@@ -1,0 +1,22 @@
+Here is the Web Service API Spec I was talking about on Wednesday. 
+
+I am thinking about a project that I think you'll be interested in. The basics are we would like to make a super simple web interface that will allow users to send a message with tracked attachments, then get a report.  
+
+Steps: 
+
+1. User comes to our web site kneto.com and authenticates via Oauth, Google, Facebook, etc or creates a local account.
+2. Gets a web-form like this:
+    Here they can type in address to send the message too. Limited to X address. 
+
+3. When they drag a file into the 'add attachments' box it changes to a view like this:
+
+
+4. The click preview and see:
+
+
+
+5. They click send, and are sent to a page like this with a success message and in invitation to come back and check the statistics. 
+
+6. A scheduled task to send a message inviting them to see there stats since someone has viewed their message. 
+
+Thats the outline. 
