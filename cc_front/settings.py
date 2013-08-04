@@ -116,12 +116,10 @@ INSTALLED_APPS = (
 
     #--- 3rd party modules ---#
     'south',               # south for DB migration
-    'gunicorn',            # gunicorn for deployment
     'django_extensions',   # django extensions
     'debug_toolbar',       # django debug toolbar
 
     # ----- CC APP  ----- #
-    'api',
 )
 
 # A sample logging configuration. The only tangible logging

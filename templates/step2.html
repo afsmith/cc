@@ -1,120 +1,62 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Chinchilla</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+{% extends 'base.html' %}
+{% load static %}
 
-        <link rel="stylesheet" href="css/bootstrap.css">
-        <style>
-            body {
-                padding-top: 60px;
-                padding-bottom: 40px;
-            }
-        </style>
-        <link rel="stylesheet" href="css/responsive.css">
-        <link rel="stylesheet" href="css/vendor/jquery.fileupload-ui.css">
-        <link rel="stylesheet" href="css/main.css">
+{% block content %}
+    <div class="row">
+        <div class="span6 center">
+            <label for="">Add receivers</label>
+            <input type="text" value="" placeholder="Import from..." class="span6" />
 
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
+            <label for="">Subject</label>
+            <input type="text" value="" placeholder="Subject here..." class="span6" />
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="#">Chinchilla</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="#">Home</a></li>
-                        </ul>
-                        <form class="navbar-form pull-right">
-                            <input class="span2" type="text" placeholder="Email">
-                            <input class="span2" type="password" placeholder="Password">
-                            <button type="submit" class="btn">Sign in</button>
-                        </form>
-                    </div><!--/.nav-collapse -->
-                </div>
+            <label for="">Message</label>
+            <textarea name="" id="" cols="30" rows="10" class="span6"></textarea>
+
+            <label for="">Add attachments, drag and drop</label>
+
+            <span class="btn btn-success fileinput-button">
+                <i class="icon-plus icon-white"></i>
+                <span>Add files...</span>
+                <!-- The file input field used as target for the file upload widget -->
+                <input id="fileupload" type="file" name="files[]" multiple>
+            </span>
+            <br>
+            <br>
+            <!-- The global progress bar -->
+            <div id="progress" class="progress progress-success progress-striped">
+                <div class="bar"></div>
             </div>
+            <!-- The container for the uploaded files -->
+            <div id="files" class="files"></div> 
         </div>
+    </div>
+{% endblock %}
 
-        <div class="container">
 
-            <div class="row">
-                <div class="span6 center">
-                    <label for="">Add receivers</label>
-                    <input type="text" value="" placeholder="Import from..." class="span6" />
 
-                    <label for="">Subject</label>
-                    <input type="text" value="" placeholder="Subject here..." class="span6" />
+{% block additional_css %}
+    <link rel="stylesheet" href="{% static 'css/vendor/jquery.fileupload-ui.css' %}">
+{% endblock %}
 
-                    <label for="">Message</label>
-                    <textarea name="" id="" cols="30" rows="10" class="span6"></textarea>
-
-                    <label for="">Add attachments, drag and drop</label>
-
-                    <span class="btn btn-success fileinput-button">
-                        <i class="icon-plus icon-white"></i>
-                        <span>Add files...</span>
-                        <!-- The file input field used as target for the file upload widget -->
-                        <input id="fileupload" type="file" name="files[]" multiple>
-                    </span>
-                    <br>
-                    <br>
-                    <!-- The global progress bar -->
-                    <div id="progress" class="progress progress-success progress-striped">
-                        <div class="bar"></div>
-                    </div>
-                    <!-- The container for the uploaded files -->
-                    <div id="files" class="files"></div> 
-                </div>
-            </div>
-
-            <hr>
-
-            <footer>
-                <p>&copy; Kneto 2013</p>
-            </footer>
-
-        </div> <!-- /container -->
-
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-        <script src="js/vendor/bootstrap.min.js"></script>
-
-        <script src="js/vendor/jquery.ui.widget.js"></script>
-        <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-        <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
-        <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-        <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
-        <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-        <script src="js/vendor/jquery.iframe-transport.js"></script>
-        <!-- The basic File Upload plugin -->
-        <script src="js/vendor/jquery.fileupload.js"></script>
-        <!-- The File Upload processing plugin -->
-        <script src="js/vendor/jquery.fileupload-process.js"></script>
-        <!-- The File Upload image preview & resize plugin -->
-        <script src="js/vendor/jquery.fileupload-image.js"></script>
-        <!-- The File Upload audio preview plugin -->
-        <script src="js/vendor/jquery.fileupload-audio.js"></script>
-        <!-- The File Upload video preview plugin -->
-        <script src="js/vendor/jquery.fileupload-video.js"></script>
-        <!-- The File Upload validation plugin -->
-        <script src="js/vendor/jquery.fileupload-validate.js"></script>
-
-        <script src="js/main.js"></script>
-    </body>
-</html>
+{% block additional_js %}
+    <script src="{% static 'js/vendor/jquery.ui.widget.js' %}"></script>
+    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+    <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
+    <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+    <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="{% static 'js/vendor/jquery.iframe-transport.js' %}"></script>
+    <!-- The basic File Upload plugin -->
+    <script src="{% static 'js/vendor/jquery.fileupload.js' %}"></script>
+    <!-- The File Upload processing plugin -->
+    <script src="{% static 'js/vendor/jquery.fileupload-process.js' %}"></script>
+    <!-- The File Upload image preview & resize plugin -->
+    <script src="{% static 'js/vendor/jquery.fileupload-image.js' %}"></script>
+    <!-- The File Upload audio preview plugin -->
+    <script src="{% static 'js/vendor/jquery.fileupload-audio.js' %}"></script>
+    <!-- The File Upload video preview plugin -->
+    <script src="{% static 'js/vendor/jquery.fileupload-video.js' %}"></script>
+    <!-- The File Upload validation plugin -->
+    <script src="{% static 'js/vendor/jquery.fileupload-validate.js' %}"></script>
+{% endblock %}
