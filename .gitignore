@@ -1,1 +1,3 @@
-css/*.css
+static/css/*.css
+*.pyc
+cc_front/local_settings.py
