@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<messages>
+	<message varname="CONTENT_BLOCKED">Innehållet är låst</message>
+	<message varname="LESSON_FINISHED">Info paket färdigt</message>
+	<message varname="LOADING_IMAGE">Laddar bild</message>
+	<message varname="LOADING_TEXT">Laddar text</message>
+	<message varname="MEDIA_NOT_FOUND">Hittade inte URL:n för media</message>
+	<message varname="MEDIA_UNSUPPORTED">Innehållet av okänd filtyp</message>
+	<message varname="SANDBOX_VOLATION">Möjligt intrång i sandlådan </message>
+	<message varname="SECURITY_ERROR">Säkerhetsfel</message>
+	<message varname="STREAM_IO_ERROR">Stream I/O error</message>
+	<message varname="STREAM_NOT_FOUND">Stream hittas inte</message>
+	<message varname="TIME_LEFT">Tid kvar</message>  	
+</messages>

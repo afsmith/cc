@@ -1,0 +1,5 @@
+first_name,last_name,phone,password,email
+marek,Marek,Mackiewicz,+123 123,10,sha1$78b2c$70562b40794a6fa198775bb2ef2f4bd3b7ab8794,marek.mackiewicz@blstream.com
+marek2,Marek,Mackiewicz,91 311 76 10,30,sha1$78b2c$70562b40794a6fa198775bb2ef2f4bd3b7ab8794,marek@mackiewicz.com
+zenek,pompa,lompa,232,30,sha1$9e485$b56705b87877c5f17512da6ee5cbd86f57400f7e,fes@es.com
+32f,fewfew,wefw,,30,sha1$86bf4$230798c9dcc2b1fcaa9a5c7ae9891d271d916698,32@3f.ce

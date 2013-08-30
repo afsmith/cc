@@ -1,0 +1,90 @@
+.border-radius(@radius: 5px){
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
+.border-top-left-radius(@radius: 5px){
+  border-top-left-radius: @radius;
+  -moz-border-radius-topleft: @radius;
+  -webkit-border-top-left-radius: @radius;
+}
+.border-top-right-radius(@radius: 5px){
+  border-top-right-radius: @radius;
+  -moz-border-radius-topright: @radius;
+  -webkit-border-top-right-radius: @radius;
+}
+.border-bottom-left-radius(@radius: 5px){
+  border-bottom-left-radius: @radius;
+  -moz-border-radius-bottomleft: @radius;
+  -webkit-border-bottom-left-radius: @radius;
+}
+.border-bottom-right-radius(@radius: 5px){
+  border-bottom-right-radius: @radius;
+  -moz-border-radius-bottomright: @radius;
+  -webkit-border-bottom-right-radius: @radius;
+}
+.button(@color: #000){
+  color: @color;
+  display: inline-block;
+  font-family: @font-button;
+  font-size: @font-size-button;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.button-gray(@text-color: #000) {
+  background: #dddddd url('../img/button-gray_bg.png') left top repeat-x;
+  border: solid 1px @color-button-border;
+  padding: 2px 10px;
+  text-shadow: 0px 1px 0px #fff;
+  .border-radius(6px);
+  .button(@text-color);
+}
+.icon(@vector: 0px, @height: 13px, @width: 13px, @sprite: @sprite-assets){
+  background: @sprite left @vector no-repeat;
+  height: @height;
+  width: @width;
+}
+.left() {
+  clear:none;
+  float:left;
+}
+.opacity(@opacity) {
+  opacity: @opacity / 100;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=@opacity)";
+  filter: alpha(opacity=@opacity);
+}
+.progress(@multiplier: 0){
+  background: @sprite-progress left @multiplier * -41px no-repeat;
+  display: block;
+  height: 41px;
+  margin: 0px auto;
+  width: 41px;
+}
+.right() {
+  clear:none;
+  float:right;
+}
+.shadow(@left, @top, @blur, @color) {
+  -moz-box-shadow: @left @top @blur @color;
+  -webkit-box-shadow: @left @top @blur @color;
+  box-shadow: @left @top @blur @color;
+}
+.text-shadow(@left, @top, @blur, @color) {
+  text-shadow: @left @top @blur @color;
+}
+.top-vertical (@size: @top-size){
+  height: @size;
+  line-height: @size;
+}
+.box-sizing (@sizing-type) {
+	-webkit-box-sizing: @sizing-type;
+    -moz-box-sizing: @sizing-type;
+    box-sizing:	@sizing-type;
+}
+.simple-transition(@property, @duration, @trans-type: ease-in-out){
+   -webkit-transition: @property @duration @trans-type;
+   -moz-transition: @property @duration @trans-type;
+   -o-transition: @property @duration @trans-type;
+   transition: @property @duration @trans-type;	
+}

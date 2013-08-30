@@ -1,0 +1,9 @@
+{% extends "modal_template.html" %}
+{% load i18n %}
+{% block style %} style="height: 400px; width: 460px;"{% endblock %}
+{% block title %} {% trans "Choose file from DMS" %} {% endblock %}
+{% block content %}
+
+    	<ul id="dmsFiles" class="filetree"></ul>
+
+{% endblock %}

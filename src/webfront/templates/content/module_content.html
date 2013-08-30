@@ -1,0 +1,239 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% block meta_title %}{% if orig_filename %}{% trans "Edit file" %}: {{ orig_filename }} {% else %}{% trans "Add file" %}{% endif %}{% endblock %}
+{% block title %}{% if orig_filename %}{% trans "Edit file" %} {% else %}{% trans "Add file" %}{% endif %}{% endblock %}
+{% block close_url %}content/manage/{% endblock %}
+{% block js_globals %}
+    var isEdited = false;
+  {% if is_edited %}
+    var isEdited = true;
+  {% endif %}
+{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.treeview.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.treeview.edit.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.treeview.async.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.form.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.custom.file.input.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.ui.datepicker.clearDate.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/content-manage.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.localscroll.js"></script>
+{% endblock %}
+{% block contentclass %} class="active"{% endblock %}
+{% block content %}
+<div id="importFile">
+<div id="selectFileWrapper">
+    {% if orig_filename %}
+      {{ orig_filename }}
+    {% else %}
+      <h3>{% trans "Select file" %}</h3>
+      <form id="importFileForm" action="/content/import/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ importFileForm.file }}
+        <a id="ufm" class="button-normal button-big-no-width leftAlignment" href="#">{% trans "Upload file" %}</a>
+        <a id="chooseFromDms" class="{% if dms_enabled %}nyroModal{% endif %} button-normal button-big-no-width {% if not dms_enabled %}button-disabled{% endif %}" href="{% if not dms_enabled %}javascript:void(0);{% endif %}{% if dms_enabled %}/content/dms/{% endif %}">{% trans "Choose from dms" %}</a>
+        <a id="sft" class="button-normal button-big-no-width" href="#">{% trans "Supported file types" %}</a>
+        <div id="sftHidden">
+            <table id="sftTable">
+                <tr>
+                    <td>
+                        <strong>Video:</strong>
+                        <ul>
+                            <li>Audio Video Interleave (.avi)</li>
+                            <li>Moving Picture Experts Group (.mpg, .mpeg, .m4v, .mp4)</li>
+                            <li>QuickTime File Format (.mov)</li>
+                            <li>Flash Video (.flv, .fla)</li>
+                            <li>RealMedia (.rm)</li>
+                            <li>Windows Media Video (.wmv)</li>
+                            <li>OGG (.ogg)</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <strong>Audio:</strong>
+                        <ul>
+                            <li>Moving Picture Experts Group (.mp2, .mp3, m4a, .mp4)</li>
+                            <li>Windows Media Audio (.wma)</li>
+                            <li>Advanced Audio Coding (.aac)</li>
+                            <li>RealAudio (.ra)</li>
+                            <li>RealMedia (.rm)</li>
+                            <li>Audio Interchange File Format (.aiff)</li>
+                            <li>AU file format (.au)</li>
+                            <li>Waveform Audio File Format (.wav)</li>
+                            <li>Free Lossless Audio Codec (.flac)</li>
+                            <li>OGG (.ogg)</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <strong>Image:</strong>
+                        <ul>
+                            <li>JPEG (.jpg, .jpeg)</li>
+                            <li>Graphics Interchange Format (.gif)</li>
+                            <li>Portable Network Graphics (.png)</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Text:</strong>
+                        <ul>
+                            <li>Word Document (.doc)</li>
+                            <li>Open Document Text (.odt)</li>
+                            <li>Portable Document Format (.pdf)</li>
+                            <li>Text file (.txt)</li>
+                            <li>Hyper Text Markup Language (.html,.htm)</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <strong>Slides:</strong>
+                        <ul>
+                            <li>PowerPoint (.ppt)</li>
+                            <li>OpenDocument Presentation (.odp)</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <strong>Scorm:</strong>
+                        <ul>
+                            <li>SCORM 1.2 (.zip)</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="progressWrapper" class="boxGray">
+            <div id="progress"></div>
+        </div>
+        <a id="cancelUpload" class="button-normal button-big-no-width" href="#" style="display: none;">{% trans "Cancel upload" %}</a>
+        <div class="clear"></div>
+        <span id="fileName" class="fileInfo leftAlignment"></span>
+        <div class="clear"></div>
+      </form>
+    {% endif %}
+  <div class="separator"></div>
+</div>
+<form id="manageContentForm" method="get">
+    <input type="hidden" id="id_is_edited" value="{% if is_edited %}True{%else%}False{%endif%}"/>
+    {% csrf_token %}
+    {% for field in manageContentForm %}
+        {% if field.is_hidden %}
+            {{ field }}
+        {% endif %}
+    {% endfor %}
+    <div id="operationsFileWrapper">
+      <div id="fileInfoWrapper">
+        <ul class="formList fleft">
+          <li>
+            <label>{{ manageContentForm.title.label }}</label><br />
+            <div class="inputWrapper shadow-gray">
+                {{ manageContentForm.title }}
+            </div>
+            <div id="nameError" class="formError textLeft"></div>
+          </li>
+          <li class="small">
+            <label>{{ manageContentForm.is_downloadable.label }}</label>
+            {{ manageContentForm.is_downloadable }}
+          </li>
+        </ul>
+        <img id="fileTypeIco" src="{{ MEDIA_URL}}img/blank.gif" alt="" class="fileTypeIco {% if file_type %}fileType{{ file_type }} {% endif %}fright" />
+
+        <ul class="formList">
+          <li>
+            <label>{% trans "Tags" %}</label><br />
+            <div id="tagsError" class="formError textLeft"></div>
+            <div class="inputWrapper shadow-gray">
+              <input id="newTag" type="text" />
+              <a id="addTag" class="inputButton" href="#">{% trans "Add tag" %}</a>
+            </div>
+            <ul id="tagList" class="taglist">
+                {% for tag in tags %}
+                    {% if not tag.is_default %}
+                        <li id="tag_{{ tag.id }}">{{ tag.name }}
+                            <a href="#" title="Remove from taglist">
+                                <img class="delete" src="{{ MEDIA_URL }}img/blank.gif" alt="" /></a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+          </li>
+        </ul>
+
+        <ul class="formList">
+          <li>
+            <label>{{ manageContentForm.language.label }}</label><br />
+            <div id="languageWrapper" class="inputWrapper shadow-gray">
+              {{ manageContentForm.language }}
+            </div>
+          </li>
+          {% if orig_filename %}
+              <li>
+                <label>{{ manageContentForm.owner.label }}</label><br />
+                <div id="ownersWrapper" class="inputWrapper shadow-gray">
+                  {{ manageContentForm.owner }}
+                </div>
+              </li>
+          {% endif %}
+
+           <li id="duration" {% if not is_duration_visible %}style="display:none;"{% endif %}>
+            <label>{{ manageContentForm.duration.label }}</label><br />
+            <div id="durationError" class="formError textLeft"></div>
+            <div id="durationWrapper" class="inputWrapper shadow-gray">
+                {{ manageContentForm.duration }}
+            </div>
+            <span>{% trans "minutes" %}</span>
+
+           </li>
+          <li class="date">
+            <label><span class="fleft">{{ manageContentForm.expires_on.label }}</span> <br />{{ manageContentForm.expires_on }}</label>
+          </li>
+          <li class="small">
+            <label>{{ manageContentForm.delete_expired.label }}</label>
+            {{ manageContentForm.delete_expired }}
+          </li>
+        </ul>
+
+        <ul class="formList">
+           <li>
+           		<label>{{ manageContentForm.note.label }}</label> <br />
+	       		<div class="inputWrapper shadow-gray textarea">
+	       			{{ manageContentForm.note }}
+	       		</div>
+            </li>
+        </ul>
+      </div>
+      <div id="groupRightsWrapper">
+        <h3>{% trans "Group rights" %}</h3>
+        <div class="groupWrapper">
+          <div id="available" class="boxGray">
+            <label>{% trans "Available" %}</label>
+            <div class="inputWrapper multipleSelectWrapper shadow-gray">
+              <select name="availableGroupsList" id="availableGroupsList" multiple="multiple" size="10">
+                  {% for availableGroup in availableGroups %}
+                    <option value="{{ availableGroup.id }}">{{ availableGroup.name }}</option>
+                  {% endfor %}
+              </select>
+              <input type="hidden" id="availableHidden" name="availableHidden" />
+            </div>
+            <div id="toSelectedGroups" class="arrow rightArrow"></div>
+          </div>
+          <div id="selected" class="boxBlue">
+            <label>{% trans "Selected" %}</label>
+            <div class="inputWrapper multipleSelectWrapper shadow-blue">
+              <select name="selectedGroupsList" id="selectedGroupsList" multiple="multiple" size="10">
+                  {% for selectedGroup in selectedGroups %}
+                    <option value="{{ selectedGroup.id }}">{{ selectedGroup.name }}</option>
+                  {% endfor %}
+              </select>
+              <input type="hidden" id="selectedHidden" name="selectedHidden" />
+            </div>
+            <div id="fromSelectedGroups" class="arrow leftArrow"></div>
+          </div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      	<div class="centered" style="margin-top: 10px;">
+      		<a id="mcc" class="button-blue {% if not orig_filename %}button-disabled{% endif %}" href="#">{% trans "Clear" %}</a>
+      		<a id="mcd" class="button-blue {% if not orig_filename %}button-disabled{% endif %}" href="#">{% trans "Done" %}</a>
+      	</div>
+      <div class="spacer"></div>
+    </div>
+</form>
+</div>
+{% endblock %}

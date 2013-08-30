@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<messages>
+	<message varname="CONTENT_BLOCKED">Sisältö lukittu</message>
+	<message varname="LESSON_FINISHED">Info paketti valmis</message>
+	<message varname="LOADING_IMAGE">Ladataan kuvaa</message>
+	<message varname="LOADING_TEXT">Ladataan tekstiä</message>
+	<message varname="MEDIA_NOT_FOUND">Median URL:ia ei löydetty</message>
+	<message varname="MEDIA_UNSUPPORTED">Sisällön formaatti tuntematon</message>
+	<message varname="SANDBOX_VOLATION">Mahdollinen hiekkalaatikkoon tunkeutuja</message>
+	<message varname="SECURITY_ERROR">Turvallisuuserhe</message>
+	<message varname="STREAM_IO_ERROR">Stream I/O virhe</message>
+	<message varname="STREAM_NOT_FOUND">Stream ei löydy</message>
+	<message varname="TIME_LEFT">Aikaa jäljellä</message>  	
+</messages>

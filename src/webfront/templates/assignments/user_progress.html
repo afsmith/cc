@@ -1,0 +1,109 @@
+{% load i18n %}
+<div class="boxGray clear">
+  <div class="singleLessonWrapper userProgressWrapper">
+     <div class="rollerWrapper">
+       <div class="leftMargin margin fleft prev">
+          <a href="#" class="browse left"></a>
+        </div>
+        <div class="roller" id="mainScrollerWrapper">
+          <div class="rollerItems" id="mainScroller">
+            <ul>
+            {% for key, segment in segments.items %}
+              <li{% if segment.segment.is_learnt %} class="completed"{% endif %}>
+               	<a id="segment_{{ segment.segment.id }}" href="#" class="singleFile">
+                 		<img src="{{ MEDIA_URL }}img/blank.gif" class="fileTypeIco fileType{{ segment.segment.file.type }}" alt="" />
+               	</a>
+                   {% if not segment.segment.available %}
+                   <div class="courseApla"></div>
+                   {% endif %}
+             	  </li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="rightMargin margin fright next">
+          <a href="#" class="browse right"></a>
+        </div>
+      </div>
+   </div>
+  </div>
+
+<div id="user_details" class="fleft">
+{% for key, segment in segments.items %}
+  	<div id="details_segment_{{ segment.segment.id }}" class="segmentDetails">
+	    <div class="fleft">
+            <h3 title="{{ segment.segment.file.title }}">{{ segment.segment.file.title }}</h3>
+            
+            <div class="detail">{% trans "Content total time" %}: {{ segments.total }}</div>
+
+            <span class="detail">{% trans "Duration" %}: {{ segment.segment.file.duration }} {% trans "min" %}</span>
+            <span class="detail">{% trans "Total time" %}: {{ segment.total_time }}</span>
+            <span class="detail">{% trans "Download count" %}: {{ segment.download_count }}</span>
+            {% if course.sign_off_required %}
+                <span class="detail">{% trans "Sign off" %}: {% if course_user.sign_off %}{% trans "yes" %}{% else %}{% trans "no" %}{% endif %}</span>
+            {% endif %}
+        </div>
+		<a href="{{ MEDIA_URL }}swf/player.swf" class="preview" >
+			<span>{% trans "Preview" %}</span>
+		</a>
+
+	    <div class="hr"></div>
+	</div>
+{% endfor %}
+</div>
+
+<div id="userLog" class="fleft">
+  <h3>{% trans "Log" %}</h3>
+  <div class="boxGray">
+    <span class="resultHead dateCol">{% trans "Date" %}</span>
+    <span class="resultHead timeCol">{% trans "Duration" %}</span>
+    <span class="resultHead intCol">{% trans "Result" %}</span>
+    {% if settings.SALES_PLUS %}
+    <span class="resultHead ipCol">{% trans "User IP" %}</span>
+    {% endif %}
+    {% for key, segment in segments.items %}
+    <ul id="progress_segment_{{ segment.segment.id }}" class="result shadow-gray list">
+    	{% for tracking in segment.trackings %}
+               {% if tracking.is_paging %}
+               <a href="#" class="page_tracking_link">
+               {% endif %}
+	      <li id='progress_tracking_{{ tracking.id }}' class="progress_tracking {% cycle 'odd' 'even' %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}">
+	        <span class="dateCol">{{ tracking.date|date:"Y-m-d H:i" }}</span>
+	        <span class="timeCol">{{ tracking.duration }}</span>
+	        <span class="intCol">{% if tracking.result %}{{ tracking.result }}{% else %}n/a{% endif %}</span>
+            {% if settings.SALES_PLUS %}
+	        <span class="ipCol last">{% if tracking.client_ip %}{{ tracking.client_ip }}{% else %}n/a{% endif %}</span>
+            {% endif %}
+	      </li>
+               {% if tracking.is_paging %}
+               </a>
+               {% endif %}
+	     {% endfor %}
+    </ul>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="scormResults" class="fleft">
+  <h3>{% trans "Results log" %}</h3>
+  <div class="boxGray">
+    <span class="resultHead idCol">{% trans "Id" %}</span>
+       <span class="resultHead typeCol">{% trans "Type" %}</span>
+    <span class="resultHead responseCol">{% trans "Student response" %}</span>
+    <span class="resultHead resultCol">{% trans "Result" %}</span>
+    {% for key, segment in segments.items %}
+    	{% for tracking_id, results in segment.results.items %}
+               <ul id="results_tracking_{{ tracking_id }}" class="result shadow-gray list">
+               {% for result in results %}
+                 <li class="{% cycle 'odd' 'even' %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}">
+                   <span class="idCol">{{ result.name }}</span>
+                   <span class="typeCol">{{ result.type }}</span>
+                   <span class="responseCol">{{ result.student_response }}</span>
+                   <span class="resultCol last">{{ result.result }}</span>
+                 </li>
+               {% endfor %}
+               </ul>
+	     {% endfor %}
+    {% endfor %}
+  </div>
+</div>

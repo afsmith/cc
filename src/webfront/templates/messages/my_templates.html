@@ -1,0 +1,99 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Administration" %}{% endblock %}
+{% block title %}{% trans "Manage my templates" %}{% endblock %}
+{% block administrationclass %} class="active"{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.form.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.custom.file.input.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.ui.datepicker.clearDate.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dashboard.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script>
+{% endblock %}
+{% block content %}
+<div id="dashboardWrapper" style="position: relative;">
+    <div class="clear"></div>
+    {% include "administration/admin_tabs.html" %}
+    <div class="boxGray">
+		<form id="MessagesTemplateForm" class="dbMiddle modalContent">
+		    <input type="hidden" id="userEdit" value="{% if user_edit %}1{% else %}0{%endif %}" />
+		
+		    <ul class="formList">
+		      <li>
+		        <label>{% trans "Select template" %}</label>
+		        <div class="inputWrapper shadow-gray selectWrapper">
+			  <select id="selectMessageTemplate">
+			    {% for template in templates %}
+			    <option value="{{ template.id }}">{{ template.name_with_type }}</option>
+			    {% endfor %}
+			  </select>
+		        </div>
+		      </li>
+		
+		      {% for template in templates %}
+		      {% with template.get_defaults as defaults %}
+		      <li id="messageTemplateSubject-{{ template.id}}" style="display: none;" class="messageTitle">
+			<label>{% trans "Subject" %}</label>
+			<div class="inputWrapper shadow-gray">
+			  <input type="text" value="{{ template.subject }}" />
+		          <input type="hidden" class="default" value="{{ defaults.0 }}" />
+			</div>
+		      </li>
+		
+		      <li id="messageTemplate-{{ template.id }}" style="display: none;" class="messageContent">
+			<label>{% trans "Message" %}</label>
+		        <div class="inputWrapper shadow-gray htmlEditor">
+					<textarea class="htmlEditor">{{ template.content }}</textarea>
+					<input type="hidden" class="default" value="{{ defaults.1 }}" />
+		        </div>
+			<div class='descriptionWrapper'>
+			  <span class="description">{% trans "Parameters" %}:
+			    <strong>
+			      {% for param in template.get_params.all %}
+			      {{ param.pattern }}{% if not forloop.last %},{% endif %}
+			      {% endfor %}
+			    </strong>
+			  </span>
+			</div>
+		      </li>
+		      {% if template.send_msg != 'D' %}
+		      <li id="messageTemplateSend-{{ template.id }}" style="display: none;" class='messageSend'>
+		        <label>{% trans "Send message" %}</label>
+		        {% if template.send_msg == 'T' %}
+		        <input type="checkbox" checked="checked"></input>
+		        {% else %}
+		        <input type="checkbox"></input>
+		        {% endif %}
+		      </li>
+		      {% endif %}
+		
+		      {% if user_edit %}
+{% comment %}
+                {% if user.get_profile.is_superadmin %}
+                <li id="messageSaveAsDefault-{{ template.id }}" style="display: none;" class="messageAsDefault">
+                    <label>{% trans "Save notification as default" %}</label>
+                    <input type="checkbox"></input>
+                </li>
+                {% endif %}
+{% endcomment %}
+		      {% endif %}
+		
+		      {% endwith %}
+		      {% endfor %}
+		    </ul>
+		
+		    <div>
+			    <div style="min-width: 150px; margin: 0 16px 0 auto; display: block; float: right;">
+			      <a class="button-blue button-big button-submit" href="#" style="">{% trans "Save" %}</a>
+			    </div>
+			    <div style="min-width: 150px; margin: 0 16px 0 auto; display: block; float: right; ">
+                  <a class="button-gray button-big button-default" href="#" style="width: 150px;">{% trans "Back to default" %}</a>
+                </div>
+		    </div>
+		    <div class="clear"></div>
+		  </form>
+	  </div>
+</div>
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/templates.js"></script>
+{% endblock %}

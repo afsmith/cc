@@ -1,0 +1,48 @@
+{% load i18n %}
+{% load  %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block meta_title %}CC Login{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/bootstrap.css">
+    <style>
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/responsive.css">
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css">
+
+    <script src="{{ MEDIA_URL }}js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        {% block content_header %}
+        <h1>{% trans "Register" %}</h1>
+        {% endblock %}
+        
+        {% block content %}{% endblock %}
+
+    
+        <hr>
+        <footer>
+            <p>&copy; </p>
+        </footer>
+    </div> <!-- /container -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ MEDIA_URL }}js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ing.lib.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+{% load extras %}
+{% if form.non_field_errors %}
+  <div class="error">
+    {%for error in form.non_field_errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+{% endif %}
+{% csrf_token %}
+<ul class="formList">
+  {% for field in form.hidden_fields %}
+    {{ field }}
+  {% endfor %}
+          <table>
+          	<tr>
+          		<td colspan="2">
+		            <label>{{ form.name.label }}</label>
+		            <div class="inputWrapper shadow-gray">{{ form.name }}</div>
+		            {% if form.name.errors %}
+		              <div class="formError">
+		                {%for error in form.name.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+            <tr>
+          		<td colspan="2">
+		            <label>{{ form.template.label }}</label>
+		            {{ form.template }}
+		            {% if form.template.errors %}
+		              <div class="formError">
+		                {%for error in form.template.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+            <tr>
+          		<td>
+		            <label>{{ form.user_required.label }}</label>
+		            {{ form.user_required }}
+		            {% if form.user_required.errors %}
+		              <div class="formError">
+		                {%for error in form.user_required.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            	<td>
+		            <label>{{ form.user_shown.label }}</label>
+		            {{ form.user_shown }}
+		            {% if form.user_shown.errors %}
+		              <div class="formError">
+		                {%for error in form.user_shown.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+            <tr>
+          		<td>
+		            <label>{{ form.group_required.label }}</label>
+		            {{ form.group_required }}
+		            {% if form.group_required.errors %}
+		              <div class="formError">
+		                {%for error in form.group_required.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            	<td>
+		            <label>{{ form.group_shown.label }}</label>
+		            {{ form.group_shown }}
+		            {% if form.group_shown.errors %}
+		              <div class="formError">
+		                {%for error in form.group_shown.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+            <tr>
+          		<td>
+		            <label>{{ form.course_required.label }}</label>
+		            {{ form.course_required }}
+		            {% if form.course_required.errors %}
+		              <div class="formError">
+		                {%for error in form.course_required.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            	<td>
+		            <label>{{ form.course_shown.label }}</label>
+		            {{ form.course_shown }}
+		            {% if form.course_shown.errors %}
+		              <div class="formError">
+		                {%for error in form.course_shown.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+
+            <tr>
+          		<td>
+		            <label>{{ form.admin_required.label }}</label>
+		            {{ form.admin_required }}
+		            {% if form.admin_required.errors %}
+		              <div class="formError">
+		                {%for error in form.admin_required.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            	<td>
+		            <label>{{ form.admin_shown.label }}</label>
+		            {{ form.admin_shown }}
+		            {% if form.admin_shown.errors %}
+		              <div class="formError">
+		                {%for error in form.admin_shown.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+
+            <tr>
+          		<td>
+		            <label>{{ form.date_from_shown.label }}</label>
+		            {{ form.date_from_shown }}
+		            {% if form.date_from_shown.errors %}
+		              <div class="formError">
+		                {%for error in form.date_from_shown.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            	<td>
+		            <label>{{ form.date_to_shown.label }}</label>
+		            {{ form.date_to_shown }}
+		            {% if form.date_to_shown.errors %}
+		              <div class="formError">
+		                {%for error in form.date_to_shown.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+            <tr>
+          		<td colspan="2">
+		            <label>{{ form.note.label }}</label>
+		            <div class="inputWrapper shadow-gray">{{ form.note }}</div>
+		            	<span class="charCounter"></span>
+		            {% if form.note.errors %}
+		              <div class="formError">
+		                {%for error in form.name.errors %}
+		                  {{error}}
+		                {% endfor %}
+		              </div>
+		            {% endif %}
+            	</td>
+            </tr>
+		</table>
+</ul>

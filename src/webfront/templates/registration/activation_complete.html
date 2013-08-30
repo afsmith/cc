@@ -1,0 +1,15 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block meta_title %}Activation complete{% endblock %}
+{% block content %}
+<div style="margin-top: 25px;">
+    <p style="margin: 15px 15px 15px 15px;">{% trans "Thanks, activation complete!" %}
+   {% trans "You may now login using the username and password you set at registration." %}
+    </p>
+    <div id="submitWrapper">
+        <a class="button-gray button-big" href="{% url "auth_login" %}" style="margin-top: 10px;">{% trans "Login" %}</a>
+    </div></div>
+{% endblock %}
+
+

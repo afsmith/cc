@@ -1,0 +1,105 @@
+{% extends "modal_template.html" %}
+{% load i18n %}
+{% load extras %}
+{% load  %}
+{% block style %} style="width: 520px;"{% endblock %}
+{% block title %}
+  {% if edited_user %}
+    {% trans "Edit user's details" %}
+  {% else %}
+    {% trans "Add new user to:" %}
+    {% if type == "pending" %} 
+     {% trans "Kneto" %} 
+    {% else %} 
+        <span id="name_group" class="highlight">{{ group }}</span>
+    {% endif %} 
+  {% endif %}
+{% endblock %}
+{% block content %}
+<form id="newUserForm" action="{% if edited_user %}/management/users/{{ edited_user.id }}/{% else %}{% url "management-create_user" %}{% endif %}" method='post'>
+{% if form.non_field_errors %}
+  <div class="error">
+    {%for error in form.non_field_errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+{% endif %}
+{% csrf_token %}
+<ul class="formList">
+  {% for field in form %}
+    {% if forloop.first %}
+        {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+    {% endif %}
+      {% if not field.is_hidden %}
+      	{% if edited_user and field.html_name == 'ocl' %}
+      	
+      	{% else %}
+	          <li>
+	            {% if field.html_name == form.role.html_name %}
+	              {% if user.get_profile.role <= 20 %}
+	                  <label>{{ field.label }}</label><div class="inputWrapper shadow-gray selectWrapper">{{ field }}</div>
+	              {% else %}
+	                  {{ field.as_hidden }}
+	              {% endif %}
+	            {% else %}
+	                <label>{{ field.label }}</label>
+	                {% if field.html_name == form.username.html_name and edited_user %}
+	                    <span class="username">{{ edited_user.username }}</span>
+	                    {{ field.as_hidden }}
+	                {% else %}
+	    	          	{% if field.html_name == 'ocl' %}
+			                <div class="inputWrapperCheck shadow-gray">{{ field }}</div>                
+			            {% else %}
+                            {% if field.html_name == 'send_email' %}
+                                {% if edited_user %}
+                                <div class="inputWrapperCheck shadow-gray">{{ field }}</div>
+                                <div id="previewMessageBtn" class="edit"></div>              
+                                {% else %}
+                                <div class="inputWrapperCheck shadow-gray">{{ field|htmlattributes:"disabled:disabled" }}</div>
+                                <div id="previewMessageBtn" class="add"></div>
+                                {% endif %}
+                                
+                            {% else %}
+                                <div class="inputWrapper shadow-gray">{{ field }}</div>
+                            {% endif %}
+	                    {% endif %}
+	                {% endif %}
+	            {% endif %}
+	            {% if field.errors %}
+	              <div class="formError">
+	                {%for error in field.errors %}
+	                  {{error}}
+	                {% endfor %}
+	              </div>
+	            {% endif %}
+	          </li>
+          {% endif %}
+      {% endif %}
+  {% endfor %}
+  {% if edited_user %}
+	{% if not edited_user.get_profile.ldap_user %}
+	    {% if request.user.get_profile.is_superadmin%}
+	    	<li>
+	    		<label>&nbsp;</label>
+	            <div style="display: inline-block; width: 200px; margin: 0px auto;" id='rp'><a class="button-gray button-big" href="#" >{% trans "Reset password"%}</a></div>
+		        <div style="width: 200px;" class="formError" id='reset_message'></div>
+	        </li>
+	    {% endif %}
+	    {% if request.user.get_profile.is_admin and edited_user.get_profile.role == 30 %}
+	        <li>
+	    		<label>&nbsp;</label>
+				<div style="display: inline-block; width: 200px; margin: 0px auto;" id='rp'><a class="button-gray button-big" href="#" >{% trans "Reset password"%}</a></div>
+	            <div style="width: 200px;" class="formError" id='reset_message'></div>
+		    </li>
+	    {% endif %}
+	{% endif %}
+{% endif %}
+</ul>
+<div style="width: 200px; margin: 0px auto;">
+    <a id={% if type == "pending" %}'sb_pending'{% else %}'sb'{% endif %} class="button-gray button-big" href="#" style="margin-top: 10px;">{% if edited_user %}{% trans "Save changes" %}{% else %}{% trans "Add new user" %}{% endif %}</a>
+</div>
+</form>
+
+{% endblock %}

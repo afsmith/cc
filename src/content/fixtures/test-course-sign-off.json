@@ -1,0 +1,316 @@
+[
+    {
+        "pk": 300,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "deactivated_on": "2010-12-10 09:11:09",
+            "active": "True",
+            "state_code": 4,
+            "owner": 2,
+            "sign_off_required": "True"
+        }
+    },
+    {
+        "pk": 301,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "deactivated_on": "2010-12-10 09:11:09",
+            "active": "True",
+            "state_code": 4,
+            "owner": 2,
+            "sign_off_required": "False"
+        }
+    },
+    {
+        "pk": 302,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "deactivated_on": "2010-12-10 09:11:09",
+            "active": "True",
+            "state_code": 4,
+            "owner": 2,
+            "sign_off_required": "True"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "active": "True",
+            "owner": 1,
+            "state_code": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-11 09:11:09",
+            "created_on": "2010-12-10 09:12:09",
+            "active": "True",
+            "owner": 1,
+            "state_code": 1
+        }
+    },
+    {
+        "pk": 3,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-12 09:11:09",
+            "created_on": "2010-12-10 09:13:09",
+            "active": "True",
+            "state_code": 2,
+            "owner": 2
+        }
+    },
+    {
+        "pk": 4,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:13:09",
+            "published_on": "2010-12-10 09:13:09",
+            "active": "True",
+            "state_code": 2,
+            "owner": 2
+        }
+    },
+    {
+        "pk": 5,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:13:09",
+            "published_on": "2010-12-09 09:13:09",
+            "active": "True",
+            "state_code": 3,
+            "owner": 2
+        }
+    },
+    {
+        "pk": 6,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-11 09:11:09",
+            "created_on": "2010-12-10 09:13:09",
+            "deactivated_on": "2010-12-11 09:11:09",
+            "active": "True",
+            "state_code": 5,
+            "owner": 2
+        }
+    },
+    {
+        "pk": 1,
+        "model": "content.coursegroup",
+        "fields": {
+            "group": 1,
+            "course": 1,
+            "assigner": 1,
+            "assigned_on": "2010-12-10"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "content.coursegroupcanbeassignedto",
+        "fields": {
+            "group": 1,
+            "course": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "content.coursegroupcanbeassignedto",
+        "fields": {
+            "group": 1,
+            "course": 2
+        }
+    },
+    {
+        "pk": 3,
+        "model": "content.coursegroupcanbeassignedto",
+        "fields": {
+            "group": 2,
+            "course": 3
+        }
+    },
+    {
+        "pk": 4,
+        "model": "content.coursegroupcanbeassignedto",
+        "fields": {
+            "group": 1,
+            "course": 300
+        }
+    },
+    {
+        "pk": 5,
+        "model": "content.coursegroupcanbeassignedto",
+        "fields": {
+            "group": 1,
+            "course": 301
+        }
+    },
+    {
+        "pk": 6,
+        "model": "content.coursegroupcanbeassignedto",
+        "fields": {
+            "group": 1,
+            "course": 302
+        }
+    },
+    {
+        "pk": 2,
+        "model": "content.coursegroup",
+        "fields": {
+            "group": 2,
+            "course": 1,
+            "assigner": 1,
+            "assigned_on": "2010-12-10"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "content.coursegroup",
+        "fields": {
+            "group": 2,
+            "course": 3,
+            "assigner": 1,
+            "assigned_on": "2010-12-10"
+        }
+    },    
+    {
+        "pk": 4,
+        "model": "content.coursegroup",
+        "fields": {
+            "group": 1,
+            "course": 300,
+            "assigner": 2,
+            "assigned_on": "2010-12-10"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "content.coursegroup",
+        "fields": {
+            "group": 1,
+            "course": 301,
+            "assigner": 2,
+            "assigned_on": "2010-12-10"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "content.coursegroup",
+        "fields": {
+            "group": 1,
+            "course": 302,
+            "assigner": 2,
+            "assigned_on": "2010-12-10"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "content.file",
+        "fields": {
+            "status": 10,
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "type": 10,
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "language": 10,
+            "owner": 1
+        }
+    },
+    {
+        "pk": 1, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 1,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 2, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 2,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 3, "model": "content.segment",
+        "fields": {
+            "file": 9,
+            "course": 4,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 4, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 300,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 5, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 301,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 6, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 302,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    }
+]
+

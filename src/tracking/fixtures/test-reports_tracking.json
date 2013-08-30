@@ -1,0 +1,77 @@
+[
+    {
+        "pk": 1,
+        "model": "reports.report",
+        "fields": {
+            "owner": 1,
+            "created_on": "2010-02-10 09:45:09",
+            "schedule_type": 3,
+            "schedule_hour": "09:02",
+            "user": 1,
+            "show_all": "True"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "reports.report",
+        "fields": {
+            "owner": 1,
+            "created_on": "2010-04-28 09:45:09",
+            "schedule_type": 2,
+            "schedule_hour": "11:11",
+            "schedule_day": 31,
+            "show_all": "True"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "reports.report",
+        "fields": {
+            "owner": 1,
+            "created_on": "2010-01-31 09:45:09",
+            "schedule_type": 2,
+            "schedule_hour": "11:11",
+            "schedule_day": 28,
+            "show_all": "True"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "reports.report",
+        "fields": {
+            "owner": 1,
+            "created_on": "2010-01-31 09:45:09",
+            "schedule_type": 2,
+            "schedule_hour": "11:11",
+            "schedule_day": 28,
+            "group": 1,
+            "show_all": "True"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "reports.report",
+        "fields": {
+            "owner": 1,
+            "created_on": "2010-01-31 09:45:09",
+            "schedule_type": 2,
+            "schedule_hour": "11:11",
+            "schedule_day": 28,
+            "course": 1,
+            "show_all": "True"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "reports.report",
+        "fields": {
+            "owner": 1,
+            "created_on": "2010-01-31 09:45:09",
+            "schedule_type": 2,
+            "schedule_hour": "11:11",
+            "schedule_day": 28,
+            "group": 1,
+            "show_all": "True"
+        }
+    }
+]

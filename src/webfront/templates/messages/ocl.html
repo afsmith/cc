@@ -1,0 +1,22 @@
+{% extends "messages/box.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Messages - OCL" %}{% endblock %}
+{% block title %}{% trans "Messages" %}{% endblock %}
+{% block oclboxactive %} active{% endblock %}
+{% block is_ocl %} ocl{% endblock %}
+{% block show_my_links %}
+{% if request.user.get_profile.is_superadmin %}
+<span class="oclSuperAdminFilter superadmin" style="float: none;">
+    <input type="checkbox" id="show_my_ocl_links" {% if show_my_ocl_links == 'true' %}checked{% endif %}/>
+    {% trans "Show my links" %}
+</span>
+{% endif %}
+{% endblock %}
+{% block row_content %}
+  <p>
+  {{ message.subject }}
+  </p>
+  <p class="date">{{ message.sent_at|date:'Y-m-d H:i' }}</p>
+{% endblock %}
+{% block message_filter_path %}{% url "messages_ocl" %}{% endblock %}
+{% block remove_messages %}{% endblock %}

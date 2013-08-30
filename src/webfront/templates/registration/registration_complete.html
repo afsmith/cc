@@ -1,0 +1,13 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block meta_title %}{% trans "Activation email sent" %}{% endblock %}
+{% block content %}
+<div style="margin-top: 25px;">
+    <p style="margin: 15px 15px 15px 15px;">{% trans "An activation email has been sent.  Please check your email and click on the link to activate your account." %} </p>
+    <div id="submitWrapper">
+        <a class="button-gray button-big" href="{% url "dashboard" %}" style="margin-top: 10px;">{% trans "Ok" %}</a>
+    </div>
+</div>
+{% endblock %}
+

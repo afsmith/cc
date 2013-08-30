@@ -1,0 +1,22 @@
+{% extends "messages/box.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Messages - Sent" %}{% endblock %}
+{% block title %}{% trans "Messages" %}{% endblock %}
+{% block outboxactive %} active{% endblock %}
+{% block ocl_only_filter %}
+{% if request.user.get_profile.is_admin or request.user.get_profile.is_superadmin %}
+<span class="oclMessagesFilter">
+    <input type="checkbox" id="ocl_messages_only" {% if ocl_only == 'true' %}checked{% endif %}/>
+    {% trans "Show only messages with OCL" %}
+</span>
+{% endif %}
+{% endblock %}
+{% block row_content %}
+  <p>
+  <input type="checkbox" class="messageToRemove" value="{{ message.id }}" />
+  {{ message.subject }}
+  </p>
+  <p>{% trans "To" %}: {{ message.recipient.first_name }} {{ message.recipient.last_name }}</p>
+  <p class="date">{{ message.sent_at|date:'Y-m-d H:i' }}</p>
+{% endblock %}
+{% block message_filter_path %}{% url "messages_outbox" %}{% endblock %}

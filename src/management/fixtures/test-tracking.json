@@ -1,0 +1,66 @@
+[
+    {
+        "pk": 1,
+        "model": "content.course",
+        "fields": {
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "objective": "Cras suscipit lectus sit amet lacus vehicula at.",
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "state_code": 4
+        }
+    },
+    {
+        "pk": 1,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 1,
+                "group": 4,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 1,
+        "model": "content.file",
+        "fields": {
+            "status": 10,
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "type": 10,
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "expires_on": "2011-01-01",
+            "language": 10
+        }
+    },
+    {
+        "pk": 1, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 1,
+            "track": 1,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+      "pk": 101, "model": "tracking.trackingevent",
+       "fields": {
+           "segment": 1,
+           "participant": 4,
+           "event_type": "START",
+           "created_on": "2010-12-10 09:11:09"
+       }
+    },
+    {
+      "pk": 102, "model": "tracking.trackingevent",
+       "fields": {
+           "segment": 1,
+           "participant": 4,
+           "event_type": "END",
+           "created_on": "2010-12-10 10:11:09"
+       }                   
+    }
+]

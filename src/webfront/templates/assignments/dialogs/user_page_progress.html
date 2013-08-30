@@ -1,0 +1,27 @@
+{% extends "modal_template.html" %}
+{% load i18n %}
+{% load extras %}
+{% block style %} style="width: 520px;"{% endblock %}
+{% block title %}
+    {% trans "Viewed pages" %}
+{% endblock %}
+{% block content %}
+<div id="userLog">
+    <h3>{% trans "Log" %}</h3>
+    <div class="boxGray" style="width: 450px; color:#58585A;">
+    <span class="resultHead intCol">Page</span>
+    <span class="resultHead dateCol">Date</span>
+    <span class="resultHead timeCol">Duration</span>
+    <ul id="progress_segment" class="sult shadow-gray list" style="display: block;">
+    {% for track in tracks %}
+        <li id="progress_tracking_{{ track.id }}" class="progress_tracking {% cycle 'odd' 'even' %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}">
+            <span class="intCol">{{ track.page }}</span>
+            <span class="dateCol">{{ track.date|date:"Y-m-d H:i" }}</span>
+            <span class="timeCol">{{ track.duration }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+</div>
+{% endblock %}
+

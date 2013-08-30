@@ -1,0 +1,18 @@
+{% load i18n %}
+{% load  %}
+{% load i18n %}
+{% url "registration_activate" activation_key as activate_url %}
+{% blocktrans with site.name as site_name and site.domain as site_domain %}
+Dear {{username}},
+
+You have created an account for {{ site_name }}, which has to
+be activated. To do this, please follow the following link:
+http://{{ site_name }}{{ activate_url }}
+
+Please do take note that if your activation does not succeed
+within {{ expiration_days }} days, you will have to restart
+the activation process.
+
+Best regards,
+The Kneto
+{% endblocktrans %}

@@ -1,0 +1,104 @@
+[
+    {
+        "pk": 1,
+        "model": "content.file",
+        "fields": {
+            "status": 10,
+            "updated_on": "2010-12-10 09:11:09",
+            "created_on": "2010-12-10 09:11:09",
+            "type": 10,
+            "title": "Praesent pharetra turpis ac turpis pharetra.",
+            "expires_on": "2011-12-12",
+            "language": 10,
+            "owner": 1
+        }
+    },
+    {
+        "pk": 1, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 1,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 2, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 1,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 100,
+            "end": 200
+        }
+    },
+    {
+        "pk": 3, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 2,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 100,
+            "end": 200
+        }
+    },
+    {
+        "pk": 4, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 3,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 1,
+            "end": 100
+        }
+    },
+    {
+        "pk": 5, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 3,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 100,
+            "end": 200
+        }
+    },
+    {
+        "pk": 6, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 3,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 200,
+            "end": 300
+        }
+    },
+    {
+        "pk": 7, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 3,
+            "track": 1,
+            "playback_mode": 10,
+            "start": 100,
+            "end": 200
+        }
+    },
+    {
+        "pk": 8, "model": "content.segment",
+        "fields": {
+            "file": 1,
+            "course": 4,
+            "track": 0,
+            "playback_mode": 10,
+            "start": 100,
+            "end": 200
+        }
+    }
+]

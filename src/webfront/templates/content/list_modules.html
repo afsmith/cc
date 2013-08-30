@@ -1,0 +1,149 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% load  %}
+{% block meta_title %}{% trans "Manage content" %}{% endblock %}
+{% block title %}{% trans "Manage content" %}{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/module-management.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script>
+{% endblock %}
+{% block modulesclass %} class="active"{% endblock %}
+{% block content %}
+<div id="moduleManage">
+    <div id="mngMyModulesWrapper">
+      <div class="mngMyModules boxGray">
+        <a id="createModule" class="button-normal button-big-no-width" href="{% url "content-create_module" %}">{% trans "Create new" %}</a>
+        <a id="cloneModule" class="button-normal button-big-no-width" href="#">{% trans "New from a copy" %}</a>
+        <a id="button-activate" class="button-normal button-big-no-width activate operationBtn fright" href="#"><img class="icoActive icon" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Activate" %}</a>
+        <a id="button-reactivate" class="button-normal button-big-no-width operationBtn fright" href="#">{% trans "Re-activate" %}</a>
+        <a id="button-deactivate" class="button-normal button-big-no-width operationBtn fright" href="#"><img class="icoDeactive icon" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Deactivate" %}</a>
+        <a id="button-back_to_draft" class="button-normal button-big-no-width operationBtn operationBtn fright" href="#"><img class="icon ico_inuse" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "To draft" %}</a>
+        <div class="clear"></div>
+				<a id="button-delete" class="button-normal button-big-no-width removeBtn operationBtn fright" href="#"><img class="icoRemove icon" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Remove" %}</a>
+        <a id="button-remove" class="button-normal button-big-no-width removeBtn operationBtn fright" href="#"><img class="icoRemove icon" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Remove" %}</a>
+        <div class="inputWrapper shadow-gray fleft">
+          <input id="search" type="text" value="{% trans "- search by name -" %}"/>
+          <a class="selectButton" href="#"><img class="searchIco" src="{{ MEDIA_URL }}img/blank.gif" alt="" /></a>
+        </div>
+        {% if user.get_profile.is_superadmin  %}
+            <div class="inputWrapper shadow-gray fleft">
+                {{ manageModulesForm.owner }}
+            </div>
+        {% endif %}
+
+        <div class="clear"></div>
+        <span class="resultHead headModuleName">{% trans "Content title" %}</span>
+        <span class="resultHead headModuleAssigned">{% trans "Sent" %}</span>
+        <span class="resultHead headModuleStatus">{% trans "Active" %}</span>
+
+        <ul class="myModules result shadow-gray list"></ul>
+        <a id="editModule" class="button-normal button-big-no-width fright" href="#">{% trans "Continue editing" %}</a>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div id="mngMyModulesDetailsWrapper">
+      <div class="preview"></div>
+      <h3 class="fleft">{{ form.title.label }}</h3>
+      <div class="inputWrapper titleWrapper shadow-gray fleft">
+        {{ form.title }}
+      </div>
+      <dl class="infoContainer">
+        <dt>{% trans "Created" %}:</dt><dd id="moduleCD"></dd>
+        <dt id="moduleMD_wrapper">{% trans "Modified" %}:</dt><dd id="moduleMD"></dd>
+        <dt id="modulePD_wrapper">{% trans "Published" %}:</dt><dd id="modulePD"></dd>
+        <dt id="moduleDD_wrapper">{% trans "Deactivated" %}:</dt><dd id="moduleDD"></dd>
+      </dl>
+      <dl class="infoContainer" style="margin-left: 0">
+        <dt>{{ form.allow_download.label }}:</dt><dd>{{ form.allow_download }}</dd>
+        <dt>{{ form.allow_skipping.label }}:</dt><dd>{{ form.allow_skipping }}</dd>
+        {% if show_sign_off %}
+        <dt>{{ form.sign_off_required.label }}:</dt><dd>{{ form.sign_off_required }}</dd>
+        {% endif %}
+      </dl>
+
+      <div class="clear"></div>
+
+<!--       <ul class="formList">
+          <li class="date">
+              <label>{{ form.allow_download.label }}</label>
+              {{ form.allow_download }}
+          </li>
+          <li class="date">
+          	<label> {% trans "Allow skipping" %}:</label>
+          	{{ form.allow_download }}
+          </li>
+      </ul> -->
+
+
+<!--  Moduelobjective    <h3>{{ form.objective.label }}</h3>
+      <div class="inputWrapper shadow-gray textarea fleft">
+        {{ form.objective }}
+      </div> -->
+
+      <div class="clear"></div>
+
+      {% if settings.SALES_PLUS %}
+      <h3>{{ form.completion_msg.label }}</h3>
+      <div class="inputWrapper shadow-gray textarea fleft">
+            {{ form.completion_msg }}
+      </div>
+      {% endif %}
+
+      <div class="clear"></div>
+
+      <h3>{{ form.language.label }}</h3>
+      <div id="moduleLanguageWrapper" class="inputWrapper selectWrapper shadow-gray fleft">
+        {{ form.language }}
+      </div>
+
+{#      <div class="clear"></div>#}
+{#      #}
+{#      <ul class="formList">#}
+{#        <li class="date">#}
+{#          <label>{{ form.expires_on.label }}</label>#}
+{#          {{ form.expires_on }}#}
+{#        </li>#}
+{#      </ul>#}
+
+      <div class="clear"></div>
+
+      <h3>{% trans "Can be sent to" %}</h3>
+      <ul id="tagList" class="taglist blueList"></ul>
+      <div class="clear"></div>
+      <div class="inputWrapper shadow-gray fleft">
+        <select id="groupList" class="selectBoxJs">
+          <option value="-1">{% trans "- choose group -" %}</option>
+          <option value="-2">{% trans "-- All groups --" %}</option>
+          {% for group in my_groups %}
+            <option value="{{ group.id }}">{{ group.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <a id="addGroup" class="button-normal button-big-no-width addBtn" href="#">{% trans "Add group" %}</a>
+      {% if user.get_profile.is_superadmin %}
+	       <div class="superadmin">
+	           <input id="showMy" type="checkbox"/><label for="showMy">{% trans "My groups" %}</label>
+	       </div>
+           <select id="myGroupList">
+                <option value="-1">{% trans "-- no group selected --" %}</option>
+                {% for group in groups %}
+                    <option class="" value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+	  {% endif %}
+      <div class="clear"></div>
+      <h3>{% trans "Sent to:" %}</h3>
+      <ul id="assignmentList" class="taglist blueList"></ul>
+      <div class="clear"></div>
+<!--      <a id="moduleAssignments" class="button-normal button-big-no-width" href="#">{% trans "Change assignments" %}</a> -->
+      <div class="formFooter">
+          <div class="separator"></div>
+          <!-- <br /><br /> --><a id="moduleSave" class="button-blue assignmentsBtn" href="#">{% trans "Save changes" %}</a>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+</div>
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/init_ckeditor.js"></script>
+{% endblock %}

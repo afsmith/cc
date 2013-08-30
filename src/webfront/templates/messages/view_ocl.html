@@ -1,0 +1,42 @@
+{% extends "messages/view.html" %}
+{% load i18n %}
+
+{% block messageView %}
+<div class="messageView boxWhite" style="height: 270px;">
+  <div class="msgHeader">
+    <p>{% trans "From" %}: <span>{{ message.sender.first_name }} {{ message.sender.last_name }}</span></p>
+    <p>{% trans "To" %}: <span>{{ message.recipient.first_name }} {{ message.recipient.last_name }}</span></p>
+  </div>
+  <div class="msgContent">
+    <h4 class="title">{{ message.subject}}</h4>
+    <div class="text">{{ message.body|linebreaksbr}}</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block ocl_expiration %}
+{% with message.messageprofile_set.all|first as messageprofile %}
+<div class="oclExpiration boxWhite">
+    <ul class="formListOCL fleft">
+        <li class="date">
+            <label><span class="fleft">{% trans "Expiration date" %}</span>
+                <input disabled="true" type="text" id="datepicker" name="expires_on" 
+                    value="{% if messageprofile.ocl.expires_on %}{{messageprofile.ocl.expires_on|date:'Y-m-d'}}{% endif %}" />
+            </label>
+                <a id="setExpirationDate" href="{% url "management-ocl_expire" messageprofile.ocl.id %}" class="button-normal">{% trans "Save changes" %}</a>
+        </li>
+    </ul>
+</div>
+{% endwith %}
+{% endblock %}
+
+{% block buttons %}
+<div class="buttons">
+    {% ifequal message.sender.pk user.pk %}
+    {% with message.messageprofile_set.all|first as messageprofile %}
+    <a id="oclExpireNow" href="{% url "management-ocl_expire" messageprofile.ocl.id %}" class="button-normal">{% trans "Expire now" %}</a>
+    {% endwith %}
+    <a id="resendMessage" href="{% url "messages_resend" message.id %}" class="button-normal">{% trans "Resend" %}</a>
+  {% endifequal %}
+</div>
+{% endblock %}

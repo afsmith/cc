@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>{{ title }}</title>
+
+</head>
+<body>
+        {% if result.errors %}
+        <table>
+            <tr>
+                <th>Error messages</th>
+            </tr>
+            {% for error in result.errors %}
+            <tr>
+                <td>
+                    {{ error }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            {% if result.infos %}
+            <table>
+            <tr>
+                <th>
+                    {% trans "Processed" %} {{ result.row_num }} {% trans "rows" %}
+                </th>
+            </tr>
+            <tr>
+                <th>Import messages</th>
+            </tr>
+            {% for info in result.infos %}
+            <tr>
+                <td>
+                    {{ info }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tr>
+            </table>
+            {% endif %}
+        {% endif %}
+
+</body>
+</html>

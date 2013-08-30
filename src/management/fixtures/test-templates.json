@@ -1,0 +1,163 @@
+[
+    {
+        "pk": 1,
+        "model": "messages_custom.mailtemplateparam",
+        "fields": {
+            "pattern": "[password]"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "messages_custom.mailtemplateparam",
+        "fields": {
+            "pattern": "[username]"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "messages_custom.mailtemplateparam",
+        "fields": {
+            "pattern": "[groupname]"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "messages_custom.mailtemplateparam",
+        "fields": {
+            "pattern": "[moduletitle]"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Goodbye message",
+            "default": "Your account in the e-Learning platform system has been deleted.\n\nBest regards\ne-Learning Platform team ",
+            "content": "Your account in the e-Learning platform system has been deleted.\n\nBest regards\ne-Learning Platform team ",
+            "subject": "Message from the e-Learning Platform system.",
+            "default_subject": "Message from the e-Learning Platform system.",
+            "params": [],
+            "type": "EMAIL",
+            "description": "This message is sent to the users when they have been removed from the system.",
+            "identifier": "GOODBYE"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Welcome message",
+            "default": "Welcome to the e-Learning Platform!\nYour login: [username]\nYour password: [password]\n\nBest regards\ne-Learning Platform team",
+            "content": "Welcome to the e-Learning Platform!\nYour login: [username]\nYour password: [password]\n\nBest regards\ne-Learning Platform team",
+            "subject": "Message from the e-Learning Platform system.",
+            "default_subject": "Message from the e-Learning Platform system.",
+            "params": [
+                1,
+                2
+            ],
+            "type": "EMAIL",
+            "description": "This message is sent to the users when they have been added to the system.",
+            "identifier": "WELCOME"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Welcome message",
+            "default": "You became a member of the group: [groupname]",
+            "content": "You became a member of the group: [groupname]",
+            "subject": "You become a member of a new group!",
+            "default_subject": "You become a member of a new group!",
+            "params": [
+                3
+            ],
+            "type": "INT",
+            "description": "This message is sent to the users when they have been added to the group.",
+            "identifier": "WELCOME"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Reset passwords message",
+            "default": "Your password has been reset.\n\nYour new password is: [password]\n\nBest regards\ne-Learning Platform team",
+            "content": "Your password has been reset.\n\nYour new password is: [password]\n\nBest regards\ne-Learning Platform team",
+            "subject": "Message from the e-Learning Platform system.",
+            "default_subject": "Message from the e-Learning Platform system.",
+            "params": [
+                1
+            ],
+            "type": "INT",
+            "description": "This message is sent to the users when their password has been reset.",
+            "identifier": "PASSWORD"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Edit user's data",
+            "default": "Your data in the e-learning Platform system has been changed.",
+            "content": "Your data in the e-learning Platform system has been changed.",
+            "subject": "Message from the e-Learning Platform system",
+            "default_subject": "Message from the e-Learning Platform system",
+            "params": [],
+            "type": "EMAIL",
+            "description": "Internal welcoming message.",
+            "identifier": "EDIT_DATA"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Receive the ‘Group manager’ right",
+            "default": "You received the right to manage the group: [groupname]",
+            "content": "You received the right to manage the group: [groupname]",
+            "subject": "You become a manager of a new group!",
+            "default_subject": "You become a manager of a new group!",
+            "params": [
+                3
+            ],
+            "type": "INT",
+            "description": "This message is sent to the admins when they become a manager of a group.",
+            "identifier": "ADD_RIGHT"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Assign a new lesson",
+            "default": "The new lesson: [moduletitle] has been assigned to your group: [groupname].",
+            "content": "The new lesson: [moduletitle] has been assigned to your group: [groupname].",
+            "subject": "You have a new lesson in the e-Learning system!",
+            "default_subject": "You have a new lesson in the e-Learning system!",
+            "params": [
+                3,4
+            ],
+            "type": "EMAIL",
+            "description": "Internal welcoming message.",
+            "identifier": "ADD_ASSIGNMENT"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "messages_custom.mailtemplate",
+        "fields": {
+            "name": "Goodbye message",
+            "default": "You are no longer a member of the group: [groupname]",
+            "content": "You are no longer a member of the group: [groupname]",
+            "subject": "Your group membership was cancelled.",
+            "default_subject": "Your group membership was cancelled.",
+            "params": [
+                3
+            ],
+            "type": "INT",
+            "description": "This message is sent to the users when they have been removed from the group.",
+            "identifier": "GOODBYE"
+        }
+    }
+]

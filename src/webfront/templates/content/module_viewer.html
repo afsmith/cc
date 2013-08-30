@@ -1,0 +1,40 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% block meta_title %}{{ course.title }}{% endblock %}
+{% block title %}{{ course.title }}{% endblock %}
+{% block js_globals %}var moduleID = {{ course.id|default:"null" }};{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/module-viewer.js"></script>
+{% endblock %}
+{% block bodyclass %} class="userView"{% endblock %}
+{% block usermodulesclass %} class="active"{% endblock %}
+{% block content %}
+    <div class="boxGray" id="moduleViewer">
+	    <div id="videoWrapper">
+	    	<div id="video"></div>
+	    </div>
+	    <div class="hr"></div>
+	    <div class="moduleWrapper" id="moduleUserWrapper">
+	        <div class="scrollableWrapper">
+	          <div  id="moduleLeft" class="leftMargin margin prev">
+	            <a class="prev browse left"></a>
+	          </div>
+	          <div id="moduleWrapper">
+	            <div id="module" class="shelf">
+	              <ul id="moduleList"></ul>
+	            </div>
+	          </div>
+	          <div id="moduleRight" class="rightMargin margin next">
+	            <a class="next browse right"></a>
+	          </div>
+	        </div>
+	        <div class="hr"></div>
+	      </div>
+    </div>
+    {% if course.sign_off_required %}
+    <a id="courseSignOff" class="button-orange fright" {% if not show_sign_off_button %}style="display: none;"{%endif%}
+        href="{% url "content-sign_off_module" course.id %}">{% trans "Sign off" %}</a>
+    {% endif %}
+<!--    <a id="courseObjective" class="button-orange fright" href="#">{% trans "Module objective" %}</a> -->
+    <div class="hr"></div>
+{% endblock %}

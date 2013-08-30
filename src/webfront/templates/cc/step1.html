@@ -1,0 +1,40 @@
+{% extends 'base_template2.html' %}
+
+{% load extras i18n %}
+
+{% block content %}
+    <div class="row">
+        <div class="span6 center">
+            <form id="js-messageForm" action="{% url "home" %}" method="POST">{% csrf_token %}
+                {% for field in message_form %}
+                    {{ field.label_tag }}
+                    <p {% if field.errors %}class="alert alert-error"{% endif %}>{{ field.errors.as_text }}</p>
+                    {{ field }}
+                {% endfor %}
+
+                <ul id="file_list"></ul>
+            </form>
+
+            <form id="js-uploadFileForm" action="{% url "upload_file" %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <p style="width:125px;float:left;">Add attachments</p>
+                {{ import_file_form.file }}
+                <button id="js-addFile" class="btn">{% trans "Add file" %}</button>
+            </form>
+
+            <button id="js-submitMessageForm" class="btn btn-large btn-success">Send</button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block additional_css %}
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/bootstrap-tokenfield.css">
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{{ MEDIA_URL }}js/jquery.form.js"></script>
+    <script src="{{ MEDIA_URL }}js/jquery.custom.file.input.js"></script>
+    <script src="{{ MEDIA_URL }}js/vendor/bootstrap-tokenfield.min.js"></script>
+
+    <script src="{{ MEDIA_URL }}js/main.js"></script>
+{% endblock %}

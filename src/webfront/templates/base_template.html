@@ -1,0 +1,106 @@
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>{{ TITLE }} {% block meta_title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/zero.css" />
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/index.css" />
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.9.0.custom.css" />
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/jquery.treeview.css" />
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/player.css" />
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/print.css" media="print" />
+    
+    <script type="text/javascript">
+       var mediaURL = "{{ MEDIA_URL }}";
+       var siteLanguage = "{{ request.session.django_language }}";
+       {% block js_globals %}{% endblock %}
+       if(typeof moduleID == 'undefined')
+           var moduleID = null;
+    </script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/swfobject.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.9.0.custom.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.nyroModal.custom.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.selectBox.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.escapify.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/json2.js"></script>
+    {% if request.session.django_language %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/locale_{{ request.session.django_language }}.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.ui.datepicker-{{ request.session.django_language }}.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-timepicker-{{ request.session.django_language }}.js"></script>
+    {% else %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/locale.js"></script>
+    {% endif %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/player.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ing.lib.js"></script>
+    {% block js_scripts %}{% endblock %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/data.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/objSort.js"></script>
+	<!--[if IE]><!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>--><![endif]-->
+</head>
+<body{% block bodyclass %}{% endblock %}>
+  <div id="top">
+{% block menu_wrapper %}
+    <div id="menuWrapper">
+      <div class="wrapper">
+        <strong><a href="/">
+        
+        <div id="logo_title" style="background-image: url('')"></div>
+        
+        {% endif %}
+        </a></strong>
+        <a id="messagesBadge" class="{% if messages_inbox_count < 1 %}empty{% endif %}" href="{% url "messages_inbox" %}" title="{% trans "Messages" %}">
+						{% if messages_inbox_count > 0 %}
+								<span>{{ messages_inbox_count }}</span>
+						{% endif %}
+				</a>
+        <ul>
+        	{% if user.get_profile.role == 30 %}
+        		<li{% block userstatusclass %}{% endblock %}><a href="/"><img id="menuStatus" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Home" %}</a></li>
+<!--   Removed for Simplicity          		<li{% block usermodulesclass %}{% endblock %}><a href="#"><img id="menuModules" class="continueCourse" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Continue Module" %}</a></li> -->
+
+<!--   Removed for Simplicity       		<li{% block usernotepadclass %}{% endblock %}><a href="{% url "notepad-notepad" %}"><img id="menuNotepad" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Notepad" %}</a></li> -->
+          	{% else %}
+        		<li{% block statusclass %}{% endblock %}><a href="/"><img id="menuStatus" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Dashboard" %}</a></li>
+          	    <li{% block contentclass %}{% endblock %}><a href="{% url "content-files_manage" %}"><img id="menuContent" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Manage files" %}</a></li>
+          		<li{% block modulesclass %}{% endblock %}><a href="{% url "content-manage_modules" %}"><img id="menuModules" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Manage content" %}</a></li>
+          		<li{% block assignmentsclass %}{% endblock %}><a href="{% url "content-assign_module" %}"><img id="menuAssignments" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Send" %}</a></li>
+          		<li{% block administrationclass %}{% endblock %}><a href="{% url "administration-dashboard" %}"><img id="menuAdministration" src="{{ MEDIA_URL }}img/blank.gif" alt="" />{% trans "Administration" %}</a></li>
+          	{% endif %}
+          <li>&nbsp;</li>
+        </ul>
+      </div>
+    </div>
+{% endblock %}
+  </div>
+    {% block top_content %}{% endblock %}
+    {% block left_content %}{% endblock %}
+    <div class="wrapper">
+      <div id="userBadge">
+          <!-- <a id="newMessages" href="{% url "messages_inbox" %}">{{ messages_inbox_count }}</a> -->
+          <a href="{% url "management-user_profile" %}"><span id="username">{{ user.first_name }} {{ user.last_name }}</span></a>
+          {% block login_controller %}
+          <a href="{% url "django.contrib.auth.views.logout" %}" id="logout">{% trans "Log out" %}</a>
+          {% endblock %}
+      </div>
+      <div class="hr"></div>
+      <div class="dbMiddle">
+        <h1>{% block title %}{% endblock %}</h1>
+        {% if request.get_full_path != '/' %}
+         <a class="close" href="/{% block close_url %}{% endblock %}"></a>
+        {% endif %}
+        <div class="separator"></div>
+        {% block content %}{% endblock %}
+        <div class="hr"></div>
+      </div>
+    </div>
+    {% block right_content %}{% endblock %}
+    {% block bottom_content %}{% endblock %}
+    <div id="footer">
+    	
+      &copy;
+    </div>
+</body>
+</html>

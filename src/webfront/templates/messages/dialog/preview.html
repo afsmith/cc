@@ -1,0 +1,15 @@
+{% load i18n %}
+<div class="modalContent" style="width: 640px;">
+  <h1>{% trans "Preview" %}</h1>
+  <a class="close customModalClose customModalCloseButton" href="#"></a>
+  <div class="separator"></div>
+	<div class="nyroModalWrapper">
+	    <span class="header">{% trans "Email message" %}</span>
+	    <div class="notificationMessage topWideContainer boxGray">
+	        <div id="messageTemplate" style="display: none">{{ notificationBody }}</div>
+	        <iframe class="whiteBox shadow-gray big">
+	        </iframe>
+	    </div>
+	</div>
+  <div class="hr"></div>
+</div>

@@ -1,0 +1,14 @@
+{% extends "messages/box.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Messages - Inbox" %}{% endblock %}
+{% block title %}{% trans "Messages" %}{% endblock %}
+{% block inboxactive %} active"{% endblock %}
+{% block row_content %}
+  <p>
+  <input type="checkbox" class="messageToRemove" value="{{ message.id }}" />
+  {{ message.subject }}
+  </p>
+  <p>{% trans "From" %}: {{ message.sender.first_name }} {{ message.sender.last_name }}</p>
+  <p class="date">{{ message.sent_at|date:'Y-m-d H:i' }}</p>
+{% endblock %}
+{% block message_filter_path %}{% url "messages_inbox" %}{% endblock %}

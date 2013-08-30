@@ -1,0 +1,79 @@
+[
+    {
+        "pk": 1,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 1,
+                "group": 1,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 2,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 2,
+                "group": 1,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 3,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 1,
+                "group": 3,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 4,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 3,
+                "group": 2,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 4,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 300,
+                "group": 2,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 5,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 3,
+                "group": 1,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    },
+    {
+        "pk": 6,
+        "model": "content.coursegroup",
+        "fields":
+            {
+                "course": 4,
+                "group": 1,
+                "assigner": 1,
+                "assigned_on": "2011-01-25"
+            }
+    }
+]

@@ -1,0 +1,77 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Recipient Status" %}{% endblock %}
+{% block title %}{% trans "Recipient Status" %}{% endblock %}
+{% block js_globals %}var moduleID = {{ course.id|default:"null" }};{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/user-progress.js"></script>
+{% endblock %}
+{% block statusclass %} class="active"{% endblock %}
+{% block content %}
+<div class="contentWrapper">
+    <h2 class="courseTitle fleft progress{{ module_ratio }}">
+      {{ course.title }} ({% trans "group" %}: {{ group.name }} )
+    </h2>
+    <div class="clear"></div>
+	<div id="usersListWrapper">
+	    <div class="boxGray">
+		    <form id="usersFilter">
+		      <div class="inputWrapper shadow-gray" style="margin-bottom: 16px">
+		        <input id="userFilter" type="text" value="{% trans "- search by name -" %}">
+		        <a class="selectButton" href="#"><img class="searchIco" src="{{ MEDIA_URL }}img/blank.gif" alt="" ></a>
+		      </div>
+		    </form>
+		    <span class="resultHead userName">{% trans "Recipient" %}</span>
+		    <span class="resultHead completion">{% trans "Completion" %}</span>
+		    <form id="usersListForm">
+			    <ul id="usersList" class="result shadow-gray itemsList">
+			    {% for user in users %}
+			        <li id="progress_{{ group.id }}_{{ user.data.id }}" class="{% cycle 'odd' 'even' %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last {% endif %}" value="{{ user.data.id }}" my_group="{{ group.is_my_group }}">
+			            <span class="userName">
+			                <input class="userSelect" name="{{ user.data.id }}" type="checkbox"> {{ user.data.first_name }} {{ user.data.last_name}}
+	                        {% if status_checkbox_enabled %}
+	                        <div class="hasCard">
+	                            <label for="check_card_{{ group.id }}_{{ user.data.id }}">{% trans "Has card" %}</label>
+	                            <input type="checkbox" id="check_card_{{ group.id }}_{{ user.data.id }}" {% if user.data.get_profile.has_card %}checked="checked"{% endif %}/>
+	                        </div>
+	                        {% endif %}
+			            </span>
+			            <span class="completion">
+			                <div class="progress{{ user.ratio }}"></div>
+			                <div class="tooltip">
+		                         <table>
+		                             <tr><th>{% trans "Username" %}:</th><td>{{ user.data.username }}</td></tr>
+		                             <tr><th>{% trans "First Name" %}:</th><td>{{ user.data.first_name }}</td></tr>
+		                             <tr><th>{% trans "Last name" %}:</th><td>{{ user.data.last_name }}</td></tr>
+                                     {% if settings.SALES_PLUS %}
+		                             <tr><th>{% trans "User IP" %}:</th><td>{% if user.ratio > 0 %}{{ user.ip_count }}{% else %}0{% endif %}</td></tr>
+                                     {% endif %}
+		                             <tr><th>{% trans "E-mail" %}:</th><td>{{ user.data.email }}</td></tr>
+		                             <tr><th>{% trans "Phone" %}:</th><td>{{ user.data.phone }}</td></tr>
+		                             <tr><th>{% trans "Last login" %}:</th><td>{{ user.data.last_login|date:"Y-m-d H:i" }}</td></tr>
+		                             <tr><th>{% trans "Groups" %}:</th><td>
+		                                 {% for group in user.data.groups.all %}
+		                                  {{ group.name }}
+		                                  {% if not forloop.last %}, {% endif %}
+		                                 {% endfor %}
+		                             </td></tr>
+		                         </table>
+		                    </div>
+			            </span>
+			        </li>
+			    {% endfor %}
+			    </ul>
+		    </form>
+	    </div>
+	    <div class="msgSend clear">
+	        <span class="checkAll"><input type="checkbox" id="selectAll" />{% trans "Select all" %}</span>
+	        <a href="#" id="sendMessageToUsers" class="button-normal button-big-no-width">
+	            <img src="{{ MEDIA_URL }}img/blank.gif" class="postIco icon" alt="" style="display: inline;" /><label>{% trans "To 0 people" %}</label>
+	        </a>
+	    </div>
+	</div>   
+	<div id="defaultLabel"><span class="innerText">{% trans "No recipient selected" %}</span></div>
+	<div id="moduleProgressWrapper" class="hidden"></div>
+	<div class="containerEnd"></div>
+</div>
+{% endblock %}

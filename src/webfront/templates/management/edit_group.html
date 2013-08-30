@@ -1,0 +1,16 @@
+{% extends "modal_template.html" %}
+{% load i18n %}
+{% block style %} style="height: 200px; width: 460px;"{% endblock %}
+{% block title %}
+  {% if group %}
+    {% trans "Edit group name" %}
+  {% else %}
+    {% trans "Create new group" %}
+  {% endif %}
+{% endblock %}
+{% block content %}
+<form id="newGroupForm"  action="/management/groups/{% if group %}{{ group.id }}{% else %}create{% endif %}/" method='post'>{% csrf_token %}
+{% include "form_template.html" %}
+<div style="width: 200px; margin: 0px auto;"><a class="button-gray button-big" href="#" style="margin-top: 10px;">{% if group %}{% trans "Save changes" %}{% else %}{% trans "Add new group" %}{% endif %}</a></div>
+</form>
+{% endblock %}

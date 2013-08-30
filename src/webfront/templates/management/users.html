@@ -1,0 +1,106 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Groups &amp; users management" %}{% endblock %}
+{% block title %}{% trans "Groups &amp; users management" %}{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/user-management.js"></script>
+{% endblock %}
+{% block close_url %}administration/{% endblock %}
+{% block administrationclass %} class="active"{% endblock %}
+{% block content %}
+<div id="dashboardWrapper" style="position: relative;">
+{% include "administration/admin_tabs.html" %}
+<div class="boxGray">
+    <div class="dbMiddle">
+		<div id="usersManagement">
+		  <div class="columnContent columnLeft">
+		    <h3>{% trans "All groups" %}</h3>
+		    <div class="groupWrapper">
+		      <div id="allGroups" class="boxGray">
+		        <div class="inputWrapper shadow-gray">
+		          <select name="groups" id="groups" class="selectBoxJs"><option>{% trans "Loading groups" %}...</option></select>
+		        </div>
+		        <div class="inputWrapper shadow-gray">
+		          <input type="text" name="u_narrow" id="narrow" value="{% trans "- search by name -" %}" />
+		          <a class="selectButton" href="#"><img class="searchIco" src="{{ MEDIA_URL }}img/blank.gif" alt="" /></a>
+		        </div>
+		        <div id="grouplistWrapper" class="inputWrapper multipleSelectWrapper shadow-gray">
+		        <select name="grouplist" id="grouplist" multiple="multiple" size="10"><option>{% trans "Loading users" %}...</option></select>
+		        </div>
+		      </div>
+		      <div class="rightArrow" id="move_users" title="{% trans "Add selected to group" %}"></div>
+		    </div>
+		    {% if request.user.get_profile.is_superadmin %}<a class="button-normal button-big-no-width fright" href="#" id="ure"><img class="icoRemove icon" src="/media/img/blank.gif" alt="">{% trans "CSV remove" %}</a>{% endif %}
+		  </div>
+		  <div class="columnContent columnMiddle">
+		    <a class="removeUsers" id="rs" href="#" title="{% trans "Remove selected from group" %}"></a>
+		    <h3>{% trans "My groups" %}</h3>
+		    <div class="groupWrapper {% if user.get_profile.is_superadmin %}isSupeadmin{% endif %}">
+		      <div id="myGroups" class="boxBlue">
+		        <div class="inputWrapper shadow-blue">
+		          <select name="my_groups" id="my_groups" class="selectBoxJs"><option>{% trans "Loading groups" %}...</option></select>
+		        </div>
+		        {% if user.get_profile.is_superadmin %}
+			       <div class="superadmin">
+			           <input id="showMy" type="checkbox" checked="yes" /><label for="showMy"> {% trans "Show only my groups" %} </label>
+			       </div>
+		           <select id="my_groups_tmp" style="display:none;"></select>
+			    {% endif %}
+		        <p class="buttonsWrapper">
+		          <a class="button-normal fleft" href="#" id="nga">{% trans "Add new" %}</a>
+		          <a class="button-disabled" href="#" id="ge">{% trans "Edit" %}</a>
+		          <a class="fright button-disabled" href="#" id="gr"><img class="icoRemove icon" src="/media/img/blank.gif" alt="">{% trans "Remove" %}</a>
+		        </p>
+		        <div class="inputWrapper shadow-blue">
+		          <input type="text" name="u_narrow2" id="narrow2" value="{% trans "- search by name -" %}" />
+		          <a class="selectButton" href="#"><img class="searchIco" src="{{ MEDIA_URL }}img/blank.gif" alt="" /></a>
+		        </div>
+		        <div id="userlistWrapper" class="inputWrapper multipleSelectWrapper shadow-blue">
+		        <select name="userlist" id="userlist" multiple="multiple" size="10"><option>{% trans "Loading users" %}...</option></select>
+		        </div>
+		      </div>
+		      <a class="button-blue button-big" href="#" id="anu">{% trans "Add new user" %}</a>
+		      <a class="button-normal button-big-no-width" href="#" id="gex">{% trans "Export to CSV" %}</a>
+		      <a class="button-normal button-big-no-width" href="#" id="gim">{% trans "Import from CSV" %}</a>
+		    </div>
+		  </div>
+		  <div class="columnContent columnRight">
+		    <h3>{% trans "User details" %}</h3>
+		    <div class="groupWrapper">
+		      <div id="userDetails">
+		        <div id="u_details_content"></div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="hr"></div>
+		</div>
+		{% if settings.REGISTRATION_OPEN %}
+		{% if request.user.get_profile.is_superadmin %}
+		<div class="separator"></div>
+		<div id="groupsManagement">
+		  <h3>{% trans "Manage group self registration option" %}</h3><br/>
+		    <div class="groupWrapper">
+		        <div id="available" class="boxGray">
+		            <label>{% trans "Available" %}</label>
+		            <div id="grouplistWrapper" class="inputWrapper multipleSelectWrapper shadow-gray">
+		                <select name="all_group_list" id="all_group_list" multiple="multiple" size="10"><option>{% trans "Loading groups" %}...</option></select>
+		            </div>
+		            <div class="arrow rightArrow" id="enable_self_register" title="{% trans "Enable self-registration" %}"></div>
+		        </div>
+		        <div id="selected" class="boxBlue">
+		            <label>{% trans "Selected" %}</label>
+		            <div class="arrow leftArrow" id="disable_self_register" title="{% trans "Disable self-registration" %}"></div>
+		            <div id="grouplistWrapper" class="inputWrapper multipleSelectWrapper shadow-blue">
+		                <select name="self_register_group_list" id="self_register_group_list" multiple="multiple" size="10"><option>{% trans "Loading groups" %}...</option></select>
+		            </div>
+		        </div>
+		  </div>
+		  <div class="hr"></div>
+		</div>
+<!-- 		<div class="clear"></div> -->
+		{% endif %}
+		{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

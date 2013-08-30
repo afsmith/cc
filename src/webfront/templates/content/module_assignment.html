@@ -1,0 +1,226 @@
+{% extends "base_template.html" %}
+{% load i18n %}
+{% block meta_title %}{% trans "Send" %}{% endblock %}
+{% block title %}{% trans "Send" %}{% endblock %}
+{% block js_scripts %}
+<script type="text/javascript" src="{{ MEDIA_URL }}ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/module-assignment.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.ui.datepicker.clearDate.js"></script>
+{% endblock %}
+{% block assignmentsclass %} class="active"{% endblock %}
+{% block content %}
+      {% csrf_token %}
+          <div id="moduleAssignments">
+            <div id="moduleAssignmentsWrapper">
+              <div id="groupSelectionWrapper" class="topWideContainer">
+                    <div class="boxGray">
+                    {% if settings.SALES_PLUS %}
+                    <label class="header left">{% trans "Select" %}</label>
+                    {% endif %}
+	                  <ul class="left">
+	                    <li class="fleft">
+	                      <div class="inputWrapper shadow-gray fleft{% if not settings.SALES_PLUS %} hidden{% endif %}">
+	                        <select name="type_group" id="type_group" class="selectBoxJs">
+	                            <option value=0>{% trans "Groups" %}</option>
+	                            <option value=1>{% trans "Users" %}</option>
+	                        </select>
+	<!--                        <select name="groups" id="groups" class="selectBoxJs"></select>-->
+	                        </div>
+	<!--                      <a id="addGroup" class="button-normal button-big-no-width">{% trans "Add group" %}</a>-->
+                        </li>
+	                  </ul>
+                    {% if settings.SALES_PLUS %}
+                        <span class="header left">{% trans "to send content" %}</span>
+                    {% endif %}
+                    {% if not settings.SALES_PLUS %}
+                        <span class="header left">{% trans "Select group to send content" %}</span>
+                    {% endif %}
+                    {% if user.get_profile.is_superadmin %}
+                        <div class="superadmin fright">
+                            <label for="showMy">{% trans "Show only my groups" %}</label><input id="showMy" type="checkbox"/>
+                        </div>
+                        <select name="groups" id="my_groups" style="display:none;"></select>
+                    {% endif %}
+                 </div>
+              </div>
+              <div id="nothingSelectedIndicator">{% trans "No group selected" %}</div>
+			  <div id="modulesWrapper">
+			    <div class="tabs">
+			      <ul>
+			        <li class="first">
+			          <span class="left"></span>
+			          <a href="#myModules"><span>{% trans "My content" %}</span></a>
+			          <span class="right"></span>
+			        </li>
+			        <li class="">
+			          <span class="left"></span>
+			          <a href="#allModules"><span>{% trans "Available content" %}</span></a>
+			          <span class="right"></span>
+			        </li>
+			      </ul>
+			    </div>
+			    <div class="modules {% if user.get_profile.is_superadmin %}modulesHigher{% endif %} boxGray">
+<!-- @todo: search form -->
+				<div class="search min">
+			      	<form>
+			      		<ul>
+			      			<li class="hidden">
+			                    <div class="inputWrapper fleft inputMedium shadow-gray">
+			                      <select class="selectBoxJs" id="id_groups">
+			                        <option value="0">{% trans "All groups" %}</option>
+			                        {% for group in groups %}
+			                        <option value="{{ group.id }}">{{ group.name }}</option>
+			                        {% endfor %}
+			                      </select>
+
+                                  {% if user.get_profile.is_superadmin %}
+                                      <select style="display:none;" id="id_groups_all">
+                                        <option value="0">{% trans "All groups" %}</option>
+                                        {% for group in groups %}
+                                        <option value="{{ group.id }}">{{ group.name }}</option>
+                                        {% endfor %}
+                                      </select>
+                                  {% endif %}
+			                    </div>
+			                    
+			                   </li>
+			                   
+			                   <li class='hidden'>
+		
+			                    <div class="inputWrapper fleft inputMedium shadow-gray">
+			                      {{ form.language }}
+			                    </div>
+			                    
+			                    </li>
+			                <li class="always">
+						        <div class="inputWrapper fleft inputLong shadow-gray fleft">
+						          <input id="search" type="text" value="{% trans "- search by name -" %}"/>
+						          <a class="selectButton" href="#"><img class="searchIco" src="{{ MEDIA_URL }}img/blank.gif" alt="" /></a>
+						        </div>
+					        </li>
+
+                        {% comment %}
+                            {% if user.get_profile.is_superadmin %}
+                        {% endcomment %}
+                                <li class='hidden'>
+                                    <div class="inputWrapper fleft inputMedium shadow-gray">
+                                      {{ form.owner }}
+                                    </div>
+                                </li>
+                        {% comment %}
+                            {% endif %}
+                        {% endcomment %}
+                            <li class='always'>
+                                 <span id="showAdvanced" class="defaultLink">{% trans "Show advanced search" %}</span>
+                            </li>
+			       		</ul>
+		              </form>
+				</div>
+				<div class="clear"></div>
+			      <span class="resultHead headModuleCheck"></span>
+			      <span class="resultHead headModuleName">{% trans "Content title" %}</span>
+			      <span class="resultHead headModuleAuthor">{% trans "Author" %}</span>
+			      <ul id="" class="allModules result shadow-gray list hidden">
+			      </ul>
+			      <ul id="" class="myModules result shadow-gray list hidden">			        
+			      </ul>
+			    </div>
+			  </div>
+			  <div id="moduleDetailsWrapper" class="hidden boxGray">
+			     <div class="previewBackContainer"><a href="#">{% trans "Back" %}</a></div>
+			     <div class="previewContent"></div>
+			  </div>
+			  <div id="groupsWrapper">
+			    <div class="groups boxGray">
+                  <!--<ul id="group_list" class="list">-->
+                  <div id="groupsBar" class="hidden">
+                    <div class="fleft" id="groupInformation">
+                        <span>{% trans "Group: " %}</span><span id="groupName"></span>
+                        <a class="button-normal" id="changeGroup" href="#">{% trans "Change" %}</a>
+                    </div>
+                  </div>
+                  <div class="search">
+                     <div class="inputWrapper fleft inputLong shadow-gray fleft" style="width: 180px;">
+                         <input id="searchGroups" type="text" value="{% trans "- search by name -" %}"/>
+                         <a class="selectButton" href="#"><img class="searchIco" src="/media/img/blank.gif" alt=""></a>
+                     </div>
+                     <a class="addUser" id="addNewUser" href="#"><img class="addIco" src="/media/img/addUser.png" alt="" /></a>
+                     <div class="spacer clear"></div>
+                  </div>
+                  <ul class="result shadow-gray list usersList hidden">
+                    {% for user in users %}
+	                    {% if user.get_profile.role > 20 %}
+	                    <li class="{% cycle 'even' 'odd' %}{% if forloop.first %} first{% endif %}{% if forloop.last %} last {% endif %}{% if user.get_profile.is_user_plus %} usr_plus{% endif %}">
+	                    <input type="checkbox" name="select_user" id="id_select_user_{{ user.id }}" value="{{ user.id }}" />
+	                    <label for="id_select_user_{{ user.id }}">{{ user.first_name }} {{ user.last_name }}{{ user.get_profile.get_sales_plus_marker}}</label>
+	                    </li>
+	                    {% endif %}
+                    {% endfor %}
+			      </ul>
+                  <ul class="result shadow-gray list groupsList hidden">
+                    <li class="odd first">
+                        <span id="group_list_-2" class="group_list">{% trans "-- All --" %}</span>
+                    </li>
+                    {% for group in groups %}
+                    <li class="{% cycle 'even' 'odd' %}{% if forloop.last %} last {% endif %}">
+                        <span id="group_list_{{ group.id }}" class="group_list">{{ group.name }}</span>
+                    </li>
+                    {% endfor %}
+			      </ul>
+			      {% if user.get_profile.is_superadmin %}
+			      <ul class="result shadow-gray list allGroupsList hidden">
+                    <li class="odd first">
+                        <span id="group_list_-2" class="group_list">{% trans "-- All --" %}</span>
+                    </li>
+                    {% for group in groups %}
+                    <li class="{% cycle 'even' 'odd' %}{% if forloop.last %} last {% endif %}">
+                        <span id="group_list_{{ group.id }}" class="group_list">{{ group.name }}</span>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <ul id="assigned_group_users" class="result shadow-gray list usersList hidden"></ul>
+                  <div class="spacer clear"></div>
+                  <ul class="formList hidden">
+                  <li>
+                    <label>{% trans "Group" %}</label>
+                    <div class="inputWrapper shadow-gray" style="margin-right: 0; width:161px;">
+                        <input id="id_new_group_name" type="text" />
+                    </div>
+                  </li>
+                  </ul>
+			    </div>
+			  </div>
+              <div id="notifyOptions" class="bottomWideContainer boxGray">
+                  <span class="header">{% trans "Email message" %}</span>
+                  <div class="whiteBox shadow-gray">
+		              <div class="fleft inputMedium bigItem">
+		                  {{ form.send_email }}{{ form.send_email.label }}
+		              </div>
+		              <div class="fleft bigItem">
+		                  <a class="button-normal" id="modulePersonalizeBtn" href="#">{% trans "Edit message" %}</a>
+		              </div>
+		              <div class="spacer clear"></div>
+		              <div class="fleft inputMedium bigItem">
+                          {{ form.ocl }}{{ form.ocl.label }}
+                      </div>
+                      <div class="date fleft bigItem">
+	                      <label><span class="fleft">Expire date:</span>
+	                      <input disabled='true' type="text" id="id_ocl_expires_on" name="expires_on" class="fleft">
+                      </div>
+                      <div class="fleft bigItem">
+                          <input type="checkbox" id="allow_login" name="allow_login" />
+                          <label for="allow_login">{% trans "Allow Log-In" %}</label>
+                      </div>
+                  </div>
+              </div>
+              <div class="spacer clear"></div>
+              <a class="button-normal customModal" id="modulePreviewBtn" href="#">{% trans "Show Preview" %}</a>
+              <div class="spacer clear"></div>
+              <div class="separator"></div>
+	              <a id="as_save" class="button-blue done" href="#">{% trans "Send" %}</a>
+	              <a id="as_cancel" class="button-gray cancel forceHidden" href="/content/modules/assign/">{% trans "Cancel" %}</a>
+              <div class="spacer"></div>
+		    </div>
+          </div>    
+{% endblock %}

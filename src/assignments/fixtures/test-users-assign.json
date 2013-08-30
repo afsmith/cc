@@ -1,0 +1,118 @@
+[
+    {
+        "pk": 1, "model": "auth.group", 
+        "fields": {
+            "name": "Employees", "permissions": []
+        }
+    }, 
+    {
+        "pk": 2, "model": "auth.group", 
+        "fields": {
+            "name": "Sales Dept.", "permissions": []
+        }
+    }, 
+    {
+        "pk": 3, "model": "auth.group", 
+        "fields": {
+            "name": "Operations", "permissions": []
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "management.groupprofile", 
+        "fields": {
+            "self_register_enabled": false
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "management.groupprofile", 
+        "fields": {
+            "self_register_enabled": false
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "management.groupprofile", 
+        "fields": {
+            "self_register_enabled": true
+        }
+    }, 
+    {
+        "pk": 1, "model": "management.userprofile",
+        "fields": {
+            "user": "1", "role": 20,
+            "phone": "4512"
+        }
+    },
+    {
+        "pk": 2, "model": "management.userprofile",
+        "fields": {
+            "user": "2", "role": 10,
+            "phone": "4512"
+        }
+    },
+    {
+        "pk": 3, "model": "management.userprofile",
+        "fields": {
+            "user": "3", "role": 30,
+            "phone": "4512"
+        }
+    },
+    {
+        "pk": 1, "model": "auth.user", 
+        "fields": {
+            "username": "admin",
+            "is_active": true, "is_superuser": false, "is_staff": false, 
+            "first_name": "marek", "last_name": "zegarek",
+            "last_login": "2011-01-12 16:13:16", 
+            "user_permissions": [], 
+            "password": "sha1$59046$805dcdc73fd4f8a9fd270467bc6f4e926824ca3e", 
+            "email": "plato-dev@lists.blstream.net", 
+            "date_joined": "2011-01-07 13:42:01",
+            "groups": [1, 2]
+        }
+    },
+    {
+        "pk": 2, "model": "auth.user", 
+        "fields": {
+            "username": "superadmin",
+            "is_active": true, "is_superuser": false, "is_staff": false, 
+            "first_name": "Super", "last_name": "Man",
+            "last_login": "2011-01-12 16:13:16", 
+            "user_permissions": [], 
+            "password": "sha1$59046$805dcdc73fd4f8a9fd270467bc6f4e926824ca3e", 
+            "email": "plato-dev@lists.blstream.net", 
+            "date_joined": "2011-01-07 13:42:01",
+            "groups": [1, 2]
+        }
+    },
+    {
+        "pk": 3, "model": "auth.user",
+        "fields": {
+            "username": "john",
+            "is_active": true, "is_superuser": false, "is_staff": false, 
+            "first_name": "John", "last_name": "Random",
+            "last_login": "2011-01-12 16:13:16", 
+            "user_permissions": [], 
+            "password": "sha1$59046$805dcdc73fd4f8a9fd270467bc6f4e926824ca3e", 
+            "email": "plato-dev@lists.blstream.net", 
+            "date_joined": "2011-01-07 13:42:01",
+            "groups": [1, 2, 3]
+        }
+    },
+    {
+        "pk": 4, "model": "auth.user",
+        "fields": {
+            "username": "Maklejn",
+            "is_active": true, "is_superuser": false, "is_staff": false,
+            "first_name": "John", "last_name": "McLane",
+            "last_login": "2011-01-12 16:13:16",
+            "user_permissions": [],
+            "password": "sha1$59046$805dcdc73fd4f8a9fd270467bc6f4e926824ca3e",
+            "email": "plato-dev@lists.blstream.net",
+            "date_joined": "2011-01-07 13:42:01",
+            "groups": [4]
+        }
+    }
+]

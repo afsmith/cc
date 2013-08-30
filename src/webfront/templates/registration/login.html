@@ -1,0 +1,52 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+{% load  %}
+
+{% block content_header %}
+<h1>{% trans "Please log-in" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+    <form id="loginForm" action="{% url "auth_login" %}" method="post" class="well">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-info">
+            {%for error in form.non_field_errors %}
+                {{error}}
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% if ocl_expired %}
+            <div class="alert alert-info">
+                {% trans "This link is expired" %}
+            </div>
+        {% endif %}
+
+        <label>{% trans 'Username' %}</label>
+        <input type='text' id='id_username' name='username' />
+        <label>{% trans 'Password' %}</label>
+        <input type='password' id='id_password' name='password'/>
+        <label>{% trans 'Language' %}</label>
+        <select id='id_language' name='language'>
+            {% for lang_id, lang_name in request.session.languages %}
+            <option value="{{ lang_id }}" {% if lang_id == request.session.django_language %} selected="selected" {% endif %}>{{ lang_name }}</option>
+            {% endfor %}
+        </select>
+        
+        <div>
+            <button id="login_button" class="btn btn-primary" href="#" style="margin-top: 10px;">{% trans "Log-in" %}</button>    
+        </div>
+
+        {% if REGISTRATION_OPEN %}
+        <div>
+            <a class="button-gray button-big" href="{# % url "registration_register" %# }" style="margin-top: 10px;">{% trans "Register" %}</a>
+        </div>
+        {% endif %}
+        <div>
+            <a class="button-gray button-big" href="{#% url "auth_password_reset" %#}" style="margin-top: 10px;">{% trans "Lost password" %}</a>
+        </div>
+    </form>
+
+
+{% endblock %}
