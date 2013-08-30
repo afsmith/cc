@@ -3,9 +3,9 @@ import json, re
 from django.test.testcases import TestCase
 from cc.apps.content.course_states import ActiveInUse
 from cc.apps.content.models import Segment
-from plato_common.test_utils import ClientTestCase, TransactionalClientTestCase
-from tracking.models import TrackingEvent, TrackingEventService, module_with_track_ratio
-from tracking.utils import progress_formatter
+from cc.libs.plato_common.test_utils import ClientTestCase, TransactionalClientTestCase
+from cc.apps.tracking.models import TrackingEvent, TrackingEventService, module_with_track_ratio
+from cc.apps.tracking.utils import progress_formatter
 
 class CreateEventTest(ClientTestCase):
     fixtures = ('test-users-tracking.json', "test-segments.json", "test-course-assign.json")

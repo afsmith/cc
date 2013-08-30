@@ -1,7 +1,7 @@
 
 from django.conf.urls.defaults import *
 
-from tracking import views
+from cc.apps.tracking import views
 urlpatterns = patterns('',
     url(r'^events/create/$', views.create_event, name='tracking-create_event'),
     url(r'^events/update/$', views.update_scorm_event, name='tracking-update_event'),

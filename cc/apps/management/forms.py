@@ -13,8 +13,8 @@ from django.contrib.auth import forms as auth_forms
 from django.conf import settings
 from django.contrib.auth import models as auth_models, authenticate
 from django.utils.translation import ugettext_lazy as _
-from management import models
-from management.models import UserProfile
+from cc.apps.management import models
+from cc.apps.management.models import UserProfile
 
 class AuthenticationForm(auth_forms.AuthenticationForm):
     username = forms.CharField(label=_("Username"), max_length=30, required=False)

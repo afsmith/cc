@@ -23,9 +23,9 @@ from django.shortcuts import get_object_or_404
 from cc.apps.content.course_states import ActiveAssign, DeactivatedUsed, Deactivated
 from cc.apps.content.models import Course
 
-from management import forms, models
-from management.models import OneClickLinkToken
-from plato_common.test_utils import ClientTestCase
+from cc.apps.management import forms, models
+from cc.apps.management.models import OneClickLinkToken
+from cc.libs.plato_common.test_utils import ClientTestCase
 
 
 def create_user(username='newuser', role=models.UserProfile.ROLE_USER):
@@ -1316,7 +1316,7 @@ class OneClickLinkExpirationTest(ClientTestCase):
         c = self._get_client_superadmin()
         response = c.post(self.url % 1)
         self.assertEquals(response.status_code, 200)
-        from management.models import OneClickLinkToken
+        from cc.apps.management.models import OneClickLinkToken
         from datetime import date
         ocl = OneClickLinkToken.objects.get(pk=1)
         self.assertTrue(ocl.expired)

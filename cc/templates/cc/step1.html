@@ -1,6 +1,6 @@
 {% extends 'base_template2.html' %}
 
-{% load extras i18n %}
+{% load extras i18n static %}
 
 {% block content %}
     <div class="row">
@@ -28,13 +28,13 @@
 
 
 {% block additional_css %}
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/bootstrap-tokenfield.css">
+    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tokenfield.css' %}">
 {% endblock %}
 
 {% block js_scripts %}
-    <script src="{{ MEDIA_URL }}js/jquery.form.js"></script>
-    <script src="{{ MEDIA_URL }}js/jquery.custom.file.input.js"></script>
-    <script src="{{ MEDIA_URL }}js/vendor/bootstrap-tokenfield.min.js"></script>
+    <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script src="{% static 'js/jquery.custom.file.input.js' %}"></script>
+    <script src="{% static 'js/vendor/bootstrap-tokenfield.min.js' %}"></script>
 
-    <script src="{{ MEDIA_URL }}js/main.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

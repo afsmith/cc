@@ -11,7 +11,7 @@
 
 
 from django.contrib import admin
-from tracking import models
+from cc.apps.tracking import models
 
 
 class TrackingEventAdmin(admin.ModelAdmin):

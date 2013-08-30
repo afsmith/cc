@@ -13,7 +13,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
-from management import views
+from cc.apps.management import views
 
 
 urlpatterns = patterns('',
@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^users/list/$', views.list_users, name='management-list_users'),
     url(r'^users/validate_form/$', views.user_form_validator, name='management-user_form_validator'),
     url(r'^users/create/$', views.create_user, name='management-create_user'),
-    url(r'^users/profile/$', views.user_profile, name='management-user_profile'),
+#    url(r'^users/profile/$', views.user_profile, name='management-user_profile'),
     url(r'^users/password/$', views.user_password_change, name='management-user_password'),
     url(r'^users/(?P<id>\d+)/delete/$',views.delete_user, name='management-delete_user'),
     url(r'^users/delete/$',views.delete_users_from_csv, name='management-delete_users_from_csv'),

@@ -12,7 +12,7 @@
 
 from django.contrib import admin
 
-from management import models
+from cc.apps.management import models
 
 
 class UserGroupProfileAdmin(admin.ModelAdmin):

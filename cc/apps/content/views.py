@@ -40,18 +40,18 @@ import re
 
 from distutils import file_util
 
-from bls_common import bls_django
-from bls_common.bls_django import HttpJsonOkResponse, HttpJsonResponse
+from cc.libs.bls_common import bls_django
+from cc.libs.bls_common.bls_django import HttpJsonOkResponse, HttpJsonResponse
 from cc.apps.content.course_states import InvalidActionError, Active, ActiveAssign, Draft, ActiveInUse, Deactivated, DeactivatedUsed, CourseState
 from cc.apps.content.models import Course, CourseGroup, CourseUser, CourseGroupCanBeAssignedTo, Segment, DownloadEvent, File
 #from administration.models import ConfigEntry
 from cc.apps.content.serializers import _get_language_name
-from management import models as manage_models
-from management.models import OneClickLinkToken
-from plato_common import decorators
-from plato_common.middleware import Http403
+from cc.apps.management import models as manage_models
+from cc.apps.management.models import OneClickLinkToken
+from cc.libs.plato_common import decorators
+from cc.libs.plato_common.middleware import Http403
 #from tagging.utils import bind_tags_with_file, add_if_not_exist
-from tracking.models import TrackingEventService, module_with_track_ratio
+from cc.apps.tracking.models import TrackingEventService, module_with_track_ratio
 #from reports import reports
 
 #from tagging import models as tagging_models

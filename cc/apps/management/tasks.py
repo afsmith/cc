@@ -1,6 +1,6 @@
 from django.conf import settings
 from celery.decorators import task
-from management.models import OneClickLinkToken
+from cc.apps.management.models import OneClickLinkToken
 from datetime import date
 import logging
 

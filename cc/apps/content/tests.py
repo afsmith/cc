@@ -27,8 +27,8 @@ from administration.models import ConfigEntry
 from cc.apps.content.convert import VideoConverter
 from cc.apps.content.models import Segment, File
 
-from management import models as mgmnt_models
-from plato_common.test_utils import ClientTestCase
+from cc.apps.management import models as mgmnt_models
+from cc.libs.plato_common.test_utils import ClientTestCase
 
 from cc.apps.content import convert, models, serializers, utils, tasks, course_states
 from cc.apps.content.course_states import Draft, Active, ActiveAssign, Deactivated, ActiveInUse, DeactivatedUsed

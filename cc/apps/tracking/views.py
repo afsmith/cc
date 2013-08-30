@@ -13,22 +13,22 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 
 from django.conf import settings
-from bls_common import bls_django
-from bls_common.bls_django import HttpJsonOkResponse, HttpJsonResponse, HttpJsonResponse
+from cc.libs.bls_common import bls_django
+from cc.libs.bls_common.bls_django import HttpJsonOkResponse, HttpJsonResponse, HttpJsonResponse
 from cc.apps.content.course_states import ActiveInUse, ActiveAssign, Active
 from cc.apps.content.models import Segment, CourseGroup, Course
-from management.models import UserProfile
-from management.models import OneClickLinkToken
-from tracking.models import TrackingEvent, active_modules_with_track_ratio, ScormActivityDetails, active_modules_with_track_ratio_sorted_by_last_event, TrackingEventService
+from cc.apps.management.models import UserProfile
+from cc.apps.management.models import OneClickLinkToken
+from cc.apps.tracking.models import TrackingEvent, active_modules_with_track_ratio, ScormActivityDetails, active_modules_with_track_ratio_sorted_by_last_event, TrackingEventService
 from django.db import models as db_models
 from django.db.models import Q
-from tracking.utils import progress_formatter
+from cc.apps.tracking.utils import progress_formatter
 
 from datetime import datetime
 
 import urllib
 
-from plato_common import decorators
+from cc.libs.plato_common import decorators
 
 logger = logging.getLogger("tracking")
 

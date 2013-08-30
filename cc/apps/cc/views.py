@@ -14,7 +14,7 @@ from cc.apps.content import utils
 from cc.apps.content.models import File
 from cc.apps.content.forms import FileImportForm
 #from tagging.utils import add_if_not_exist
-from webfront.forms import MessageForm
+from .forms import MessageForm
 
 from annoying.decorators import render_to, ajax_request
 from contextlib import closing

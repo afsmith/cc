@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from django.forms.models import ModelChoiceField
 from django.utils.translation import ugettext_lazy as _
-from management import models as mgmnt_models
+from cc.apps.management import models as mgmnt_models
 
 from cc.apps.content import models
 

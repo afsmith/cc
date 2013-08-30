@@ -81,7 +81,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -157,3 +156,7 @@ LOGGING = {
 }
 
 # other settings
+SALES_PLUS = True
+AVAILABLE_LANGUAGES = {}
+REGISTRATION_OPEN = False
+

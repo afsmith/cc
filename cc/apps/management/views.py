@@ -20,7 +20,7 @@ import os
 from django.contrib.auth import authenticate
 from django.forms.fields import CharField
 from django.views.decorators.csrf import csrf_exempt
-import ldap
+#import ldap
 
 from django import http
 from django.conf import settings
@@ -32,11 +32,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models as db_models, transaction
 from django.db.models.aggregates import Count
 from django.db.models.query_utils import Q
-from django_auth_ldap.backend import LDAPBackend, _LDAPUser, LDAPSettings
+#from django_auth_ldap.backend import LDAPBackend, _LDAPUser, LDAPSettings
 from django.utils import translation
 from django.utils.translation import ugettext as _
-from longerusername.forms import AuthenticationForm
-from bls_common.bls_django import HttpJsonOkResponse, HttpJsonResponse
+from cc.apps.management.forms import AuthenticationForm
+from cc.libs.bls_common.bls_django import HttpJsonOkResponse, HttpJsonResponse
 from cc.apps.content.course_states import ActiveInUse, DeactivatedUsed, Active, ActiveAssign
 
 from cc.apps.content.models import Collection, Course, CourseGroup, File
@@ -48,15 +48,15 @@ from django.shortcuts import render
 
 #from administration import models as admin_models
 #from administration.models import ConfigEntry
-from bls_common import bls_django
-from messages.models import Message
-from management.models import OneClickLinkToken
+from cc.libs.bls_common import bls_django
+#from messages.models import Message
+from cc.apps.management.models import OneClickLinkToken
 #from messages_custom.models import MailTemplate
 #from messages_custom.utils import send_email, send_message
-from plato_common import decorators
-from management import forms, models
+from cc.libs.plato_common import decorators
+from cc.apps.management import forms, models
 #from reports.models import Report
-from tracking.models import TrackingEvent
+from cc.apps.tracking.models import TrackingEvent
 #from reports import reports
 
 
@@ -923,7 +923,7 @@ def user_password_change(request):
 def login_screen(request):
     request.session['languages'] = settings.AVAILABLE_LANGUAGES
     if request.method == 'POST':
-        language = request.POST['language']
+        language = request.POST.get('language') or 'en'
         request.session['django_language'] = language
         translation.activate(language)
         return login(request, authentication_form=AuthenticationForm)

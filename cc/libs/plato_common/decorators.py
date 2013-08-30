@@ -14,7 +14,7 @@ from django import http
 from django.contrib.auth import decorators
 from django.conf import settings
 from django.shortcuts import render
-from management.models import OneClickLinkToken
+from cc.apps.management.models import OneClickLinkToken
 
 
 def _is_admin_or_superadmin(user):
