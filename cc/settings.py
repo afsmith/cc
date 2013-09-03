@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     #--- 3rd party modules ---#
     'south',               # south for DB migration
     'django_extensions',   # django extensions
+    'registration',
 
     # ----- CC APP  ----- #
     'cc.apps.content',
@@ -158,5 +159,6 @@ LOGGING = {
 # other settings
 SALES_PLUS = True
 AVAILABLE_LANGUAGES = {}
-REGISTRATION_OPEN = False
+REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
 

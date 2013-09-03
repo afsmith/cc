@@ -1,89 +1,32 @@
 {% extends "registration/registration_base.html" %}
 {% load i18n %}
 
-
 {% block meta_title %}Register an account{% endblock %}
+
 {% block content %}
-<p>
-{% trans "Please start the registration by entering your username" %} 
+    {% trans "Please start the registration by entering your username" %}
     <form id="signupForm" method='post' action='' class="well">{% csrf_token %}
-        {% if form.non_field_errors %}
-          <div class="error">
-            {%for error in form.non_field_errors %}
-              {{error}}
-            {% endfor %}
-          </div>
-        {% endif %}
-        <ul class="formList">
-            <li>
-                <label>{% trans 'Username' %}</label>
-                <div class="inputWrapper shadow-gray">
-                    {{ form.username }}
-                </div>
-                {{ form.username.errors }}
-            </li>
-            <li>
-                <label>{% trans 'Email' %}</label>
-                <div class="inputWrapper shadow-gray">
-                    {{ form.email }}
-                </div>
-                {{ form.email.errors }}
-            </li>
-            <li>
-                <label>{% trans 'New password' %}</label>
-                <div class="inputWrapper shadow-gray">
-                    {{ form.password1 }}
-                </div>
-                {{ form.password1.errors }}
-            </li>
-            <li>
-                <label>{% trans 'Repeat new password' %}</label>
-                <div class="inputWrapper shadow-gray">
-                    {{ form.password2 }}
-                </div>
-                {{ form.password2.errors }}
-            </li>
-            <li>
-                <label>{% trans 'First name' %}</label>
-                <div class="inputWrapper shadow-gray">
-                    {{ form.first_name }}
-                </div>
-                {{ form.first_name.errors }}
-            </li>
-            <li>
-                <label>{% trans 'Last name' %}</label>
-                <div class="inputWrapper shadow-gray">
-                    {{ form.last_name }}
-                </div>
-                {{ form.last_name.errors }}
-            </li>
-            <li>
-                <label>{% trans 'Language' %}</label>
-                <div class="inputWrapper shadow-gray selectWrapper">
-                    {{ form.language }}
-                </div>
-                {{ form.language.errors }}
-            </li>
-            <li>
-                <label>{% trans 'Token' %}</label>
-                <div class="inputWrapper shadow-gray selectWrapper">
-                    {{ form.token }}
-                </div>
-                {{ form.token.errors }}
-            </li>
-            <li>
-                <label>{% trans 'Group' %}</label>
-                <div class="inputWrapper shadow-gray selectWrapper">
-                    {{ form.group }}
-                </div>
-                {{ form.group.errors }}
-            </li>
-        </ul>
-        <div id="submitWrapper">
-          <a class="button-gray button-big" onclick="$('#signupForm').submit(); return false;" href="#" style="margin-top: 10px;">{% trans "Register" %}</a>
+        {% include "_include_form.html" %}
+            
+        <label>{% trans 'First name' %}</label>
+        <div class="inputWrapper shadow-gray">
+            {{ form.first_name }}
         </div>
-        <div id="submitWrapper">
-            <a class="button-gray button-big" href="{% url "dashboard" %}" style="margin-top: 10px;">{% trans "Cancel" %}</a>
+        {{ form.first_name.errors }}
+            
+        <label>{% trans 'Last name' %}</label>
+        <div class="inputWrapper shadow-gray">
+            {{ form.last_name }}
         </div>
+        {{ form.last_name.errors }}
+    
+        <div>
+            <a class="btn btn-primary" onclick="$('#signupForm').submit(); return false;" href="#" style="margin-top: 10px;">{% trans "Register" %}</a>
+        </div>
+        
+        <div style="margin-top: 10px;">
+            <a class="btn" href="/">{% trans "Cancel" %}</a>
+        </div>
+        
     </form>
 {% endblock %}

@@ -1,6 +1,5 @@
 {% load i18n %}
-{% load  %}
-{% load i18n %}
+
 {% url "registration_activate" activation_key as activate_url %}
 {% blocktrans with site.name as site_name and site.domain as site_domain %}
 Dear {{username}},

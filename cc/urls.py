@@ -12,10 +12,9 @@ urlpatterns = patterns(
     url(r'^$', 'cc.apps.cc.views.home', name='home'),
     url(r'^upload/$', 'cc.apps.cc.views.upload_file', name='upload_file'),
 
-    url(r'^accounts/login/$', 'cc.apps.management.views.login_screen', name="auth_login"),
-    url(r'^accounts/logout/$',
-        'django.contrib.auth.views.logout',
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}),
+    url(r'^accounts/', include('registration.backends.default.urls')),
 )
 
 if settings.DEBUG:

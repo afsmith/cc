@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load  %}
 
 {% comment %}
 **registration/activation_email_subject.txt**
@@ -25,5 +24,5 @@ being used. This template has the following context:
     documentation for the Django sites framework
     <http://docs.djangoproject.com/en/dev/ref/contrib/sites/>`_ for
     details regarding these objects' interfaces.
-{% endcomment %}{% load i18n %}
+{% endcomment %}
 {% blocktrans with site.name as site_name %}Account activation for {{ site_name }}{% endblocktrans %}

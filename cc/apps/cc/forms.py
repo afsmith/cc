@@ -12,8 +12,8 @@ from cc.apps.content.models import File
 
 
 class MessageForm(forms.Form):
-    receivers = forms.CharField(max_length=255, required=True)
     subject = forms.CharField(max_length=255, required=True)
+    receivers = forms.CharField(max_length=255, required=True)
     message = forms.CharField(widget=forms.Textarea, required=True)
     files = forms.CharField(widget=forms.HiddenInput, required=True)
 
