@@ -1,17 +1,16 @@
 {% load i18n %}
 
-{% url "registration_activate" activation_key as activate_url %}
-{% blocktrans with site.name as site_name and site.domain as site_domain %}
-Dear {{username}},
+{% blocktrans %}
+Hello {{ user.username }},
 
-You have created an account for {{ site_name }}, which has to
-be activated. To do this, please follow the following link:
-http://{{ site_name }}{{ activate_url }}
+Thank you for registering for {{ site.name }}. We believe it will help you decrease your time spent on weak leads and increase your conversion rate. 
 
-Please do take note that if your activation does not succeed
-within {{ expiration_days }} days, you will have to restart
-the activation process.
+Your just about ready to get started. 
+
+Click the link below to set your password. Remember if you run into trouble, get confused drop a line to support@kneto.com and we'll see what we can do to help you out. 
+
+http://{% url 'registration_activate' activation_key %}
 
 Best regards,
-The Kneto
+Kneto.
 {% endblocktrans %}
