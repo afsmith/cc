@@ -21,12 +21,12 @@
         {{ form.last_name.errors }}
     
         <div>
-            <a class="btn btn-primary" onclick="$('#signupForm').submit(); return false;" href="#" style="margin-top: 10px;">{% trans "Register" %}</a>
+            <a class="btn btn-success" onclick="$('#signupForm').submit(); return false;" href="#" style="margin-top: 10px;">{% trans "Register" %}</a>
         </div>
         
         <div style="margin-top: 10px;">
-            <a class="btn" href="/">{% trans "Cancel" %}</a>
+            <a class="btn btn-primary" href="/">{% trans "Cancel" %}</a>
         </div>
-        
+
     </form>
 {% endblock %}
