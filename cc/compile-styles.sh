@@ -1,5 +1,5 @@
-MEDIA_PATH=$(cd `dirname $0`'/media' && pwd)
-LESS_FILES_PATH=$MEDIA_PATH'/less_src'
+MEDIA_PATH=$(cd `dirname $0`'/static' && pwd)
+LESS_FILES_PATH=$MEDIA_PATH'/less'
 CSS_OUTPUT_PATH=$MEDIA_PATH'/css' 
 
 if [ ! -d $CSS_OUTPUT_PATH ]
