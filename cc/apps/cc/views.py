@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2013 SudoInteractive
-#
-# Authors: Hieu Nguyen <hieu@sudointeractive.com>
-
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators import http as http_decorators
 from django.core.files import storage
@@ -14,7 +8,7 @@ from cc.apps.content import utils
 from cc.apps.content.models import File
 from cc.apps.content.forms import FileImportForm
 #from tagging.utils import add_if_not_exist
-from .forms import MessageForm
+from cc.apps.messages.forms import MessageForm
 
 from annoying.decorators import render_to, ajax_request
 from contextlib import closing

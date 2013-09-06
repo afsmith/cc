@@ -6,11 +6,7 @@
     <div class="row">
         <div class="span6 center">
             <form id="js-messageForm" action="{% url "home" %}" method="POST">{% csrf_token %}
-                {% for field in message_form %}
-                    {{ field.label_tag }}
-                    <p {% if field.errors %}class="alert alert-error"{% endif %}>{{ field.errors.as_text }}</p>
-                    {{ field }}
-                {% endfor %}
+                {% include "_include_form.html" with form=message_form%}
 
                 <ul id="file_list"></ul>
             </form>
