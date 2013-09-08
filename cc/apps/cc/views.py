@@ -4,10 +4,9 @@ from django.core.files import storage
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-#from cc.apps.content import utils
-#from cc.apps.content.models import File
-#from cc.apps.content.forms import FileImportForm
-#from tagging.utils import add_if_not_exist
+from cc.apps.content import utils
+from cc.apps.content.models import File
+from cc.apps.content.forms import FileImportForm
 from cc.apps.cc_messages.forms import MessageForm
 
 from annoying.decorators import render_to, ajax_request
@@ -25,10 +24,10 @@ def home(request):
             pass
     else:
         message_form = MessageForm()
-    print message_form
+
     return {
         'message_form': message_form,
-        #'import_file_form': FileImportForm(),
+        'import_file_form': FileImportForm(),
     }
 
 
@@ -42,7 +41,7 @@ def upload_file(request):
             with closing(storage.default_storage.open(full_orig_file_path, 'wb')) as fh:
                 for chunk in form.cleaned_data['file'].chunks():
                     fh.write(chunk)
-        return _save_imported_file(
+        return _save_uploaded_file(
             request.user,
             form.cleaned_data['file'].name,
             coping_file_callback
@@ -53,7 +52,7 @@ def upload_file(request):
     }
 
 
-def _save_imported_file(user, orig_filename, coping_file_callback):
+def _save_uploaded_file(user, orig_filename, coping_file_callback):
     if not File.is_supported_file(orig_filename):
         return {
             'status': 'ERROR',
@@ -77,8 +76,6 @@ def _save_imported_file(user, orig_filename, coping_file_callback):
         }
 
     file.save()
-    file.tag_set.add(add_if_not_exist(user.username, is_default=True))
-    file.save()
 
     if file.type == File.TYPE_IMAGE:
         lang = ''
@@ -94,4 +91,3 @@ def _save_imported_file(user, orig_filename, coping_file_callback):
         'file_type': file.type,
         'is_duration_visible': is_duration_visible
     }
-    

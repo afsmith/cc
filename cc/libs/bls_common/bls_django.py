@@ -55,6 +55,3 @@ class CeleryTestRunner(DjangoTestSuiteRunner):
         mocks = os.path.join(
             os.path.dirname(__file__), '..', '..', 'tools', 'mocks')
         os.environ['PATH'] = mocks + os.pathsep + os.environ['PATH']
-
-
-'

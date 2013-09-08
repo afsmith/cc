@@ -49,7 +49,7 @@ $(document).ready(function(){
             $(this).ajaxSubmit({
                 success: function(data) {
                     onSuccessFileImport(data);
-                    clearTimeout(app.config.progress.t);
+                    //clearTimeout(app.config.progress.t);
                     $('#progressWrapper').hide();
                     // $('#cancelUpload').hide();
                 },
@@ -60,7 +60,7 @@ $(document).ready(function(){
 
         $('#progressWrapper').show();
         $('#cancelUpload').show();
-        if(typeof app.config.progress != 'object'){
+        /*if(typeof app.config.progress != 'object'){
             app.config.progress = {};
         }
         app.config.progress.v = 0;
@@ -69,7 +69,7 @@ $(document).ready(function(){
             $('#progress').css({
                 'backgroundPosition': (++app.config.progress.v)+'px 0px'
             });
-        }, 40);
+        }, 40);*/
         return false;
     });
 

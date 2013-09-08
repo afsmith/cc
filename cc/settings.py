@@ -111,19 +111,17 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 
     #--- 3rd party modules ---#
     'south',               # south for DB migration
     'django_extensions',   # django extensions
-    'registration',
+    'registration',        # django registration (Hieu's fork)
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
     'cc.apps.cc_messages',
+    'cc.apps.content',
     #'cc.apps.tracking',
     'cc.apps.cc',          # register cc apps to get the template tags
 )
@@ -158,12 +156,11 @@ LOGGING = {
 }
 
 # other settings
-AUTH_USER_MODEL = 'accounts.CUser'
-ACCOUNT_ACTIVATION_DAYS = 7
 from settings_countries import *
 
-SALES_PLUS = True
+AUTH_USER_MODEL = 'accounts.CUser'
+ACCOUNT_ACTIVATION_DAYS = 7
+
 AVAILABLE_LANGUAGES = {}
-#REGISTRATION_OPEN = True
 
 CONTENT_UPLOADED_DIR = 'cc/media/uploads'

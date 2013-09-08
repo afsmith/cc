@@ -68,6 +68,3 @@ is_user = decorators.user_passes_test(
 is_not_sales_plus = decorators.user_passes_test(
     lambda u: u.is_authenticated() and not u.get_profilen().is_user_plus
 )
-
-
-'
