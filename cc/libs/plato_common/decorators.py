@@ -70,4 +70,4 @@ is_not_sales_plus = decorators.user_passes_test(
 )
 
 
-# vim: set et sw=4 ts=4 sts=4 tw=78:
+'

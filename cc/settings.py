@@ -122,9 +122,10 @@ INSTALLED_APPS = (
     'registration',
 
     # ----- CC APP  ----- #
-    'cc.apps.content',
-    'cc.apps.management',
-    'cc.apps.tracking',
+    'cc.apps.accounts',
+    #'cc.apps.content',
+    #'cc.apps.tracking',
+    'cc.apps.cc',          # register cc apps to get the template tags
 )
 
 # A sample logging configuration. The only tangible logging
@@ -157,11 +158,12 @@ LOGGING = {
 }
 
 # other settings
+AUTH_USER_MODEL = 'accounts.CUser'
+ACCOUNT_ACTIVATION_DAYS = 7
+from settings_countries import *
+
 SALES_PLUS = True
 AVAILABLE_LANGUAGES = {}
-REGISTRATION_OPEN = True
-ACCOUNT_ACTIVATION_DAYS = 7
+#REGISTRATION_OPEN = True
 
 CONTENT_UPLOADED_DIR = 'cc/media/uploads'
-AUTH_PROFILE_MODULE = 'management.UserProfile'
-

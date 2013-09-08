@@ -57,4 +57,4 @@ class CeleryTestRunner(DjangoTestSuiteRunner):
         os.environ['PATH'] = mocks + os.pathsep + os.environ['PATH']
 
 
-# vim: set et sw=4 ts=4 sts=4 tw=78:
+'

@@ -1,4 +1,4 @@
-MEDIA_PATH=$(cd `dirname $0`'/static' && pwd)
+MEDIA_PATH=$(cd `dirname $0`'/cc/static' && pwd)
 LESS_FILES_PATH=$MEDIA_PATH'/less'
 CSS_OUTPUT_PATH=$MEDIA_PATH'/css' 
 

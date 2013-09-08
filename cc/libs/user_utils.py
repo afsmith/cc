@@ -1,221 +1,22 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2010 BLStream Sp. z o.o. (http://blstream.com/)
-#
-# Authors:
-#     Marek Mackiewicz <marek.mackiewicz@blstream.com>
-#     Bartosz Oler <bartosz.oler@blstream.com>
-#
-
-"""Models for application management.
-"""
-
 from django import http
 from django.conf import settings
-from django.contrib.auth.models import Group, User, UserManager
 from django.core.servers.basehttp import FileWrapper
-from django.core.validators import EmailValidator
-from django.conf import settings
-from django.db import models, transaction
+from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
+from cc.apps.accounts.models import CUser as User
 
-
-import codecs, csv
+import codecs
+import csv
 import cStringIO as StringIO
-import cStringIO
-from cc.apps.content import utils
-#from messages_custom.models import MailTemplate
-#from messages_custom.utils import send_email, send_message
-
-class OneClickLinkToken(models.Model):
-
-    user = models.ForeignKey(User)
-    token = models.CharField(default=utils.gen_ocl_token, max_length=30, blank=False)
-    expired = models.BooleanField(db_index=True, default=False)
-    expires_on = models.DateField(_('Expiration date'), null=True, db_index=True)
-    allow_login = models.BooleanField(default=False)
-
-    def __unicode__(self):
-        return '%s[%s][%s]' % (self.user, self.token, self.expires_on)
 
 
+class UnknownFormatError(Exception):
+    def __init__(self, format):
+        self.reason = 'Format %s not supported' % (format,)
 
-class UserGroupProfile(models.Model):
-    """Group-specific user profile.
+    def __str__(self):
+        return self.reason
 
-    Currently group-specific profile is created only for users in Admin role.
-    It's not needed for normal users, and Superusers have full access to all
-    groups anyway.
-    """
-
-    LEVEL_HALF_ADMIN = 10
-    LEVEL_FULL_ADMIN = 20
-    LEVELS = (
-        (LEVEL_HALF_ADMIN, 'Half Admin'),
-        (LEVEL_FULL_ADMIN, 'Full Admin'),
-        )
-
-    user = models.ForeignKey(User, related_name='group_profiles')
-    group = models.ForeignKey(Group, related_name='user_profiles')
-
-    access_level = models.IntegerField(_('Access level'),
-        choices=LEVELS, default=LEVEL_HALF_ADMIN)
-
-    class Meta:
-        unique_together = ('user', 'group')
-
-    def __unicode__(self):
-        return '%s (%s in %s)' % (self.user, self.get_access_level_display(), self.group)
-
-
-class KnetoUserManager(UserManager):
-    """ Custom User model manager
-    """
-
-    def all(self, *args, **kwargs):
-        """ possibility to take in to account
-            SALES_PLUS version view
-        """
-        if settings.SALES_PLUS:
-            return super(UserManager, self).all(*args, **kwargs)
-        else:
-            return super(UserManager, self).all(*args, **kwargs).filter(userprofile__role__lt=40)
-
-    def filter(self, *args, **kwargs):
-        """ possibility to take in to account
-            SALES_PLUS version view
-        """
-        if settings.SALES_PLUS:
-            return super(UserManager, self).filter(*args, **kwargs)
-        else:
-            return super(UserManager, self).filter(*args, **kwargs).filter(userprofile__role__lt=40)
-
-class UserProfileManager(models.Manager):
-    """ Custom User model manager
-    """
-
-    def all(self, *args, **kwargs):
-        """ possibility to take in to account
-            SALES_PLUS version view
-        """
-        if settings.SALES_PLUS:
-            return super(UserProfileManager, self).all(*args, **kwargs)
-        else:
-            return super(UserProfileManager, self).all(*args, **kwargs).filter(role__lt=40)
-
-class UserProfile(models.Model):
-    """Model specifying additional data for users of the system.
-    """
-
-    USERNAME_LENGTH = 299
-    FIRST_NAME_LENGTH = 20
-    LAST_NAME_LENGTH = 30
-    EMAIL_LENGTH = 70
-    PHONE_REGEX = '^[\+]?[ ]?([0-9]{1,})+([ ][0-9]{1,})*$'
-
-    ROLE_SUPERADMIN = 10
-    ROLE_ADMIN = 20
-    ROLE_USER = 30
-    ROLE_USER_PLUS = 40
-
-    ROLES = (
-        (ROLE_SUPERADMIN, ('admin')),
-        (ROLE_ADMIN, _('sender')),
-        (ROLE_USER, _('recipient')),
-        (ROLE_USER_PLUS, _('OCL recipient')),
-    )
-    ROLES_CUTED = (
-        (ROLE_USER, _('recipient')),
-        (ROLE_USER_PLUS, _('OCL recipient')),
-
-    )
-
-    user = models.OneToOneField(User, primary_key=True)
-    role = models.IntegerField(_('User role'), choices=ROLES, db_index=True)
-    phone = models.CharField(_('Phone number'), max_length=20, blank=True)
-    language = models.CharField(_('Language'), choices=settings.LANGUAGES, max_length=7)
-    ldap_user = models.BooleanField(_('User from LDAP'), default=False)
-    has_card = models.BooleanField(_('Has card'), default=False)
-
-    objects = UserProfileManager()
-
-    #class Meta:
-    #    index_together = [['group', 'role']]
-
-    @property
-    def is_superadmin(self):
-        return self.role == self.ROLE_SUPERADMIN
-
-    @property
-    def is_admin(self):
-        return self.role == self.ROLE_ADMIN
-
-    @property
-    def is_user(self):
-        return self.role == self.ROLE_USER
-    @property
-    def is_user_plus(self):
-        return self.role == self.ROLE_USER_PLUS
-
-    def get_user_type(self):
-        if self.role in (self.ROLE_ADMIN, self.ROLE_SUPERADMIN):
-            return 'sender'
-        elif self.role == self.ROLE_USER_PLUS:
-            return 'OCL recipient'
-        else:
-            return 'recipient'
-
-    def get_ldap_marker(self):
-        if self.ldap_user:
-            return '*'
-        else:
-            return ''
-
-    def get_sales_plus_marker(self):
-        if self.role == self.ROLE_USER_PLUS:
-            return '+'
-        else:
-            return ''
-
-    def __unicode__(self):
-        sufix = ''
-        if self.role == self.ROLE_USER_PLUS:
-            sufix = ' +'
-        return "%s %s%s" % (self.user.first_name, self.user.last_name, sufix)
-
-
-class GroupProfile(models.Model):
-    """Extended Group class.
-    
-    self_register_enabled: show/hide group in self_register module group list.
-    """
-    group = models.OneToOneField(Group, primary_key=True)
-    self_register_enabled = models.BooleanField()
-
-    user_count = models.IntegerField(default=0, null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-
-        self.user_count = self.group.user_set.filter(userprofile__role__gt=UserProfile.ROLE_ADMIN).count()
-        super(GroupProfile, self).save(*args, **kwargs)
-
-
-def serialize_user(user):
-    user_serial = {
-        'id': user.id,
-        'name': user.first_name + ' ' + user.last_name + user.get_profile().get_sales_plus_marker(),
-        'role': user.get_profile().role
-    }
-
-    return user_serial
-
-def serialize_group(group):
-    group_serial = {
-        'id': group.id,
-        'name': group.name,
-    }
-
-    return group_serial
 
 def _user_to_dict(user):
     if user is None:
@@ -240,15 +41,8 @@ def _user_to_dict(user):
     }
     if settings.STATUS_CHECKBOX:
         d['has_card'] = profile.has_card
-        
     return d
 
-class UnknownFormatError(Exception):
-    def __init__(self, format):
-        self.reason = 'Format %s not supported' % (format,)
-
-    def __str__(self):
-        return self.reason
 
 class UserExporter(object):
 
@@ -270,7 +64,6 @@ class UserExporter(object):
         self.format = format
         self.group_name = group_name
 
-
     def export_users(self, users):
         result = StringIO.StringIO()
         writer = csv.DictWriter(f=result, fieldnames=_user_to_dict(None).keys())
@@ -287,11 +80,16 @@ class UserExporter(object):
         if self.group_name:
             filename = '%s.csv' % self.group_name
 
-        response = http.HttpResponse(FileWrapper(result), content_type='text/csv')
-        response['Content-Disposition'] = "attachment; filename=\"%s\"" % filename.encode('utf8')
+        response = http.HttpResponse(
+            FileWrapper(result), content_type='text/csv'
+        )
+        response['Content-Disposition'] = (
+            "attachment; filename=\"%s\"" % filename.encode('utf8')
+        )
         response['Content-Length'] = result.tell()
         result.seek(0)
         return response
+
 
 class UserImporter(object):
     """
@@ -304,11 +102,12 @@ class UserImporter(object):
         FORMAT_CSV,
     )
 
-    REQUIRED_FIELDS = ('first_name',
-                       'last_name',
-                       'email',
-                       'username',)
-
+    REQUIRED_FIELDS = (
+        'first_name',
+        'last_name',
+        'email',
+        'username',
+    )
 
     def __init__(self, group, importer, format=FORMAT_CSV):
         """
@@ -324,7 +123,6 @@ class UserImporter(object):
         self.format = format
         self.group = group
         self.importer = importer
-
 
     def _validate_header(self, header):
         """
@@ -350,7 +148,6 @@ class UserImporter(object):
         if missing_values:
             return False, missing_values
         return True, None
-
 
     @transaction.commit_manually
     def import_users(self, users_data, admin, is_sendmail=True):
@@ -381,13 +178,18 @@ class UserImporter(object):
             pass
         users_data.seek(position)
 
-        status_msg = {'infos': [],
-                      'errors': [],
-                      'action': 'add',}
+        status_msg = {
+            'infos': [],
+            'errors': [],
+            'action': 'add',
+        }
 
         lines_num = len(users_data.readlines())
         if lines_num > settings.MANAGEMENT_CSV_LINES_MAX:
-            status_msg['errors'].append(_('Imported file has more than maximal number of lines (%d)')% (settings.MANAGEMENT_CSV_LINES_MAX,))
+            status_msg['errors'].append(
+                _('Imported file has more than maximal number of lines (%d)')
+                % (settings.MANAGEMENT_CSV_LINES_MAX,)
+            )
             transaction.rollback()
             return status_msg
 
@@ -395,16 +197,18 @@ class UserImporter(object):
         reader = UnicodeReader(users_data, dialect=dialect)
         header = reader.next()
 
-        #
         # Check for properly filled header
-        #
         valid, missing = self._validate_header(header)
         if not valid:
-            status_msg['errors'].append(_('Missing required header fields: %s.')% ', '.join(missing))
+            status_msg['errors'].append(
+                _('Missing required header fields: %s.') % ', '.join(missing)
+            )
             transaction.rollback()
             return status_msg
 
-        cust_reader = CustomDictReader(reader=reader,f=users_data,dialect=dialect,fieldnames=header)
+        cust_reader = CustomDictReader(
+            reader=reader, f=users_data, dialect=dialect, fieldnames=header
+        )
         for counter, row in enumerate(cust_reader):
             user = None
             if row['username']:
@@ -413,7 +217,9 @@ class UserImporter(object):
                 except User.DoesNotExist:
                     user = None
             else:
-                status_msg['errors'].append(_('Missing username field in row %d.')%(counter+1))
+                status_msg['errors'].append(
+                    _('Missing username field in row %d.') % (counter+1)
+                )
                 continue
 
             if user is not None:
@@ -425,12 +231,23 @@ class UserImporter(object):
                         user.groups.add(self.group)
                         self.group.groupprofile.save()
                         user.save()
-
-#AFS                        self._send_add_to_group_internal_message(user)
-                        status_msg['infos'].append(_('User %(username)s added to group %(groupname)s.')%{'username':user.username,
-                                                                                                        'groupname':self.group.name,})
+                        #self._send_add_to_group_internal_message(user)
+                        status_msg['infos'].append(
+                            _('User %(username)s added to group %(groupname)s.')
+                            % {
+                                'username': user.username,
+                                'groupname': self.group.name,
+                            }
+                        )
                     else:
-                        status_msg['infos'].append(_('User %(username)s (row %(counter)d) already assigned to this group, skipping.')%{'username':user.username, 'counter':counter+1,})
+                        status_msg['infos'].append(
+                            _('User %(username)s (row %(counter)d) already '
+                              'assigned to this group, skipping.')
+                            % {
+                                'username': user.username,
+                                'counter': counter+1,
+                            }
+                        )
                 #
                 # Checking data of user in database if other data except username was provided.
                 #
@@ -504,7 +321,7 @@ class UserImporter(object):
                 self.group.groupprofile.save()
                 user.save()
 
-                userProfile = UserProfile(role=UserProfile.ROLE_USER, user=user, phone=phone)
+                userProfile = UserProfile(role=UserProfile.ROLE_RECIPIENT, user=user, phone=phone)
                 userProfile.save()
 
 # Not helpful to recive two emails                self._send_add_to_group_internal_message(user)
@@ -549,7 +366,8 @@ class UserImporter(object):
             return True
         except ValidationError:
             return False
-        
+
+
 class UTF8Recoder:
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8
@@ -563,6 +381,7 @@ class UTF8Recoder:
     def next(self):
         return self.reader.next().encode("utf-8")
 
+
 class CustomDictReader(csv.DictReader):
     """
     A DictReader version which replaces standard inner reader property with the
@@ -573,6 +392,7 @@ class CustomDictReader(csv.DictReader):
         csv.DictReader.__init__(self, f, fieldnames=fieldnames, restkey=restkey, restval=restval,
                  dialect=dialect, *args, **kwds)
         self.reader = reader
+
 
 class UnicodeReader:
     """
@@ -591,4 +411,3 @@ class UnicodeReader:
 
     def __iter__(self):
         return self
-
