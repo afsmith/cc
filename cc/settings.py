@@ -123,7 +123,7 @@ INSTALLED_APPS = (
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
-    #'cc.apps.content',
+    'cc.apps.cc_messages',
     #'cc.apps.tracking',
     'cc.apps.cc',          # register cc apps to get the template tags
 )

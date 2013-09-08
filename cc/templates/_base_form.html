@@ -1,0 +1,23 @@
+{% load extras %}
+
+{% if form.non_field_errors %}
+    <div class="alert alert-info">
+    {%for error in form.non_field_errors %}
+        {{error}}
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% for field in form %}
+    {% if not field.is_hidden %}
+        {% if field.field.widget|type == "CheckboxInput" %}
+            <label for="id_{{ field.html_name }}" class="label_checkbox">{{ field }} {{ field.label }}</label>
+        {% else %}
+            {{ field.label_tag }}
+            <p {% if field.errors %}class="alert alert-error"{% endif %}>{{ field.errors.as_text }}</p>
+            {{ field }}
+        {% endif %}
+    {% else %}
+        {{ field }}
+    {% endif %}
+{% endfor %}

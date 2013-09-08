@@ -6,7 +6,7 @@
 {% block content %}
     {% trans "Please start the registration by entering your username" %}
     <form id="signupForm" method='post' action='' class="well">{% csrf_token %}
-        {% include "_include_form.html" %}
+        {% include "_base_form.html" %}
     
         <div>
             <a class="btn btn-success" onclick="$('#signupForm').submit(); return false;" href="#" style="margin-top: 10px;">{% trans "Register" %}</a>

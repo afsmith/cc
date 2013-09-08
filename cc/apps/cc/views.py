@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 #from cc.apps.content.models import File
 #from cc.apps.content.forms import FileImportForm
 #from tagging.utils import add_if_not_exist
-#from cc.apps.messages.forms import MessageForm
+from cc.apps.cc_messages.forms import MessageForm
 
 from annoying.decorators import render_to, ajax_request
 from contextlib import closing
@@ -16,9 +16,8 @@ import os
 
 
 @auth_decorators.login_required
-@render_to('cc/step1.html')
+@render_to('cc/message.html')
 def home(request):
-    return {}
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
@@ -26,7 +25,7 @@ def home(request):
             pass
     else:
         message_form = MessageForm()
-
+    print message_form
     return {
         'message_form': message_form,
         #'import_file_form': FileImportForm(),
