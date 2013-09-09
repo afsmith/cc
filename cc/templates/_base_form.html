@@ -19,5 +19,6 @@
         {% endif %}
     {% else %}
         {{ field }}
+        <p {% if field.errors %}class="alert alert-error"{% endif %}>{{ field.errors.as_text }}</p>
     {% endif %}
 {% endfor %}

@@ -3,6 +3,7 @@ from django.core.validators import validate_email
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Message
+from cc.apps.content.models import File
 
 
 class MessageForm(forms.ModelForm):
@@ -15,33 +16,28 @@ class MessageForm(forms.ModelForm):
             'attachment': forms.HiddenInput(),
         }
 
+        # error_messages is not supported until 1.6
+        '''
         error_messages = {
             'attachment': {
                 'required': _('You need to add one file.'),
             },
         }
+        '''
 
     def clean_receivers(self):
-        receiver_list = self.cleaned_data.get('receivers').split(',')
+        receiver_list = self.cleaned_data['receivers'].split(',')
 
         for email in receiver_list:
             validate_email(email)
 
         return receiver_list
 
-    '''
-    def clean_files(self):
-        file_list = self.cleaned_data.get('files').split(',')
+    def clean_attachment(self):
+        file_id = self.cleaned_data['attachment']
+        if not File.objects.filter(pk=file_id).exists():
+            raise forms.ValidationError(
+                _('File with ID %d does not exist') % file_id
+            )
 
-        for file_id in file_list:
-            if not file_id.isdigit():
-                raise forms.ValidationError(
-                    _('File IDs must be integer')
-                )
-            if not File.objects.filter(pk=file_id).exists():
-                raise forms.ValidationError(
-                    _('File with ID %s does not exist') % file_id
-                )
-
-        return file_list
-    '''
+        return file_id

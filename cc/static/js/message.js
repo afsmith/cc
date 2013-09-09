@@ -14,15 +14,7 @@ $(document).ready(function(){
             var file_name_full = data.file_orig_filename;
 
             $('#file_list').append('<li>' + file_name_full + '</li>');
-
-            $('#id_files').val(function() {
-                var current_val = $(this).val();
-                if (current_val === '') {
-                    return data.file_id;
-                } else {
-                    return current_val + ',' + data.file_id;
-                }
-            });
+            $('#id_attachment').val(data.file_id);
             
             /*$("#fileName").text(t.UPLOAD_COMPLETE + ': ' + data.file_orig_filename);
             $('#manageContentForm input[name="title"]').val(
@@ -38,7 +30,7 @@ $(document).ready(function(){
             }
             //app.data.changed = true;
         } else {
-            $('#js-uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>'+t.ERROR_OCURRED_WITHOUT_DOT + ": " + data["message"]+'</p>')
+            $('#js-uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>'+t.ERROR_OCURRED_WITHOUT_DOT + ": " + data["message"]+'</p>');
             console.log(t.SYSTEM_MESSAGE, t.UNSUPPORTED_FILE_TYPE);
         }
     };
@@ -50,8 +42,9 @@ $(document).ready(function(){
                 success: function(data) {
                     onSuccessFileImport(data);
                     //clearTimeout(app.config.progress.t);
+                    $('#js-submitMessageForm').removeClass('disabled');
                     $('#progressWrapper').hide();
-                    // $('#cancelUpload').hide();
+                    $('#cancelUpload').hide();
                 },
                 dataType: 'json'
             });
@@ -60,20 +53,10 @@ $(document).ready(function(){
 
         $('#progressWrapper').show();
         $('#cancelUpload').show();
-        /*if(typeof app.config.progress != 'object'){
-            app.config.progress = {};
-        }
-        app.config.progress.v = 0;
-        app.config.progress.t = false;
-        app.config.progress.t = setInterval(function(){
-            $('#progress').css({
-                'backgroundPosition': (++app.config.progress.v)+'px 0px'
-            });
-        }, 40);*/
         return false;
     });
 
-    $('#js-submitMessageForm').click(function() {
+    $('#js-submitMessageForm:not(.disabled)').click(function() {
         $('#js-messageForm').trigger('submit');
         return false;
     });
