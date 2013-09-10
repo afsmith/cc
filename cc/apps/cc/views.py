@@ -21,6 +21,11 @@ def home(request):
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
             # TODO
+            # 1. create a course out of the POST request
+            # 2. create users from receivers field
+            # 3. assign course to users / group
+            # 4. create OCL link
+            # 5. send email
             pass
     else:
         message_form = MessageForm()

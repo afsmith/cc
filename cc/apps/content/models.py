@@ -351,24 +351,37 @@ class Course(models.Model):
     Files can belong to one of two tracks.
     """
 
-    groups = models.ManyToManyField(auth_models.Group, through='content.CourseGroup')
-    groups_can_be_assigned_to = models.ManyToManyField(auth_models.Group, through="content.CourseGroupCanBeAssignedTo",
-                                                       related_name="course_can_assign")
+    groups = models.ManyToManyField(
+        auth_models.Group, through='content.CourseGroup'
+    )
+    groups_can_be_assigned_to = models.ManyToManyField(
+        auth_models.Group, 
+        through="content.CourseGroupCanBeAssignedTo",
+        related_name="course_can_assign"
+    )
     title = models.CharField(_('Title'), max_length=150)
     objective = models.TextField(_('Objective'), blank=True)
-    completion_msg = models.TextField(_('Goodbye message'), blank=True, default='Module finished', null=True)
-    state_code = models.IntegerField(_('State code'), default=course_states.Draft.CODE)
+    completion_msg = models.TextField(
+        _('Goodbye message'), blank=True, default='Module finished', null=True
+    )
+    state_code = models.IntegerField(
+        _('State code'), default=course_states.Draft.CODE
+    )
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     expires_on = models.DateField(_('Expiration date'), null=True)
     published_on = models.DateTimeField(_('Publish date'), null=True)
     deactivated_on = models.DateTimeField(_('Deactivated date'), null=True)
     active = models.BooleanField(default=False)
-    language = models.CharField(_('Language'), choices=settings.LANGUAGES, max_length=7)
+    language = models.CharField(
+        _('Language'), choices=settings.LANGUAGES, max_length=7
+    )
     owner = models.ForeignKey(CUser, null=True)
     allow_download = models.BooleanField(_('Allow downloads'), default=False)
     allow_skipping = models.BooleanField(_('Allow skipping'), default=False)
-    sign_off_required = models.BooleanField(_('Sign off required'), default=False)
+    sign_off_required = models.BooleanField(
+        _('Sign off required'), default=False
+    )
 
     def __unicode__(self):
         return self.title
