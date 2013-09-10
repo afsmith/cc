@@ -1,10 +1,12 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from cc.apps.accounts.models import CUser
+
 
 class Message(models.Model):
     subject = models.CharField(_('Subject'), max_length=130)
-    receivers = models.TextField(_('Receivers'))
+    receivers = models.ManyToManyField(CUser)
     cc_me = models.BooleanField(_('CC me'))
     message = models.TextField(_('Message'))
     notify_email_opened = models.BooleanField(_('Notify email opened'))

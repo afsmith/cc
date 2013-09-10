@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-COUNTRIES = (
+COUNTRY_CHOICES = (
+    ('', '----------'),
     ('AF', 'Afghanistan'),
     ('AX', 'Åland Islands'),
     ('AL', 'Albania'),
@@ -245,4 +246,29 @@ COUNTRIES = (
     ('YE', 'Yemen'),
     ('ZM', 'Zambia'),
     ('ZW', 'Zimbabwe'),
+)
+
+
+INDUSTRY_CHOICES = (
+    ('', '----------'),
+    ('industry-automotive-aerospace', 'Automotive & Aerospace'),
+    ('industry-banking-finance', 'Banking & Finance'),
+    ('industry-business-consultancy', 'Business Consultancy'),
+    ('industry-communications', 'Communications'),
+    ('industry-construction', 'Construction'),
+    ('industry-document-management', 'Document Management'),
+    ('industry-education', 'Education'),
+    ('industry-fashion-retail', 'Fashion & Retail'),
+    ('industry-government-national-local', 'Government - National & Local'),
+    ('industry-human-resources-training', 'Human Resources/Training'),
+    ('industry-industrial-engineering', 'Industrial Engineering'),
+    ('industry-insurance', 'Insurance'),
+    ('industry-it-service-software', 'IT Services/Software'),
+    ('industry-legal', 'Legal'),
+    ('industry-libraries', 'Libraries'),
+    ('industry-manufacturing', 'Manufacturing'),
+    ('industry-media-press-publishing', 'Media/Press/Publishing'),
+    ('industry-medical-healthcare', 'Medical/Healthcare'),
+    ('industry-military-defence', 'Military/Defence'),
+    ('industry-transport-logistics', 'Transport/Logistics'),
 )

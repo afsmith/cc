@@ -56,12 +56,15 @@ $(document).ready(function(){
         return false;
     });
 
-    $('#js-submitMessageForm:not(.disabled)').click(function() {
-        $('#js-messageForm').trigger('submit');
+    $('#js-submitMessageForm').click(function() {
+        if (!$(this).hasClass('disabled')) {
+            console.log('jaj');
+            $('#js-messageForm').trigger('submit');
+        }
         return false;
     });
 
-    $('#id_receivers').tokenfield({
+    $('#id_to').tokenfield({
         minLength: 3
     });
 });

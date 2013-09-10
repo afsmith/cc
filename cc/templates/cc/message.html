@@ -3,23 +3,27 @@
 {% load extras i18n static %}
 
 {% block content %}
-    <div class="row">
-        <div class="span6 center">
-            <form id="js-messageForm" action="{% url "home" %}" method="POST">{% csrf_token %}
-                {% include "_base_form.html" with form=message_form%}
+    {% if thankyou_page %}
+        {% trans 'Thank you for sending the message!' %}
+    {% else %}
+        <div class="row">
+            <div class="span6 center">
+                <form id="js-messageForm" action="{% url 'home' %}" method="POST">{% csrf_token %}
+                    {% include '_base_form.html' with form=message_form%}
 
-                <ul id="file_list"></ul>
-            </form>
+                    <ul id="file_list"></ul>
+                </form>
 
-            <form id="js-uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-                <p style="width:125px;float:left;">{% trans "Attachment" %}</p>
-                {{ import_file_form.file }}
-                <button id="js-addFile" class="btn">{% trans "Add file" %}</button>
-            </form>
+                <form id="js-uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <p style="width:125px;float:left;">{% trans 'Attachment' %}</p>
+                    {{ import_file_form.file }}
+                    <button id="js-addFile" class="btn">{% trans 'Add file' %}</button>
+                </form>
 
-            <button id="js-submitMessageForm" class="btn btn-large btn-success disabled">{% trans "Send" %}</button>
+                <button id="js-submitMessageForm" class="btn btn-large btn-success">{% trans 'Send' %}</button>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 

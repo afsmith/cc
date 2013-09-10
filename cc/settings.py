@@ -1,8 +1,4 @@
 from os import path
-try:
-    from local_settings import *
-except ImportError:
-    print 'local_settings.py doesnt exist yet. Make sure you have created it.'
 
 ROOT_PATH = path.join(path.dirname(__file__))
 
@@ -155,8 +151,14 @@ LOGGING = {
     }
 }
 
-# other settings
-from settings_countries import *
+# import local settings
+try:
+    from local_settings import *
+except ImportError:
+    print 'local_settings.py doesnt exist yet. Make sure you have created it.'
+
+# import choices for forms
+from settings_choices import *
 
 AUTH_USER_MODEL = 'accounts.CUser'
 ACCOUNT_ACTIVATION_DAYS = 7
