@@ -19,16 +19,16 @@ from fabric.utils import abort
 
 
 env.test_apps = ' '.join([
-    'administration',
-    'assignments',
-    'content',
-    'management',
-    'messages_custom',
-    'reports',
-    'tagging',
-    'tracking',
-    'self_register',
+	'accounts',
+	'cc',
+	'cc_messages',
+	'content',
+	'managemnt',
+	'messages',
+	'tracking',
+		
     ])
+
 
 env.excludes = './tools/release/excludes'
 
@@ -61,10 +61,10 @@ def test(coverage=False, only=None):
     if only:
         env.test_apps = only
 
-    local('%(_coverage)s ./src/webfront/manage.py test %(test_apps)s' % env, capture=False)
+    local('%(_coverage)s ./manage.py test %(test_apps)s' % env, capture=False)
 
 def add2virtualenv():
-    """Adds $CDW/src to python path.
+    """Adds $CDW/cc to python path.
     """
     env_path = os.environ.get('VIRTUAL_ENV', None)
     if env_path is None:
@@ -75,7 +75,7 @@ def add2virtualenv():
     path = os.path.join(*path)
     # there should be only one matching path
     path = glob.glob(path)[0]
-    path = os.path.join(path, 'plato.pth')
+    path = os.path.join(path, 'cc.pth')
 
     with open(path, 'wb') as fh:
         fh.write(os.path.join(os.path.abspath(env.cwd), 'src'))
@@ -84,7 +84,7 @@ def pylint(only_errors=False):
     """Runs pylint on all modules.
     """
 
-    local('pylint %s --rcfile docs/pylintrc src/webfront src/content'
+    local('pylint %s --rcfile docs/pylintrc cc/webfront cc/content'
         % ('-E' if only_errors else ''),
         capture=False)
 
@@ -103,7 +103,7 @@ def determine_version():
     version = version[1:]
 
     env.version = version
-    env.pkg_name = 'plato-%(version)s' % env
+    env.pkg_name = 'cc-%(version)s' % env
 
 def create_tarball():
     require('version', provided_by=['determine_version'])
@@ -111,27 +111,10 @@ def create_tarball():
     local('git archive --format=tar --prefix=%(pkg_name)s/ HEAD | tar xf -' % env,
         capture=False)
 
-    with cd('src/scorm/ant'):
-        local('ant -Doffline=true buildwar')
-    local('cp src/scorm/package/reload.war %(pkg_name)s/src/scorm' % env)
-
-    with cd('src/scorm/ant'):
-        local('ant -Doffline=true buildjar')
-    local('cp src/scorm/package/reload-import.jar %(pkg_name)s/src/scorm' % env)
-    local('cp -r src/scorm/lib %(pkg_name)s/src/scorm/' % env)
-
-    #
-    with cd('src/reports/engine'):
-	local('ant -Doffline=true')
-    local('mkdir -p %(pkg_name)s/src/reports/engine/target' % env)
-    local('mkdir -p %(pkg_name)s/src/reports/engine/templates' % env)
-    local('cp src/reports/engine/target/plato-reports.jar %(pkg_name)s/src/reports/engine/target' % env)
-    local('cp src/reports/engine/src/main/resources/*.jrxml %(pkg_name)s/src/reports/engine/templates' % env)
-    local('cp src/messages_custom/fixtures/initial_data.json %(pkg_name)s/tools/release/initial_msgs.json' % env)
     #
 
     local('python ./tools/virtualenv.py %(pkg_name)s/ENV' % env)
-    local('%(pkg_name)s/ENV/bin/pip install -r %(pkg_name)s/tools/release/deps.pip' % env)
+    local('%(pkg_name)s/ENV/bin/pip install -r %(pkg_name)s/requirements.txt' % env)
     local('python ./tools/virtualenv.py --relocatable %(pkg_name)s/ENV' % env)
 
     local('cp %(excludes)s %(excludes)s.tmp' % env)
