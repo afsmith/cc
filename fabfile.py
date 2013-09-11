@@ -10,7 +10,7 @@
 """
 
 
-import glob, os
+import glob, os, subprocess
 
 from fabric.api import env, local, run
 from fabric.context_managers import cd
@@ -93,9 +93,12 @@ def release():
     create_tarball()
 
 def determine_version():
-    version = local('git describe --match "v[0-9]*" --abbrev=4 HEAD')
+#    version = local('git describe --match "v[0-9]*" --abbrev=4 HEAD')
+    version=subprocess.check_output(["git", "describe", "--match", "v[0-9]*",
+					 "--abbrev=4", "HEAD"]).rstrip()
     local('git update-index -q --refresh')
-    is_dirty = local('git diff-index --name-only HEAD --')
+#    is_dirty = local('git diff-index --name-only HEAD --')
+    is_dirty = subprocess.check_output(["git", "diff-index", "--name-only", "HEAD", "--"]).rstrip()
     if is_dirty:
         version += '-dirty'
     version = version.replace('-', '.')

@@ -8,8 +8,9 @@
 *.db
 *.class
 *.rdb
+*.tmp
+_build/
 
-docs/_build
 /cc/local_settings.py
 /cc/media/uploads/[A-Za-z0-9]*
 /cc/media/pub/[A-Za-z0-9]*
