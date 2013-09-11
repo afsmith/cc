@@ -1,0 +1,15 @@
+./.coveragerc
+./compile-styles.sh
+./README.rst
+./.gitignore
+./.mailmap
+./fabfile.py
+./html
+./requirements.txt
+./tools/release/excludes
+./tools/release/deps.pip
+./tools/virtualenv*
+./cc/*/fixtures
+./cc/*/tests.py
+./cc/webfront/conf
+./docs
