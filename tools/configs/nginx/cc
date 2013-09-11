@@ -1,0 +1,67 @@
+
+upstream cc_gunicorn {
+        server unix:/var/run/kneto/cc.sock fail_timeout=0;
+}
+
+server {
+
+        listen   80;
+
+        server_name  cc.kneto.com;
+
+        #
+        # Allow uploads up to 100 MB.
+        # Nginx caches whole file in memory, so make sure you have plenty.
+        #
+        client_max_body_size 500m;
+
+        #
+        # To enable Basic Auth uncomment the lines below and create
+        # basic_auth_passwd file using htpasswd tool.
+        #
+        # auth_basic            "Restricted";
+        # auth_basic_user_file  /etc/opt/bls/plato/basic_auth_passwd;
+
+        location /nginx_status {
+                stub_status on;
+                access_log   off;
+                allow 109.74.12.23;
+                deny all;
+                }
+
+
+        access_log  /var/log/kneto/cc/nginx.access.log;
+        error_log  /var/log/kneto/cc/nginx.error.log;
+
+        location / {
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header Host $http_host;
+                proxy_redirect off;
+                proxy_pass http://cc_gunicorn;
+        }
+
+
+        location /media {
+                root /opt/kneto/cc/src/webfront;
+                autoindex on;
+                index off;
+        }
+
+
+        location  /favicon.ico {
+                alias /opt/kneto/cc/media/img/favicon.png;
+        }
+
+
+        #error_page  404  /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        #error_page   500 502 503 504  /50x.html;
+        #location = /50x.html {
+        #       root   /var/www/nginx-default;
+        #}
+}
+
+
+# vim: set noet sw=8 ts=8:
