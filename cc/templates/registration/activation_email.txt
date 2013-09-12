@@ -1,16 +1,15 @@
 {% load i18n %}
 
-{% blocktrans %}
-Hello {{ user.username }},
+{% blocktrans with user.first_name as user_name and site.name as sitename %}
+Hello {{ user_name }},
 
-Thank you for registering for {{ site.name }}. We believe it will help you decrease your time spent on weak leads and increase your conversion rate. 
+Thank you for registering for {{ site_name }}. We believe it will help you decrease your time spent on weak leads and increase your conversion rate. 
 
 Your just about ready to get started. 
 
 Click the link below to set your password. Remember if you run into trouble, get confused drop a line to support@kneto.com and we'll see what we can do to help you out. 
 {% endblocktrans %}
-
-http://{% url 'registration_activate' activation_key %}
+http://{{ site.domain }}{% url 'registration_activate' activation_key %}
 {% blocktrans %}
 Best regards,
 Kneto.
