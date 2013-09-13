@@ -1,16 +1,18 @@
 from django.contrib.auth import decorators as auth_decorators
+from django.contrib.auth.models import Group
 from django.views.decorators import http as http_decorators
 from django.core.files import storage
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.content import utils
-from cc.apps.content.models import File
+from cc.apps.content.models import File, Course
 from cc.apps.content.forms import FileImportForm
 from cc.apps.cc_messages.forms import MessageForm
 
 from annoying.decorators import render_to, ajax_request
 from contextlib import closing
+from datetime import datetime
 import os
 
 
@@ -20,7 +22,13 @@ def home(request):
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
-            message_form.save()
+            print request.user
+            message = message_form.save()
+            message.owner = request.user
+            message.save()
+            group = _create_group(message.receivers.all())
+            _create_course(message, group)
+            # send email
             return {'thankyou_page': True}
     else:
         message_form = MessageForm()
@@ -30,6 +38,20 @@ def home(request):
         'import_file_form': FileImportForm(),
     }
 
+
+def _create_group(user_list):
+    group = Group.objects.create(name=datetime.now())
+    for user in user_list:
+        user.groups.add(group)
+    return group
+
+def _create_course(message, group):
+    Course.objects.create(
+        title=File.objects.get(pk=message.attachment).key,
+        file=File.objects.get(pk=message.attachment),
+        owner=message.owner,
+        group=group
+    )
 
 @auth_decorators.login_required
 @http_decorators.require_POST

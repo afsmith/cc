@@ -23,24 +23,8 @@ class FileAdmin(admin.ModelAdmin):
 
 class CourseAdmin(admin.ModelAdmin):
     search_fields = ('title', 'objective')
-    list_display = ('title', 'created_on', 'updated_on')
-    date_hierarchy = 'created_on'
-
-
-class SegmentAdmin(admin.ModelAdmin):
-    list_display = ('course', 'file', 'track', 'start', 'end', 'playback_mode')
-
-
-class CourseGroupAdmin(admin.ModelAdmin):
-    list_display = ('group', 'course', 'assigner', 'assigned_on')
-
-class SimpleCourseGroup(admin.ModelAdmin):
-    list_display = ('group', 'course')
+    list_display = ('title', 'created_at', 'modified_at')
+    date_hierarchy = 'created_at'
 
 admin.site.register(models.File, FileAdmin)
 admin.site.register(models.Course, CourseAdmin)
-admin.site.register(models.Segment, SegmentAdmin)
-admin.site.register(models.CourseGroup, CourseGroupAdmin)
-admin.site.register(models.CourseGroupCanBeAssignedTo, SimpleCourseGroup)
-
-

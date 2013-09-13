@@ -10,7 +10,7 @@ from cc.apps.accounts.models import CUser
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        exclude = ('receivers',)
+        exclude = ('receivers', 'owner', )
 
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'span6'}),
@@ -18,8 +18,8 @@ class MessageForm(forms.ModelForm):
             'attachment': forms.HiddenInput(),
         }
 
-        # error_messages is not supported until 1.6
         '''
+        # error_messages is not supported until 1.6
         error_messages = {
             'attachment': {
                 'required': _('You need to add one file.'),
@@ -63,10 +63,9 @@ class MessageForm(forms.ModelForm):
             else:  # otherwise create user
                 user = CUser.objects.create_receiver_user(email)
                 receiver_list.append(user.id)
-        print receiver_list
         return receiver_list
 
-    def save(self, commit=True):
+    def save(self):
         # clean up the To data before saving
         self.cleaned_data['to'] = self._fetch_receiver_ids()
         message = super(MessageForm, self).save()
