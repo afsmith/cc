@@ -1,9 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
-#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from cc.apps.accounts.forms import UserCreationForm
-#from cc.apps.accounts.views import CustomRegistrationView
 from registration.backends.default.views import RegistrationView
 
 from django.contrib import admin
@@ -15,7 +13,7 @@ urlpatterns = patterns(
 
     # ----- CC APP  ----- #
     url(r'^$', 'cc.apps.cc.views.home', name='home'),
-    url(r'^upload/$', 'cc.apps.cc.views.upload_file', name='upload_file'),
+    url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
 
     # registration
     url(r'^accounts/register/$',
