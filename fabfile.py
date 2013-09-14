@@ -1,34 +1,18 @@
-# -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2010 BLStream Sp. z o.o. (http://blstream.com/)
-#
-# Authors:
-#     Bartosz Oler <bartosz.oler@blstream.com>
-#
-
-"""Fabric's configuration
-"""
-
-
-import glob, os, subprocess
-
-from fabric.api import env, local, run
-from fabric.context_managers import cd
+from fabric.api import env, local
 from fabric.operations import require
 from fabric.utils import abort
 
+import glob
+import os
+import subprocess
 
 env.test_apps = ' '.join([
-	'accounts',
-	'cc',
-	'cc_messages',
-	'content',
-	'managemnt',
-	'messages',
-	'tracking',
-		
-    ])
-
+    'accounts',
+    'cc',
+    'cc_messages',
+    'content',
+    'tracking',
+])
 
 env.excludes = './tools/release/excludes'
 
@@ -63,6 +47,7 @@ def test(coverage=False, only=None):
 
     local('%(_coverage)s ./manage.py test %(test_apps)s' % env, capture=False)
 
+
 def add2virtualenv():
     """Adds $CDW/cc to python path.
     """
@@ -80,22 +65,27 @@ def add2virtualenv():
     with open(path, 'wb') as fh:
         fh.write(os.path.join(os.path.abspath(env.cwd), 'src'))
 
+
 def pylint(only_errors=False):
     """Runs pylint on all modules.
     """
-
-    local('pylint %s --rcfile docs/pylintrc cc/webfront cc/content'
+    local(
+        'pylint %s --rcfile docs/pylintrc cc/webfront cc/content'
         % ('-E' if only_errors else ''),
-        capture=False)
+        capture=False
+    )
+
 
 def release():
     determine_version()
     create_tarball()
 
+
 def determine_version():
 #    version = local('git describe --match "v[0-9]*" --abbrev=4 HEAD')
-    version=subprocess.check_output(["git", "describe", "--match", "v[0-9]*",
-					 "--abbrev=4", "HEAD"]).rstrip()
+    version = subprocess.check_output([
+        "git", "describe", "--match", "v[0-9]*", "--abbrev=4", "HEAD"
+    ]).rstrip()
     local('git update-index -q --refresh')
 #    is_dirty = local('git diff-index --name-only HEAD --')
     is_dirty = subprocess.check_output(["git", "diff-index", "--name-only", "HEAD", "--"]).rstrip()
@@ -108,13 +98,14 @@ def determine_version():
     env.version = version
     env.pkg_name = 'cc-%(version)s' % env
 
+
 def create_tarball():
     require('version', provided_by=['determine_version'])
 
-    local('git archive --format=tar --prefix=%(pkg_name)s/ HEAD | tar xf -' % env,
-        capture=False)
-
-    #
+    local(
+        'git archive --format=tar --prefix=%(pkg_name)s/ HEAD | tar xf -' % env,
+        capture=False
+    )
 
     local('python ./tools/virtualenv.py %(pkg_name)s/ENV' % env)
     local('%(pkg_name)s/ENV/bin/pip install -r %(pkg_name)s/requirements.txt' % env)
@@ -125,7 +116,3 @@ def create_tarball():
     local('mkdir _build')
     local('tar zcf _build/%(pkg_name)s.tar.gz -X%(excludes)s.tmp %(pkg_name)s' % env)
     local('rm %(excludes)s.tmp' % env)
-
-
-
-

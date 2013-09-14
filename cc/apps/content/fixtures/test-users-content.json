@@ -1,0 +1,50 @@
+[
+    {
+        "pk": 1, "model": "auth.group", 
+        "fields": {
+            "name": "Employees", "permissions": []
+        }
+    }, 
+    {
+        "pk": 2, "model": "auth.group", 
+        "fields": {
+            "name": "Sales Dept.", "permissions": []
+        }
+    }, 
+    {
+        "pk": 3, "model": "auth.group", 
+        "fields": {
+            "name": "Operations", "permissions": []
+        }
+    }, 
+    {
+        "pk": 1, "model": "accounts.cuser",
+        "fields": {
+            "username": "admin", "groups": [1, 2],
+            "is_active": true, "is_superuser": false, "is_staff": false,
+            "first_name": "marek", "last_name": "zegarek",
+            "last_login": "2011-01-12 16:13:16",
+            "user_permissions": [],
+            "password": "sha1$59046$805dcdc73fd4f8a9fd270467bc6f4e926824ca3e",
+            "email": "admin@cc.kneto.com",
+            "country": "VN",
+            "industry": "industry-it-service-software",
+            "date_joined": "2011-01-07 13:42:01"
+        }
+    },
+    {
+        "pk": 3, "model": "accounts.cuser",
+        "fields": {
+            "username": "john", "groups": [1], 
+            "is_active": true, "is_superuser": false, "is_staff": false, 
+            "first_name": "John", "last_name": "Random",
+            "last_login": "2011-01-12 16:13:16", 
+            "user_permissions": [], 
+            "password": "sha1$59046$805dcdc73fd4f8a9fd270467bc6f4e926824ca3e", 
+            "email": "john@cc.kneto.com",
+            "country": "VN",
+            "industry": "industry-it-service-software",
+            "date_joined": "2011-01-07 13:42:01"
+        }
+    }
+]

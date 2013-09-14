@@ -157,11 +157,17 @@ except ImportError:
 # import choices for forms
 from settings_choices import *
 
+# account & registration
 AUTH_USER_MODEL = 'accounts.CUser'
 ACCOUNT_ACTIVATION_DAYS = 7
-
 DEFAULT_FROM_EMAIL = 'admin@cc.kneto.com'
 
-AVAILABLE_LANGUAGES = {}
-
+# files
 CONTENT_UPLOADED_DIR = 'cc/media/uploads'
+CONTENT_AVAILABLE_DIR = 'cc/media/pub'
+FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200
+
+FILE_UPLOAD_HANDLERS = (
+    'cc.apps.content.handlers.MaxFileMemoryFileUploadHandler',
+    'cc.apps.content.handlers.MaxFileTemporaryFileUploadHandler',
+)
