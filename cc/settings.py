@@ -2,9 +2,6 @@ from os import path
 
 ROOT_PATH = path.join(path.dirname(__file__))
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -162,6 +159,8 @@ from settings_choices import *
 
 AUTH_USER_MODEL = 'accounts.CUser'
 ACCOUNT_ACTIVATION_DAYS = 7
+
+DEFAULT_FROM_EMAIL = 'admin@cc.kneto.com'
 
 AVAILABLE_LANGUAGES = {}
 
