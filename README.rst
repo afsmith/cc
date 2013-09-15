@@ -6,7 +6,7 @@ How to run
 
 1. Clone the repo
 2. Make new virtualenv and activate it
-3. cd cc_front
+3. cd cc
 4. pip install -r requirement
 5. cp cc/local_settings.py.sample cc/local_settings.py
 6. Change the settings to match configuration in the local environment
@@ -18,5 +18,4 @@ How to run
 Other dependancies
 ------------------
 
-- Redis
 (TODO)

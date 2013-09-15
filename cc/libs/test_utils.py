@@ -6,7 +6,7 @@ import json
 class LoginHelper:
     __metaclass__ = ABCMeta
 
-    #fixtures = ('test-users.json',)
+    fixtures = ('test-users.json',)
 
     def _get_client_user(self, username='john@cc.kneto.com', password='admin'):
         c = client.Client()
@@ -42,7 +42,8 @@ class ClientTestCase(TestCase, LoginHelper):
         response = client.post(
             url,
             json.dumps(data),
-            content_type='application/json')
+            content_type='application/json'
+        )
         return response
 
 

@@ -2,9 +2,10 @@ from __future__ import absolute_import
 
 from django.conf import settings
 from django.core.files import storage
+from django.core.urlresolvers import reverse
 
-from .models import File
-from . import utils
+from cc.apps.content.models import File
+from cc.apps.content import utils
 
 from cc.libs.test_utils import ClientTestCase
 
@@ -26,7 +27,7 @@ class FakeStorage(object):
         return self.last_buf
 
     def path(self, path):
-        return "path"
+        return 'path'
 
 
 class FakeFile(object):
@@ -47,8 +48,9 @@ class FakeFile(object):
 class ImportFileTest(ClientTestCase):
     """Exercises import_file view.
     """
-    fixtures = ('test-users-content.json',)
-    url = '/upload/'
+    fixtures = ['test-users-content.json']
+
+    url = reverse('upload_file')
 
     def setUp(self):
         self._storage = FakeStorage()
@@ -176,61 +178,6 @@ class ImportFileTest(ClientTestCase):
         c.post(self.url, {'file': f})
         f.close()
         self.assertTrue(self._storage.last_buf.closed)
-
-
-class FileModelTest(ClientTestCase):
-    """Tests the File model.
-    """
-
-    def test_type_from_name_raises_exception_if_unknown_extension(self):
-        try:
-            File.type_from_name('foo.bah')
-            self.fail('Exception UnsupportedFileTypeError not risen.')
-        except utils.UnsupportedFileTypeError:
-            pass
-
-    def test_type_from_name_raises_exception_if_no_extension(self):
-        try:
-            File.type_from_name('foo')
-            self.fail('Exception UnsupportedFileTypeError not risen.')
-        except utils.UnsupportedFileTypeError:
-            pass
-
-    def test_type_from_name_raises_exception_if_no_extension_after_delimeter(self):
-        try:
-            File.type_from_name('foo.')
-            self.fail('Exception UnsupportedFileTypeError not risen.')
-        except utils.UnsupportedFileTypeError:
-            pass
-
-    def test_type_from_name_correctly_regognizes_uppercase_extension(self):
-        type = File.type_from_name('foo.JPG')
-        self.assertEquals(type, File.TYPE_IMAGE)
-
-    def test_type_from_name_correctly_regognizes_lowercase_extension(self):
-        type = File.type_from_name('foo.mp3')
-        self.assertEquals(type, File.TYPE_AUDIO)
-
-    def test_type_from_name_correctly_regognizes_mixedcase_extension(self):
-        type = File.type_from_name('foo.JpEg')
-        self.assertEquals(type, File.TYPE_IMAGE)
-
-    def test_original_url_has_original_file_ext(self):
-        f = File(title='foo', type=File.TYPE_VIDEO, orig_filename='foo.bar')
-        f.save()
-        self.assertEquals(f.original_url.rpartition('.')[2], 'bar')
-        f.delete()
-
-    def test_original_url_has_key_instead_of_original_name(self):
-        f = File(title='foo', type=File.TYPE_VIDEO, orig_filename='foo.bar')
-        f.save()
-        key = f.original_url.rpartition('/')[2].partition('.')[0]
-        self.assertEquals(key, '%s_%s' % (f.key, f.subkey_orig))
-        f.delete()
-
-    def test_ext_returns_extension_based_on_original_file_name(self):
-        f = File(title='foo', type=File.TYPE_VIDEO, orig_filename='foo.bar')
-        self.assertEquals(f.ext, 'bar')
 
 
 class UtilsTest(ClientTestCase):
@@ -449,55 +396,6 @@ class VideoConverterTest(TestCase):
     def test_should_return_same_command_for_low_quality(self):
         ConfigEntry(config_key=ConfigEntry.CONTENT_QUALITY_OF_CONTENT, config_val=ConfigEntry.QUALITY_TYPE_LOW).save()
         self.assertEquals(self.vc._get_command_low_quality(), self.vc._get_command_flv())
-
-class DeleteContentFile(ClientTestCase):
-    fixtures = ('sample.json', 'test-users-content.json', 'test-course.json')
-    url = "/content/manage/%d/delete/"
-
-    def _custom_remove(self, file):
-        self.removed_files.append(file)
-
-    def setUp(self):
-        self.removed_files = []
-        os.remove = self._custom_remove
-        self.orig_isfile = os.path.isfile
-        os.path.isfile = lambda file: True
-
-    def tearDown(self):
-        os.path.isfile = self.orig_isfile
-
-    def test_admin_cant_remove_not_his_file(self):
-        response = self._get_client_admin().post(self.url % 2)
-        self.assertEquals(400, response.status_code)
-        self.assertEquals("Admin can remove only his files.", response.content)
-        
-    def test_admin_cant_remove_files_from_active_courses(self):
-        response = self._get_client_admin().post(self.url % 9)
-        self.assertEquals(400, response.status_code)
-        self.assertEquals("Admin cant remove files which are in use by active courses.", response.content)
-
-    def test_superadmin_should_remove_only_file_from_disk_if_file_is_used(self):
-        response = self._get_client_superadmin().post(self.url % 9)
-        self.assertEquals(200, response.status_code)
-        file = File.objects.get(id=9)
-        self.assertEquals(file.status, File.STATUS_REMOVED)
-        self.assertTrue(os.path.join(settings.MEDIA_ROOT, settings.CONTENT_AVAILABLE_DIR, file.conv_file_path) in self.removed_files)
-        self.assertTrue(os.path.join(settings.MEDIA_ROOT, settings.CONTENT_UPLOADED_DIR, file.orig_file_path) in self.removed_files)
-        self.assertTrue(os.path.join(settings.MEDIA_ROOT, settings.CONTENT_THUMBNAILS_DIR, file.thumbnail_file_path) in self.removed_files)
-
-    def test_superadmin_can_remove_not_his_file(self):
-        response = self._get_client_superadmin().post(self.url % 4)
-        self.assertEquals(200, response.status_code)
-
-    def test_should_invoke_remove_on_existing_files(self):
-        file = File.objects.get(id=4)
-        c = self._get_client_superadmin()
-        response = c.post(self.url % 4)
-        self.assertEquals(200, response.status_code)
-        self.assertRaises(Http404, get_object_or_404, File, id=4)
-        self.assertTrue(os.path.join(settings.MEDIA_ROOT, settings.CONTENT_AVAILABLE_DIR, file.conv_file_path) in self.removed_files)
-        self.assertTrue(os.path.join(settings.MEDIA_ROOT, settings.CONTENT_UPLOADED_DIR, file.orig_file_path) in self.removed_files)
-        self.assertTrue(os.path.join(settings.MEDIA_ROOT, settings.CONTENT_THUMBNAILS_DIR, file.thumbnail_file_path) in self.removed_files)
 
 '''
 
