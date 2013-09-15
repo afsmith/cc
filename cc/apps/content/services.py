@@ -1,8 +1,13 @@
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.core.mail import send_mass_mail
+from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
 
 from . import utils
 from .models import File, Course
+from cc.apps.accounts.services import create_group
+from cc.apps.accounts.models import OneClickLinkToken
 
 import os
 
@@ -42,10 +47,40 @@ def save_file(user, orig_filename, coping_file_callback):
     }
 
 
-def create_course(message, group):
-    Course.objects.create(
+def create_course_from_message(message):
+    group = create_group(message.receivers.all())
+
+    course = Course.objects.create(
         title=File.objects.get(pk=message.attachment).key,
-        file=File.objects.get(pk=message.attachment),
         owner=message.owner,
         group=group
     )
+    course.files.add(message.attachment)
+    course.save()
+
+    return course
+
+
+def create_ocl_and_send_mail(course, receipients, request):
+    host = request.get_host() # Todo
+    emails = ()
+    for r in receipients:
+        ocl = OneClickLinkToken.objects.create(user=r)
+        
+        ocl_link = 'http://%s/content/view/%d/?token=%s' % (
+            host, course.id, ocl.token
+        )
+        emails += ((
+            'Subject OCL', 'Body %s' % ocl_link, course.owner.email, [r.email]
+        ),)
+
+    send_mass_mail(emails)
+
+
+def check_course_permission(id, user):
+    if id:
+        course = get_object_or_404(Course, pk=id)
+        if course.is_available_for_user(user):
+            return course
+        else:
+            raise PermissionDenied

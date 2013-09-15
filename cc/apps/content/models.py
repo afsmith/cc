@@ -350,9 +350,12 @@ class Course(models.Model):
     title = models.CharField(_('Title'), max_length=150)
     group = models.ForeignKey(auth_models.Group)
     owner = models.ForeignKey(CUser)
-    file = models.ForeignKey(File)
+    files = models.ManyToManyField(File, related_name='files')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     
+    def is_available_for_user(self, user):
+        return self.group in user.groups.all()
+
     def __unicode__(self):
         return self.title

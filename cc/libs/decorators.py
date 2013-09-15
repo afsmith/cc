@@ -1,8 +1,7 @@
-from django import http
 from django.contrib.auth import decorators
 from django.conf import settings
-from django.shortcuts import render
-from cc.apps.management.models import OneClickLinkToken
+from django.shortcuts import render, redirect
+from cc.apps.accounts.models import OneClickLinkToken
 
 
 def login_or_token_required(f, redirect_field_name='/'):
@@ -13,11 +12,11 @@ def login_or_token_required(f, redirect_field_name='/'):
             token = request.GET.get('token')
             if token:
                 try:
-                    one_click_link_token = OneClickLinkToken.objects.get(token=token)
+                    ocl_token = OneClickLinkToken.objects.get(token=token)
                 except OneClickLinkToken.DoesNotExist:
-                    return http.HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+                    return redirect(settings.LOGIN_REDIRECT_URL)
 
-                if one_click_link_token.expired:
+                if ocl_token.expired:
                     return render(
                         request,
                         'registration/login.html',
@@ -25,7 +24,7 @@ def login_or_token_required(f, redirect_field_name='/'):
                     )
                 return f(request, *args, **kwargs)
             else:
-                return http.HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+                return redirect(settings.LOGIN_REDIRECT_URL)
 
     return wrap
 

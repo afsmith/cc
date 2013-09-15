@@ -21,6 +21,9 @@ urlpatterns = patterns(
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}),
     url(r'^accounts/', include('registration.backends.default.urls')),
+
+    # apps
+    url(r'^content/', include('cc.apps.content.urls')),
 )
 
 if settings.DEBUG:

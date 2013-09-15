@@ -2,8 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
+from cc.apps.content.utils import gen_ocl_token
+
 
 class CustomUserManager(BaseUserManager):
+    '''
+    Custom User manager
+    '''
     def create_user(self, **kwargs):
         if 'email' not in kwargs:
             raise ValueError('Users must have an email address')
@@ -41,6 +46,9 @@ class CustomUserManager(BaseUserManager):
 
 
 class CUser(AbstractUser):
+    '''
+    Custom User model
+    '''
     country = models.CharField(_('Country'), max_length=50)
     industry = models.CharField(_('Industry'), max_length=50)
 
@@ -57,3 +65,17 @@ class CUser(AbstractUser):
 # Email should be unique
 CUser._meta.get_field('email')._unique = True
 CUser._meta.get_field('username')._unique = False
+
+
+class OneClickLinkToken(models.Model):
+    '''
+    One click link (OCL) token model
+    '''
+    user = models.ForeignKey(CUser)
+    token = models.CharField(default=gen_ocl_token, max_length=30, blank=False)
+    expired = models.BooleanField(db_index=True, default=False)
+    expires_on = models.DateField(_('Expiration date'), null=True, db_index=True)
+    allow_login = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return '%s[%s][%s]' % (self.user, self.token, self.expires_on)

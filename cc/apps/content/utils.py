@@ -1,20 +1,10 @@
-# -*- coding: utf-8 -*-
-# 
-# Copyright (C) 2010 BLStream Sp. z o.o. (http://blstream.com/)
-#
-# Authors:
-#     Bartosz Oler <bartosz.oler@blstream.com>
-#
+import random
 
-"""Various utilities for the content app.
-"""
+from . import baseconv
 
-import random, subprocess
-
-from django.conf import settings
-
-from cc.apps.content import baseconv
-
+'''
+Various utilities for the content app.
+'''
 
 BASE62_CONV = baseconv.BaseConverter(
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz')
@@ -49,7 +39,6 @@ def get_rand_bytes_as_hex(n):
     :return: String of random bytes.
     :rtype: ``str``
     """
-
     return ''.join([chr(random.randint(0, 255)) for _ in xrange(n)]).encode('hex')
 
 
@@ -59,7 +48,6 @@ def gen_file_key():
     :return: File key, length is between 1 - 22 bytes.
     :rtype: ``str``
     """
-
     # 62**22 - 1 (full 22 base-62 digits) > 2**128
     n = random.randint(1, 62 ** 22 - 1)
     return BASE62_CONV.encode(n)
@@ -71,7 +59,6 @@ def gen_file_sub_key():
     :return: File sub key, length is between 1 - 5 bytes.
     :rtype: ``str``
     """
-
     n = random.randint(1, 62 ** 5 - 1)
     return BASE62_CONV.encode(n)
 
@@ -81,7 +68,4 @@ def gen_ocl_token():
     :return: token, length equals 30 bytes.
     :rtype: ``str``
     """
-
     return BASE62_CONV.encode(random.randint(62 ** 29 - 1, 62 ** 30 - 1))
-
-

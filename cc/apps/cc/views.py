@@ -1,9 +1,10 @@
 from django.contrib.auth import decorators as auth_decorators
 
 from cc.apps.content.forms import FileImportForm
-from cc.apps.content.services import create_course
+from cc.apps.content.services import (
+    create_course_from_message, create_ocl_and_send_mail
+)
 from cc.apps.cc_messages.forms import MessageForm
-from cc.apps.accounts.services import create_group
 
 from annoying.decorators import render_to
 
@@ -14,15 +15,11 @@ def home(request):
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
-            print request.user
             message = message_form.save()
             message.owner = request.user
             message.save()
-            group = create_group(message.receivers.all())
-            create_course(message, group)
-
-            # create OCL
-            # send email
+            course = create_course_from_message(message)
+            create_ocl_and_send_mail(course, message.receivers.all(), request)
 
             return {'thankyou_page': True}
     else:
