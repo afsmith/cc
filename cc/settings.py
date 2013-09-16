@@ -27,12 +27,12 @@ USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = path.abspath(path.join(ROOT_PATH, 'media'))
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -163,10 +163,13 @@ ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'admin@cc.kneto.com'
 
 # files
-CONTENT_UPLOADED_DIR = 'cc/media/uploads'
-CONTENT_AVAILABLE_DIR = 'cc/media/pub'
-FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200
+CONTENT_UPLOADED_DIR = 'uploads'
+CONTENT_AVAILABLE_DIR = 'pub'
+CONTENT_INVALID_DIR = 'invalid'
+CONTENT_THUMBNAILS_DIR = 'thumbnails'
+CONTENT_PREVIEWS_DIR = 'previews'
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200
 FILE_UPLOAD_HANDLERS = (
     'cc.apps.content.handlers.MaxFileMemoryFileUploadHandler',
     'cc.apps.content.handlers.MaxFileTemporaryFileUploadHandler',

@@ -1,59 +1,35 @@
 $(document).ready(function(){
-    $('#js-addFile').file().choose(function(e, input) {
-        input.attr("style", "display: none;");
-        input.attr("id", "file");
-        input.attr("class", "file");
-        input.attr("name", "file");
-        $("#file").replaceWith(input);
-        $(this).parents('form').submit();
-    });
-    
-    var onSuccessFileImport = function(data) {
-        if (data.status == "OK") {
-            var file_name_without_ext = data.file_orig_filename.substr(0, data.file_orig_filename.lastIndexOf('.')) || data.file_orig_filename;
-            var file_name_full = data.file_orig_filename;
 
-            $('#file_list').append('<li>' + file_name_full + '</li>');
-            $('#id_attachment').val(data.file_id);
-            
-            /*$("#fileName").text(t.UPLOAD_COMPLETE + ': ' + data.file_orig_filename);
-            $('#manageContentForm input[name="title"]').val(
-                data.file_orig_filename
-                    .substr(0, data.file_orig_filename.lastIndexOf('.')) || data.file_orig_filename
-            );
-            $("#id_file_id").val(data.file_id);
-            $("#mcd").removeClass("button-disabled");
-            $('#fileTypeIco').addClass('fileType' + data.file_type);*/
+    $('#js-uploadFileForm').dropzone({
+        url: $(this).attr('action'),
+        paramName: 'file',
+        maxFilesize: 5, // MB
+        maxFiles: 1,
+        clickable: true,
+        acceptedFiles: 'application/pdf',
+        uploadprogress: function (a, progress) {
+            console.log(progress);
+        },
+        success: function (file, resp) {
+            console.log(file);
+            console.log(resp);
+            if (resp.status === 'OK') {
+                //var file_name_without_ext = resp.file_orig_filename.substr(0, resp.file_orig_filename.lastIndexOf('.')) || resp.file_orig_filename;
+                //var file_name_full = resp.file_orig_filename;
 
-            if (data.is_duration_visible == "True") {
-                $("li#duration").show();
+                //$('#file_list').append('<li>' + file_name_full + '</li>');
+                $('#id_attachment').val(resp.file_id);
+
+                // remove error message 
+                $('#js-uploadFileForm .alert').remove();
+            } else {
+                $('#js-uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ": " + resp.message + '</p>');
+                console.log(t.SYSTEM_MESSAGE, t.UNSUPPORTED_FILE_TYPE);
             }
-            //app.data.changed = true;
-        } else {
-            $('#js-uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>'+t.ERROR_OCURRED_WITHOUT_DOT + ": " + data["message"]+'</p>');
-            console.log(t.SYSTEM_MESSAGE, t.UNSUPPORTED_FILE_TYPE);
-        }
-    };
-
-    $('#js-uploadFileForm').submit(function() {
-        try {
-            $("#fileName").text('Uploading: '+$("#file").val());
-            $(this).ajaxSubmit({
-                success: function(data) {
-                    onSuccessFileImport(data);
-                    //clearTimeout(app.config.progress.t);
-                    $('#js-submitMessageForm').removeClass('disabled');
-                    $('#progressWrapper').hide();
-                    $('#cancelUpload').hide();
-                },
-                dataType: 'json'
-            });
-
-        } catch(err) {}
-
-        $('#progressWrapper').show();
-        $('#cancelUpload').show();
-        return false;
+        },
+        maxfilesexceeded: function () {
+            console.log('Max file exceed');
+        },
     });
 
     $('#js-submitMessageForm').click(function() {

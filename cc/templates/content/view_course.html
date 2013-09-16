@@ -5,36 +5,12 @@
 {% block title %}{{ course.title }}{% endblock %}
 
 {% block content %}
-    <div class="hidden" id="ocl_token">{{ token }}</div>
-    <div class="boxGray" id="moduleViewer">
-        <div id="videoWrapper">
-            <div id="video"></div>
-            <div id="playLesson" class="playButton_bigGreen"></div>
-        </div>
-        <div class="hr"></div>
-        <div class="moduleWrapper" id="moduleUserWrapper">
-            <div class="scrollableWrapper">
-                <div  id="moduleLeft" class="leftMargin margin prev">
-                   <a class="prev browse left"></a>
-                </div>
-                <div id="moduleWrapper">
-                    <div id="module" class="shelf">
-                        <ul id="moduleList"></ul>
-                    </div>
-                </div>
-                <div id="moduleRight" class="rightMargin margin next">
-                    <a class="next browse right"></a>
-                </div>
-            </div>
-            <div class="hr"></div>
-        </div>
-    </div>
+
+    <!--div class="hidden" id="ocl_token">{{ token }}</div-->
+    {% for file in course.files.all %}
+        {{ file.view_url }}
+    {% endfor %}
+
 {% endblock %}
 
-{% block js_globals %}var moduleID = {{ course.id|default:"null" }};{% endblock %}
-{% block js_scripts %}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/module-viewer.js"></script>
-<script type="text/javascript">
-   singleModuleMode = true;
-</script>
-{% endblock %}
+{% block js_scripts %}{% endblock %}

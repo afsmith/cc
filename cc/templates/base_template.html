@@ -84,34 +84,9 @@
     <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery-ui-1.9.0.custom.min.js' %}"></script>
 
-    <!--script type="text/javascript">
-        var mediaURL = "{% static '";
-        var siteLanguage = "{{ request.session.django_language }}";
-        {% block js_globals %}{% endblock %}
-        if(typeof moduleID == 'undefined')
-            var moduleID = null;
-    </script>
-    <script src="{% static 'js/swfobject.js' %}"></script>
-    <script src="{% static 'js/jquery.tools.min.js' %}"></script>
-    <script src="{% static 'js/jquery.nyroModal.custom.min.js' %}"></script>
-    <script src="{% static 'js/jquery.selectBox.js' %}"></script>
-    <script src="{% static 'js/jquery-ui-timepicker-addon.js' %}"></script>
-    <script src="{% static 'js/jquery.escapify.js' %}"></script>
-    <script src="{% static 'js/json2.js' %}"></script>
-    {% if request.session.django_language %}
-        <script src="{% static 'js/locale_'|add:request.session.django_language|add:'.js' %}"></script>
-        <script src="{% static 'js/jquery.ui.datepicker-'|add:request.session.django_language|add:'.js' %}"></script>
-        <script src="{% static 'js/jquery-ui-timepicker-'|add:request.session.django_language|add:'.js' %}"></script>
-    {% else %}
-        <script src="{% static 'js/locale.js' %}"></script>
-    {% endif %}
-    <script src="{% static 'js/player.js' %}"></script>
-    <script src="{% static 'js/ing.lib.js' %}"></script-->
+    <script src="{% static 'js/locale/locale_en.js' %}"></script>
     
     {% block js_scripts %}{% endblock %}
-
-    <!--script src="{% static 'js/data.js' %}"></script>
-    <script src="{% static 'js/objSort.js' %}"></script-->
 
     </body>
 </html>

@@ -1,13 +1,16 @@
+from django import http
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators import http as http_decorators
 from django.utils.translation import ugettext_lazy as _
 from django.core.files import storage
 from django.shortcuts import redirect
 
+from . import serializers
 from .forms import FileImportForm
 from .services import save_file, check_course_permission
 from cc.apps.accounts.services import verify_ocl_token
 from cc.libs import decorators as custom_decorators
+from cc.libs import bls_django
 
 from annoying.decorators import ajax_request, render_to
 from contextlib import closing
@@ -53,6 +56,32 @@ def view_course(request, id=None):
             'course': course,
             'token': token,
         }
+
+
+@custom_decorators.login_or_token_required
+@http_decorators.require_GET
+def module_descr(request, id):
+    """Creates module description.
+    """
+
+    user = request.user
+    format = request.GET.get('format', 'json')
+    token = request.GET.get('token')
+    if token:
+        ocl_token = verify_ocl_token(token)
+        if not ocl_token or ocl_token.expired:
+            return redirect('/')
+
+        user = ocl_token.user
+        course = check_course_permission(id, user)
+    
+    if format == 'json':
+        return bls_django.HttpJsonResponse(serializers.serialize_course(
+                course, user, tracking=None, ocl_token=token))
+    #elif format == 'xml':
+    #    return http.HttpResponse(serializers.serialize_course_xml(
+    #            course, user), mimetype='application/xml')
+    return http.HttpResponseNotFound('Requested module not found.')
 
 '''
 @auth_decorators.login_required
