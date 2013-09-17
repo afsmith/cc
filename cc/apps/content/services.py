@@ -4,7 +4,7 @@ from django.core.mail import send_mass_mail
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 
-from . import utils
+from . import utils, tasks
 from .models import File, Course
 from cc.apps.accounts.services import create_group
 from cc.apps.accounts.models import OneClickLinkToken
@@ -37,13 +37,14 @@ def save_file(user, orig_filename, coping_file_callback):
 
     file.save()
 
-    is_duration_visible = not file.type in [File.TYPE_AUDIO, File.TYPE_VIDEO]
+    if file.status == File.STATUS_UPLOADED:
+        tasks.process_stored_file.delay(file)
+
     return {
         'status': 'OK',
         'file_id': file.id,
         'file_orig_filename': file.orig_filename,
         'file_type': file.type,
-        'is_duration_visible': is_duration_visible
     }
 
 

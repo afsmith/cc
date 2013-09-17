@@ -20,7 +20,7 @@ Convert numbers from base 10 integers to base X strings and back again.
 
 Sample usage::
 
-  >>> base20 = BaseConverter('0123456789abcdefghij')
+  >>> base20 = BaseConv('0123456789abcdefghij')
   >>> base20.encode(1234)
   '31e'
   >>> base20.decode('31e')
@@ -29,7 +29,7 @@ Sample usage::
   '-31e'
   >>> base20.decode('-31e')
   '-1234'
-  >>> base11 = BaseConverter('0123456789-', signal='$')
+  >>> base11 = BaseConv('0123456789-', signal='$')
   >>> base11.encode('$1234')
   '$-22'
   >>> base11.decode('$-22')
@@ -37,7 +37,7 @@ Sample usage::
 
 """
 
-BINARY_ALPHABET      = '01'
+BINARY_ALPHABET = '01'
 HEXADECIMAL_ALPHABET = '0123456789ABCDEF'
 
 BASE56_URLSAFE_ALPHABET = ('ABCDEFGHJKLMNPQRSTUVWXYZ'
@@ -48,7 +48,8 @@ BASE62_URLSAFE_ALPHABET = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                            '0123456789')
 BASE64_URLSAFE_ALPHABET = BASE62_URLSAFE_ALPHABET + '-_'
 
-class BaseConverter(object):
+
+class BaseConv(object):
     decimal_digits = '0123456789'
 
     def __init__(self, digits, signal='-'):
@@ -73,7 +74,7 @@ class BaseConverter(object):
         # make an integer out of the number
         x = 0
         for digit in str(number):
-           x = x * len(fromdigits) + fromdigits.index(digit)
+            x = x * len(fromdigits) + fromdigits.index(digit)
 
         # create the result in base 'len(todigits)'
         if x == 0:
@@ -89,11 +90,11 @@ class BaseConverter(object):
         return res
     convert = staticmethod(convert)
 
-bin = BaseConverter(BINARY_ALPHABET)
-hexconv = BaseConverter(HEXADECIMAL_ALPHABET)
-base56_urlsafe = BaseConverter(BASE56_URLSAFE_ALPHABET)
-base62_urlsafe = BaseConverter(BASE62_URLSAFE_ALPHABET)
-base64_urlsafe = BaseConverter(BASE64_URLSAFE_ALPHABET, signal='$')
+bin = BaseConv(BINARY_ALPHABET)
+hexconv = BaseConv(HEXADECIMAL_ALPHABET)
+base56_urlsafe = BaseConv(BASE56_URLSAFE_ALPHABET)
+base62_urlsafe = BaseConv(BASE62_URLSAFE_ALPHABET)
+base64_urlsafe = BaseConv(BASE64_URLSAFE_ALPHABET, signal='$')
 
 if __name__ == '__main__':
     # doctests

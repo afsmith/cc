@@ -1,13 +1,10 @@
 import random
 
-from . import baseconv
+from cc.libs.baseconv import BaseConv
 
-'''
-Various utilities for the content app.
-'''
-
-BASE62_CONV = baseconv.BaseConverter(
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz')
+BASE62_CONV = BaseConv(
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
+)
 
 
 class UnsupportedFileTypeError(Exception):
@@ -16,6 +13,7 @@ class UnsupportedFileTypeError(Exception):
 
     def __str__(self):
         return 'Files with extension "%s" are not supported.' % (self.ext,)
+
 
 class CommandError(Exception):
     def __init__(self, cmd=None, code=None, stdout=None, stderr=None):
@@ -61,6 +59,7 @@ def gen_file_sub_key():
     """
     n = random.randint(1, 62 ** 5 - 1)
     return BASE62_CONV.encode(n)
+
 
 def gen_ocl_token():
     """Generates random ocl token.

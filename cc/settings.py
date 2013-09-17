@@ -1,70 +1,29 @@
 from os import path
-
 ROOT_PATH = path.join(path.dirname(__file__))
 
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
-
-# Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
+# translation and locale
 USE_I18N = True
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
 USE_L10N = True
-
-# If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = False
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/home/media/media.lawrence.com/media/"
+# media
 MEDIA_ROOT = path.abspath(path.join(ROOT_PATH, 'media'))
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
+# static
 STATIC_ROOT = ''
-
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
-
-# Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
     path.abspath(path.join(ROOT_PATH, 'static')),
 )
-
-# List of finder classes that know how to find static files in
-# various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    #     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,17 +36,12 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'cc.urls'
-
-# Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'cc.wsgi.application'
 
+# templates
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
     path.abspath(path.join(ROOT_PATH, 'templates')),
 )
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -96,7 +50,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.request",
 )
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    #     'django.template.loaders.eggs.Loader',
+)
 
+# apps
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -110,6 +70,7 @@ INSTALLED_APPS = (
     'south',               # south for DB migration
     'django_extensions',   # django extensions
     'registration',        # django registration (Hieu's fork)
+    'djcelery',            # celery for converting files
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
@@ -119,11 +80,7 @@ INSTALLED_APPS = (
     'cc.apps.cc',          # register cc apps to get the template tags
 )
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
+# See http://docs.djangoproject.com/en/dev/topics/logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -157,20 +114,75 @@ except ImportError:
 # import choices for forms
 from settings_choices import *
 
-# account & registration
+# admin settings
+ADMINS = (
+    # ('Your Name', 'your_email@example.com'),
+)
+
+MANAGERS = ADMINS
+
+##############################################################################
+# Account & registration
+##############################################################################
+
 AUTH_USER_MODEL = 'accounts.CUser'
 ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'admin@cc.kneto.com'
 
-# files
+
+##############################################################################
+# Files
+##############################################################################
+
 CONTENT_UPLOADED_DIR = 'uploads'
 CONTENT_AVAILABLE_DIR = 'pub'
 CONTENT_INVALID_DIR = 'invalid'
 CONTENT_THUMBNAILS_DIR = 'thumbnails'
 CONTENT_PREVIEWS_DIR = 'previews'
 
+FILE_UPLOAD_PERMISSIONS = 0644
+FILE_UPLOAD_PERMISSIONS_DIRS = 0775
+
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200
 FILE_UPLOAD_HANDLERS = (
     'cc.apps.content.handlers.MaxFileMemoryFileUploadHandler',
     'cc.apps.content.handlers.MaxFileTemporaryFileUploadHandler',
 )
+
+
+##############################################################################
+# Celery
+##############################################################################
+
+CELERY_RESULT_BACKEND = 'redis'
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
+REDIS_CONNECT_RETRY = True
+
+BROKER_URL = 'redis://localhost:6379/0'
+
+CELERYD_CONCURRENCY = 1
+
+'''
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERYBEAT_SCHEDULE = {
+    'delete_expired_files_schedule': {
+        'task': 'content.tasks.delete_expired_content',
+        'schedule': crontab(minute='0', hour='0', day_of_week='*'),
+    },
+
+    'generate_reports_schedule': {
+        'task': 'reports.tasks.generate_reports',
+        'schedule': crontab(minute='*', hour='*', day_of_week='*'),
+    },
+    'check_mailbox': {
+        'task': 'messages_custom.tasks.check_mailbox',
+        'schedule': crontab(minute='*'),
+    },
+    'check_ocl_expiration': {
+        'task': 'management.tasks.check_ocl_expiration',
+        'schedule': crontab(minute='*'),
+    }
+}
+'''
