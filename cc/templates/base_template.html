@@ -62,7 +62,7 @@
     </div>
 
     <div class="container">
-        <h1>{% block title %}{% endblock %}</h1>
+        <h1 class="page_title">{% block title %}{% endblock %}</h1>
         {% block content %}{% endblock %}
         {% if request.get_full_path != '/' %}
          <a class="close" href="/{% block close_url %}{% endblock %}"></a>

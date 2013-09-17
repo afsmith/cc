@@ -51,9 +51,22 @@ def view_course(request, id=None):
         if not ocl_token:
             return redirect('/')
         course = check_course_permission(id, ocl_token.user)
-        
+
+        # there is only 1 file per course for now so return that file
+        file = course.files.all()[0]
+        pages_num = file.pages_num
+        view_url = file.view_url
+        page_list = []
+
+        if pages_num == 1:
+            page_list.append('%s/p.png' % view_url)
+        elif pages_num > 1:
+            for i in range(0, pages_num):
+                page_list.append('%s/p-%d.png' % (view_url, i))
+
         return {
             'course': course,
+            'page_list': page_list,
             'token': token,
         }
 
@@ -74,13 +87,12 @@ def module_descr(request, id):
 
         user = ocl_token.user
         course = check_course_permission(id, user)
-    
+
     if format == 'json':
         return bls_django.HttpJsonResponse(serializers.serialize_course(
-                course, user, tracking=None, ocl_token=token))
-    #elif format == 'xml':
-    #    return http.HttpResponse(serializers.serialize_course_xml(
-    #            course, user), mimetype='application/xml')
+            course, user, tracking=None, ocl_token=token
+        ))
+
     return http.HttpResponseNotFound('Requested module not found.')
 
 '''

@@ -52,7 +52,7 @@ def create_course_from_message(message):
     group = create_group(message.receivers.all())
 
     course = Course.objects.create(
-        title=File.objects.get(pk=message.attachment).key,
+        title=message.subject,
         owner=message.owner,
         group=group
     )
@@ -63,11 +63,10 @@ def create_course_from_message(message):
 
 
 def create_ocl_and_send_mail(course, receipients, request):
-    host = request.get_host() # Todo
+    host = request.get_host()  # Todo
     emails = ()
     for r in receipients:
         ocl = OneClickLinkToken.objects.create(user=r)
-        
         ocl_link = 'http://%s/content/view/%d/?token=%s' % (
             host, course.id, ocl.token
         )

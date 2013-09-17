@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 from cc.apps.accounts.models import CUser
 
 import os
-import urllib
 import urlparse
 import utils
 import type_specifiers
@@ -346,7 +345,7 @@ class Course(models.Model):
     files = models.ManyToManyField(File, related_name='files')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    
+
     def is_available_for_user(self, user):
         return self.group in user.groups.all()
 

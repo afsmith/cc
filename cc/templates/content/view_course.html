@@ -2,15 +2,30 @@
 {% load extras i18n static %}
 
 {% block meta_title %}{{ course.title }}{% endblock %}
+
 {% block title %}{{ course.title }}{% endblock %}
 
 {% block content %}
 
-    <!--div class="hidden" id="ocl_token">{{ token }}</div-->
-    {% for file in course.files.all %}
-        {{ file.view_url }}
-    {% endfor %}
+    <div id="course_carousel" class="carousel slide span9 center">
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+            {% for p in page_list %}
+                <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
+                    <img src="{{ p }}" alt="">
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Carousel nav -->
+        {% if page_list|length > 1 %}
+            <a class="carousel-control left" href="#course_carousel" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#course_carousel" data-slide="next">&rsaquo;</a>
+        {% endif %}
+    </div>
 
 {% endblock %}
 
-{% block js_scripts %}{% endblock %}
+{% block js_scripts %}
+    <script src="{% static 'js/view_course.js' %}"></script>
+{% endblock %}

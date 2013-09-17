@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
     $('#js-uploadFileForm').dropzone({
         url: $(this).attr('action'),
@@ -43,4 +43,5 @@ $(document).ready(function(){
     $('#id_to').tokenfield({
         minLength: 3
     });
-});
+
+}); // end document ready
