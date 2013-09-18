@@ -71,6 +71,7 @@ INSTALLED_APPS = (
     'django_extensions',   # django extensions
     'registration',        # django registration (Hieu's fork)
     'djcelery',            # celery for converting files
+    'analytical',          # support for many analytic platforms
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
