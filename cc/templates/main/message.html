@@ -1,6 +1,8 @@
 {% extends 'base_template.html' %}
 {% load extras i18n static %}
 
+{% block meta_title %}Home{% endblock %}
+
 {% block content %}
     {% if thankyou_page %}
         {% trans 'Thank you for sending the message!' %}

@@ -26,7 +26,6 @@ class BaseConverter(object):
         except Exception, e:
             # Catch all exceptions as we want to process all errors in the
             # converters.
-
             self._file.status = models.File.STATUS_INVALID
             self._file.save()
             raise ConversionError(e)

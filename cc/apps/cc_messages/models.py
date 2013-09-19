@@ -5,6 +5,9 @@ from cc.apps.accounts.models import CUser
 
 
 class Message(models.Model):
+    '''
+    Message model for saving the original message of senders
+    '''
     subject = models.CharField(_('Subject'), max_length=130)
     receivers = models.ManyToManyField(CUser, related_name='receivers')
     cc_me = models.BooleanField(_('CC me'))

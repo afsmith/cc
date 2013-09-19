@@ -7,17 +7,11 @@ $(document).ready(function () {
         maxFiles: 1,
         clickable: true,
         acceptedFiles: 'application/pdf',
-        uploadprogress: function (a, progress) {
+        uploadprogress: function (foo, progress) {
             console.log(progress);
         },
         success: function (file, resp) {
-            console.log(file);
-            console.log(resp);
             if (resp.status === 'OK') {
-                //var file_name_without_ext = resp.file_orig_filename.substr(0, resp.file_orig_filename.lastIndexOf('.')) || resp.file_orig_filename;
-                //var file_name_full = resp.file_orig_filename;
-
-                //$('#file_list').append('<li>' + file_name_full + '</li>');
                 $('#id_attachment').val(resp.file_id);
 
                 // remove error message 
@@ -27,6 +21,9 @@ $(document).ready(function () {
                 console.log(t.SYSTEM_MESSAGE, t.UNSUPPORTED_FILE_TYPE);
             }
         },
+        error: function (file, errorMessage) {
+            console.log(errorMessage);
+        },
         maxfilesexceeded: function () {
             console.log('Max file exceed');
         },
@@ -34,7 +31,6 @@ $(document).ready(function () {
 
     $('#js-submitMessageForm').click(function() {
         if (!$(this).hasClass('disabled')) {
-            console.log('jaj');
             $('#js-messageForm').trigger('submit');
         }
         return false;
