@@ -1,8 +1,9 @@
 from django import http
+from django.core.urlresolvers import reverse
+from django.core.files import storage
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators import http as http_decorators
 from django.utils.translation import ugettext_lazy as _
-from django.core.files import storage
 from django.shortcuts import redirect
 
 from . import serializers
@@ -49,7 +50,7 @@ def view_course(request, id=None):
     if token:
         ocl_token = verify_ocl_token(token)
         if not ocl_token:
-            return redirect('/')
+            return redirect(reverse('home'))
         course = check_course_permission(id, ocl_token.user)
 
         # there is only 1 file per course for now so return that file
@@ -69,31 +70,6 @@ def view_course(request, id=None):
             'page_list': page_list,
             'token': token,
         }
-
-
-@custom_decorators.login_or_token_required
-@http_decorators.require_GET
-def module_descr(request, id):
-    """Creates module description.
-    """
-
-    user = request.user
-    format = request.GET.get('format', 'json')
-    token = request.GET.get('token')
-    if token:
-        ocl_token = verify_ocl_token(token)
-        if not ocl_token or ocl_token.expired:
-            return redirect('/')
-
-        user = ocl_token.user
-        course = check_course_permission(id, user)
-
-    if format == 'json':
-        return bls_django.HttpJsonResponse(serializers.serialize_course(
-            course, user, tracking=None, ocl_token=token
-        ))
-
-    return http.HttpResponseNotFound('Requested module not found.')
 
 '''
 @auth_decorators.login_required

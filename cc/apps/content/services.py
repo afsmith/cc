@@ -4,9 +4,8 @@ from django.core.mail import send_mass_mail
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 
-from . import utils, tasks
+from . import utils, tasks, convert
 from .models import File, Course
-from .convert import ConversionError
 from cc.apps.accounts.services import create_group
 from cc.apps.accounts.models import OneClickLinkToken
 
@@ -46,8 +45,21 @@ def save_file(user, orig_filename, coping_file_callback):
     if file.status == File.STATUS_UPLOADED:
         try:
             tasks.process_stored_file.delay(file)
-        except:
-            print 'huhu'
+        except convert.ConversionError, e:
+            return {
+                'status': 'ERROR',
+                'message': unicode(_('File conversion error.')),
+                'original_error': e
+            }
+        except Exception, e:
+            # catch all other errors here to not display anything for end user
+            return {
+                'status': 'ERROR',
+                'message': unicode(_(
+                    'Something went wrong. Please contact the admin.'
+                )),
+                'original_error': e.__str__()
+            }
 
     return {
         'status': 'OK',

@@ -10,15 +10,15 @@ $(document).ready(function () {
         uploadprogress: function (foo, progress) {
             console.log(progress);
         },
-        success: function (file, resp) {
-            if (resp.status === 'OK') {
-                $('#id_attachment').val(resp.file_id);
+        success: function (file, response) {
+            if (response.status === 'OK') {
+                $('#id_attachment').val(response.file_id);
 
                 // remove error message 
                 $('#js-uploadFileForm .alert').remove();
             } else {
-                $('#js-uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ": " + resp.message + '</p>');
-                console.log(t.SYSTEM_MESSAGE, t.UNSUPPORTED_FILE_TYPE);
+                $('#js-uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ": " + response.message + '</p>');
+                console.log('Conversion error: ' + response.original_error);
             }
         },
         error: function (file, errorMessage) {
