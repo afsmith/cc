@@ -13,6 +13,9 @@ import os
 
 
 def save_file(user, orig_filename, coping_file_callback):
+    '''
+    Save the uploaded file and return the status and file meta data
+    '''
     if not File.is_supported_file(orig_filename):
         return {
             'status': 'ERROR',
@@ -49,6 +52,9 @@ def save_file(user, orig_filename, coping_file_callback):
 
 
 def create_course_from_message(message):
+    '''
+    Create the group and course from the message
+    '''
     group = create_group(message.receivers.all())
 
     course = Course.objects.create(
@@ -62,10 +68,13 @@ def create_course_from_message(message):
     return course
 
 
-def create_ocl_and_send_mail(course, receipients, request):
+def create_ocl_and_send_mail(course, recipients, request):
+    '''
+    Create OCL link (to the course) for each recipients and send email to them
+    '''
     host = request.get_host()  # Todo
     emails = ()
-    for r in receipients:
+    for r in recipients:
         ocl = OneClickLinkToken.objects.create(user=r)
         ocl_link = 'http://%s/content/view/%d/?token=%s' % (
             host, course.id, ocl.token
@@ -78,6 +87,9 @@ def create_ocl_and_send_mail(course, receipients, request):
 
 
 def check_course_permission(id, user):
+    '''
+    Check if the user has permission to view the course
+    '''
     if id:
         course = get_object_or_404(Course, pk=id)
         if course.is_available_for_user(user):

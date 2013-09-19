@@ -106,7 +106,10 @@ LOGGING = {
     }
 }
 
-# import local settings
+##############################################################################
+# Magic comes next
+##############################################################################
+
 try:
     from local_settings import *
 except ImportError:

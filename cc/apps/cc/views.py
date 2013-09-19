@@ -10,7 +10,7 @@ from annoying.decorators import render_to
 
 
 @auth_decorators.login_required
-@render_to('cc/message.html')
+@render_to('main/message.html')
 def home(request):
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
