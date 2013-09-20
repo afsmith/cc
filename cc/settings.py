@@ -49,6 +49,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
 )
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -72,6 +73,7 @@ INSTALLED_APPS = (
     'registration',        # django registration (Hieu's fork)
     'djcelery',            # celery for converting files
     'analytical',          # support for many analytic platforms
+    'cookielaw',           # EU cookie law banner
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',

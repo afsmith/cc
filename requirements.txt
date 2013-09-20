@@ -12,6 +12,7 @@ django-celery-email==1.0.3
 redis==2.8.0
 kombu==2.5.14
 django-analytical==0.15.0
+django-cookie-law>=1.0.0
 
 # for testing
 sqlparse==0.1.8

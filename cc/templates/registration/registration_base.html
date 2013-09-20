@@ -1,4 +1,4 @@
-{% load i18n static analytical %}
+{% load i18n static analytical cookielaw_tags %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7' %}"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8' %}"> <![endif]-->
@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width">
     
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendor/cookielaw.css ' %}">
     <style>
         body {
             padding-top: 60px;
@@ -23,11 +24,13 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     <script src="{% static 'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+    <script src="{% static 'js/vendor/cookielaw.js' %}"></script>
     {% analytical_head_bottom %}
 </head>
 
 <body>
     {% analytical_body_top %}
+    {% cookielaw_banner %}
     <div class="container">
         <div class="row">
             <div class="span4 center registration_page">
