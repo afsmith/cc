@@ -169,9 +169,9 @@ REDIS_CONNECT_RETRY = True
 BROKER_URL = 'redis://localhost:6379/0'
 
 CELERYD_CONCURRENCY = 1
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 '''
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERYBEAT_SCHEDULE = {
     'delete_expired_files_schedule': {
         'task': 'content.tasks.delete_expired_content',

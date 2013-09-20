@@ -84,14 +84,6 @@ class ImportFileTest(ClientTestCase):
         data = json.loads(response.content)
         self.assertEquals(data['status'], "ERROR")
 
-    def test_on_success_should_return_is_duration_visible_attr(self):
-        c = self._get_client_admin()
-        f = self._get_fh()
-        response = c.post(self.url, {'file': f})
-        f.close()
-        data = json.loads(response.content)
-        self.assertTrue("is_duration_visible" in data)
-
     def test_upload_of_file_without_ext_results_in_error(self):
         c = self._get_client_admin()
         f = self._get_fh()
@@ -113,7 +105,8 @@ class ImportFileTest(ClientTestCase):
     def test_adds_imported_file_to_database(self):
         c = self._get_client_admin()
         f = self._get_fh()
-        c.post(self.url, {'file': f})
+        response = c.post(self.url, {'file': f})
+        print response
         f.close()
         self.assertEquals(File.objects.all().count(), 1)
 

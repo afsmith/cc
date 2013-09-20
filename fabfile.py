@@ -7,11 +7,11 @@ import os
 import subprocess
 
 env.test_apps = ' '.join([
-    'accounts',
-    'cc',
+    #'accounts',
+    #'cc',
     'cc_messages',
     'content',
-    'tracking',
+    #'tracking',
 ])
 
 env.excludes = './tools/release/excludes'
