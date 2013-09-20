@@ -1,16 +1,13 @@
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from django.core.mail import send_mass_mail
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 
 from . import utils, tasks, convert
 from .models import File, Course
 from cc.apps.accounts.services import create_group
-from cc.apps.accounts.models import OneClickLinkToken
 
 import os
-import datetime
 
 
 def save_file(user, orig_filename, coping_file_callback):
@@ -84,44 +81,6 @@ def create_course_from_message(message):
     course.save()
 
     return course
-
-
-def create_ocl_and_send_mail(course, message, request):
-    '''
-    Create OCL link (to the course) for each recipients and send email to them
-    '''
-    # extract the domain name from request
-    domain = request.get_host()
-    emails = ()
-    for r in message.receivers.all():
-        # ocl token should expire after 30 days
-        ocl = OneClickLinkToken.objects.create(
-            user=r,
-            expires_on=datetime.datetime.today() + datetime.timedelta(days=30)
-        )
-        ocl_link = 'http://%s/content/view/%d/?token=%s' % (
-            domain, course.id, ocl.token
-        )
-
-        # email tuple format: (subject, message, from_email, recipient_list)
-        emails += ((
-            message.subject,
-            '%s. Click here to check the file %s' % (message.message, ocl_link),
-            course.owner.email,
-            [r.email]
-        ),)
-
-    # if sender chooses to cc himself
-    if message.cc_me:
-        emails += ((
-            message.subject,
-            '%s. Click here to check the file [link]' % message.message,
-            course.owner.email,  # TODO: might change to system email address
-            [course.owner.email]
-        ),)
-
-    # send mass / bulk emails to be more efficient
-    send_mass_mail(emails)
 
 
 def check_course_permission(id, user):

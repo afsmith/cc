@@ -1,9 +1,8 @@
 from django.contrib.auth import decorators as auth_decorators
 
+from .services import create_ocl_and_send_mail
 from cc.apps.content.forms import FileImportForm
-from cc.apps.content.services import (
-    create_course_from_message, create_ocl_and_send_mail
-)
+from cc.apps.content.services import create_course_from_message
 from cc.apps.cc_messages.forms import MessageForm
 
 from annoying.decorators import render_to
