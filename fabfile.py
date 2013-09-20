@@ -82,13 +82,14 @@ def release():
 
 
 def determine_version():
-#    version = local('git describe --match "v[0-9]*" --abbrev=4 HEAD')
     version = subprocess.check_output([
         "git", "describe", "--match", "v[0-9]*", "--abbrev=4", "HEAD"
     ]).rstrip()
     local('git update-index -q --refresh')
-#    is_dirty = local('git diff-index --name-only HEAD --')
-    is_dirty = subprocess.check_output(["git", "diff-index", "--name-only", "HEAD", "--"]).rstrip()
+    is_dirty = subprocess.check_output([
+        "git", "diff-index", "--name-only", "HEAD", "--"
+    ]).rstrip()
+
     if is_dirty:
         version += '-dirty'
     version = version.replace('-', '.')
@@ -108,11 +109,24 @@ def create_tarball():
     )
 
     local('python ./tools/virtualenv.py %(pkg_name)s/ENV' % env)
-    local('%(pkg_name)s/ENV/bin/pip install -r %(pkg_name)s/requirements.txt' % env)
+    local(
+        '%(pkg_name)s/ENV/bin/pip install -r %(pkg_name)s/requirements.txt'
+        % env
+    )
     local('python ./tools/virtualenv.py --relocatable %(pkg_name)s/ENV' % env)
 
     local('cp %(excludes)s %(excludes)s.tmp' % env)
     local('sed -i -r -e "s!^\./!%(pkg_name)s/!g" %(excludes)s.tmp' % env)
     local('mkdir _build')
-    local('tar zcf _build/%(pkg_name)s.tar.gz -X%(excludes)s.tmp %(pkg_name)s' % env)
+    local(
+        'tar zcf _build/%(pkg_name)s.tar.gz -X%(excludes)s.tmp %(pkg_name)s'
+        % env
+    )
     local('rm %(excludes)s.tmp' % env)
+
+
+def deploy_local():
+    local('git pull --rebase')
+    local('pip install -r requirements.txt')
+    local('python manage.py syncdb')
+    local('python manage.py migrate')
