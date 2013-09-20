@@ -130,3 +130,4 @@ def deploy_local():
     local('pip install -r requirements.txt')
     local('python manage.py syncdb')
     local('python manage.py migrate')
+    local('fab test')

@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 
 from django.core.files import storage
+from django.test import TestCase
 
 from cc.apps.content.models import File
-from cc.apps.content import utils
-
-from cc.libs.test_utils import ClientTestCase
+from cc.apps.content import utils, convert
+from .test_general import FakeFile
 
 '''
 class DeleteExpiredTaskTest(ClientTestCase):
@@ -31,6 +31,7 @@ class DeleteExpiredTaskTest(ClientTestCase):
                                                       segment__file__is_removed = True,
                                                       active=True).count()
         self.assertEquals(active_modules, 0)
+'''
 
 
 class ExceptionalConverter(convert.BaseConverter):
@@ -39,6 +40,7 @@ class ExceptionalConverter(convert.BaseConverter):
 
     class File(object):
         status = None
+
         def save(self):
             pass
 
@@ -72,6 +74,7 @@ class FakeLogger(object):
 class FailingConverter(convert.BaseConverter):
     def _get_command(self):
         raise convert.ConversionError('Conversion has failed on purpose!')
+
 
 class SuccessfulConverter(convert.BaseConverter):
     def _convert(self):
@@ -155,8 +158,6 @@ class ConvertTest(TestCase):
 
     def test_pdf_files_are_converted_using_mocked_command(self):
         file = self._create_file('foo.pdf', File.TYPE_PDF)
-
-        from django.core.files import storage
         conv = convert.PDFConverter(file, storage.default_storage, FakeLogger())
         conv._convert_preview = lambda: None
         conv._convert_thumbnail = lambda: None
@@ -177,27 +178,3 @@ class ConvertTest(TestCase):
         file = File(orig_filename=name, type=type)
         file.save()
         return file
-
-
-class VideoConverterTest(TestCase):
-    fixtures = ('test-files.json',)
-
-    def setUp(self):
-        self.vc = VideoConverter(File.objects.get(id=1), FakeStorage(), None)
-        self.vc._tmp = ["tmp.mp4", "tmp.webm", "tmp.ogv", "temp.flv"]
-
-    def test_should_be_medium_if_there_is_no_config_entry(self):
-        self.assertEquals(self.vc._get_command_medium_quality(), self.vc._get_command_flv())
-
-    def test_should_return_same_command_for_high_quality(self):
-        ConfigEntry(config_key=ConfigEntry.CONTENT_QUALITY_OF_CONTENT, config_val=ConfigEntry.QUALITY_TYPE_HIGH).save()
-        self.assertEquals(self.vc._get_command_high_quality(), self.vc._get_command_flv())
-
-    def test_should_return_same_command_for_medium_quality(self):
-        ConfigEntry(config_key=ConfigEntry.CONTENT_QUALITY_OF_CONTENT, config_val=ConfigEntry.QUALITY_TYPE_MEDIUM).save()
-        self.assertEquals(self.vc._get_command_medium_quality(), self.vc._get_command_flv())
-
-    def test_should_return_same_command_for_low_quality(self):
-        ConfigEntry(config_key=ConfigEntry.CONTENT_QUALITY_OF_CONTENT, config_val=ConfigEntry.QUALITY_TYPE_LOW).save()
-        self.assertEquals(self.vc._get_command_low_quality(), self.vc._get_command_flv())
-'''
