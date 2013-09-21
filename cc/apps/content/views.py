@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 from .forms import FileImportForm
 from .services import save_file, check_course_permission
 from cc.apps.accounts.services import verify_ocl_token
-from cc.libs import decorators as custom_decorators
 
 from annoying.decorators import ajax_request, render_to
 from contextlib import closing
@@ -37,17 +36,15 @@ def upload_file(request):
     }
 
 
-@custom_decorators.login_or_token_required
 @render_to('content/view_course.html')
 def view_course(request, id=None):
-    #if request.user.is_authenticated():
-    #    return HttpResponseRedirect(reverse('content-view_module', kwargs={'id': id}))
-
     token = request.GET.get('token')
     if token:
         ocl_token = verify_ocl_token(token)
         if not ocl_token:
-            return redirect(reverse('home'))
+            return {
+                'ocl_expired': True
+            }
         course = check_course_permission(id, ocl_token.user)
 
         # there is only 1 file per course for now so return that file
@@ -67,3 +64,5 @@ def view_course(request, id=None):
             'page_list': page_list,
             'token': token,
         }
+    else:
+        return redirect(reverse('home'))

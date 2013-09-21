@@ -8,12 +8,6 @@
 {% block content %}
 
     <form id="loginForm" action="{% url 'auth_login' %}" method="post" class="well">{% csrf_token %}
-        {% if ocl_expired %}
-            <div class="alert alert-info">
-                {% trans "This link is expired" %}
-            </div>
-        {% endif %}
-
         {% include "_base_form.html" %}
 
         <input type="hidden" name="next" value="{% url 'home' %}" />
@@ -28,6 +22,5 @@
             <a class="button-gray button-big" href="{% url 'auth_password_reset' %}">{% trans "Lost password" %}</a>
         </div>
     </form>
-
 
 {% endblock %}

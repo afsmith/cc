@@ -7,6 +7,11 @@
 
 {% block content %}
 
+{% if ocl_expired %}
+    <p class="alert">
+        {% trans "This link is expired. Please request another link from the sender." %}
+    </p>
+{% else %}
     <div id="course_carousel" class="carousel slide span9 center">
         <!-- Carousel items -->
         <div class="carousel-inner">
@@ -23,6 +28,7 @@
             <a class="carousel-control right" href="#course_carousel" data-slide="next">&rsaquo;</a>
         {% endif %}
     </div>
+{% endif %}
 
 {% endblock %}
 

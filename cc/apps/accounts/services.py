@@ -17,4 +17,6 @@ def verify_ocl_token(token):
         ocl_token = OneClickLinkToken.objects.get(token=token)
     except OneClickLinkToken.DoesNotExist:
         return False
+    if ocl_token.expired:
+        return False
     return ocl_token

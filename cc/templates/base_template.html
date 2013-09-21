@@ -34,7 +34,6 @@
     <!--[if lt IE 7]>
         <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
     <![endif]-->
-
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -46,10 +45,13 @@
                 <a class="brand" href="/">Chinchilla</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
+                        {% if user.is_authenticated %}
                         <li class="active"><a href="/">Home</a></li>
                         <li><a href="#">Report</a></li>
+                        {% endif %}
                     </ul>
-
+                    
+                    {% if user.is_authenticated %}
                     <div class="nav-collapse collapse pull-right">
                         <ul id="top_nav" class="nav">
                             <li class="active">
@@ -62,6 +64,7 @@
                             </li>
                         </ul>
                     </div><!--/.nav-collapse -->
+                    {% endif %}
                 </div><!--/.nav-collapse -->
             </div>
         </div>
