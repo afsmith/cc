@@ -151,8 +151,8 @@ FILE_UPLOAD_PERMISSIONS_DIRS = 0775
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200
 FILE_UPLOAD_HANDLERS = (
-    'cc.apps.content.handlers.MaxFileMemoryFileUploadHandler',
-    'cc.apps.content.handlers.MaxFileTemporaryFileUploadHandler',
+    'cc.libs.handlers.MaxFileMemoryFileUploadHandler',
+    'cc.libs.handlers.MaxFileTemporaryFileUploadHandler',
 )
 
 
