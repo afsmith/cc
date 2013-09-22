@@ -33,5 +33,5 @@ if settings.DEBUG:
 
     urlpatterns += patterns('',
         (r'^%s(?P<path>.*)$' % media_url,
-            'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+        'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )

@@ -1,87 +1,54 @@
 from django.test import TestCase
-from accounts.models import WhamUser
 from django.core.urlresolvers import reverse
-from django.test.client import Client
 
 
-class AccountViewTestCases(TestCase):
-    def test_index(self):
-        resp = self.client.get(reverse('home'))
+class RegistrationViewTestCases(TestCase):
+    def test_register_GET_success(self):
+        resp = self.client.get(reverse('registration_register'))
         self.assertEqual(resp.status_code, 200)
-
-    def test_login(self):
-        resp = self.client.get(reverse('login'))
-        self.assertEqual(resp.status_code, 200)
-
-    def test_register(self):
-        resp = self.client.get(reverse('register'))
-        self.assertEqual(resp.status_code, 200)
-
-    def test_teaser(self):
-        resp = self.client.get(reverse('teaser'))
-        self.assertEqual(resp.status_code, 200)
-
-
-class RegisterUserViewTestCases(TestCase):
-    def test_register_test_user_1(self):
-        resp = self.client.post(reverse('register'), {
-            'username': 'test_user_1',
-            'email': 'test_user_1@hotmail.com',
-            'password1': 'test_user_1',
-            'password2': 'test_user_1'
-        })
-        self.assertEqual(resp.status_code, 302)
-        self.assertEqual(resp['Location'], 'http://testserver/')
-
-
-class LoginUserViewTestCases(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.user = WhamUser.objects.create_user(
-            'test_user_1',
-            'test1@example.com',
-            'test_user_1'
+        self.assertEqual(
+            resp.context['form'].__class__.__name__, 'UserCreationForm'
         )
 
-    def test_login_user_view(self):
-        #correct combination of username and password
-        resp = self.client.post(reverse('login'), {
-            'next': '',
-            'username': 'test_user_1',
-            'password': 'test_user_1'
-        }, follow=True)
-        self.assertEqual(resp.redirect_chain[0][1], 302)
-        self.assertEqual(resp.context['user'].username, 'test_user_1')
-
-        #empty password and username
-        resp = self.client.post(reverse('login'), {
-            'next': '',
-            'username': '',
-            'password': ''
+    def test_register_POST_success(self):
+        resp = self.client.post(reverse('registration_register'), {
+            'email': 'foo@cc.kneto.com',
+            'password1': 'abcd1234',
+            'password2': 'abcd1234',
+            'first_name': 'Foo',
+            'last_name': 'Bar',
+            'country': 'VN',
+            'industry': 'industry-legal'
         })
-        self.assertEqual(resp.status_code, 200)
-        #self.assertEqual(resp.context['user'].username,'test_user_1')
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            resp['Location'],
+            'http://testserver%s' % reverse('registration_complete')
+        )
 
-        # Correct login, logout and go back with the browser <BACK> button.
-        resp = self.client.post(reverse('login'), {
-            'next': '',
-            'username': 'test_user_1',
-            'password': 'test_user_1'
+
+class LoginViewTestCases(TestCase):
+    fixtures = ['test-users-content.json']
+
+    def test_login_POST_success(self):
+        resp = self.client.post(reverse('auth_login'), {
+            'username': 'admin@cc.kneto.com',
+            'password': 'admin'
         }, follow=True)
         self.assertEqual(resp.redirect_chain[0][1], 302)
-        self.assertEqual(resp.context['user'].username, 'test_user_1')
+        self.assertEqual(resp.context['user'].first_name, 'marek')
 
-        resp = self.client.post(reverse('logout'), follow=True)
-        self.assertEqual(resp.redirect_chain[0][1], 302)
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.context['user'].username, '')
-
-    def test_login_fail_view(self):
+    def test_login_POST_failure(self):
         """
         If login fails, system debug information should not be shown to users
         """
-        resp = self.client.post(reverse('login'), {
-            'next': '',
+        resp = self.client.post(reverse('auth_login'), {
             'username': 'test_user_1',
             'password': 'test_user_1'
         }, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(
+            resp.context['form'].errors['__all__'],
+            [u'Please enter a correct email address and password.'
+             ' Note that both fields may be case-sensitive.']
+        )

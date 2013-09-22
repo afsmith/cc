@@ -7,10 +7,10 @@ import os
 import subprocess
 
 env.test_apps = ' '.join([
-    #'accounts',
-    #'cc',
+    'accounts',
     'cc_messages',
     'content',
+    #'cc'
     #'tracking',
 ])
 
