@@ -1,7 +1,8 @@
-from django.core.mail import send_mail, send_mass_mail
+from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.conf import settings
 
 from cc.apps.accounts.models import OneClickLinkToken
+from cc.libs.utils import get_domain
 
 import datetime
 
@@ -37,8 +38,10 @@ def create_ocl_and_send_mail(course, request, message=None):
     '''
     Create OCL link (to the course) for each recipients and send email to them
     '''
-    emails = ()
+    connection = get_connection()
+    connection.open()
     recipient_emails = []
+    domain = get_domain(request)
     if not message:
         message = course.message
 
@@ -48,34 +51,50 @@ def create_ocl_and_send_mail(course, request, message=None):
             user=r,
             expires_on=datetime.datetime.today() + datetime.timedelta(days=30)
         )
-        ocl_link = 'http://%s/content/view/%d/?token=%s' % (
-            request.get_host(), course.id, ocl.token
+        ocl_link = '%s/content/view/%d/?token=%s' % (
+            domain, course.id, ocl.token
         )
 
-        # email tuple format: (subject, message, from_email, recipient_list)
-        emails += ((
-            message.subject,
-            EMAIL_TEMPLATE % {'message': message.message, 'ocl_link': ocl_link},
-            course.owner.email,
-            [r.email]
-        ),)
+        text_body = EMAIL_TEMPLATE % {
+            'message': message.message, 'ocl_link': ocl_link
+        }
+        msg = EmailMultiAlternatives(
+            subject=message.subject,
+            body=text_body,
+            from_email=course.owner.email,
+            to=[r.email],
+            connection=connection
+        )
 
+        # attach the tracking pixel if needed
+        if message.notify_email_opened:
+            msg.attach_alternative(
+                '%s <img src="%s/tracking-pixel/%d" />' % (
+                    text_body, domain, course.id
+                ),
+                'text/html'
+            )
+        msg.send()
+
+        # add recipient email address to the list
         recipient_emails.append(r.email)
 
-    # if sender chooses to cc himself
+    # send a copy if sender chooses to cc himself
     if message.cc_me:
-        emails += ((
-            message.subject,
-            CC_ME_TEMPLATE % {
+        msg = EmailMultiAlternatives(
+            subject=message.subject,
+            body=CC_ME_TEMPLATE % {
                 'recipients': ', '.join(recipient_emails),
                 'message': message.message
             },
-            settings.DEFAULT_FROM_EMAIL,
-            [course.owner.email]
-        ),)
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[course.owner.email],
+            connection=connection
+        )
+        msg.send()
 
-    # send mass / bulk emails to be more efficient
-    send_mass_mail(emails)
+    # close connection after finish
+    connection.close()
 
 
 def send_notification_email(course, recipient, reason_code):
