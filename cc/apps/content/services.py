@@ -75,7 +75,8 @@ def create_course_from_message(message):
     course = Course.objects.create(
         title=message.subject,
         owner=message.owner,
-        group=group
+        group=group,
+        message=message
     )
     course.files.add(message.attachment)
     course.save()

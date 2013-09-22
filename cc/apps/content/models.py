@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.accounts.models import CUser
+from cc.apps.cc_messages.models import Message
 
 import os
 import urlparse
@@ -343,6 +344,7 @@ class Course(models.Model):
     group = models.ForeignKey(auth_models.Group)
     owner = models.ForeignKey(CUser)
     files = models.ManyToManyField(File, related_name='files')
+    message = models.ForeignKey(Message)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
