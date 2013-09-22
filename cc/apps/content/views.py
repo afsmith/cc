@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from .forms import FileImportForm
 from .services import save_file, check_course_permission
 from cc.apps.accounts.services import verify_ocl_token
+from cc.apps.cc.services import send_notification_email
 
 from annoying.decorators import ajax_request, render_to
 from contextlib import closing
@@ -58,6 +59,10 @@ def view_course(request, id=None):
         elif pages_num > 1:
             for i in range(0, pages_num):
                 page_list.append('%s/p-%d.png' % (view_url, i))
+
+        # notify the sender if "notify when link clicked" option is on
+        if course.message.notify_link_clicked:
+            send_notification_email(course, ocl_token.user, 2)
 
         return {
             'course': course,

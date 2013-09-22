@@ -21,7 +21,7 @@ def home(request):
             message.owner = request.user
             message.save()
             course = create_course_from_message(message)
-            create_ocl_and_send_mail(course, message, request)
+            create_ocl_and_send_mail(course, request, message)
 
             return {'thankyou_page': True}
     else:
