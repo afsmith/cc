@@ -1,7 +1,8 @@
-from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.conf import settings
+from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 
-from cc.apps.accounts.models import OneClickLinkToken
+from cc.apps.accounts.models import OneClickLinkToken, CUser
+from cc.apps.content.models import Course
 from cc.libs.utils import get_domain
 
 import datetime
@@ -69,8 +70,8 @@ def create_ocl_and_send_mail(course, request, message=None):
         # attach the tracking pixel if needed
         if message.notify_email_opened:
             msg.attach_alternative(
-                '%s <img src="%s/tracking-pixel/%d" />' % (
-                    text_body, domain, course.id
+                '%s <img src="%s/track/%d/%d" />' % (
+                    text_body, domain, course.id, r.id
                 ),
                 'text/html'
             )
@@ -125,3 +126,17 @@ def send_notification_email(course, recipient, reason_code):
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[course.owner.email]
     )
+
+
+def notify_email_opened(course_id, user_id):
+    if course_id > 0 and user_id > 0:
+        course = Course.objects.filter(id=course_id, message__receivers=user_id)
+        if course:
+            if course.message.notify_email_opened:
+                recipient = CUser.objects.get(id=user_id)
+                # if all pass, send notification
+                send_notification_email(course[0], recipient, 1)
+        else:
+            return False
+    else:
+        return False

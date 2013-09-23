@@ -24,6 +24,10 @@ urlpatterns = patterns(
 
     # apps
     url(r'^content/', include('cc.apps.content.urls')),
+
+    # tracking email opened
+    url(r'^track/(?P<course_id>\d+)/(?P<user_id>\d+)$',
+        'cc.apps.cc.views.track_email', name='track_email'),
 )
 
 if settings.DEBUG:
@@ -32,6 +36,6 @@ if settings.DEBUG:
         media_url = media_url[1:]
 
     urlpatterns += patterns('',
-        (r'^%s(?P<path>.*)$' % media_url,
-        'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+        url(r'^%s(?P<path>.*)$' % media_url,
+            'django.views.static.serve', {'document_root': settings.MEDIA_ROOT})
     )
