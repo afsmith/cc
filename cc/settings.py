@@ -112,11 +112,6 @@ LOGGING = {
 # Magic comes next
 ##############################################################################
 
-try:
-    from local_settings import *
-except ImportError:
-    print 'local_settings.py doesnt exist yet. Make sure you have created it.'
-
 # import choices for forms
 from settings_choices import *
 
@@ -192,3 +187,14 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 '''
+
+##############################################################################
+# Move local settings to bottom so any setting can be overriden
+##############################################################################
+
+try:
+    from local_settings import *
+except ImportError:
+    print 'local_settings.py doesnt exist yet. Make sure you have created it.'
+
+################################### THE END ###################################
