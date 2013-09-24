@@ -36,9 +36,14 @@ def home(request):
 
 
 def track_email(request, course_id, user_id):
+    '''
+    The 1x1 transparent image to track opened email
+    '''
+    # send email notification to owner of the course
     notify_email_opened(course_id, user_id)
 
+    # serve the 1x1 transparent image
     image_data = open(
-        settings.STATICFILES_DIRS[0]+'/img/transparent.gif', 'rb'
+        '%s/img/transparent.gif' % settings.STATICFILES_DIRS[0], 'rb'
     ).read()
-    return http.HttpResponse(image_data, mimetype='image/png')
+    return http.HttpResponse(image_data, mimetype='image/gif')
