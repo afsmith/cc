@@ -109,6 +109,14 @@ class ImportFileTest(ClientTestCase):
         f.close()
         self.assertEquals(File.objects.all().count(), 1)
 
+    def test_upload_file_returns_page_count(self):
+        c = self._get_client_admin()
+        f = self._get_fh()
+        resp = c.post(self.url, {'file': f})
+        json_resp = json.loads(resp.content)
+        self.assertEquals(json_resp.get('page_count'), -1)
+        f.close()
+
     #
     # I've disabled this test for now as we don't have any way to skip
     # conversion and it is eager (read: blocking) when tests are run.

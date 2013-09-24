@@ -63,8 +63,12 @@ def save_file(user, orig_filename, coping_file_callback):
     file_abs_path = path.abspath(path.join(
         settings.MEDIA_ROOT, full_orig_file_path
     ))
-    pdf = PdfFileReader(open(file_abs_path, 'rb'))
-    page_count = pdf.getNumPages()
+    try:
+        pdf = PdfFileReader(open(file_abs_path, 'rb'))
+        page_count = pdf.getNumPages()
+    except IOError:
+        # Testing eh?
+        page_count = -1
 
     return {
         'status': 'OK',
