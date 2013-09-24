@@ -130,12 +130,13 @@ def send_notification_email(course, recipient, reason_code):
 
 def notify_email_opened(course_id, user_id):
     if course_id > 0 and user_id > 0:
-        course = Course.objects.filter(id=course_id, message__receivers=user_id)
-        if course:
+        qs = Course.objects.filter(id=course_id, message__receivers=user_id)
+        if qs:
+            course = qs[0]
             if course.message.notify_email_opened:
                 recipient = CUser.objects.get(id=user_id)
                 # if all pass, send notification
-                send_notification_email(course[0], recipient, 1)
+                send_notification_email(course, recipient, 1)
         else:
             return False
     else:
