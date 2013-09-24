@@ -8,6 +8,7 @@ from cc.apps.content.services import create_course_from_message
 from cc.apps.cc_messages.forms import MessageForm
 
 from annoying.decorators import render_to
+from os import path
 
 
 @auth_decorators.login_required
@@ -43,7 +44,8 @@ def track_email(request, course_id, user_id):
     notify_email_opened(course_id, user_id)
 
     # serve the 1x1 transparent image
-    image_data = open(
-        '%s/img/transparent.gif' % settings.STATICFILES_DIRS[0], 'rb'
-    ).read()
+    img_abs_path = path.abspath(path.join(
+        settings.STATICFILES_DIRS[0], 'img', 'transparent.gif'
+    ))
+    image_data = open(img_abs_path, 'rb').read()
     return http.HttpResponse(image_data, mimetype='image/gif')

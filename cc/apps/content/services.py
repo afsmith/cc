@@ -7,7 +7,8 @@ from . import utils, tasks, convert
 from .models import File, Course
 from cc.apps.accounts.services import create_group
 
-import os
+from os import path
+from PyPDF2 import PdfFileReader
 
 
 def save_file(user, orig_filename, coping_file_callback):
@@ -22,7 +23,7 @@ def save_file(user, orig_filename, coping_file_callback):
 
     file = File(orig_filename=orig_filename)
 
-    full_orig_file_path = os.path.join(
+    full_orig_file_path = path.join(
         settings.CONTENT_UPLOADED_DIR,
         file.orig_file_path
     )
@@ -58,11 +59,19 @@ def save_file(user, orig_filename, coping_file_callback):
                 'original_error': e.__str__()
             }
 
+    # get the page count quickly
+    file_abs_path = path.abspath(path.join(
+        settings.MEDIA_ROOT, full_orig_file_path
+    ))
+    pdf = PdfFileReader(open(file_abs_path, 'rb'))
+    page_count = pdf.getNumPages()
+
     return {
         'status': 'OK',
         'file_id': file.id,
         'file_orig_filename': file.orig_filename,
         'file_type': file.type,
+        'page_count': page_count
     }
 
 

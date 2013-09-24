@@ -13,6 +13,7 @@ redis==2.8.0
 kombu==2.5.14
 django-analytical==0.15.0
 django-cookie-law>=1.0.0
+PyPDF2==1.18
 
 # for testing
 sqlparse==0.1.8

@@ -15,11 +15,11 @@
                     <ul id="file_list"></ul>
                 </form>
 
-                <form id="js-uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="row-fluid">{% csrf_token %}
+                <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="row-fluid dropzone">{% csrf_token %}
                     {% trans 'Drop the attachment (or click) here to upload' %}
                 </form>
 
-                <button id="js-submitMessageForm" class="btn btn-large btn-success">{% trans 'Send' %}</button>
+                <button id="js-submitMessageForm" class="btn btn-large btn-success disabled">{% trans 'Send' %}</button>
             </div>
         </div>
     {% endif %}
@@ -28,6 +28,7 @@
 
 {% block additional_css %}
     <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tokenfield.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendor/dropzone.css' %}">
 {% endblock %}
 
 {% block js_scripts %}
