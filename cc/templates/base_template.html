@@ -1,4 +1,4 @@
-{% load i18n static analytical cookielaw_tags %}
+{% load i18n static extras analytical cookielaw_tags %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -42,12 +42,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="/">Chinchilla</a>
+                <a class="brand" href="{% url 'home' %}">Chinchilla</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         {% if user.is_authenticated %}
-                        <li class="active"><a href="/">Home</a></li>
-                        <li><a href="#">Report</a></li>
+                        <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+                        <li class="{% active request 'report' %}"><a href="{% url 'report' %}">{% trans 'Report' %}</a></li>
                         {% endif %}
                     </ul>
                     

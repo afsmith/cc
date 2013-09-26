@@ -13,6 +13,7 @@ urlpatterns = patterns(
 
     # ----- CC APP  ----- #
     url(r'^$', 'cc.apps.cc.views.home', name='home'),
+    url(r'^report/$', 'cc.apps.cc.views.report', name='report'),
     url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
 
     # registration

@@ -15,7 +15,7 @@ from os import path
 @render_to('main/message.html')
 def home(request):
     '''
-    Home view
+    Home view / Send message view
     '''
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
@@ -49,3 +49,12 @@ def track_email(request, course_id, user_id):
     ))
     image_data = open(img_abs_path, 'rb').read()
     return http.HttpResponse(image_data, mimetype='image/gif')
+
+
+@auth_decorators.login_required
+@render_to('main/report.html')
+def report(request):
+    '''
+    Reporting view
+    '''
+    return {}
