@@ -39,26 +39,6 @@ def save_file(user, orig_filename, coping_file_callback):
 
     file.save()
 
-    # if file is uploaded, start the celery conversion task
-    if file.status == File.STATUS_UPLOADED:
-        try:
-            tasks.process_stored_file.delay(file)
-        except convert.ConversionError, e:
-            return {
-                'status': 'ERROR',
-                'message': unicode(_('File conversion error.')),
-                'original_error': e
-            }
-        except Exception, e:
-            # catch all other errors here to not display anything for end user
-            return {
-                'status': 'ERROR',
-                'message': unicode(_(
-                    'Something went wrong. Please contact the admin.'
-                )),
-                'original_error': e.__str__()
-            }
-
     # get the page count quickly
     file_abs_path = path.abspath(path.join(
         settings.MEDIA_ROOT, full_orig_file_path
