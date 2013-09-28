@@ -2,7 +2,8 @@ from django import http
 from django.conf import settings
 from django.contrib.auth import decorators as auth_decorators
 
-from .services import create_ocl_and_send_mail, notify_email_opened
+from . import tasks
+from .services import notify_email_opened
 from cc.apps.content.forms import FileImportForm
 from cc.apps.content.services import create_course_from_message
 from cc.apps.cc_messages.forms import MessageForm
@@ -24,7 +25,7 @@ def home(request):
             message.owner = request.user
             message.save()
             course = create_course_from_message(message)
-            create_ocl_and_send_mail(course, request, message)
+            tasks.process_file_and_send_message(course, request, message)
 
             return {'thankyou_page': True}
     else:
