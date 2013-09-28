@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth import models as auth_models
 from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.accounts.models import CUser
+from cc.apps.content.models import File
 
 
 class Message(models.Model):
@@ -14,11 +16,15 @@ class Message(models.Model):
     message = models.TextField(_('Message'))
     notify_email_opened = models.BooleanField(_('Notify email opened'))
     notify_link_clicked = models.BooleanField(_('Notify link clicked'))
-    attachment = models.IntegerField(_('Attachment'))
-    owner = models.ForeignKey(CUser, related_name='owner', null=True)
+    files = models.ManyToManyField(File, related_name='files')
 
+    owner = models.ForeignKey(CUser, related_name='owner', null=True)
+    group = models.ForeignKey(auth_models.Group, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    def is_available_for_user(self, user):
+        return self.group in user.groups.all()
+
     def __unicode__(self):
-        return self.subject + self.message
+        return self.subject

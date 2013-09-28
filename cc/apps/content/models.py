@@ -1,10 +1,8 @@
 from django.conf import settings
-from django.contrib.auth import models as auth_models
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.accounts.models import CUser
-from cc.apps.cc_messages.models import Message
 
 import os
 import urlparse
@@ -334,22 +332,3 @@ class File(models.Model):
     class Meta:
         ordering = ('created_on',)
 
-
-class Course(models.Model):
-    """
-    Represents course assembled from a File and assigned to a Group.
-    """
-
-    title = models.CharField(_('Title'), max_length=150)
-    group = models.ForeignKey(auth_models.Group)
-    owner = models.ForeignKey(CUser)
-    files = models.ManyToManyField(File, related_name='files')
-    message = models.ForeignKey(Message)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-
-    def is_available_for_user(self, user):
-        return self.group in user.groups.all()
-
-    def __unicode__(self):
-        return self.title
