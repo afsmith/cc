@@ -3,7 +3,6 @@ from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 
 from cc.apps.accounts.models import OneClickLinkToken, CUser
 from cc.apps.content.models import Course
-from cc.libs.utils import get_domain
 
 import datetime
 
@@ -35,16 +34,13 @@ Best,
 Kneto'''
 
 
-def create_ocl_and_send_mail(course, request, message=None):
+def create_ocl_and_send_message(course, domain, message):
     '''
     Create OCL link (to the course) for each recipients and send email to them
     '''
     connection = get_connection()
     connection.open()
     recipient_emails = []
-    domain = get_domain(request)
-    if not message:
-        message = course.message
 
     for r in message.receivers.all():
         # ocl token should expire after 30 days

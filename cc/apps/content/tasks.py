@@ -7,11 +7,16 @@ from celery.utils.log import get_task_logger
 import datetime
 
 
-@task(ignore_result=True)
+@task
 def process_stored_file(file):
     logger = get_task_logger(__name__)
     conv = convert.get_converter(file, storage.default_storage, logger)
-    conv.convert()
+    try:
+        conv.convert()
+    except convert.ConversionError, e:
+        print '[CONVERSION ERROR] %s' % e
+        return False
+    return True
 
 
 @task
