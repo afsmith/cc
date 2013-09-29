@@ -47,6 +47,14 @@ def save_file(user, orig_filename, coping_file_callback):
         # Testing eh?
         page_count = -1
 
+    # if exceed max pages in settings
+    if page_count > settings.PDF_MAX_PAGES:
+        return {
+            'status': 'ERROR',
+            'message': unicode(_('The attachment has too many pages.'))
+        }
+
+    # if everything is cool
     return {
         'status': 'OK',
         'file_id': file.id,

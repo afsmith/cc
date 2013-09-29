@@ -150,6 +150,8 @@ FILE_UPLOAD_HANDLERS = (
     'cc.libs.handlers.MaxFileTemporaryFileUploadHandler',
 )
 
+PDF_MAX_PAGES = 30
+
 
 ##############################################################################
 # Celery
