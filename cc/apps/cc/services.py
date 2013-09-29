@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 
 from cc.apps.accounts.models import OneClickLinkToken, CUser
-from cc.apps.content.models import Course
+from cc.apps.cc_messages.models import Message
 
 import datetime
 
@@ -34,9 +34,9 @@ Best,
 Kneto'''
 
 
-def create_ocl_and_send_message(course, domain, message):
+def create_ocl_and_send_message(message, domain):
     '''
-    Create OCL link (to the course) for each recipients and send email to them
+    Create OCL link (to the message) for each recipients and send email to them
     '''
     connection = get_connection()
     connection.open()
@@ -48,8 +48,8 @@ def create_ocl_and_send_message(course, domain, message):
             user=r,
             expires_on=datetime.datetime.today() + datetime.timedelta(days=30)
         )
-        ocl_link = '%s/content/view/%d/?token=%s' % (
-            domain, course.id, ocl.token
+        ocl_link = '%s/view/%d/?token=%s' % (
+            domain, message.id, ocl.token
         )
 
         text_body = EMAIL_TEMPLATE % {
@@ -58,7 +58,7 @@ def create_ocl_and_send_message(course, domain, message):
         msg = EmailMultiAlternatives(
             subject=message.subject,
             body=text_body,
-            from_email=course.owner.email,
+            from_email=message.owner.email,
             to=[r.email],
             connection=connection
         )
@@ -67,7 +67,7 @@ def create_ocl_and_send_message(course, domain, message):
         if message.notify_email_opened:
             msg.attach_alternative(
                 '%s <img src="%s/track/%d/%d" />' % (
-                    text_body, domain, course.id, r.id
+                    text_body, domain, message.id, r.id
                 ),
                 'text/html'
             )
@@ -85,7 +85,7 @@ def create_ocl_and_send_message(course, domain, message):
                 'message': message.message
             },
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[course.owner.email],
+            to=[message.owner.email],
             connection=connection
         )
         msg.send()
@@ -94,13 +94,12 @@ def create_ocl_and_send_message(course, domain, message):
     connection.close()
 
 
-def send_notification_email(course, recipient, reason_code):
+def send_notification_email(message, recipient, reason_code):
     '''
     Send notification email to sender
     reason_code 1: notify_email_opened
     reason_code 2: notify_link_clicked
     '''
-    message = course.message
     if reason_code == 1:
         subject = '[Notification] %s opened your email.' % recipient.email
         body = NOTIFICATION_EMAIL_OPENED_TEMPLATE % {
@@ -120,19 +119,19 @@ def send_notification_email(course, recipient, reason_code):
         subject=subject,
         message=body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[course.owner.email]
+        recipient_list=[message.owner.email]
     )
 
 
-def notify_email_opened(course_id, user_id):
-    if course_id > 0 and user_id > 0:
-        qs = Course.objects.filter(id=course_id, message__receivers=user_id)
+def notify_email_opened(message_id, user_id):
+    if message_id > 0 and user_id > 0:
+        qs = Message.objects.filter(id=message_id, message__receivers=user_id)
         if qs:
-            course = qs[0]
-            if course.message.notify_email_opened:
+            message = qs[0]
+            if message.notify_email_opened:
                 recipient = CUser.objects.get(id=user_id)
                 # if all pass, send notification
-                send_notification_email(course, recipient, 1)
+                send_notification_email(message, recipient, 1)
         else:
             return False
     else:

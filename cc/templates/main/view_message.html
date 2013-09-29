@@ -1,9 +1,9 @@
 {% extends "base_template.html" %}
 {% load extras i18n static %}
 
-{% block meta_title %}{{ course.title }}{% endblock %}
+{% block meta_title %}{{ message.subject }}{% endblock %}
 
-{% block title %}{{ course.title }}{% endblock %}
+{% block title %}{{ message.subject }}{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
         {% trans "This link is expired. Please request another link from the sender." %}
     </p>
 {% else %}
-    <div id="course_carousel" class="carousel slide span9 center">
+    <div id="message_carousel" class="carousel slide span9 center">
         <!-- Carousel items -->
         <div class="carousel-inner">
             {% for p in page_list %}
@@ -24,8 +24,8 @@
         
         <!-- Carousel nav -->
         {% if page_list|length > 1 %}
-            <a class="carousel-control left" href="#course_carousel" data-slide="prev">&lsaquo;</a>
-            <a class="carousel-control right" href="#course_carousel" data-slide="next">&rsaquo;</a>
+            <a class="carousel-control left" href="#message_carousel" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#message_carousel" data-slide="next">&rsaquo;</a>
         {% endif %}
     </div>
 {% endif %}
@@ -33,5 +33,5 @@
 {% endblock %}
 
 {% block js_scripts %}
-    <script src="{% static 'js/view_course.js' %}"></script>
+    <script src="{% static 'js/view_message.js' %}"></script>
 {% endblock %}

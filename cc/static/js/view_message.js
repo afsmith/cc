@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $('#course_carousel').carousel({
+    $('#message_carousel').carousel({
         interval: false
     });
     

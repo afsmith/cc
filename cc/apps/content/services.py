@@ -1,11 +1,8 @@
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import PermissionDenied
 
-from . import utils, tasks, convert
-from .models import File, Course
-from cc.apps.accounts.services import create_group
+from . import utils
+from .models import File
 
 from os import path
 from PyPDF2 import PdfFileReader
@@ -39,7 +36,7 @@ def save_file(user, orig_filename, coping_file_callback):
 
     file.save()
 
-    # get the page count quickly
+    # get the page count
     file_abs_path = path.abspath(path.join(
         settings.MEDIA_ROOT, full_orig_file_path
     ))
@@ -57,33 +54,3 @@ def save_file(user, orig_filename, coping_file_callback):
         'file_type': file.type,
         'page_count': page_count
     }
-
-
-def create_course_from_message(message):
-    '''
-    Create the group and course from the message
-    '''
-    group = create_group(message.receivers.all())
-
-    course = Course.objects.create(
-        title=message.subject,
-        owner=message.owner,
-        group=group,
-        message=message
-    )
-    course.files.add(message.attachment)
-    course.save()
-
-    return course
-
-
-def check_course_permission(id, user):
-    '''
-    Check if the user has permission to view the course
-    '''
-    if id:
-        course = get_object_or_404(Course, pk=id)
-        if course.is_available_for_user(user):
-            return course
-        else:
-            raise PermissionDenied

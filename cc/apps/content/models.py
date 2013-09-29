@@ -9,11 +9,6 @@ import urlparse
 import utils
 import type_specifiers
 
-"""
-Django models related to content handled by the system.
-
-These models represent various business types needed to create and use courses.
-"""
 
 PLAIN_FILES = frozenset([
     'txt',
@@ -98,10 +93,9 @@ class ModuleDescrError(Exception):
 
 
 class File(models.Model):
-    """Represents single file managed by the system.
-
-    Files are building blocks of courses.
-    """
+    '''
+    Represents single file managed by the system.
+    '''
 
     TYPE_PLAIN = 10
     TYPE_IMAGE = 20

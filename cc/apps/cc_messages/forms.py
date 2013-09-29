@@ -5,23 +5,27 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Message
 from cc.apps.content.models import File
 from cc.apps.accounts.models import CUser
+from cc.apps.accounts.services import create_group
 
 
 class MessageForm(forms.ModelForm):
+    attachment = forms.IntegerField(
+        label=_('Attachment'), widget=forms.HiddenInput
+    )
+
     class Meta:
         model = Message
-        exclude = ('receivers', 'owner', )
+        exclude = ('receivers', 'owner', 'group', 'files',)
 
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'span6'}),
             'message': forms.Textarea(attrs={'class': 'span6'}),
-            'attachment': forms.HiddenInput(),
         }
 
         '''
         # error_messages is not supported until 1.6
         error_messages = {
-            'attachment': {
+            'files': {
                 'required': _('You need to add one file.'),
             },
         }
@@ -69,6 +73,13 @@ class MessageForm(forms.ModelForm):
         # clean up the To data before saving
         self.cleaned_data['to'] = self._fetch_receiver_ids()
         message = super(MessageForm, self).save()
+        
         # then add m2m relationship after saving
         message.receivers = self.cleaned_data['to']
+        message.files.add(self.cleaned_data['attachment'])
+
+        # add the receivers group and save
+        message.group = create_group(message.receivers.all())
+
+        message.save()
         return message

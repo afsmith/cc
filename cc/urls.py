@@ -15,6 +15,12 @@ urlpatterns = patterns(
     url(r'^$', 'cc.apps.cc.views.home', name='home'),
     url(r'^report/$', 'cc.apps.cc.views.report', name='report'),
     url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
+    url(r'^view/(?P<id>\d+)/$',
+        'cc.apps.cc_messages.views.view_message', name='view_message'),
+    # tracking email opened
+    url(r'^track/(?P<message_id>\d+)/(?P<user_id>\d+)$',
+        'cc.apps.cc.views.track_email', name='track_email'),
+
 
     # registration
     url(r'^accounts/register/$',
@@ -24,11 +30,7 @@ urlpatterns = patterns(
     url(r'^accounts/', include('registration.backends.default.urls')),
 
     # apps
-    url(r'^content/', include('cc.apps.content.urls')),
-
-    # tracking email opened
-    url(r'^track/(?P<course_id>\d+)/(?P<user_id>\d+)$',
-        'cc.apps.cc.views.track_email', name='track_email'),
+    #url(r'^content/', include('cc.apps.content.urls')),
 )
 
 if settings.DEBUG:
