@@ -115,6 +115,9 @@ LOGGING = {
 # import choices for forms
 from settings_choices import *
 
+# import email templates
+from settings_emails import *
+
 # admin settings
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),

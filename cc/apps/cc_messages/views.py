@@ -1,11 +1,57 @@
+from django import http
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.contrib.auth import decorators as auth_decorators
 
+from . import tasks
 from .services import get_message
+from .forms import MessageForm
+from .services import notify_email_opened, send_notification_email
 from cc.apps.accounts.services import verify_ocl_token
-from cc.apps.cc.services import send_notification_email
+from cc.apps.content.forms import FileImportForm
 
 from annoying.decorators import render_to
+from os import path
+
+
+@auth_decorators.login_required
+@render_to('main/send_message.html')
+def send_message(request):
+    '''
+    Send message view / Home view
+    '''
+    if request.method == 'POST':
+        message_form = MessageForm(request.POST)
+        if message_form.is_valid():
+            message = message_form.save()
+            message.owner = request.user
+            message.save()
+            tasks.process_file_and_send_message(message, request)
+
+            return {'thankyou_page': True}
+    else:
+        message_form = MessageForm()
+
+    return {
+        'message_form': message_form,
+        'import_file_form': FileImportForm(),
+    }
+
+
+def track_email(request, message_id, user_id):
+    '''
+    The 1x1 transparent image to track opened email
+    '''
+    # send email notification to owner of the message
+    notify_email_opened(message_id, user_id)
+
+    # serve the 1x1 transparent image
+    img_abs_path = path.abspath(path.join(
+        settings.STATICFILES_DIRS[0], 'img', 'transparent.gif'
+    ))
+    image_data = open(img_abs_path, 'rb').read()
+    return http.HttpResponse(image_data, mimetype='image/gif')
 
 
 @render_to('main/view_message.html')
@@ -33,7 +79,7 @@ def view_message(request, id=None):
 
         # notify the sender if "notify when link clicked" option is on
         if message.notify_link_clicked:
-            send_notification_email(message, ocl_token.user, 2)
+            send_notification_email(2, message, ocl_token.user)
 
         return {
             'message': message,

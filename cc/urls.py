@@ -12,14 +12,14 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     # ----- CC APP  ----- #
-    url(r'^$', 'cc.apps.cc.views.home', name='home'),
+    url(r'^$', 'cc.apps.cc_messages.views.send_message', name='home'),
     url(r'^report/$', 'cc.apps.cc.views.report', name='report'),
     url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
     url(r'^view/(?P<id>\d+)/$',
         'cc.apps.cc_messages.views.view_message', name='view_message'),
     # tracking email opened
     url(r'^track/(?P<message_id>\d+)/(?P<user_id>\d+)$',
-        'cc.apps.cc.views.track_email', name='track_email'),
+        'cc.apps.cc_messages.views.track_email', name='track_email'),
 
 
     # registration
@@ -28,9 +28,6 @@ urlpatterns = patterns(
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}),
     url(r'^accounts/', include('registration.backends.default.urls')),
-
-    # apps
-    #url(r'^content/', include('cc.apps.content.urls')),
 )
 
 if settings.DEBUG:
