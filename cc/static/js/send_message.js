@@ -59,6 +59,9 @@ $(document).ready(function () {
         toggleMessageSubmitButton();
     });
 
+    // hide pricing page
+    $('label[for="id_pricing_page"], #id_pricing_page').hide();
+
     // dropzone config for file upload form
     Dropzone.options.uploadFileForm = {
         url: $(this).attr('action'),
@@ -68,13 +71,25 @@ $(document).ready(function () {
         clickable: true,
         acceptedFiles: 'application/pdf',
         success: function (file, response) {
+            var page_count = response.page_count,
+                i = 1,
+                options = '';
+
             if (response.status === 'OK') {
                 // add file ID to hidden input
                 $('#id_attachment').val(response.file_id);
 
+                // populate pricing page selector and show
+                for (i=1; i<=page_count; i++) {
+                    options += '<option value="'+i+'">'+i+'</option>';
+                }
+                $('#id_pricing_page').append(options);
+                $('label[for="id_pricing_page"], #id_pricing_page').show();
+                
+
                 // handle some CSS and template
                 $('.dz-success-mark').css('opacity', 1);
-                $('.dz-filename').append(' (<span>' + response.page_count + ' pages</span>)');
+                $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
 
                 // remove error message 
                 $('#uploadFileForm .alert').remove();

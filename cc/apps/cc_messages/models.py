@@ -17,6 +17,7 @@ class Message(models.Model):
     notify_email_opened = models.BooleanField(_('Notify email opened'))
     notify_link_clicked = models.BooleanField(_('Notify link clicked'))
     files = models.ManyToManyField(File, related_name='files')
+    pricing_page = models.IntegerField(_('Pricing page'), null=True, blank=True)
 
     owner = models.ForeignKey(CUser, related_name='owner', null=True)
     group = models.ForeignKey(auth_models.Group, null=True)

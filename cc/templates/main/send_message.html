@@ -11,8 +11,6 @@
             <div class="span6 center">
                 <form id="js-messageForm" action="{% url 'home' %}" method="POST">{% csrf_token %}
                     {% include '_base_form.html' with form=message_form%}
-
-                    <ul id="file_list"></ul>
                 </form>
 
                 <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="row-fluid dropzone">{% csrf_token %}

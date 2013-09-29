@@ -20,6 +20,7 @@ class MessageForm(forms.ModelForm):
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'span6'}),
             'message': forms.Textarea(attrs={'class': 'span6'}),
+            'pricing_page': forms.Select(choices=[('', '----------')]),
         }
 
         '''
