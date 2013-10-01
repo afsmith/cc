@@ -1,5 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import (
+    ReadOnlyPasswordHashField, PasswordResetForm
+)
+from django.contrib.auth.hashers import UNUSABLE_PASSWORD
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
@@ -87,3 +90,39 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial['password']
+
+
+class UserPasswordResetForm(PasswordResetForm):
+    error_messages = {
+        'unknown': _("That email address doesn't have an associated "
+                     "user account. Are you sure you've registered?"),
+        'unusable': _("The user account associated with this email "
+                      "address cannot reset the password."),
+        'receiver': _("Hey, it does not look like you're registered as a "
+                      "sender. Would you like to sign up?"),
+    }
+    email = forms.EmailField(label=_("Email"), max_length=254)
+
+    def clean_email(self):
+        """
+        Validates that an active user exists with the given email address.
+        """
+        email = self.cleaned_data['email']
+        self.users_cache = CUser.objects.filter(email__iexact=email)
+        if not len(self.users_cache) or len(self.users_cache) > 1:
+            raise forms.ValidationError(self.error_messages['unknown'])
+        user = self.users_cache[0]
+        if not user.is_active:
+            if user.country == 'N/A':  # receiver user
+                raise forms.ValidationError(
+                    self.error_messages['receiver'],
+                    code='receiver'
+                )
+            else:
+                raise forms.ValidationError(self.error_messages['unknown'])
+        if user.password == UNUSABLE_PASSWORD:
+            raise forms.ValidationError(self.error_messages['unusable'])
+        return email
+
+    def save(self, *args, **kwargs):
+        super(UserPasswordResetForm, self).save(*args, **kwargs)
