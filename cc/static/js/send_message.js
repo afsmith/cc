@@ -4,6 +4,7 @@ $(document).ready(function () {
 
     // validation rules for message form
     message_form.validate({
+        ignore: '',
         rules: {
             subject: 'required',
             to: 'required',
@@ -24,7 +25,7 @@ $(document).ready(function () {
             message_submit_btn.addClass('disabled');
         }
 
-        if ($('#js-messageForm').valid()) {
+        if (message_form.valid()) {
             message_submit_btn.removeClass('disabled');
         } else {
             message_submit_btn.addClass('disabled');
