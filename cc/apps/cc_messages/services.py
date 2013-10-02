@@ -116,7 +116,7 @@ def send_notification_email(reason_code, message, recipient=None):
 
 def notify_email_opened(message_id, user_id):
     if message_id > 0 and user_id > 0:
-        qs = Message.objects.filter(id=message_id, message__receivers=user_id)
+        qs = Message.objects.filter(id=message_id, receivers=user_id)
         if qs:
             message = qs[0]
             if message.notify_email_opened:
