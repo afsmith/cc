@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
     });
 
-    if ($('.registration_form').length && qs.email !== '') {
+    if ($('.registration_form').length && typeof qs.email !== 'undefined') {
         $('.registration_form #id_email').val(qs.email);
     }
 });

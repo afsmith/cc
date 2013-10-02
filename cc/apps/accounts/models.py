@@ -12,8 +12,11 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, **kwargs):
         if 'email' not in kwargs:
             raise ValueError('Users must have an email address')
-
-        user = self.model(**kwargs)
+        try:
+            user = CUser.objects.get(email__iexact=kwargs['email'])
+            user = CUser(id=user.id, **kwargs)
+        except CUser.DoesNotExist:
+            user = self.model(**kwargs)
         user.set_password(kwargs['password'])
         user.save(using=self._db)
         return user
