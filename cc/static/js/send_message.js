@@ -70,7 +70,7 @@ $(document).ready(function () {
         maxFilesize: 5, // MB
         maxFiles: 1,
         clickable: true,
-        acceptedFiles: 'application/pdf',
+        acceptedFiles: 'application/pdf,.pdf,.PDF',
         success: function (file, response) {
             var page_count = response.page_count,
                 i = 1,
