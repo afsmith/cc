@@ -4,7 +4,14 @@
 {% block meta_title %}Report{% endblock %}
 
 {% block content %}
-    Reporting here ...
+    {% if messages %}
+        <label for="">Messages</label>
+        <select name="" id="" style="width: auto;">
+            {% for msg in messages %}
+            <option value="">{{ msg.subject }} - {{ msg.created_at }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
 {% endblock %}
 
 

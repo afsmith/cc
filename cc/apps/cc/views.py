@@ -1,5 +1,7 @@
 from django.contrib.auth import decorators as auth_decorators
 
+from cc.apps.cc_messages.models import Message
+
 from annoying.decorators import render_to
 
 
@@ -9,4 +11,6 @@ def report(request):
     '''
     Reporting view
     '''
-    return {}
+    return {
+        'messages': Message.objects.filter(owner=request.user).order_by('created_at')
+    }
