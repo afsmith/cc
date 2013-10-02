@@ -1,5 +1,4 @@
 ./.coveragerc
-./compile-styles.sh
 ./README.rst
 ./.gitignore
 ./.mailmap
