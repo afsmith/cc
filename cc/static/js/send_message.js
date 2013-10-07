@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var message_form = $('#js-messageForm'),
-        message_submit_btn = $('#js-submitMessageForm');
+        message_submit_btn = $('#js-submitMessageForm'),
+        upload_form = $('#uploadFileForm');
 
     // validation rules for message form
     message_form.validate({
@@ -20,7 +21,7 @@ $(document).ready(function () {
     });
 
     // function to enable / disable send button
-    function toggleMessageSubmitButton(force_disable) {
+    function _toggleMessageSubmitButton(force_disable) {
         if (typeof force_disable !== 'undefined' && force_disable) {
             message_submit_btn.addClass('disabled');
         }
@@ -50,19 +51,23 @@ $(document).ready(function () {
         var valid = re.test(e.token.value);
         if (!valid) {
             $(e.relatedTarget).addClass('invalid');
-            toggleMessageSubmitButton(true);
+            _toggleMessageSubmitButton(true);
         }
     }).on('removeToken', function (e) {
-        toggleMessageSubmitButton();
+        _toggleMessageSubmitButton();
     });
 
     // bind validation on input keyup
     message_form.find('input[type="text"], textarea').keyup(function () {
-        toggleMessageSubmitButton();
+        _toggleMessageSubmitButton();
     });
 
     // hide pricing page
     $('label[for="id_pricing_page"], #id_pricing_page').hide();
+
+    function _renderUploadError(error_message) {
+        upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ': ' + error_message + '</p>');
+    }
 
     // dropzone config for file upload form
     Dropzone.options.uploadFileForm = {
@@ -94,25 +99,28 @@ $(document).ready(function () {
                 $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
 
                 // remove error message 
-                $('#uploadFileForm .alert').remove();
+                upload_form.find('.alert').remove();
 
-                toggleMessageSubmitButton();
+                _toggleMessageSubmitButton();
             } else {
-                $('#uploadFileForm').prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ": " + response.message + '</p>');
+                _renderUploadError(response.message);
                 console.log('Conversion error: ' + response.original_error);
 
                 $('.dz-error-mark').css('opacity', 1);
-                toggleMessageSubmitButton();
+                _toggleMessageSubmitButton();
             }
         },
         error: function (file, errorMessage) {
-            $('.dz-error-mark').css('opacity', 1);
-            console.log(errorMessage);
-            toggleMessageSubmitButton();
+            if (errorMessage !== 'You can only upload 1 files.') {
+                $('.dz-error-mark').css('opacity', 1);
+                console.log(errorMessage);
+            }
+            _toggleMessageSubmitButton();
         },
-        maxfilesexceeded: function () {
-            console.log('Max file exceed');
-            toggleMessageSubmitButton();
+        maxfilesexceeded: function (file) {
+            _renderUploadError('You can attach only one file at a time');
+            this.removeFile(file);
+            _toggleMessageSubmitButton();
         },
     };
 
