@@ -11,7 +11,7 @@ $(document).ready(function () {
             message: 'required',
             attachment: 'required',
         },
-        errorPlacement: function(error,element) {
+        errorPlacement: function(error, element) {
             return true;
         },
         submitHandler: function(form) {
@@ -32,11 +32,6 @@ $(document).ready(function () {
         }
     }
 
-    // bind validation on input keyup
-    message_form.find('input[type="text"], textarea').keyup(function () {
-        toggleMessageSubmitButton();
-    });
-
     // submit the form when clicking Send button
     message_submit_btn.click(function() {
         if (!$(this).hasClass('disabled')) {
@@ -47,7 +42,8 @@ $(document).ready(function () {
 
     // use tokenfield for To field
     $('#id_to').tokenfield({
-        minLength: 3
+        minLength: 3,
+        createTokensOnBlur: true
     }).on('afterCreateToken', function (e) {
         // validate the email
         var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -57,6 +53,11 @@ $(document).ready(function () {
             toggleMessageSubmitButton(true);
         }
     }).on('removeToken', function (e) {
+        toggleMessageSubmitButton();
+    });
+
+    // bind validation on input keyup
+    message_form.find('input[type="text"], textarea').keyup(function () {
         toggleMessageSubmitButton();
     });
 
