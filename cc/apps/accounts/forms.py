@@ -41,23 +41,12 @@ class UserCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
-        print self.fields['email'].validators
         # make all fields required
         for key in self.fields:
             self.fields[key].required = True
 
-    def clean(self):
-        # allow receiver to update account by bypassing unique in email field
-        email = self.cleaned_data['email']
-        user_qs = CUser.objects.filter(email__iexact=email)
-        if user_qs and user_qs[0].country != 'N/A':
-            raise forms.ValidationError(
-                _('User with this email address already exists.')
-            )
-        return self.cleaned_data
-
     def clean_password1(self):
-        password1 = self.cleaned_data['password1']
+        password1 = self.cleaned_data.get('password1')
 
         # At least PASSWORD_MIN_LENGTH long
         if len(password1) < self.PASSWORD_MIN_LENGTH:
@@ -78,11 +67,22 @@ class UserCreationForm(forms.ModelForm):
 
     def clean_password2(self):
         # Check that the two password entries match
-        password1 = self.cleaned_data['password1']
-        password2 = self.cleaned_data['password2']
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError(_('Passwords don\'t match.'))
         return password2
+
+    def clean(self):
+        # allow receiver to update account by bypassing unique in email field
+        email = self.cleaned_data.get('email')
+        if email:
+            user_qs = CUser.objects.filter(email__iexact=email)
+            if user_qs and user_qs[0].country != 'N/A':
+                raise forms.ValidationError(
+                    _('User with this email address already exists.')
+                )
+        return self.cleaned_data
 
 
 class UserChangeForm(forms.ModelForm):

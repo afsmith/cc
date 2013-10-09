@@ -58,7 +58,7 @@ class UserCreationFormTests(TestCase):
                 'country': 'VN',
                 'industry': 'industry-legal',
             }, 'error': (
-                'email', [u'User with this Email address already exists.']
+                '__all__', [u'User with this email address already exists.']
             )},
 
             # invalid choice
