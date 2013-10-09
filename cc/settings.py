@@ -79,7 +79,7 @@ INSTALLED_APPS = (
     'cc.apps.accounts',
     'cc.apps.cc_messages',
     'cc.apps.content',
-    #'cc.apps.tracking',
+    'cc.apps.tracking',
     'cc.apps.cc',          # register cc apps to get the template tags
 )
 
@@ -124,6 +124,9 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # session expire on browser close
+SESSION_COOKIE_AGE = 5 * 60  # session expire in 5 mins
 
 ##############################################################################
 # Account & registration
