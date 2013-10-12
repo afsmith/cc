@@ -17,10 +17,11 @@ urlpatterns = patterns(
     url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
     url(r'^view/(?P<id>\d+)/$',
         'cc.apps.cc_messages.views.view_message', name='view_message'),
-    # tracking email opened
-    url(r'^track/(?P<message_id>\d+)/(?P<user_id>\d+)$',
-        'cc.apps.cc_messages.views.track_email', name='track_email'),
-
+    
+    url(r'^track/email/(?P<message_id>\d+)/(?P<user_id>\d+)$',
+        'cc.apps.tracking.views.track_email', name='track_email'),
+    url(r'^track/event/create$',
+        'cc.apps.tracking.views.create_event', name='create_event'),
 
     # registration
     url(r'^accounts/register/$',

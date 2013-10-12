@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    var message_form = $('#js-messageForm'),
-        message_submit_btn = $('#js-submitMessageForm'),
+    var message_form = $('#js_messageForm'),
+        message_submit_btn = $('#js_submitMessageForm'),
         upload_form = $('#uploadFileForm');
 
     // validation rules for message form

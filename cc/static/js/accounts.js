@@ -11,7 +11,7 @@ $(document).ready(function () {
         return b;
     })(window.location.search.substr(1).split('&'));
 
-    $('#js-loginButton').click(function () {
+    $('#js_loginButton').click(function () {
         $('#loginForm').submit();
         return false;
     });

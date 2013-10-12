@@ -9,7 +9,7 @@
     {% else %}
         <div class="row">
             <div class="span6 center">
-                <form id="js-messageForm" action="{% url 'home' %}" method="POST">{% csrf_token %}
+                <form id="js_messageForm" action="{% url 'home' %}" method="POST">{% csrf_token %}
                     {% include '_base_form.html' with form=message_form%}
                 </form>
 
@@ -18,7 +18,7 @@
                 </form>
 
                 <p><span class="label label-success">{% trans 'Note' %}</span><span>  {% trans 'All fields are required' %}</span></p>
-                <button id="js-submitMessageForm" class="btn btn-large btn-success disabled">{% trans 'Send' %}</button>
+                <button id="js_submitMessageForm" class="btn btn-large btn-success disabled">{% trans 'Send' %}</button>
             </div>
         </div>
     {% endif %}

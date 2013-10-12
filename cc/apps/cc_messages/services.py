@@ -54,7 +54,7 @@ def create_ocl_and_send_message(message, domain):
         # attach the tracking pixel if needed
         if message.notify_email_opened:
             msg.attach_alternative(
-                '%s <img src="%s/track/%d/%d" />' % (
+                '%s <img src="%s/track/email/%d/%d" />' % (
                     text_body, domain, message.id, r.id
                 ),
                 'text/html'

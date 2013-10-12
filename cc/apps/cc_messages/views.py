@@ -1,18 +1,15 @@
-from django import http
-from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
 
 from . import tasks
 from .services import get_message
 from .forms import MessageForm
-from .services import notify_email_opened, send_notification_email
+from .services import send_notification_email
 from cc.apps.accounts.services import verify_ocl_token
 from cc.apps.content.forms import FileImportForm
 
 from annoying.decorators import render_to
-from os import path
 
 
 @auth_decorators.login_required
@@ -37,21 +34,6 @@ def send_message(request):
         'message_form': message_form,
         'import_file_form': FileImportForm(),
     }
-
-
-def track_email(request, message_id, user_id):
-    '''
-    The 1x1 transparent image to track opened email
-    '''
-    # send email notification to owner of the message
-    notify_email_opened(message_id, user_id)
-
-    # serve the 1x1 transparent image
-    img_abs_path = path.abspath(path.join(
-        settings.STATICFILES_DIRS[0], 'img', 'transparent.gif'
-    ))
-    image_data = open(img_abs_path, 'rb').read()
-    return http.HttpResponse(image_data, mimetype='image/gif')
 
 
 @render_to('main/view_message.html')
@@ -85,6 +67,7 @@ def view_message(request, id=None):
             'message': message,
             'page_list': page_list,
             'token': token,
+            'user': ocl_token.user
         }
     else:
         return redirect(reverse('home'))

@@ -33,5 +33,15 @@
 {% endblock %}
 
 {% block js_scripts %}
+    {% if not ocl_expired %}
+    <script>
+        var message_data = {
+            message_id: {{ message.id }},
+            user_id: {{ user.id }},
+            token: '{{ token }}'
+        };
+    </script>
+    {% endif %}
+
     <script src="{% static 'js/view_message.js' %}"></script>
 {% endblock %}
