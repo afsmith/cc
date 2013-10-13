@@ -2,12 +2,10 @@ from django import http
 from django.conf import settings
 from django.views.decorators import http as http_decorators
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.sessions.models import Session
 
-from .models import TrackingEvent
-from cc.apps.accounts.models import CUser
-from cc.apps.cc_messages.models import Message
+from .services import validate_request, create_tracking_event
 from cc.apps.cc_messages.services import notify_email_opened
+from cc.libs.utils import get_client_ip
 
 from annoying.decorators import ajax_request
 from os import path
@@ -20,30 +18,27 @@ def create_event(request):
     '''
     Handles event creation
     '''
-    message_id = request.POST.get('message_id')
-    user_id = request.POST.get('user_id')
-
-    if message_id and user_id:
-        addr_list = request.META.get('HTTP_X_FORWARDED_FOR')
-        if addr_list:
-            client_ip = addr_list.split(',')[-1].strip()
-        else:
-            client_ip = request.META.get('REMOTE_ADDR', None)
-
-        event = TrackingEvent.objects.create(
-            message=Message.objects.get(pk=message_id),
-            participant=CUser.objects.get(pk=user_id),
-            session=Session.objects.get(pk=request.session.session_key),
-            event_type=TrackingEvent.OPEN_EVENT_TYPE,
-            client_ip=client_ip
+    data = validate_request(request)
+    if data:
+        print request.session.session_key
+        print request.session._session_key
+        event = create_tracking_event(
+            message=data['message'],
+            user=data['user'],
+            session_key=request.session.session_key,
+            client_ip=get_client_ip(request)
         )
 
         if event:
-            return {'status': event.id}
-        else:
-            return {'status': 'ERROR'}
+            return {
+                'status': 'OK',
+                'event': event.id
+            }
     else:
-        return {'status': 'ERROR'}
+        return {
+            'status': 'ERROR',
+            'message': 'Invalid arguments'
+        }
 
 
 def track_email(request, message_id, user_id):
