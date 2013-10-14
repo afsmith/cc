@@ -3,7 +3,7 @@ from django.conf import settings
 from django.views.decorators import http as http_decorators
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import validate_request, create_tracking_event
+from .services import validate_request, create_tracking_session
 from cc.apps.cc_messages.services import notify_email_opened
 from cc.libs.utils import get_client_ip
 
@@ -16,24 +16,23 @@ from os import path
 @ajax_request
 def create_event(request):
     '''
-    Handles event creation
+    Handles tracking event and session creation
     '''
     data = validate_request(request)
     if data:
-        print request.session.session_key
-        print request.session._session_key
-        event = create_tracking_event(
-            message=data['message'],
-            user=data['user'],
-            session_key=request.session.session_key,
-            client_ip=get_client_ip(request)
-        )
+        if data['type'] == 'SESSION':
+            session = create_tracking_session(
+                message=data['message'],
+                user=data['user'],
+                session_key=request.session.session_key,
+                client_ip=get_client_ip(request)
+            )
 
-        if event:
-            return {
-                'status': 'OK',
-                'event': event.id
-            }
+            if session:
+                return {
+                    'status': 'OK',
+                    'session': session.id
+                }
     else:
         return {
             'status': 'ERROR',

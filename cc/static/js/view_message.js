@@ -12,7 +12,9 @@ $(document).ready(function () {
     }
     
     if (typeof message_data !== 'undefined') {
-        //createTrackingEvent(message_data);
+        createTrackingEvent($.extend({
+            'type': 'SESSION'
+        }, message_data));
     }
 
 
