@@ -38,6 +38,7 @@
         var message_data = {
             message_id: {{ message.id }},
             user_id: {{ user.id }},
+            page_count: {{ page_list|length }},
             token: '{{ token }}'
         };
     </script>

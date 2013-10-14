@@ -20,7 +20,7 @@ def create_event(request):
     '''
     data = validate_request(request)
     if data:
-        if data['type'] == 'SESSION':
+        if request.POST['type'] == 'SESSION':
             session = create_tracking_session(
                 message=data['message'],
                 user=data['user'],
@@ -33,6 +33,11 @@ def create_event(request):
                     'status': 'OK',
                     'session': session.id
                 }
+        elif request.POST['type'] == 'EVENT':
+            timer_params = [x for x in request.POST if x.startswith('timer')]
+            for p in timer_params:
+                print p, request.POST.get(p)
+            return {}
     else:
         return {
             'status': 'ERROR',

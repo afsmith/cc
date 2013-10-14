@@ -7,14 +7,17 @@ def validate_request(request):
     message_id = request.POST.get('message_id')
     user_id = request.POST.get('user_id')
     request_type = request.POST.get('type')
+    timer = request.POST.get('timer[1]')
 
-    if message_id and user_id:
+    if request_type == 'SESSION' and message_id and user_id:
         try:
             message = Message.objects.get(pk=message_id)
             user = CUser.objects.get(pk=user_id)
         except Message.DoesNotExist, CUser.DoesNotExist:
             return False
-        return {'message': message, 'user': user, 'type': request_type}
+        return {'message': message, 'user': user}
+    elif request_type == 'EVENT' and timer:
+        return True
     else:
         return False
 
