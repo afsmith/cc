@@ -3,7 +3,7 @@ from django.conf import settings
 from django.views.decorators import http as http_decorators
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import validate_request, create_tracking_session
+from .services import validate_request, create_tracking_session, create_tracking_events_from_timer
 from cc.apps.cc_messages.services import notify_email_opened
 from cc.libs.utils import get_client_ip
 
@@ -34,9 +34,14 @@ def create_event(request):
                     'session': session.id
                 }
         elif request.POST['type'] == 'EVENT':
-            timer_params = [x for x in request.POST if x.startswith('timer')]
-            for p in timer_params:
-                print p, request.POST.get(p)
+            # since timer parameters are sent in format: timer[1], timer[2]
+            # we need to get them into a list
+            timer_params = [
+                (x, request.POST.get(x)) 
+                for x in request.POST if x.startswith('timer')
+            ]
+            print create_tracking_events_from_timer(data['session_id'], timer_params)
+
             return {}
     else:
         return {

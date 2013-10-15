@@ -21,7 +21,6 @@ class TrackingEvent(models.Model):
     total_time = models.BigIntegerField(_('Total time'), default=0)
 
     def __unicode__(self):
-        return 'Message: %s - Page number: %d' % (
-            self.message.subject,
-            self.page_number
+        return 'Page number: %d - Time: %d' % (
+            self.page_number, self.total_time
         )
