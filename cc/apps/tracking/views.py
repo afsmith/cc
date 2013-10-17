@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .services import validate_request, create_tracking_session, create_tracking_events_from_timer
 from cc.apps.cc_messages.services import notify_email_opened
-from cc.libs.utils import get_client_ip
+from cc.libs.utils import get_client_ip, get_device_name
 
 from annoying.decorators import ajax_request
 from os import path
@@ -25,13 +25,19 @@ def create_event(request):
                 message=data['message'],
                 user=data['user'],
                 session_key=request.session.session_key,
-                client_ip=get_client_ip(request)
+                client_ip=get_client_ip(request),
+                device=get_device_name(request)
             )
 
             if session:
                 return {
                     'status': 'OK',
                     'session': session.id
+                }
+            else:
+                return {
+                    'status': 'ERROR',
+                    'message': session.__str__()
                 }
         elif request.POST['type'] == 'EVENT':
             # since timer parameters are sent in format: timer[1], timer[2]
@@ -40,8 +46,11 @@ def create_event(request):
                 (x, request.POST.get(x)) 
                 for x in request.POST if x.startswith('timer')
             ]
-            print create_tracking_events_from_timer(data['session_id'], timer_params)
+            
+            # save events in DB
+            create_tracking_events_from_timer(data['session_id'], timer_params)
 
+            # response doesn't do anything special so just send a blank one
             return {}
     else:
         return {

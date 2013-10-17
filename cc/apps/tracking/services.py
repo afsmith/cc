@@ -27,7 +27,8 @@ def create_tracking_session(**kw):
     return TrackingSession.objects.create(
         message=kw['message'],
         participant=kw['user'],
-        client_ip=kw['client_ip']
+        client_ip=kw['client_ip'],
+        device=kw['device']
     )
 
 
@@ -40,11 +41,12 @@ def create_tracking_events_from_timer(session_id, timer_params):
 
     events = []
     for t in timer_params:
-        page_number = t[0].replace('timer[', '').replace(']', '')
+        page_number = int(t[0].replace('timer[', '').replace(']', ''))
+        total_time = int(t[1])
         events.append(TrackingEvent(
             tracking_session=session,
             page_number=page_number,
-            total_time=t[1]
+            total_time=total_time
         ))
 
     return TrackingEvent.objects.bulk_create(events)

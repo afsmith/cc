@@ -51,8 +51,6 @@ $(document).ready(function () {
                     'timer': page_timer,
                     'session_id': session_id
                 }
-            }).done(function (resp) {
-                console.log(resp);
             });
         });
     };
