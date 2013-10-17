@@ -67,7 +67,7 @@ def view_message(request, id=None):
             'message': message,
             'page_list': page_list,
             'token': token,
-            'user': ocl_token.user
+            'ocl_user': ocl_token.user
         }
     else:
         return redirect(reverse('home'))
