@@ -1,0 +1,10 @@
+{% extends 'base_template.html' %}
+{% load extras i18n static %}
+
+{% block meta_title %}Report{% endblock %}
+
+{% block content %}
+    <p class="alert">
+        {% trans "You haven't sent any message yet." %}
+    </p>
+{% endblock %}

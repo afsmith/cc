@@ -1,0 +1,48 @@
+{% extends 'base_template.html' %}
+{% load extras i18n static %}
+
+{% block meta_title %}Report{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        <label for="">Messages</label>
+        <select name="" id="" style="width: auto;">
+            {% for msg in messages %}
+            <option value="{{ msg.id }}">{{ msg.subject }} - {{ msg.created_at }}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
+
+    <table border="1">
+        <tr>
+            <th>Closed</th>
+            <th>Date</th>
+            <th>Viewed by</th>
+            <th>Total time</th>
+            <th>Total visits</th>
+            <th>Unique IPs</th>
+            <th>Device types</th>
+        </tr>
+
+        {% for session in log %}
+        <tr>
+            <td></td>
+            <td>{{ session.created_at }}</td>
+            <td>{{ session.participant }}</td>
+            <td></td>
+            <td></td>
+            <td>{{ session.client_ip }}</td>
+            <td>{{ session.device }}</td>
+        </tr>
+            
+        {% endfor %}    
+    </table>
+    
+{% endblock %}
+
+
+{% block additional_css %}
+{% endblock %}
+
+{% block js_scripts %}
+{% endblock %}

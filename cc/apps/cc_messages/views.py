@@ -37,7 +37,7 @@ def send_message(request):
 
 
 @render_to('main/view_message.html')
-def view_message(request, id=None):
+def view_message(request, message_id=None):
     token = request.GET.get('token')
     if token:
         ocl_token = verify_ocl_token(token)
@@ -45,7 +45,7 @@ def view_message(request, id=None):
             return {
                 'ocl_expired': True
             }
-        message = get_message(id, ocl_token.user)
+        message = get_message(message_id, ocl_token.user)
 
         # there is only 1 file per message for now so return that file
         file = message.files.all()[0]

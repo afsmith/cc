@@ -47,7 +47,7 @@
                     <ul class="nav">
                         {% if user.is_authenticated %}
                         <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
-                        <li class="{% active request 'report' %}"><a href="{% url 'report' %}">{% trans 'Report' %}</a></li>
+                        <li class="{% active request 'report_index' %}"><a href="{% url 'report_index' %}">{% trans 'Report' %}</a></li>
                         {% endif %}
                     </ul>
                     
@@ -77,7 +77,7 @@
         
         <hr>
         <footer>
-            <p>&copy; </p>
+            <p>&copy; Kneto CC</p>
         </footer>
 
     </div> <!-- /container -->
