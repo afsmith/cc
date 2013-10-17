@@ -62,8 +62,8 @@ $(document).ready(function () {
         _toggleMessageSubmitButton();
     });
 
-    // hide pricing page
-    $('label[for="id_pricing_page"], #id_pricing_page').hide();
+    // hide key page
+    $('label[for="id_key_page"], #id_key_page').hide();
 
     function _renderUploadError(error_message) {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ': ' + error_message + '</p>');
@@ -86,12 +86,12 @@ $(document).ready(function () {
                 // add file ID to hidden input
                 $('#id_attachment').val(response.file_id);
 
-                // populate pricing page selector and show
+                // populate key page selector and show
                 for (i=1; i<=page_count; i++) {
                     options += '<option value="'+i+'">'+i+'</option>';
                 }
-                $('#id_pricing_page').append(options);
-                $('label[for="id_pricing_page"], #id_pricing_page').show();
+                $('#id_key_page').append(options);
+                $('label[for="id_key_page"], #id_key_page').show();
                 
 
                 // handle some CSS and template
