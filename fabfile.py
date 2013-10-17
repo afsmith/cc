@@ -10,8 +10,7 @@ env.test_apps = ' '.join([
     'accounts',
     'cc_messages',
     'content',
-    #'cc'
-    #'tracking',
+    'tracking',
 ])
 
 env.excludes = './tools/release/excludes'
@@ -66,16 +65,6 @@ def add2virtualenv():
         fh.write(os.path.join(os.path.abspath(env.cwd), 'src'))
 
 
-def pylint(only_errors=False):
-    """Runs pylint on all modules.
-    """
-    local(
-        'pylint %s --rcfile docs/pylintrc cc/webfront cc/content'
-        % ('-E' if only_errors else ''),
-        capture=False
-    )
-
-
 def release():
     determine_version()
     create_tarball()
@@ -126,8 +115,10 @@ def create_tarball():
 
 
 def deploy_local():
-    local('git pull --rebase')
+    local('git stash')
+    local('git pull')
     local('pip install -r requirements.txt')
     local('python manage.py syncdb')
     local('python manage.py migrate')
     local('fab test')
+    local('git stash apply')  # apply the stash after successful deploying

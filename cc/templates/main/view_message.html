@@ -34,7 +34,7 @@
 
 {% block js_scripts %}
     {% if not ocl_expired %}
-    <script>
+    <script type="text/javascript">
         var message_data = {
             message_id: {{ message.id }},
             user_id: {{ user.id }},
