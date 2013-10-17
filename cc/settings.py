@@ -125,8 +125,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # session expire on browser close
-SESSION_COOKIE_AGE = 5 * 60  # session expire in 5 mins
 
 ##############################################################################
 # Account & registration
