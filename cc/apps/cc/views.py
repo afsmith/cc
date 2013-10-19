@@ -29,6 +29,8 @@ def report_detail(request, message_id):
     '''
     Reporting detail view
     '''
+    this_message = get_object_or_404(Message, pk=message_id)
+
     all_messages = (
         Message.objects.filter(owner=request.user)
         .order_by('created_at').reverse()
@@ -37,6 +39,7 @@ def report_detail(request, message_id):
     log = TrackingSession.objects.filter(message=message_id)
 
     return {
+        'this_message': this_message,
         'messages': all_messages,
-        'log': log
+        'log': log,
     }

@@ -4,45 +4,46 @@
 {% block meta_title %}Report{% endblock %}
 
 {% block content %}
-    {% if messages %}
-        <label for="">Messages</label>
-        <select name="" id="" style="width: auto;">
-            {% for msg in messages %}
-            <option value="{{ msg.id }}">{{ msg.subject }} - {{ msg.created_at }}</option>
-            {% endfor %}
-        </select>
-    {% endif %}
 
-    <table border="1">
-        <tr>
-            <th>Closed</th>
-            <th>Date</th>
-            <th>Viewed by</th>
-            <th>Total time</th>
-            <th>Total visits</th>
-            <th>Unique IPs</th>
-            <th>Device types</th>
-        </tr>
+{% if messages %}
+    <label for="js_selectMessage">Select message:</label>
+    <select id="js_selectMessage" style="width: auto;">
+        {% for msg in messages %}
+        <option value="{{ msg.id }}" {% if msg.id == this_message.id %}selected="selected"{% endif %}>
+            {{ msg.subject }} - {{ msg.created_at }} - {{ msg.receivers.all|join:', '|truncatechars:30 }}
+        </option>
+        {% endfor %}
+    </select>
+{% endif %}
 
-        {% for session in log %}
-        <tr>
-            <td></td>
-            <td>{{ session.created_at }}</td>
-            <td>{{ session.participant }}</td>
-            <td></td>
-            <td></td>
-            <td>{{ session.client_ip }}</td>
-            <td>{{ session.device }}</td>
-        </tr>
-            
-        {% endfor %}    
-    </table>
+<h1 class="page_title">{{ this_message.subject }}</h1>
+<table class="table table-striped">
+    <tr class="success">
+        <th>Closed</th>
+        <th>Date</th>
+        <th>Viewed by</th>
+        <th>Total time</th>
+        <th>Total visits</th>
+        <th>Unique IPs</th>
+        <th>Device types</th>
+    </tr>
+
+    {% for session in log %}
+    <tr>
+        <td></td>
+        <td>{{ session.created_at }}</td>
+        <td>{{ session.participant }}</td>
+        <td></td>
+        <td></td>
+        <td>{{ session.client_ip }}</td>
+        <td>{{ session.device }}</td>
+    </tr>
+        
+    {% endfor %}    
+</table>
     
 {% endblock %}
 
-
-{% block additional_css %}
-{% endblock %}
-
 {% block js_scripts %}
+    <script src="{% static 'js/report.js' %}"></script>
 {% endblock %}
