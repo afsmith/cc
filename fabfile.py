@@ -122,3 +122,9 @@ def deploy_local():
     local('python manage.py migrate')
     local('fab test')
     local('git stash apply')  # apply the stash after successful deploying
+
+
+def run():
+    # lazy version of runserver, YES!
+    local('python manage.py runserver_plus')
+
