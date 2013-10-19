@@ -1,4 +1,4 @@
-from fabric.api import env, local
+from fabric.api import *
 from fabric.operations import require
 from fabric.utils import abort
 
@@ -6,50 +6,16 @@ import glob
 import os
 import subprocess
 
-env.test_apps = ' '.join([
-    'accounts',
-    'cc_messages',
-    'content',
-    'tracking',
-])
-
 env.excludes = './tools/release/excludes'
 
 # This will get overwritten by determine_version().
 env.version = 'v0.1.0dev'
 
 
-def test(coverage=False, only=None):
-    """Executes test suite, optionally checking coverage.
-
-    Accepted flags:
-        - converage   Set to True to gather coverage information
-                      (it is disable by default).
-        - only        Name of an app/testcase/fixture you want to execute
-                      (default includes all apps).
-
-    Examples:
-        % fab test:coverage=True
-        % fab test:only=content
-
-    The first example executes all tests and gathers coverage information. The
-    second one executes only tests defined in the app with label ``content``.
-    """
-
-    if coverage:
-        env._coverage = 'coverage run'
-    else:
-        env._coverage = ''
-
-    if only:
-        env.test_apps = only
-
-    local('%(_coverage)s ./manage.py test %(test_apps)s' % env, capture=False)
-
-
 def add2virtualenv():
-    """Adds $CDW/cc to python path.
-    """
+    '''
+    Adds $CDW/cc to python path.
+    '''
     env_path = os.environ.get('VIRTUAL_ENV', None)
     if env_path is None:
         abort('Virtual env is not active.')
@@ -114,7 +80,49 @@ def create_tarball():
     local('rm %(excludes)s.tmp' % env)
 
 
+### ------------------------- Tasks with aliases ------------------------- ###
+@task(alias='t')
+def test(coverage=False, only=None):
+    '''
+    Executes test suite, optionally checking coverage.
+
+    Accepted flags:
+        - converage   Set to True to gather coverage information
+                      (it is disable by default).
+        - only        Name of an app/testcase/fixture you want to execute
+                      (default includes all apps).
+
+    Examples:
+        fab test:coverage=True
+        fab test:only=content
+
+    The first example executes all tests and gathers coverage information. The
+    second one executes only tests defined in the app with label ``content``.
+    '''
+
+    test_apps = ' '.join([
+        'accounts',
+        'cc_messages',
+        'content',
+        'tracking',
+    ])
+
+    if coverage:
+        _coverage = 'coverage run'
+    else:
+        _coverage = ''
+
+    if only:
+        test_apps = only
+
+    local('%s ./manage.py test %s' % (_coverage, test_apps), capture=False)
+
+
+@task(alias='d')
 def deploy_local():
+    '''
+    Deploy the latest changes to local envinronment
+    '''
     local('git stash')
     local('git pull')
     local('pip install -r requirements.txt')
@@ -124,7 +132,18 @@ def deploy_local():
     local('git stash apply')  # apply the stash after successful deploying
 
 
+@task(alias='r')
 def run():
-    # lazy version of runserver, YES!
+    '''
+    Lazy shortcut for runserver_plus
+    '''
     local('python manage.py runserver_plus')
+
+
+@task(alias='s')
+def shell():
+    '''
+    Another lazy shortcut for shell_plus
+    '''
+    local('python manage.py shell_plus')
 
