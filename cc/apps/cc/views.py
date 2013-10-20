@@ -1,5 +1,6 @@
 from django.contrib.auth import decorators as auth_decorators
 from django.shortcuts import redirect, get_object_or_404
+from django.db.models import Sum
 
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession, TrackingEvent
@@ -36,7 +37,23 @@ def report_detail(request, message_id):
         .order_by('created_at').reverse()
     )
 
-    log = TrackingSession.objects.filter(message=message_id)
+    log = (
+        TrackingSession.objects
+        .filter(message=message_id)
+        .extra(select={
+            'total_time': "SELECT SUM(total_time) FROM tracking_trackingevent WHERE tracking_trackingevent.tracking_session_id = tracking_trackingsession.id"
+        })
+    )
+    
+    '''
+    TrackingEvent.objects.filter(tracking_session__message=message_id).aggregate(Sum('total_time'))
+    log2 = (
+        TrackingEvent.objects
+        .filter(tracking_session__message=message_id)
+        .values('tracking_session')
+        .annotate(total_time=Sum('total_time'))
+    )
+    '''
 
     return {
         'this_message': this_message,

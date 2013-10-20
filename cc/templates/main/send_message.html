@@ -1,7 +1,7 @@
 {% extends 'base_template.html' %}
 {% load extras i18n static %}
 
-{% block meta_title %}Home{% endblock %}
+{% block meta_title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
     {% if thankyou_page %}
@@ -14,11 +14,11 @@
                 </form>
 
                 <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="row-fluid dropzone">{% csrf_token %}
-                    {% trans 'Drop the attachment (or click) here to upload' %}
+                    {% trans "Drop the attachment (or click) here to upload" %}
                 </form>
 
-                <p><span class="label label-success">{% trans 'Note' %}</span><span>  {% trans 'All fields are required' %}</span></p>
-                <button id="js_submitMessageForm" class="btn btn-large btn-success disabled">{% trans 'Send' %}</button>
+                <p><span class="label label-success">{% trans "Note" %}</span><span>  {% trans "All fields are required" %}</span></p>
+                <button id="js_submitMessageForm" class="btn btn-large btn-success disabled">{% trans "Send" %}</button>
             </div>
         </div>
     {% endif %}

@@ -1,40 +1,40 @@
 {% extends 'base_template.html' %}
 {% load extras i18n static %}
 
-{% block meta_title %}Report{% endblock %}
+{% block meta_title %}{% trans "Report" %} #{{ this_message.id }}{% endblock %}
 
 {% block content %}
 
 {% if messages %}
-    <label for="js_selectMessage">Select message:</label>
+    <label for="js_selectMessage">{% trans "Select message:" %}</label>
     <select id="js_selectMessage" style="width: auto;">
         {% for msg in messages %}
         <option value="{{ msg.id }}" {% if msg.id == this_message.id %}selected="selected"{% endif %}>
-            {{ msg.subject }} - {{ msg.created_at }} - {{ msg.receivers.all|join:', '|truncatechars:30 }}
+            {{ msg.subject }} | {{ msg.created_at }} | {{ msg.receivers.all|join:', '|truncatechars:30 }}
         </option>
         {% endfor %}
     </select>
 {% endif %}
 
-<h1 class="page_title">{{ this_message.subject }}</h1>
+
 <table class="table table-striped">
     <tr class="success">
-        <th>Closed</th>
-        <th>Date</th>
-        <th>Viewed by</th>
-        <th>Total time</th>
-        <th>Total visits</th>
-        <th>Unique IPs</th>
-        <th>Device types</th>
+        <th>{% trans "Closed" %}</th>
+        <th>{% trans "Date" %}</th>
+        <th>{% trans "Viewed by" %}</th>
+        <th>{% trans "Total time" %}</th>
+        <th>{% trans "Total visits" %}</th>
+        <th>{% trans "Unique IPs" %}</th>
+        <th>{% trans "Device types" %}</th>
     </tr>
 
     {% for session in log %}
-    <tr>
+    <tr id="session_{{ session.id }}">
         <td></td>
         <td>{{ session.created_at }}</td>
         <td>{{ session.participant }}</td>
-        <td></td>
-        <td></td>
+        <td>{% to_second session.total_time %}</td>
+        <td>1</td>
         <td>{{ session.client_ip }}</td>
         <td>{{ session.device }}</td>
     </tr>
