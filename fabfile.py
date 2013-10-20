@@ -30,8 +30,12 @@ def add2virtualenv():
     with open(path, 'wb') as fh:
         fh.write(os.path.join(os.path.abspath(env.cwd), 'src'))
 
+@task()
 
 def release():
+    '''
+    Makes a build for staging prod
+    '''
     determine_version()
     create_tarball()
 
