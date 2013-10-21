@@ -33,6 +33,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'hunger.middleware.BetaMiddleware',
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -57,6 +58,7 @@ TEMPLATE_LOADERS = (
     #     'django.template.loaders.eggs.Loader',
 )
 
+
 # apps
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -74,6 +76,7 @@ INSTALLED_APPS = (
     'djcelery',            # celery for converting files
     'analytical',          # support for many analytic platforms
     'cookielaw',           # EU cookie law banner
+    'hunger',		   # for managing beta signups and invitations
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
