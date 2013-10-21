@@ -16,6 +16,7 @@
     </select>
 {% endif %}
 
+<div id="report_graph"></div>
 
 <table class="table table-striped">
     <tr class="success">
@@ -45,5 +46,6 @@
 {% endblock %}
 
 {% block js_scripts %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="{% static 'js/report.js' %}"></script>
 {% endblock %}
