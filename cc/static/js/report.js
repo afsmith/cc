@@ -6,45 +6,61 @@ $(document).ready(function () {
         window.location = '/report/' + $(this).val();
     });
 
-    // draw google charts
+    // fetch data from backend and draw column chart
     drawChart = function () {
-        var chart_data,
-            data,
-            options,
-            chart;
-
-        chart_data = $.ajax({
+        $.ajax({
             url: window.location,
             type: 'GET',
             dataType: 'json',
         }).done(function (resp) {
-            data = google.visualization.arrayToDataTable($.merge(
-                [['Page', 'Total time']],
-                resp
-            ));
+            var data,
+                options,
+                chart;
 
-            options = {
-                title: 'Page graph',
-                hAxis: {
-                    //title: 'Page',
-                    //titleTextStyle: {color: 'red'},
-                    format: 'Page #',
-                    gridlines: {
-                        count: resp.length
-                    }
-                },
-                height: 500,
-            };
+            if (resp.length > 0) {
+                data = new google.visualization.DataTable();
+                data.addColumn({type: 'string', label: 'Page'});
+                data.addColumn({type: 'number', label: 'Total time'});
+                data.addColumn({type: 'string', role: 'annotation'});
+                data.addRows(resp);
 
-            chart = new google.visualization.ColumnChart(document.getElementById('report_graph'));
-            chart.draw(data, options);
+                options = {
+                    title: 'Page graph',
+                    hAxis: {
+                        gridlines: {
+                            count: resp.length
+                        }
+                    },
+                    vAxis: {
+                        format: '#s'
+                    },
+                    series: {
+                        0: {
+                            type: 'bars'
+                        },
+                        1: {
+                            type: 'line',
+                            //color: 'grey', 
+                            lineWidth: 0,
+                            pointSize: 0,
+                            visibleInLegend: false
+                        }
+                    },
+                    height: 500
+                };
+
+                var view = new google.visualization.DataView(data);
+                view.setColumns([0, 1, 1, 2]);
+
+                chart = new google.visualization.ComboChart(document.getElementById('report_graph'));
+                chart.draw(view, options);
+            } else {
+                console.log('No data to display');
+            }
         });
-
-        
     };
+
+    // display the chart on page init
     google.load("visualization", "1", {packages:["corechart"], "callback" : drawChart});
-    
-    // get page total time and display
-    
 
 }); // end document ready

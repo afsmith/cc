@@ -51,17 +51,25 @@ def report_detail(request, message_id):
     #TrackingEvent.objects.filter(tracking_session__message=message_id).aggregate(Sum('total_time'))
 
     if request.is_ajax():
-        page_time_log = (
+        total_time_per_page = (
             TrackingEvent.objects
             .filter(tracking_session__message=message_id)
             .values('page_number')
             .annotate(total_time=Sum('total_time'))
             .order_by('page_number')
-            .values_list('page_number', 'total_time') # convert it to flat list
+            .values_list('page_number', 'total_time')
         )
-        to_second = [[x[0], x[1]/100.0] for x in list(page_time_log)]
-        print to_second
-        json_resp = json.dumps(to_second)
+        # format the data nicely
+        formatted_data = []
+        for p in list(total_time_per_page):
+            row = ['Page {}'.format(p[0]), p[1]/100.0]
+            if this_message.key_page and this_message.key_page == p[0]:
+                row.append('Key page: {}s'.format(p[1]/100.0))
+            else:
+                row.append('{}s'.format(p[1]/100.0))
+            formatted_data.append(row)
+        # and return to JS via json
+        json_resp = json.dumps(formatted_data)
         return HttpResponse(json_resp, mimetype='application/json')
     else:
         return {
