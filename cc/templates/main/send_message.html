@@ -9,7 +9,7 @@
     {% else %}
         <div class="row">
             <div class="span6 center">
-                <form id="js_messageForm" action="{% url 'home' %}" method="POST">{% csrf_token %}
+                <form id="js_messageForm" action="{% url 'send' %}" method="POST">{% csrf_token %}
                     {% include '_base_form.html' with form=message_form%}
                 </form>
 

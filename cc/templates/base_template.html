@@ -46,7 +46,7 @@
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         {% if user.is_authenticated %}
-                        <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Home' %}</a></li>
+                        <li class="{% active request 'send' %}"><a href="{% url 'send' %}">{% trans 'Send' %}</a></li>
                         <li class="{% active request 'report_index' %}"><a href="{% url 'report_index' %}">{% trans 'Report' %}</a></li>
                         {% endif %}
                     </ul>

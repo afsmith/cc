@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
 
@@ -11,6 +11,9 @@ from cc.apps.content.forms import FileImportForm
 
 from annoying.decorators import render_to
 
+@auth_decorators.login_required
+def dashboard(request):
+    return render(request, 'main/dashboard.html')
 
 @auth_decorators.login_required
 @render_to('main/send_message.html')

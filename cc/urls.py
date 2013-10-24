@@ -4,6 +4,8 @@ from django.conf import settings
 from cc.apps.accounts.forms import UserCreationForm, UserPasswordResetForm
 from registration.backends.default.views import RegistrationView
 
+from hunger.views import InviteView, VerifiedView, InvalidView, NotBetaView
+
 from django.contrib import admin
 admin.autodiscover()
 
@@ -12,7 +14,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     # ----- CC APP  ----- #
-    url(r'^$', 'cc.apps.cc_messages.views.send_message', name='home'),
+    url(r'^$', 'cc.apps.cc_messages.views.dashboard', name='home'),
+    url(r'^send/$', 'cc.apps.cc_messages.views.send_message', name='send'),
     url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
     url(r'^view/(?P<message_id>\d+)/$',
         'cc.apps.cc_messages.views.view_message', name='view_message'),
@@ -30,7 +33,7 @@ urlpatterns = patterns(
 
     # registration
     url(r'^accounts/register/$',
-        RegistrationView.as_view(form_class=UserCreationForm)),
+        RegistrationView.as_view(form_class=UserCreationForm), name='accounts_register'),
     url(r'^accounts/logout/$',
         'django.contrib.auth.views.logout',
         {'next_page': '/'},
@@ -40,6 +43,10 @@ urlpatterns = patterns(
         {'password_reset_form': UserPasswordResetForm},
         name='auth_password_reset'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+
+## Hunger- its urls is missing beta_verify_invite
+    url(r'^verify/(\w+)/$', 'hunger.views.verify_invite', name='beta_verify_invite'),
+    url(r'hunger', include('hunger.urls')),
 )
 
 if settings.DEBUG:
