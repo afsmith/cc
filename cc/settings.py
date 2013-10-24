@@ -76,7 +76,7 @@ INSTALLED_APPS = (
     'djcelery',            # celery for converting files
     'analytical',          # support for many analytic platforms
     'cookielaw',           # EU cookie law banner
-    'hunger',		   # for managing beta signups and invitations
+    'hunger',		       # for managing beta signups and invitations
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',

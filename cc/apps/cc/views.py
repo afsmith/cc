@@ -11,6 +11,12 @@ import json
 
 
 @auth_decorators.login_required
+@render_to('main/dashboard.html')
+def dashboard(request):
+    return {}
+
+
+@auth_decorators.login_required
 @render_to('main/report_index.html')
 def report_index(request):
     '''
