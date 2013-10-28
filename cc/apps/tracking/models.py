@@ -25,3 +25,12 @@ class TrackingEvent(models.Model):
         return 'Page number: %d - Time: %d' % (
             self.page_number, self.total_time
         )
+
+
+class ClosedDeal(models.Model):
+    message = models.ForeignKey(Message)
+    participant = models.ForeignKey(CUser)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.message.subject
