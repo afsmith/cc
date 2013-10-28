@@ -137,7 +137,7 @@ def deploy_local():
 
 
 @task(alias='r')
-def run():
+def runplus():
     '''
     Lazy shortcut for runserver_plus
     '''
