@@ -1,6 +1,9 @@
 from django import template
 from django.core.urlresolvers import reverse
 
+import decimal
+
+
 register = template.Library()
 @register.filter('type')
 def type(obj):
@@ -18,4 +21,8 @@ def active(request, route):
 def to_second(number):
     if number is None:
         return 0
-    return (number / 100)
+    try: 
+        return (number / 100.0)
+    except decimal.InvalidOperation:
+        return (number / 100)
+    

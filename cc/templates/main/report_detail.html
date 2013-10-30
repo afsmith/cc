@@ -18,11 +18,9 @@
 
 <div id="report_graph"></div>
 
-{{ page_time_log }}
-
 <table class="table table-striped">
     <tr class="success">
-        <th>{% trans "Closed" %}</th>
+        <th>{% trans "Sold" %}</th>
         <th>{% trans "Date" %}</th>
         <th>{% trans "Viewed by" %}</th>
         <th>{% trans "Total time" %}</th>
@@ -31,18 +29,17 @@
         <th>{% trans "Device types" %}</th>
     </tr>
 
-    {% for session in session_log %}
-    <tr id="session_{{ session.id }}">
-        <td></td>
-        <td>{{ session.created_at }}</td>
-        <td>{{ session.participant }}</td>
-        <td>{% to_second session.total_time %}</td>
-        <td>1</td>
-        <td>{{ session.client_ip }}</td>
-        <td>{{ session.device }}</td>
+    {% for row in log_groupby_user %}
+    <tr>
+        <td><input type="checkbox" name="sold" class="js_sold" id="sold_{{ this_message.id }}_{{ row.tracking_session__participant }}" /></td>
+        <td>{{ row.max_date }}</td>
+        <td>{{ row.tracking_session__participant__email }}</td>
+        <td>{% to_second row.total_time %}</td>
+        <td>{{ row.visit_count }}</td>
+        <td>{{ row.ip_count }}</td>
+        <td>{{ row.device_count }}</td>
     </tr>
-        
-    {% endfor %}    
+    {% endfor %}
 </table>
     
 {% endblock %}

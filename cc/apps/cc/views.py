@@ -1,10 +1,12 @@
 from django.contrib.auth import decorators as auth_decorators
 from django.shortcuts import redirect, get_object_or_404
-from django.db.models import Sum
+from django.db.models import Sum, Count, Max
 from django.http import HttpResponse
+#from django.db import connection
 
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession, TrackingEvent
+#from cc.libs.utils import dictfetchall
 
 from annoying.decorators import render_to
 import json
@@ -45,19 +47,37 @@ def report_detail(request, message_id):
         .order_by('created_at').reverse()
     )
 
-    session_log = (
+    log_groupby_session = (
         TrackingSession.objects
         .filter(message=message_id)
         .extra(select={
-            'total_time': "SELECT SUM(total_time) FROM tracking_trackingevent WHERE tracking_trackingevent.tracking_session_id = tracking_trackingsession.id"
+            'total_time': """SELECT SUM(total_time) 
+                FROM tracking_trackingevent 
+                WHERE tracking_trackingevent.tracking_session_id 
+                    = tracking_trackingsession.id"""
         })
     )
 
-    # might be useful later
-    #TrackingEvent.objects.filter(tracking_session__message=message_id).aggregate(Sum('total_time'))
+    log_groupby_user = (
+        TrackingEvent.objects
+        .filter(tracking_session__message=message_id)
+        .values(
+            'tracking_session__participant',
+            'tracking_session__participant__email'
+        )
+        .annotate(
+            total_time=Sum('total_time'),
+            ip_count=Count('tracking_session__client_ip', distinct=True),
+            device_count=Count('tracking_session__device', distinct=True),
+            visit_count=Count('id'),
+            max_date=Max('tracking_session__created_at'),
+        )
+        .order_by()
+    )
+    #print log_groupby_user.query.__str__()
 
     if request.is_ajax():
-        total_time_per_page = (
+        log_groupby_page_number = (
             TrackingEvent.objects
             .filter(tracking_session__message=message_id)
             .values('page_number')
@@ -67,7 +87,7 @@ def report_detail(request, message_id):
         )
         # format the data nicely
         formatted_data = []
-        for p in list(total_time_per_page):
+        for p in list(log_groupby_page_number):
             row = ['Page {}'.format(p[0]), p[1]/100.0]
             if this_message.key_page and this_message.key_page == p[0]:
                 row.append('Key page: {}s'.format(p[1]/100.0))
@@ -81,5 +101,6 @@ def report_detail(request, message_id):
         return {
             'this_message': this_message,
             'messages': all_messages,
-            'session_log': session_log,
+            'log_groupby_session': log_groupby_session,
+            'log_groupby_user': log_groupby_user
         }
