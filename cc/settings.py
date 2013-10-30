@@ -1,4 +1,5 @@
 from os import path
+import sys
 ROOT_PATH = path.join(path.dirname(__file__))
 
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -77,6 +78,7 @@ INSTALLED_APPS = (
     'analytical',          # support for many analytic platforms
     'cookielaw',           # EU cookie law banner
     'hunger',		       # for managing beta signups and invitations
+    'django_nose',         # django nose for testing
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
@@ -127,6 +129,14 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+# for testing
+if 'test' in sys.argv:
+    # remove django hunger middleware in testing
+    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
+    MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 
 ##############################################################################

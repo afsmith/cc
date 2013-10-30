@@ -1,4 +1,4 @@
-Django==1.5.2
+Django==1.5.5
 django-annoying==0.7.7
 django-extensions==1.2.0
 -e git+git://github.com/H25/django-registration#egg=registration
@@ -16,8 +16,4 @@ django-cookie-law>=1.0.0
 PyPDF2==1.18
 django-hunger==2.0.2
 django-templated-email==0.4.9
-
-# for testing
-sqlparse==0.1.8
-guppy==0.1.10
-coverage==3.6
+django-nose==1.2

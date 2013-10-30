@@ -31,7 +31,6 @@ def add2virtualenv():
         fh.write(os.path.join(os.path.abspath(env.cwd), 'src'))
 
 @task()
-
 def release():
     '''
     Makes a build for staging prod
@@ -86,40 +85,11 @@ def create_tarball():
 
 ### ------------------------- Tasks with aliases ------------------------- ###
 @task(alias='t')
-def test(coverage=False, only=None):
+def test():
     '''
     Executes test suite, optionally checking coverage.
-
-    Accepted flags:
-        - converage   Set to True to gather coverage information
-                      (it is disable by default).
-        - only        Name of an app/testcase/fixture you want to execute
-                      (default includes all apps).
-
-    Examples:
-        fab test:coverage=True
-        fab test:only=content
-
-    The first example executes all tests and gathers coverage information. The
-    second one executes only tests defined in the app with label ``content``.
     '''
-
-    test_apps = ' '.join([
-        'accounts',
-        'cc_messages',
-        'content',
-        'tracking',
-    ])
-
-    if coverage:
-        _coverage = 'coverage run'
-    else:
-        _coverage = ''
-
-    if only:
-        test_apps = only
-
-    local('%s ./manage.py test %s' % (_coverage, test_apps), capture=False)
+    local('python manage.py test')
 
 
 @task(alias='d')
