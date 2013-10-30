@@ -42,7 +42,7 @@ $(document).ready(function () {
         // window unload => create tracking events
         $(window).unload(function () {
             $.ajax({
-                url: '/track/event/create',
+                url: '/track/event/create/',
                 type: 'POST',
                 dataType: 'json',
                 async: false,
@@ -58,7 +58,7 @@ $(document).ready(function () {
     pageInitHandler = function () {
         // init page => create tracking session
         $.ajax({
-            url: '/track/event/create',
+            url: '/track/event/create/',
             type: 'POST',
             dataType: 'json',
             data: $.extend({'type': 'SESSION'}, message_data)

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.views.decorators import http as http_decorators
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import validate_request, create_tracking_session, create_tracking_events_from_timer
+from .services import *
 from cc.apps.cc_messages.services import notify_email_opened
 from cc.libs.utils import get_client_ip, get_device_name
 
@@ -18,7 +18,7 @@ def create_event(request):
     '''
     Handles tracking event and session creation
     '''
-    data = validate_request(request)
+    data = validate_request(request, 'event')
     if data:
         if request.POST['type'] == 'SESSION':
             session = create_tracking_session(
@@ -72,3 +72,36 @@ def track_email(request, message_id, user_id):
     ))
     image_data = open(img_abs_path, 'rb').read()
     return http.HttpResponse(image_data, mimetype='image/gif')
+
+
+@csrf_exempt
+@http_decorators.require_POST
+@ajax_request
+def close_deal(request):
+    data = validate_request(request, 'deal')
+    if data:
+        if request.POST['action'] == 'create':
+            closed_deal = create_closed_deal(
+                message=data['message'],
+                user=data['user']
+            )
+            if closed_deal:
+                return {
+                    'status': 'OK',
+                    'closed_deal': closed_deal.id
+                }
+            else:
+                return {
+                    'status': 'ERROR',
+                    'message': closed_deal.__str__()
+                }
+        else:
+            return {
+                'status': 'ERROR',
+                'message': 'Not implement'
+            }
+    else:
+        return {
+            'status': 'ERROR',
+            'message': 'Invalid arguments'
+        }

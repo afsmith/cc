@@ -19,10 +19,12 @@ urlpatterns = patterns(
         'cc.apps.cc_messages.views.view_message', name='view_message'),
     
     # tracking
-    url(r'^track/email/(?P<message_id>\d+)/(?P<user_id>\d+)$',
+    url(r'^track/email/(?P<message_id>\d+)/(?P<user_id>\d+)/$',
         'cc.apps.tracking.views.track_email', name='track_email'),
-    url(r'^track/event/create$',
+    url(r'^track/event/create/$',
         'cc.apps.tracking.views.create_event', name='create_event'),
+    url(r'^track/close_deal/$',
+        'cc.apps.tracking.views.close_deal', name='close_deal'),
 
     # report
     url(r'^report/(?P<message_id>\d+)/$',

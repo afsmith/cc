@@ -63,4 +63,31 @@ $(document).ready(function () {
     // display the chart on page init
     google.load("visualization", "1", {packages:["corechart"], "callback" : drawChart});
 
+    // close the deal when click checkbox
+    $('.js_sold').click(function () {
+        var _this = $(this),
+            this_id = _this.prop('id'),
+            action = _this.prop('checked') ? 'create' : 'remove',
+            id_pair = this_id.replace('sold_', '').split('_'),
+            message_id = id_pair[0],
+            user_id = id_pair[1];
+
+        $.ajax({
+            url: '/track/close_deal/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'message_id': message_id,
+                'user_id': user_id,
+                'action': action
+            }
+        }).done(function (resp) {
+            // make the row lighter
+            console.log(resp);
+            if (resp.status === 'OK') {
+                _this.closest('tr').css('color', '#999');
+            }
+        });
+    });
+
 }); // end document ready
