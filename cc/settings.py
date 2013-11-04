@@ -138,6 +138,13 @@ if 'test' in sys.argv:
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
+HUNGER_ALWAYS_ALLOW_VIEWS = [
+    'django.contrib.auth.views',
+    'track_email',
+    'create_event',
+    'view_message',
+]
+
 
 ##############################################################################
 # Account & registration
