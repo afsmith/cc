@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
@@ -7,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from .models import Message
 from cc.apps.accounts.models import OneClickLinkToken, CUser
 
+from templated_email import send_templated_mail
 import datetime
 
 
@@ -26,8 +26,6 @@ def create_ocl_and_send_message(message, domain):
     '''
     Create OCL link (to the message) for each recipients and send email to them
     '''
-    connection = get_connection()
-    connection.open()
     recipient_emails = []
 
     for r in message.receivers.all():
@@ -39,47 +37,36 @@ def create_ocl_and_send_message(message, domain):
         ocl_link = '%s/view/%d/?token=%s' % (
             domain, message.id, ocl.token
         )
-
-        text_body = settings.EMAIL_TEMPLATE % {
-            'message': message.message, 'ocl_link': ocl_link
-        }
-        msg = EmailMultiAlternatives(
-            subject=message.subject,
-            body=text_body,
-            from_email=message.owner.email,
-            to=[r.email],
-            connection=connection
+        tracking_pixel_src = '%s/track/email/%d/%d/' % (
+            domain, message.id, r.id
         )
 
-        # attach the tracking pixel if needed
-        if message.notify_email_opened:
-            msg.attach_alternative(
-                '%s <img src="%s/track/email/%d/%d/" />' % (
-                    text_body, domain, message.id, r.id
-                ),
-                'text/html'
-            )
-        msg.send()
+        send_templated_mail(
+            template_name='message_default',
+            from_email=message.owner.email,
+            to=[r.email],
+            context={
+                'message': message,
+                'ocl_link': ocl_link,
+                'notify_email_opened': message.notify_email_opened,
+                'tracking_pixel_src': tracking_pixel_src
+            },
+        )
 
         # add recipient email address to the list
         recipient_emails.append(r.email)
 
     # send a copy if sender chooses to cc himself
     if message.cc_me:
-        msg = EmailMultiAlternatives(
-            subject=message.subject,
-            body=settings.CC_ME_TEMPLATE % {
-                'recipients': ', '.join(recipient_emails),
-                'message': message.message
-            },
+        send_templated_mail(
+            template_name='message_cc',
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[message.owner.email],
-            connection=connection
+            context={
+                'message': message,
+                'recipients': ', '.join(recipient_emails),
+            },
         )
-        msg.send()
-
-    # close connection after finish
-    connection.close()
 
 
 def send_notification_email(reason_code, message, recipient=None):
@@ -91,26 +78,25 @@ def send_notification_email(reason_code, message, recipient=None):
     '''
     if reason_code == 1:
         subject = _('[Notification] %s opened your email.') % recipient.email
-        email_template = settings.NOTIFICATION_EMAIL_OPENED_TEMPLATE
+        email_template = 'notification_email_opened'
     elif reason_code == 2:
         subject = _('[Notification] %s clicked on your link.') % recipient.email
-        email_template = settings.NOTIFICATION_LINK_CLICKED_TEMPLATE
+        email_template = 'notification_link_clicked'
     elif reason_code == 3:
         subject = _('[Notification] Conversion error.')
-        email_template = settings.NOTIFICATION_CONVERSION_ERROR_TEMPLATE
+        email_template = 'notification_conversion_error'
     else:
         return None
 
-    body = email_template % {
-        'recipient': getattr(recipient, 'email', None),
-        'subject': message.subject
-    }
-
-    send_mail(
-        subject=subject,
-        message=body,
+    send_templated_mail(
+        template_name=email_template,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[message.owner.email]
+        to=[message.owner.email],
+        context={
+            'subject': subject,
+            'message_subject': message.subject,
+            'recipient': getattr(recipient, 'email', None),
+        },
     )
 
 
