@@ -8,12 +8,12 @@
         {% trans 'Thank you for sending the message!' %}
     {% else %}
         <div class="row">
-            <div class="span6 center">
+            <div class="span6 center send_message_page">
                 <form id="js_messageForm" action="{% url 'send' %}" method="POST">{% csrf_token %}
                     {% include '_base_form.html' with form=message_form%}
                 </form>
 
-                <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="row-fluid dropzone">{% csrf_token %}
+                <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
                     {% trans "Drop the attachment (or click) here to upload" %}
                 </form>
 
