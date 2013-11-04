@@ -97,35 +97,48 @@ $(document).ready(function () {
             this_id = this_row.prop('id'),
             id_pair = this_id.replace('row_', '').split('_'),
             message_id = id_pair[0],
-            user_id = id_pair[1];
+            user_id = id_pair[1],
+            all_log_rows = $('.log_' + this_id);
 
-        $.ajax({
-            url: '/report/user/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'message_id': message_id,
-                'user_id': user_id,
-            }
-        }).done(function (resp) {
-            var i = 0,
-                html = '';
+        // handle style
+        if (this_row.hasClass('log_opened')) {
+            all_log_rows.hide();
+            this_row.removeClass('log_opened').attr('style', '');
+        } else {
+            this_row.addClass('log_opened').css('background-color', '#B4F0F0');
 
-            if (resp.length) {
-                for (i; i < resp.length; i++) {
-                    html += ['<tr class="user_log">',
-                    '<td></td>',
-                    '<td>' + resp[i].created_at + '</td>',
-                    '<td></td>',
-                    '<td>' + resp[i].total_time/100 + '</td>',
-                    '<td></td>',
-                    '<td>' + resp[i].client_ip + '</td>',
-                    '<td>' + resp[i].device + '</td>',
-                    '</tr>'].join('');
-                }
+            if (all_log_rows.length) {
+                all_log_rows.show();
+            } else {
+                $.ajax({
+                    url: '/report/user/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'message_id': message_id,
+                        'user_id': user_id,
+                    }
+                }).done(function (resp) {
+                    var i = 0,
+                        html = '';
+
+                    if (resp.length) {
+                        for (i; i < resp.length; i++) {
+                            html += ['<tr class="user_log log_' + this_id + '">',
+                            '<td></td>',
+                            '<td>' + resp[i].created_at + '</td>',
+                            '<td></td>',
+                            '<td>' + resp[i].total_time/100 + '</td>',
+                            '<td></td>',
+                            '<td>' + resp[i].client_ip + '</td>',
+                            '<td>' + resp[i].device + '</td>',
+                            '</tr>'].join('');
+                        }
+                    }
+                    this_row.after(html);
+                });
             }
-            this_row.after(html);
-        });
+        }
     });
 
 }); // end document ready
