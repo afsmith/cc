@@ -32,7 +32,7 @@
     {% for row in log_groupby_user %}
     <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}">
         <td><input type="checkbox" name="sold" class="js_sold" /></td>
-        <td>{{ row.max_date }}</td>
+        <td>{{ row.max_date|date:'d.m.Y H:i:s' }}</td>
         <td class="cell_email">{{ row.tracking_session__participant__email }}</td>
         <td>{% to_second row.total_time %}</td>
         <td>{{ row.visit_count }}</td>
@@ -46,5 +46,7 @@
 
 {% block js_scripts %}
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+    
     <script src="{% static 'js/report.js' %}"></script>
 {% endblock %}

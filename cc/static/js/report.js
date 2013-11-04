@@ -126,7 +126,7 @@ $(document).ready(function () {
                         for (i; i < resp.length; i++) {
                             html += ['<tr class="user_log log_' + this_id + '">',
                             '<td></td>',
-                            '<td>' + resp[i].created_at + '</td>',
+                            '<td>' + Date.parse(resp[i].created_at).toString('dd.MM.yyyy HH:mm:ss') + '</td>',
                             '<td></td>',
                             '<td>' + resp[i].total_time/100 + '</td>',
                             '<td></td>',
