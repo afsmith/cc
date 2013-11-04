@@ -1,3 +1,14 @@
+// custom validator
+$.validator.addMethod(
+    "regex",
+    function(value, element, regexp) {
+        var check = false;
+        var re = new RegExp(regexp);
+        return this.optional(element) || re.test(value);
+    },
+    "Please include your keyword(s)."
+);
+
 $(document).ready(function () {
     var message_form = $('#js_messageForm'),
         message_submit_btn = $('#js_submitMessageForm'),
@@ -9,7 +20,7 @@ $(document).ready(function () {
         rules: {
             subject: 'required',
             to: 'required',
-            message: 'required',
+            message: {required: true, regex: /\[link\]/},
             attachment: 'required',
         },
         errorPlacement: function(error, element) {

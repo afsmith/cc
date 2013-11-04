@@ -28,7 +28,7 @@ def send_message(request):
 
             return {'thankyou_page': True}
     else:
-        message_form = MessageForm()
+        message_form = MessageForm(initial={'message': '[link]'})
 
     return {
         'message_form': message_form,

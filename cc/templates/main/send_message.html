@@ -17,7 +17,12 @@
                     {% trans "Drop the attachment (or click) here to upload" %}
                 </form>
 
-                <p><span class="label label-success">{% trans "Note" %}</span><span>  {% trans "All fields are required" %}</span></p>
+                <p>
+                    <span class="label label-success">{% trans "Note" %}</span>
+                    <span>  {% trans "All fields are required" %}</span>
+                    <br>
+                    <span>  {% trans 'Message has to contain "[link]"' %}</span>
+                </p>
                 <button id="js_submitMessageForm" class="btn btn-large btn-success disabled">{% trans "Send" %}</button>
             </div>
         </div>
@@ -36,5 +41,5 @@
     <script src="{% static 'js/vendor/dropzone.js' %}"></script>
     <script src="{% static 'js/vendor/bootstrap-tokenfield.min.js' %}"></script>
 
-    <script src="{% static 'js/send_message.js' %}?v=0004"></script>
+    <script src="{% static 'js/send_message.js' %}?v=0005"></script>
 {% endblock %}
