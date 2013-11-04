@@ -24,7 +24,7 @@ def validate_request(request, type):
         else:
             return False
     elif type == 'deal':
-        if action and message_id and user_id:
+        if action in ['create', 'remove'] and message_id and user_id:
             try:
                 message = Message.objects.get(pk=message_id)
                 user = CUser.objects.get(pk=user_id)
@@ -69,3 +69,10 @@ def create_closed_deal(**kw):
         message=kw['message'],
         participant=kw['user']
     )
+
+
+def remove_closed_deal(**kw):
+    return ClosedDeal.objects.filter(
+        message=kw['message'],
+        participant=kw['user']
+    ).delete()

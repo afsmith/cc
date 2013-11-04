@@ -81,6 +81,7 @@ def close_deal(request):
     data = validate_request(request, 'deal')
     if data:
         if request.POST['action'] == 'create':
+            # create closed deal
             closed_deal = create_closed_deal(
                 message=data['message'],
                 user=data['user']
@@ -96,9 +97,13 @@ def close_deal(request):
                     'message': closed_deal.__str__()
                 }
         else:
+            # remove closed deal
+            remove_closed_deal(
+                message=data['message'],
+                user=data['user']
+            )
             return {
-                'status': 'ERROR',
-                'message': 'Not implement'
+                'status': 'OK',
             }
     else:
         return {

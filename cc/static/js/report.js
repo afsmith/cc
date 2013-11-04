@@ -66,7 +66,8 @@ $(document).ready(function () {
     // close the deal when click checkbox
     $('.js_sold').click(function () {
         var _this = $(this),
-            this_id = _this.closest('tr').prop('id'),
+            this_row = _this.closest('tr'),
+            this_id = this_row.prop('id'),
             action = _this.prop('checked') ? 'create' : 'remove',
             id_pair = this_id.replace('row_', '').split('_'),
             message_id = id_pair[0],
@@ -83,9 +84,12 @@ $(document).ready(function () {
             }
         }).done(function (resp) {
             // make the row lighter
-            console.log(resp);
             if (resp.status === 'OK') {
-                _this.closest('tr').css('color', '#999');
+                if (action === 'create') {
+                    this_row.addClass('sold');
+                } else {
+                    this_row.removeClass('sold');
+                }
             }
         });
     });
@@ -100,13 +104,16 @@ $(document).ready(function () {
             user_id = id_pair[1],
             all_log_rows = $('.log_' + this_id);
 
-        // handle style
+        // if the log rows are shown
         if (this_row.hasClass('log_opened')) {
+            // hide the log rows and remove the blue background
             all_log_rows.hide();
             this_row.removeClass('log_opened').attr('style', '');
         } else {
+            // add blue background
             this_row.addClass('log_opened').css('background-color', '#B4F0F0');
 
+            // show the logs or fetch it with ajax
             if (all_log_rows.length) {
                 all_log_rows.show();
             } else {
