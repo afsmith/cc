@@ -2,13 +2,16 @@ from django.contrib.auth import decorators as auth_decorators
 from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Sum, Count, Max
 from django.http import HttpResponse
-#from django.db import connection
+from django.views.decorators import http as http_decorators
+from django.views.decorators.csrf import csrf_exempt
+from django.core.serializers.json import DjangoJSONEncoder
 
+from .services import validate_request
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession, TrackingEvent
-#from cc.libs.utils import dictfetchall
 
-from annoying.decorators import render_to
+
+from annoying.decorators import render_to, ajax_request
 import json
 
 
@@ -45,17 +48,6 @@ def report_detail(request, message_id):
     all_messages = (
         Message.objects.filter(owner=request.user)
         .order_by('created_at').reverse()
-    )
-
-    log_groupby_session = (
-        TrackingSession.objects
-        .filter(message=message_id)
-        .extra(select={
-            'total_time': """SELECT SUM(total_time) 
-                FROM tracking_trackingevent 
-                WHERE tracking_trackingevent.tracking_session_id 
-                    = tracking_trackingsession.id"""
-        })
     )
 
     log_groupby_user = (
@@ -101,6 +93,31 @@ def report_detail(request, message_id):
         return {
             'this_message': this_message,
             'messages': all_messages,
-            'log_groupby_session': log_groupby_session,
             'log_groupby_user': log_groupby_user
+        }
+
+
+@csrf_exempt
+@http_decorators.require_POST
+@ajax_request
+def user_log(request):
+    data = validate_request(request)
+    if data:
+        log_groupby_session = (
+            TrackingSession.objects
+            .filter(message=data['message'], participant=data['user'])
+            .extra(select={
+                'total_time': """SELECT SUM(total_time) 
+                    FROM tracking_trackingevent 
+                    WHERE tracking_trackingevent.tracking_session_id 
+                        = tracking_trackingsession.id"""
+            })
+            .values('created_at', 'total_time', 'client_ip', 'device')
+        )
+        json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
+        return HttpResponse(json_resp, mimetype='application/json')
+    else:
+        return {
+            'status': 'ERROR',
+            'message': 'Invalid arguments'
         }

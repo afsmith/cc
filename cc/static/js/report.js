@@ -66,9 +66,9 @@ $(document).ready(function () {
     // close the deal when click checkbox
     $('.js_sold').click(function () {
         var _this = $(this),
-            this_id = _this.prop('id'),
+            this_id = _this.closest('tr').prop('id'),
             action = _this.prop('checked') ? 'create' : 'remove',
-            id_pair = this_id.replace('sold_', '').split('_'),
+            id_pair = this_id.replace('row_', '').split('_'),
             message_id = id_pair[0],
             user_id = id_pair[1];
 
@@ -87,6 +87,44 @@ $(document).ready(function () {
             if (resp.status === 'OK') {
                 _this.closest('tr').css('color', '#999');
             }
+        });
+    });
+
+    // click on email address cell
+    $('.cell_email').click(function () {
+        var _this = $(this),
+            this_row = _this.closest('tr'),
+            this_id = this_row.prop('id'),
+            id_pair = this_id.replace('row_', '').split('_'),
+            message_id = id_pair[0],
+            user_id = id_pair[1];
+
+        $.ajax({
+            url: '/report/user/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'message_id': message_id,
+                'user_id': user_id,
+            }
+        }).done(function (resp) {
+            var i = 0,
+                html = '';
+
+            if (resp.length) {
+                for (i; i < resp.length; i++) {
+                    html += ['<tr class="user_log">',
+                    '<td></td>',
+                    '<td>' + resp[i].created_at + '</td>',
+                    '<td></td>',
+                    '<td>' + resp[i].total_time/100 + '</td>',
+                    '<td></td>',
+                    '<td>' + resp[i].client_ip + '</td>',
+                    '<td>' + resp[i].device + '</td>',
+                    '</tr>'].join('');
+                }
+            }
+            this_row.after(html);
         });
     });
 

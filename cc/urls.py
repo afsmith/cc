@@ -29,7 +29,9 @@ urlpatterns = patterns(
     # report
     url(r'^report/(?P<message_id>\d+)/$',
         'cc.apps.cc.views.report_detail', name='report_detail'),
+    url(r'^report/user/$', 'cc.apps.cc.views.user_log', name='user_log'),
     url(r'^report/$', 'cc.apps.cc.views.report_index', name='report_index'),
+
 
     # registration
     url(r'^accounts/register/$',
