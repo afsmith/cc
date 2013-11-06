@@ -143,7 +143,6 @@ HUNGER_ALWAYS_ALLOW_VIEWS = [
 ]
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
-TEMPLATED_EMAIL_FILE_EXTENSION = 'html'
 
 ##############################################################################
 # Account & registration

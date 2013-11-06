@@ -38,13 +38,13 @@ def create_ocl_and_send_message(message, domain):
             domain, message.id, ocl.token
         )
         tracking_pixel_src = '%s/track/email/%d/%d/' % (
-            domain, message.id, r.id
+           domain, message.id, r.id
         )
 
         send_templated_mail(
             template_name='message_default',
             from_email=message.owner.email,
-            to=[r.email],
+            recipient_list=[r.email],
             context={
                 'message': message,
                 'ocl_link': ocl_link,
@@ -61,7 +61,7 @@ def create_ocl_and_send_message(message, domain):
         send_templated_mail(
             template_name='message_cc',
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[message.owner.email],
+            recipient_list=[message.owner.email],
             context={
                 'message': message,
                 'recipients': ', '.join(recipient_emails),
@@ -91,7 +91,7 @@ def send_notification_email(reason_code, message, recipient=None):
     send_templated_mail(
         template_name=email_template,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[message.owner.email],
+        recipient_list=[message.owner.email],
         context={
             'subject': subject,
             'message_subject': message.subject,
