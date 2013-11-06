@@ -104,8 +104,8 @@ $(document).ready(function () {
                 $('#id_key_page').append(options);
                 $('label[for="id_key_page"], #id_key_page').show();
                 
-
                 // handle some CSS and template
+                upload_form.css({'margin-bottom': '110px'});
                 $('.dz-success-mark').css('opacity', 1);
                 $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
 
