@@ -2,11 +2,27 @@
 {% load url from future %}
 
 {% block content %}
-<div>
-  <h1>CC Dashboard</h1>
+<div class="container-fluid"> 
+<div  class="row">
+  <h2>CC Dashboard</h2>
 </div>
 
-<div class="span12">
- Here you could select some options or something. Chose sending or reporting? 
+<div class="row-fluid">
+<div class="span6 offset3">
+<p class="lead">Hey, good to see you. We really belive using kneto you'll close more deals.
+  Thanks for giving it a shot, and if we can help, just send us a mail. </p> 
 </div>
+</div>
+<div class="row-fluid">
+<div class="span3 offset3">
+ <a href="{% url 'send' %}"><button class="btn btn-large btn-success" type="button">Send offers</button></a><p>
+</div>
+
+<div class="span3">
+<a href="{% url 'report_index' %}"<button class="btn btn-large btn-success" type="button">View reports</button></a><p>
+</div>
+
+</div>
+</div>
+
 {% endblock %}
