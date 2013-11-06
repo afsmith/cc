@@ -1,5 +1,0 @@
-Visit {{ invite_url }} to join the kneto private beta.
-
-If you have pre-registered click the link above then log in. If you have not, don't worry registration just takes a moment
-
-Look forward to seeing you.
