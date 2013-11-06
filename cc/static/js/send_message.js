@@ -12,7 +12,10 @@ $.validator.addMethod(
 $(document).ready(function () {
     var message_form = $('#js_messageForm'),
         message_submit_btn = $('#js_submitMessageForm'),
-        upload_form = $('#uploadFileForm');
+        message_field = $('#id_message'),
+        upload_form = $('#uploadFileForm'),
+        _toggleMessageSubmitButton,
+        _renderUploadError;
 
     // validation rules for message form
     message_form.validate({
@@ -32,7 +35,7 @@ $(document).ready(function () {
     });
 
     // function to enable / disable send button
-    function _toggleMessageSubmitButton(force_disable) {
+    _toggleMessageSubmitButton = function (force_disable) {
         if (typeof force_disable !== 'undefined' && force_disable) {
             message_submit_btn.addClass('disabled');
         }
@@ -42,15 +45,7 @@ $(document).ready(function () {
         } else {
             message_submit_btn.addClass('disabled');
         }
-    }
-
-    // submit the form when clicking Send button
-    message_submit_btn.click(function() {
-        if (!$(this).hasClass('disabled')) {
-            message_form.trigger('submit');
-        }
-        return false;
-    });
+    };
 
     // use tokenfield for To field
     $('#id_to').tokenfield({
@@ -68,17 +63,32 @@ $(document).ready(function () {
         _toggleMessageSubmitButton();
     });
 
+    // hide key page
+    $('label[for="id_key_page"], #id_key_page').hide();
+
     // bind validation on input keyup
     message_form.find('input[type="text"], textarea').keyup(function () {
         _toggleMessageSubmitButton();
     });
 
-    // hide key page
-    $('label[for="id_key_page"], #id_key_page').hide();
+    // summernote config
+    message_field.summernote({
+        height: 160,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol']],
+        ],
+        onkeyup: function(e) {
+            // TODO: improve this later by not copying on every key press
+            message_field.val(message_field.code());
+            _toggleMessageSubmitButton();
+        }
+    });
 
-    function _renderUploadError(error_message) {
+    _renderUploadError = function (error_message) {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ': ' + error_message + '</p>');
-    }
+    };
 
     // dropzone config for file upload form
     Dropzone.options.uploadFileForm = {
@@ -134,5 +144,13 @@ $(document).ready(function () {
             _toggleMessageSubmitButton();
         },
     };
+
+    // submit the form when clicking Send button
+    message_submit_btn.click(function() {
+        if (!$(this).hasClass('disabled')) {
+            message_form.trigger('submit');
+        }
+        return false;
+    });
 
 }); // end document ready

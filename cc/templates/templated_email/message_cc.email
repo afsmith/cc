@@ -4,8 +4,8 @@
 <p>Here is a copy of the message you sent to: {{ recipients }}</p>
 <p>------------------------------------------------</p>
 
-<p>{{ text }}</p>
+{{ text }}
 
-Best,
-Kneto
+<p>Best,<br />
+Kneto</p>
 {% endblock %}

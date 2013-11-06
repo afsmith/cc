@@ -1,7 +1,7 @@
 {% block subject %}{{ message.subject }}{% endblock %}
 
 {% block html %}
-<p>{{ text }}</p>
+{{ text }}
 
 {% if message.notify_email_opened %}
     <img src="{{ tracking_pixel_src }}" />
