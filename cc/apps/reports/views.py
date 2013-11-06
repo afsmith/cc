@@ -62,12 +62,16 @@ def report_detail(request, message_id):
         .order_by()
     )
 
-    # check if there is closed deal exists
     for qs in log_groupby_user:
+        # check if there is closed deal exists
         qs['closed_deal'] = ClosedDeal.objects.filter(
             message=message_id,
             participant=qs['tracking_session__participant']
         ).exists()
+
+        # calculate the actual visit count (the above is 1 per page)
+        qs['visit_count'] /= this_message.files.all()[0].pages_num
+    
     #print log_groupby_user.query.__str__()
 
     # if request is ajax, provide the total time per page
@@ -109,12 +113,8 @@ def user_log(request):
         log_groupby_session = (
             TrackingSession.objects
             .filter(message=data['message'], participant=data['user'])
-            .extra(select={
-                'total_time': """SELECT SUM(total_time) 
-                    FROM tracking_trackingevent 
-                    WHERE tracking_trackingevent.tracking_session_id 
-                        = tracking_trackingsession.id"""
-            })
+            .annotate(total_time=Sum('trackingevent__total_time'))
+            .filter(total_time__gt=0)
             .values('created_at', 'total_time', 'client_ip', 'device')
         )
         json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
