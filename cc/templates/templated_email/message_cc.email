@@ -4,9 +4,7 @@
 <p>Here is a copy of the message you sent to: {{ recipients }}</p>
 <p>------------------------------------------------</p>
 
-<p>{{ message.message }}</p>
-
-<p>Click here to check the file: </p>
+<p>{{ text }}</p>
 
 Best,
 Kneto

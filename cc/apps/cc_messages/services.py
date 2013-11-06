@@ -34,11 +34,17 @@ def create_ocl_and_send_message(message, domain):
             user=r,
             expires_on=datetime.datetime.today() + datetime.timedelta(days=30)
         )
-        ocl_link = '%s/view/%d/?token=%s' % (
+        ocl_link = '{}/view/{}/?token={}'.format(
             domain, message.id, ocl.token
         )
-        tracking_pixel_src = '%s/track/email/%d/%d/' % (
+        tracking_pixel_src = '{}/track/email/{}/{}/'.format(
            domain, message.id, r.id
+        )
+
+        # replace the token [link] with the actual OCL link
+        text = message.message.replace(
+            '[link]',
+            '<a href="{0}">{0}</a>'.format(ocl_link)
         )
 
         send_templated_mail(
@@ -47,8 +53,7 @@ def create_ocl_and_send_message(message, domain):
             recipient_list=[r.email],
             context={
                 'message': message,
-                'ocl_link': ocl_link,
-                'notify_email_opened': message.notify_email_opened,
+                'text': text,
                 'tracking_pixel_src': tracking_pixel_src
             },
         )
@@ -58,12 +63,14 @@ def create_ocl_and_send_message(message, domain):
 
     # send a copy if sender chooses to cc himself
     if message.cc_me:
+        text = message.message
         send_templated_mail(
             template_name='message_cc',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[message.owner.email],
             context={
                 'message': message,
+                'text': text,
                 'recipients': ', '.join(recipient_emails),
             },
         )

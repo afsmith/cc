@@ -1,11 +1,9 @@
 {% block subject %}{{ message.subject }}{% endblock %}
 
 {% block html %}
-<p>{{ message.message }}</p>
+<p>{{ text }}</p>
 
-<p>Click here to check the file: <a href="{{ ocl_link }}">{{ ocl_link }}</a></p>
-
-{% if notify_email_opened %}
+{% if message.notify_email_opened %}
     <img src="{{ tracking_pixel_src }}" />
 {% endif %}
 {% endblock %}
