@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 
 from .models import Message
 from cc.apps.accounts.models import OneClickLinkToken, CUser
+from cc.apps.tracking.models import TrackingLog
 
 from templated_email import send_templated_mail
 import datetime
@@ -78,15 +79,17 @@ def create_ocl_and_send_message(message, domain):
 
 def send_notification_email(reason_code, message, recipient=None):
     '''
-    Send notification email to sender
+    Send notification email to sender, log the action if not exist
     reason_code 1: email is opened
     reason_code 2: link is clicked
     reason_code 3: conversion error
     '''
     if reason_code == 1:
+        action = TrackingLog.OPEN_EMAIL_ACTION
         subject = _('[Notification] %s opened your email.') % recipient.email
         email_template = 'notification_email_opened'
     elif reason_code == 2:
+        action = TrackingLog.CLICK_LINK_ACTION
         subject = _('[Notification] %s clicked on your link.') % recipient.email
         email_template = 'notification_link_clicked'
     elif reason_code == 3:
@@ -95,16 +98,36 @@ def send_notification_email(reason_code, message, recipient=None):
     else:
         return None
 
-    send_templated_mail(
-        template_name=email_template,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[message.owner.email],
-        context={
-            'subject': subject,
-            'message_subject': message.subject,
-            'recipient': getattr(recipient, 'email', None),
-        },
-    )
+    # check if email has been sent
+    should_send = True
+    if reason_code in [1, 2] and recipient:
+        # if there is existing log then should not send email again
+        if TrackingLog.objects.filter(
+            message=message,
+            participant=recipient,
+            action=action
+        ):
+            should_send = False
+
+        # create log anyway
+        TrackingLog.objects.create(
+            message=message,
+            participant=recipient,
+            action=action
+        )
+
+    # then send email if needed
+    if should_send:
+        send_templated_mail(
+            template_name=email_template,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[message.owner.email],
+            context={
+                'subject': subject,
+                'message_subject': message.subject,
+                'recipient': getattr(recipient, 'email', None),
+            },
+        )
 
 
 def notify_email_opened(message_id, user_id):

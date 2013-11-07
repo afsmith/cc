@@ -34,3 +34,16 @@ class ClosedDeal(models.Model):
 
     def __unicode__(self):
         return self.message.subject
+
+
+class TrackingLog(models.Model):
+    OPEN_EMAIL_ACTION = 'OPEN_EMAIL'
+    CLICK_LINK_ACTION = 'CLICK_LINK'
+
+    message = models.ForeignKey(Message)
+    participant = models.ForeignKey(CUser)
+    action = models.CharField(_('Action'), max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.message.subject
