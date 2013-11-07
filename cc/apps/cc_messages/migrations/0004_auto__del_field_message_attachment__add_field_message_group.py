@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('content', '0001_initial'),
+    )
+
     def forwards(self, orm):
         # Deleting field 'Message.attachment'
         db.delete_column(u'cc_messages_message', 'attachment')
