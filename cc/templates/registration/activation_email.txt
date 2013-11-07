@@ -7,7 +7,7 @@ Thank you for registering for {{ site_name }}. We believe it will help you decre
 
 Your just about ready to get started. 
 
-Click the link below to set your password. Remember if you run into trouble, get confused drop a line to support@kneto.com and we'll see what we can do to help you out. 
+Click the link below to activate your account. Remember if you run into trouble, get confused drop a line to support@kneto.com and we'll see what we can do to help you out. 
 {% endblocktrans %}
 http://{{ site.domain }}{% url 'registration_activate' activation_key %}
 {% blocktrans %}
