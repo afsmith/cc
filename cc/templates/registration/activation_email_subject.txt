@@ -1,3 +1,3 @@
 {% load i18n %}
 
-{% blocktrans %}Greeting from {{ site.name }}{% endblocktrans %}
+{% blocktrans %}Kneto: Thanks for registering {% endblocktrans %}
