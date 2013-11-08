@@ -148,6 +148,8 @@ $(document).ready(function () {
     // submit the form when clicking Send button
     message_submit_btn.click(function() {
         if (!$(this).hasClass('disabled')) {
+            // copy data from WYSIWYG editor to textarea before submit
+            message_field.val(message_field.code());
             message_form.trigger('submit');
         }
         return false;
