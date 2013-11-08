@@ -5,7 +5,25 @@
 
 {% block content %}
     {% if thankyou_page %}
-        {% trans 'Thank you for sending the message!' %}
+
+        <div class="row">
+    <div class="span6 offset3">
+        <h2>Sent</h2>
+    </div>
+
+    <div class="span6 offset3">
+        <p class="lead">Ok, your message is being processed and the mail will be sent to your people in just a few minutes.</p> 
+    </div>
+
+    <div class="span3 offset3">
+        <a href="{% url 'send' %}" class="btn btn-large btn-success">Send another offer</a>
+    </div>
+
+    <div class="span3">
+        <a href="{% url 'report_index' %}" class="btn btn-large btn-success">View reports</a>
+    </div>
+</div>
+
     {% else %}
         <div class="row">
             <div class="span6 center send_message_page">
