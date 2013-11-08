@@ -127,14 +127,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# for testing
-if 'test' in sys.argv:
-    # remove django hunger middleware in testing
-    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-    MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
 HUNGER_ALWAYS_ALLOW_VIEWS = [
     'django.contrib.auth.views',
     'track_email',
@@ -211,6 +203,19 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 '''
+
+##############################################################################
+# Testing
+##############################################################################
+
+# for testing
+if 'test' in sys.argv:
+    # remove django hunger middleware in testing
+    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
+    MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
 
 ##############################################################################
 # Move local settings to bottom so any setting can be overriden
