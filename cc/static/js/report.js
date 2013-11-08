@@ -134,7 +134,8 @@ $(document).ready(function () {
                             console.log(resp[i].created_at);
                             html += ['<tr class="user_log log_' + this_id + '">',
                             '<td></td>',
-                            '<td>' + (!resp[i].created_at ? '' : Date.parse(resp[i].created_at).toString('dd.MM.yyyy HH:mm:ss')) + '</td>',
+                            //'<td>' + (!resp[i].created_at ? '' : Date.parse(resp[i].created_at).toString('dd.MM.yyyy HH:mm:ss')) + '</td>',
+                            '<td>' + resp[i].created_ts + '</td>',
                             '<td></td>',
                             '<td>' + resp[i].total_time/100 + '</td>',
                             '<td></td>',

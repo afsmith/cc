@@ -117,6 +117,8 @@ def user_log(request):
             .filter(total_time__gt=0)
             .values('created_at', 'total_time', 'client_ip', 'device')
         )
+        for qs in log_groupby_session:
+            qs['created_ts'] = qs['created_at'].strftime('%d.%m.%Y %H:%M:%S')
         json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
         return HttpResponse(json_resp, mimetype='application/json')
     else:
