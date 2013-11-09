@@ -9,6 +9,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from .services import validate_request
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession, TrackingEvent, ClosedDeal
+from cc.libs.utils import format_dbtime
 
 from annoying.decorators import render_to, ajax_request
 import json
@@ -68,9 +69,10 @@ def report_detail(request, message_id):
             message=message_id,
             participant=qs['tracking_session__participant']
         ).exists()
-
         # calculate the actual visit count (the above is 1 per page)
         qs['visit_count'] /= this_message.files.all()[0].pages_num
+        # format time
+        qs['total_time'] = format_dbtime(qs['total_time'])
     
     #print log_groupby_user.query.__str__()
 
@@ -87,11 +89,11 @@ def report_detail(request, message_id):
         # format the data nicely
         formatted_data = []
         for p in list(log_groupby_page_number):
-            row = ['Page {}'.format(p[0]), p[1]/100.0]
+            row = ['Page {}'.format(p[0]), p[1]/10.0]
             if this_message.key_page and this_message.key_page == p[0]:
-                row.append('Key page: {}s'.format(p[1]/100.0))
+                row.append('Key page: {}s'.format(p[1]/10.0))
             else:
-                row.append('{}s'.format(p[1]/100.0))
+                row.append('{}s'.format(p[1]/10.0))
             formatted_data.append(row)
         # and return to JS via json
         json_resp = json.dumps(formatted_data)
@@ -119,6 +121,7 @@ def user_log(request):
         )
         for qs in log_groupby_session:
             qs['created_ts'] = qs['created_at'].strftime('%d.%m.%Y %H:%M:%S')
+            qs['total_time'] = format_dbtime(qs['total_time'])
         json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
         return HttpResponse(json_resp, mimetype='application/json')
     else:

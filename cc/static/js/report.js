@@ -137,7 +137,7 @@ $(document).ready(function () {
                             //'<td>' + (!resp[i].created_at ? '' : Date.parse(resp[i].created_at).toString('dd.MM.yyyy HH:mm:ss')) + '</td>',
                             '<td>' + resp[i].created_ts + '</td>',
                             '<td></td>',
-                            '<td>' + resp[i].total_time/100 + '</td>',
+                            '<td>' + resp[i].total_time + '</td>',
                             '<td></td>',
                             '<td>' + resp[i].client_ip + '</td>',
                             '<td>' + resp[i].device + '</td>',

@@ -1,4 +1,5 @@
 from mdetect import UAgentInfo
+import datetime
 
 def get_domain(request):
     '''
@@ -80,3 +81,11 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
+
+
+def format_dbtime(time_from_db):
+    time_in_second = time_from_db / 10.0
+    #return str(datetime.timedelta(seconds=time_in_second))
+    m, s = divmod(time_in_second, 60)
+    h, m = divmod(m, 60)
+    return '{0:02.0f}:{1:02.0f}:{2:04.1f}'.format(h, m, s)
