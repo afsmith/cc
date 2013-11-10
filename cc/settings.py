@@ -215,6 +215,7 @@ if 'test' in sys.argv:
     MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = ['--nologcapture', '--nocapture']
 
 
 ##############################################################################

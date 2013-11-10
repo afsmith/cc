@@ -7,12 +7,16 @@ from selenium.webdriver.common.keys import Keys
 class UsersLiveTest(LiveServerTestCase):
     fixtures = ['test-users-content.json']
 
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+    @classmethod
+    def setUpClass(cls):
+        cls.browser = webdriver.Firefox()
+        cls.browser.implicitly_wait(3)
+        super(UsersLiveTest, cls).setUpClass()
 
-    def tearDown(self):
-        self.browser.quit()
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.quit()
+        super(UsersLiveTest, cls).tearDownClass()
 
     def test_can_login(self):
         self.browser.get(self.live_server_url + '/accounts/login/')
@@ -30,8 +34,5 @@ class UsersLiveTest(LiveServerTestCase):
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn('Hey, good to see you.', body.text)
 
-    #def test_login_and_click_on_send(self):
-    #    self.test_can_login()
-
-        #self.browser.driver.find_element_by_xpath('#').click()
-
+    def test_login_and_click_on_send(self):
+        pass

@@ -33,3 +33,6 @@ gunicorn.conf.py
 .metadata
 django.mo
 inst.py
+
+# one exception for the selenium test
+!/cc/media/pub/sr6qWmlrXFAFjbFuzgl77M_xDGaO.pdf
