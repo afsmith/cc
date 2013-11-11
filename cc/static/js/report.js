@@ -131,10 +131,8 @@ $(document).ready(function () {
 
                     if (resp.length) {
                         for (i; i < resp.length; i++) {
-                            console.log(resp[i].created_at);
                             html += ['<tr class="log_row log_' + this_id + '">',
                             '<td></td>',
-                            //'<td>' + (!resp[i].created_at ? '' : Date.parse(resp[i].created_at).toString('dd.MM.yyyy HH:mm:ss')) + '</td>',
                             '<td>' + resp[i].created_ts + '</td>',
                             '<td></td>',
                             '<td>' + resp[i].total_time + '</td>',
@@ -153,5 +151,4 @@ $(document).ready(function () {
     $('.report_table').on('click', '.log_row', function () {
 
     });
-
 }); // end document ready

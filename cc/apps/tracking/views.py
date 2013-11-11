@@ -1,7 +1,6 @@
 from django import http
 from django.conf import settings
 from django.views.decorators import http as http_decorators
-from django.views.decorators.csrf import csrf_exempt
 
 from .services import *
 from cc.apps.cc_messages.services import notify_email_opened
@@ -11,7 +10,6 @@ from annoying.decorators import ajax_request
 from os import path
 
 
-@csrf_exempt
 @http_decorators.require_POST
 @ajax_request
 def create_event(request):
@@ -74,7 +72,6 @@ def track_email(request, message_id, user_id):
     return http.HttpResponse(image_data, mimetype='image/gif')
 
 
-@csrf_exempt
 @http_decorators.require_POST
 @ajax_request
 def close_deal(request):

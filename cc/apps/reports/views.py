@@ -3,7 +3,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Sum, Count, Max
 from django.http import HttpResponse
 from django.views.decorators import http as http_decorators
-from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 
 from .services import validate_request
@@ -106,10 +105,33 @@ def report_detail(request, message_id):
         }
 
 
-@csrf_exempt
 @http_decorators.require_POST
 @ajax_request
 def user_log(request):
+    data = validate_request(request)
+    if data:
+        log_groupby_session = (
+            TrackingSession.objects
+            .filter(message=data['message'], participant=data['user'])
+            .annotate(total_time=Sum('trackingevent__total_time'))
+            .filter(total_time__gt=0)
+            .values('created_at', 'total_time', 'client_ip', 'device')
+        )
+        for qs in log_groupby_session:
+            qs['created_ts'] = qs['created_at'].strftime('%d.%m.%Y %H:%M:%S')
+            qs['total_time'] = format_dbtime(qs['total_time'])
+        json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
+        return HttpResponse(json_resp, mimetype='application/json')
+    else:
+        return {
+            'status': 'ERROR',
+            'message': 'Invalid arguments'
+        }
+
+
+@http_decorators.require_POST
+@ajax_request
+def session_log(request):
     data = validate_request(request)
     if data:
         log_groupby_session = (

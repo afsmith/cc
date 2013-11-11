@@ -87,7 +87,7 @@ $(document).ready(function () {
     });
 
     _renderUploadError = function (error_message) {
-        upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + t.ERROR_OCURRED_WITHOUT_DOT + ': ' + error_message + '</p>');
+        upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
     };
 
     // dropzone config for file upload form
