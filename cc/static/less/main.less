@@ -1,3 +1,7 @@
+@report_row_clicked_bg: #B4F0F0;
+@report_row_log_bg: #FAF1BB;
+
+
 // --------------------------- global --------------------------- //
 .center {
     float: none;
@@ -45,9 +49,20 @@ form {
 }
 
 // --------------------------- report page --------------------------- //
-.cell_email {
-    cursor: pointer;
-}
-.sold {
-    color: #999;
+.report_table {
+    .cell_email {
+        cursor: pointer;
+    }
+    .log_opened {
+        background: @report_row_clicked_bg;
+    }
+    .sold {
+        color: #999;
+    }
+    .log_row {
+        cursor: pointer;
+        &:hover {
+            background: @report_row_log_bg;
+        }
+    }
 }

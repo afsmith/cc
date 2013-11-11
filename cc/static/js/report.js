@@ -108,10 +108,10 @@ $(document).ready(function () {
         if (this_row.hasClass('log_opened')) {
             // hide the log rows and remove the blue background
             all_log_rows.hide();
-            this_row.removeClass('log_opened').attr('style', '');
+            this_row.removeClass('log_opened');
         } else {
             // add blue background
-            this_row.addClass('log_opened').css('background-color', '#B4F0F0');
+            this_row.addClass('log_opened');
 
             // show the logs or fetch it with ajax
             if (all_log_rows.length) {
@@ -132,7 +132,7 @@ $(document).ready(function () {
                     if (resp.length) {
                         for (i; i < resp.length; i++) {
                             console.log(resp[i].created_at);
-                            html += ['<tr class="user_log log_' + this_id + '">',
+                            html += ['<tr class="log_row log_' + this_id + '">',
                             '<td></td>',
                             //'<td>' + (!resp[i].created_at ? '' : Date.parse(resp[i].created_at).toString('dd.MM.yyyy HH:mm:ss')) + '</td>',
                             '<td>' + resp[i].created_ts + '</td>',
@@ -148,6 +148,10 @@ $(document).ready(function () {
                 });
             }
         }
+    });
+
+    $('.report_table').on('click', '.log_row', function () {
+
     });
 
 }); // end document ready
