@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    var drawChart;
+    var drawChart,
+        this_message_id = $('#js_selectMessage').val();
 
     // navigate with the dropdown
     $('#js_selectMessage').change(function () {
@@ -9,8 +10,9 @@ $(document).ready(function () {
     // fetch data from backend and draw column chart
     drawChart = function () {
         $.ajax({
-            url: window.location,
-            type: 'GET',
+            url: '/report/summary/',
+            type: 'POST',
+            data: {'message_id': this_message_id},
             dataType: 'json',
         }).done(function (resp) {
             var data,

@@ -74,35 +74,40 @@ def report_detail(request, message_id):
         qs['total_time'] = format_dbtime(qs['total_time'])
     
     #print log_groupby_user.query.__str__()
+    
+    return {
+        'this_message': this_message,
+        'messages': all_messages,
+        'log_groupby_user': log_groupby_user
+    }
 
-    # if request is ajax, provide the total time per page
-    if request.is_ajax():
-        log_groupby_page_number = (
-            TrackingEvent.objects
-            .filter(tracking_session__message=message_id)
-            .values('page_number')
-            .annotate(total_time=Sum('total_time'))
-            .order_by('page_number')
-            .values_list('page_number', 'total_time')
-        )
-        # format the data nicely
-        formatted_data = []
-        for p in list(log_groupby_page_number):
-            row = ['Page {}'.format(p[0]), p[1]/10.0]
-            if this_message.key_page and this_message.key_page == p[0]:
-                row.append('Key page: {}s'.format(p[1]/10.0))
-            else:
-                row.append('{}s'.format(p[1]/10.0))
-            formatted_data.append(row)
-        # and return to JS via json
-        json_resp = json.dumps(formatted_data)
-        return HttpResponse(json_resp, mimetype='application/json')
-    else:
-        return {
-            'this_message': this_message,
-            'messages': all_messages,
-            'log_groupby_user': log_groupby_user
-        }
+
+@http_decorators.require_POST
+@ajax_request
+def summary_log(request):
+    message_id = request.POST.get('message_id')
+    this_message = get_object_or_404(Message, pk=message_id)
+
+    log_groupby_page_number = (
+        TrackingEvent.objects
+        .filter(tracking_session__message=message_id)
+        .values('page_number')
+        .annotate(total_time=Sum('total_time'))
+        .order_by('page_number')
+        .values_list('page_number', 'total_time')
+    )
+
+    # format the data nicely
+    formatted_data = []
+    for p in list(log_groupby_page_number):
+        row = ['Page {}'.format(p[0]), p[1]/10.0]
+        if this_message.key_page and this_message.key_page == p[0]:
+            row.append('Key page: {}s'.format(p[1]/10.0))
+        else:
+            row.append('{}s'.format(p[1]/10.0))
+        formatted_data.append(row)
+
+    return formatted_data
 
 
 @http_decorators.require_POST
@@ -132,22 +137,26 @@ def user_log(request):
 @http_decorators.require_POST
 @ajax_request
 def session_log(request):
-    data = validate_request(request)
-    if data:
-        log_groupby_session = (
-            TrackingSession.objects
-            .filter(message=data['message'], participant=data['user'])
-            .annotate(total_time=Sum('trackingevent__total_time'))
-            .filter(total_time__gt=0)
-            .values('created_at', 'total_time', 'client_ip', 'device')
-        )
-        for qs in log_groupby_session:
-            qs['created_ts'] = qs['created_at'].strftime('%d.%m.%Y %H:%M:%S')
-            qs['total_time'] = format_dbtime(qs['total_time'])
-        json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
-        return HttpResponse(json_resp, mimetype='application/json')
-    else:
-        return {
-            'status': 'ERROR',
-            'message': 'Invalid arguments'
-        }
+    message_id = request.POST.get('message_id')
+    this_message = get_object_or_404(Message, pk=message_id)
+
+    log_groupby_page_number = (
+        TrackingEvent.objects
+        .filter(tracking_session__message=message_id)
+        .values('page_number')
+        .annotate(total_time=Sum('total_time'))
+        .order_by('page_number')
+        .values_list('page_number', 'total_time')
+    )
+
+    # format the data nicely
+    formatted_data = []
+    for p in list(log_groupby_page_number):
+        row = ['Page {}'.format(p[0]), p[1]/10.0]
+        if this_message.key_page and this_message.key_page == p[0]:
+            row.append('Key page: {}s'.format(p[1]/10.0))
+        else:
+            row.append('{}s'.format(p[1]/10.0))
+        formatted_data.append(row)
+
+    return formatted_data
