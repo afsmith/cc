@@ -97,17 +97,7 @@ def summary_log(request):
         .values_list('page_number', 'total_time')
     )
 
-    # format the data nicely
-    formatted_data = []
-    for p in list(log_groupby_page_number):
-        row = ['Page {}'.format(p[0]), p[1]/10.0]
-        if this_message.key_page and this_message.key_page == p[0]:
-            row.append('Key page: {}s'.format(p[1]/10.0))
-        else:
-            row.append('{}s'.format(p[1]/10.0))
-        formatted_data.append(row)
-
-    return formatted_data
+    return _format_data_for_chart(log_groupby_page_number, this_message)
 
 
 @http_decorators.require_POST
@@ -120,7 +110,7 @@ def user_log(request):
             .filter(message=data['message'], participant=data['user'])
             .annotate(total_time=Sum('trackingevent__total_time'))
             .filter(total_time__gt=0)
-            .values('created_at', 'total_time', 'client_ip', 'device')
+            .values('id', 'created_at', 'total_time', 'client_ip', 'device')
         )
         for qs in log_groupby_session:
             qs['created_ts'] = qs['created_at'].strftime('%d.%m.%Y %H:%M:%S')
@@ -137,26 +127,28 @@ def user_log(request):
 @http_decorators.require_POST
 @ajax_request
 def session_log(request):
+    session_id = request.POST.get('session_id')
     message_id = request.POST.get('message_id')
     this_message = get_object_or_404(Message, pk=message_id)
 
     log_groupby_page_number = (
         TrackingEvent.objects
-        .filter(tracking_session__message=message_id)
+        .filter(tracking_session=session_id)
         .values('page_number')
         .annotate(total_time=Sum('total_time'))
         .order_by('page_number')
         .values_list('page_number', 'total_time')
     )
+    return _format_data_for_chart(log_groupby_page_number, this_message)
 
-    # format the data nicely
+
+def _format_data_for_chart(log, this_message):
     formatted_data = []
-    for p in list(log_groupby_page_number):
+    for p in list(log):
         row = ['Page {}'.format(p[0]), p[1]/10.0]
         if this_message.key_page and this_message.key_page == p[0]:
             row.append('Key page: {}s'.format(p[1]/10.0))
         else:
             row.append('{}s'.format(p[1]/10.0))
         formatted_data.append(row)
-
     return formatted_data

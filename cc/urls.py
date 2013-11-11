@@ -33,9 +33,10 @@ urlpatterns = patterns(
         'cc.apps.reports.views.summary_log', name='summary_log'),
     url(r'^report/user/$',
         'cc.apps.reports.views.user_log', name='user_log'),
+    url(r'^report/session/$',
+        'cc.apps.reports.views.session_log', name='session_log'),
     url(r'^report/$',
         'cc.apps.reports.views.report_index', name='report_index'),
-
 
     # registration
     url(r'^accounts/register/$',
@@ -50,8 +51,9 @@ urlpatterns = patterns(
         name='auth_password_reset'),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
-## Hunger- its urls is missing beta_verify_invite
-    url(r'^verify/(\w+)/$', 'hunger.views.verify_invite', name='beta_verify_invite'),
+    ## Hunger- its urls is missing beta_verify_invite
+    url(r'^verify/(\w+)/$', 
+        'hunger.views.verify_invite', name='beta_verify_invite'),
     url(r'hunger', include('hunger.urls')),
 )
 
