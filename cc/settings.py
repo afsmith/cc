@@ -128,10 +128,14 @@ ADMINS = (
 MANAGERS = ADMINS
 
 HUNGER_ALWAYS_ALLOW_VIEWS = [
-    'django.contrib.auth.views',
+    'accounts_register',
     'track_email',
     'create_event',
     'view_message',
+]
+
+HUNGER_ALWAYS_ALLOW_MODULES = [
+    'django.contrib.auth.views',
 ]
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
