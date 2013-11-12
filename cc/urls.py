@@ -40,7 +40,8 @@ urlpatterns = patterns(
 
     # registration
     url(r'^accounts/register/$',
-        RegistrationView.as_view(form_class=UserCreationForm), name='accounts_register'),
+        RegistrationView.as_view(form_class=UserCreationForm),
+        name='accounts_register'),
     url(r'^accounts/logout/$',
         'django.contrib.auth.views.logout',
         {'next_page': '/'},

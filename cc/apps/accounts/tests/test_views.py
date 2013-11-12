@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
+from ..models import CUser
+
 
 class RegistrationViewTestCases(TestCase):
     def test_register_GET_success(self):
@@ -25,6 +27,33 @@ class RegistrationViewTestCases(TestCase):
             resp['Location'],
             'http://testserver%s' % reverse('registration_complete')
         )
+
+    def test_register_with_mixed_case_email(self):
+        resp = self.client.post(reverse('registration_register'), {
+            'email': 'BARBAR@cC.knEto.com',
+            'password1': 'abcd1234',
+            'password2': 'abcd1234',
+            'first_name': 'Foo',
+            'last_name': 'Bar',
+            'country': 'VN',
+            'industry': 'industry-legal'
+        })
+        self.assertEqual(resp.status_code, 302)
+
+        # check if DB save lowercase value
+        user_qs = CUser.objects.get(email__exact='barbar@cc.kneto.com')
+
+        # manual set this user to active
+        user_qs.is_active = True
+        user_qs.save()
+
+        # then try to use that to login with mixed case
+        resp = self.client.post(reverse('auth_login'), {
+            'username': 'barBAr@cc.kneTO.Com',
+            'password': 'abcd1234'
+        }, follow=True)
+        self.assertEqual(resp.redirect_chain[0][1], 302)
+        self.assertEqual(resp.context['user'].first_name, 'Foo')
 
 
 class LoginViewTestCases(TestCase):

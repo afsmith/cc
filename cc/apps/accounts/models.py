@@ -12,6 +12,9 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, **kwargs):
         if 'email' not in kwargs:
             raise ValueError('Users must have an email address')
+        # turn user email to lowercase on saving
+        kwargs['email'] = kwargs['email'].lower()
+
         try:
             user = CUser.objects.get(email__iexact=kwargs['email'])
             user = CUser(id=user.id, **kwargs)
