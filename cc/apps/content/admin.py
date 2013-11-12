@@ -8,4 +8,4 @@ class FileAdmin(admin.ModelAdmin):
     list_filter = ('status', 'type')
     date_hierarchy = 'updated_on'
 
-admin.site.register(models.File, FileAdmin)
+#admin.site.register(models.File, FileAdmin)

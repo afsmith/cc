@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 
 from . import models
 
@@ -36,3 +37,6 @@ class UserAdmin(admin.ModelAdmin):
             return 'Sender'
 
 admin.site.register(models.CUser, UserAdmin)
+
+# Hide the Group panel for now
+admin.site.unregister(Group)
