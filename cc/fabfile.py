@@ -10,10 +10,6 @@ from posixpath import join
 from fabric.api import env, cd, prefix, sudo as _sudo, run as _run, hide, task
 from fabric.contrib.files import exists, upload_template
 from fabric.colors import yellow, green, blue, red
-from fabric.api import *
-
-
-
 
 
 ################
@@ -352,7 +348,7 @@ def install():
     apt("nginx libjpeg-dev python-dev python-setuptools git-core "
         "postgresql libpq-dev memcached supervisor")
     sudo("easy_install pip")
-    sudo("pip install virtualenv")
+    sudo("pip install virtualenv mercurial")
 
 
 @task
@@ -366,7 +362,6 @@ def create():
     """
 
     # Create virtualenv
-
     with cd(env.venv_home):
         if exists(env.proj_name):
             prompt = raw_input("\nVirtualenv exists: %s\nWould you like "
@@ -537,43 +532,3 @@ def all():
     install()
     if create():
         deploy()
-
-
-
-### ------------------------- Tasks with aliases ------------------------- ###
-@task(alias='t')
-def test():
-    '''
-Executes test suite, optionally checking coverage.
-'''
-    local('python manage.py test')
-
-
-@task(alias='d')
-def deploy_local():
-    '''
-Deploy the latest changes to local envinronment
-'''
-    local('git stash')
-    local('git pull')
-    local('pip install -r requirements.txt')
-    local('python manage.py syncdb')
-    local('python manage.py migrate')
-    local('fab test')
-    local('git stash apply') # apply the stash after successful deploying
-
-
-@task(alias='r')
-def runplus():
-    '''
-Lazy shortcut for runserver_plus
-'''
-    local('python manage.py runserver_plus')
-
-
-@task(alias='s')
-def shell():
-    '''
-Another lazy shortcut for shell_plus
-'''
-    local('python manage.py shell_plus')

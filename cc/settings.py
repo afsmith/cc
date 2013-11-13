@@ -1,3 +1,4 @@
+import os
 from os import path
 import sys
 ROOT_PATH = path.join(path.dirname(__file__))
@@ -11,6 +12,17 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = False
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Name of the directory for the project.
+PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
+
+# Every cache key will get prefixed with this value - here we set it to
+# the name of the directory the project is in to try and use something
+# project specific.
+#CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_DIRNAME
+
+
 # media
 MEDIA_ROOT = path.abspath(path.join(ROOT_PATH, 'media'))
 MEDIA_URL = '/media/'
@@ -21,6 +33,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     path.abspath(path.join(ROOT_PATH, 'static')),
 )
+
+
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -77,7 +92,7 @@ INSTALLED_APPS = (
     'djcelery',            # celery for converting files
     'analytical',          # support for many analytic platforms
     'cookielaw',           # EU cookie law banner
-    'hunger',		       # for managing beta signups and invitations
+    'hunger',              # for managing beta signups and invitations
     'django_nose',         # django nose for testing
 
     # ----- CC APP  ----- #
@@ -113,6 +128,8 @@ LOGGING = {
     }
 }
 
+
+
 ##############################################################################
 # Magic comes next
 ##############################################################################
@@ -128,14 +145,10 @@ ADMINS = (
 MANAGERS = ADMINS
 
 HUNGER_ALWAYS_ALLOW_VIEWS = [
-    'accounts_register',
+    'django.contrib.auth.views',
     'track_email',
     'create_event',
     'view_message',
-]
-
-HUNGER_ALWAYS_ALLOW_MODULES = [
-    'django.contrib.auth.views',
 ]
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
@@ -169,6 +182,8 @@ FILE_UPLOAD_HANDLERS = (
 )
 
 PDF_MAX_PAGES = 30
+
+
 
 
 ##############################################################################
