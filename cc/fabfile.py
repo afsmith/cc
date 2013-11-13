@@ -418,17 +418,17 @@ def create():
                "site, _ = Site.objects.get_or_create(id=settings.SITE_ID);"
                "site.domain = '" + env.live_host + "';"
                "site.save();")
-        if env.admin_pass:
-            pw = env.admin_pass
-            user_py = ("from mezzanine.utils.models import get_user_model;"
-                       "User = get_user_model();"
-                       "u, _ = User.objects.get_or_create(username='admin');"
-                       "u.is_staff = u.is_superuser = True;"
-                       "u.set_password('%s');"
-                       "u.save();" % pw)
-            python(user_py, show=False)
-            shadowed = "*" * len(pw)
-            print_command(user_py.replace("'%s'" % pw, "'%s'" % shadowed))
+#        if env.admin_pass:
+#            pw = env.admin_pass
+#            user_py = ("from mezzanine.utils.models import get_user_model;"
+#                       "User = get_user_model();"
+#                       "u, _ = User.objects.get_or_create(username='admin');"
+#                       "u.is_staff = u.is_superuser = True;"
+#                       "u.set_password('%s');"
+#                       "u.save();" % pw)
+#            python(user_py, show=False)
+#            shadowed = "*" * len(pw)
+#            print_command(user_py.replace("'%s'" % pw, "'%s'" % shadowed))
 
     return True
 
