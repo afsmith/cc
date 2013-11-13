@@ -1,6 +1,6 @@
 from django.test import LiveServerTestCase
 
-from cc.apps.tracking.models import TrackingEvent
+from cc.apps.tracking.models import TrackingEvent, TrackingSession
 
 from selenium import webdriver
 import time
@@ -41,7 +41,8 @@ class ViewMessageLiveTest(LiveServerTestCase):
         # then go to home page to close the session
         self.browser.get(self.live_server_url)
 
-        # there should be 7 tracking events
+        # there should be 1 tracking session and 7 tracking events
+        self.assertEqual(TrackingSession.objects.count(), 1)
         self.assertEqual(TrackingEvent.objects.count(), 7)
 
         # and the time in each event should be correct

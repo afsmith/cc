@@ -40,7 +40,7 @@ $(document).ready(function () {
     // ----------------------------- Tracking ----------------------------- //
     windowUnloadHandler = function () {
         // window unload => create tracking events
-        $(window).unload(function () {
+        $(window).on('unload', function () {
             $.ajax({
                 url: '/track/event/create/',
                 type: 'POST',
@@ -49,7 +49,8 @@ $(document).ready(function () {
                 data: {
                     'type': 'EVENT',
                     'timer': page_timer,
-                    'session_id': session_id
+                    'session_id': session_id,
+                    'csrfmiddlewaretoken': CC_GLOBAL.csrftoken // to make sure the test run correctly
                 }
             });
         });
