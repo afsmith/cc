@@ -54,6 +54,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'cc.urls'
 WSGI_APPLICATION = 'cc.wsgi.application'
+
 # templates
 TEMPLATE_DIRS = (
     path.abspath(path.join(ROOT_PATH, 'templates')),
@@ -221,6 +222,33 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 '''
+
+###################
+# DEPLOY SETTINGS #
+###################
+
+# These settings are used by the default fabfile.py provided.
+# Check fabfile.py for defaults.
+
+#FABRIC = {
+#     "SSH_USER": "", # SSH username
+#     "SSH_PASS":  "", # SSH password (consider key-based authentication)
+#     "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
+#     "HOSTS": [''], # List of hosts to deploy to
+#     "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
+#     "PROJECT_NAME": "", # Unique identifier for project
+#     "REQUIREMENTS_PATH": "requirements.txt", # Path to pip requirements, relative to project
+#     "GUNICORN_PORT": 8000, # Port gunicorn will listen on
+#     "LOCALE": "en_US.UTF-8", # Should end with ".UTF-8"
+#     "LIVE_HOSTNAME": "kneto.com", # Host for public site.
+#     "REPO_URL": "git@github.com:afsmith/kneto-web.git", # Git or Mercurial remote repo URL for the project
+#     "DB_PASS": "", # Live database password
+#     "ADMIN_PASS": "", # Live admin user password
+#     "SECRET_KEY": SECRET_KEY,
+#     "NEVERCACHE_KEY": NEVERCACHE_KEY,
+#}
+
+#
 
 ##############################################################################
 # Testing
