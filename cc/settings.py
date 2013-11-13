@@ -2,7 +2,7 @@ import os
 from os import path
 import sys
 ROOT_PATH = path.join(path.dirname(__file__))
-
+DJANGO_SETTINGS_MODULE = cc.settings
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
