@@ -54,7 +54,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'cc.urls'
 WSGI_APPLICATION = 'cc.wsgi.application'
-DJANGO_SETTINGS_MODULE = 'cc.settings'
 # templates
 TEMPLATE_DIRS = (
     path.abspath(path.join(ROOT_PATH, 'templates')),
