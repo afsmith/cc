@@ -2,7 +2,7 @@ import os
 from os import path
 import sys
 ROOT_PATH = path.join(path.dirname(__file__))
-DJANGO_SETTINGS_MODULE = cc.settings
+
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
@@ -54,7 +54,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'cc.urls'
 WSGI_APPLICATION = 'cc.wsgi.application'
-
+DJANGO_SETTINGS_MODULE = 'cc.settings'
 # templates
 TEMPLATE_DIRS = (
     path.abspath(path.join(ROOT_PATH, 'templates')),
