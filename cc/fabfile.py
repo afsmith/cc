@@ -412,7 +412,7 @@ def create():
         pip("gunicorn setproctitle south psycopg2 "
             "django-compressor python-memcached")
         manage("syncdb")
-        manage("migreate")
+        manage("migrate")
         python("from django.conf import settings;"
                "from django.contrib.sites.models import Site;"
                "site, _ = Site.objects.get_or_create(id=settings.SITE_ID);"
