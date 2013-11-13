@@ -346,7 +346,7 @@ def install():
             run("exit")
     sudo("apt-get update -y -q")
     apt("nginx libjpeg-dev python-dev python-setuptools git-core "
-        "postgresql libpq-dev memcached supervisor")
+        "postgresql libpq-dev memcached supervisor node-less")
     sudo("easy_install pip")
     sudo("pip install virtualenv mercurial")
 
