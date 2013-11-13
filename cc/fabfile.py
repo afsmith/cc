@@ -499,6 +499,8 @@ def deploy():
         manage("collectstatic -v 0 --noinput")
         manage("syncdb --noinput")
         manage("migrate --noinput")
+        run("/opt/kneto/cc/project/compile-styles.sh")
+
     restart()
     return True
 

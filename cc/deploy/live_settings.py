@@ -38,10 +38,27 @@ CACHES = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
-ALLOWED_HOSTS = [ '.kneto.com','kneto.com', '109.74.10.96', 'kneto.fi', 'kneto.se',
-                'www.kneto.com', 'www.kneto.se', 'www.kneto.fi', ]
+#ALLOWED_HOSTS = ['127.0.0.1', 'cc.kneto.com']
 
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-45345264-2'
+
+#Registration:
+
+HUNGER_ALWAYS_ALLOW_VIEWS = (
+    'registration_activation_complete',
+    'registration_activate',
+    'registration_complete',
+    'registration_disallowed',
+    'accounts_register',
+    'home',
+    'view_message',
+    'track_email',
+    'create_event',
+    'close_deal',
+)
+
 
 
 EMAIL_HOST='email-smtp.us-east-1.amazonaws.com'
