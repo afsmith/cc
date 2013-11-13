@@ -304,8 +304,7 @@ def python(code, show=True):
     """
     Runs Python code in the project's virtual environment, with Django loaded.
     """
-    setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'cc.settings\';"
-#    setup = "import os; os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cc.settings")
+    setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'settings\';"
     full_code = 'python -c "%s%s"' % (setup, code.replace("`", "\\\`"))
     with project():
         result = run(full_code, show=False)
@@ -412,7 +411,8 @@ def create():
             pip("-r %s/%s" % (env.proj_path, env.reqs_path))
         pip("gunicorn setproctitle south psycopg2 "
             "django-compressor python-memcached")
-        manage("createdb --noinput --nodata")
+        manage("syncdb")
+        manage("migreate")
         python("from django.conf import settings;"
                "from django.contrib.sites.models import Site;"
                "site, _ = Site.objects.get_or_create(id=settings.SITE_ID);"
