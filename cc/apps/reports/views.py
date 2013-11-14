@@ -4,6 +4,7 @@ from django.db.models import Sum, Count, Max
 from django.http import HttpResponse
 from django.views.decorators import http as http_decorators
 from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .services import validate_request
 from cc.apps.cc_messages.models import Message
@@ -30,6 +31,7 @@ def report_index(request):
     return redirect('report_detail', message_id=latest_message.id)
 
 
+@ensure_csrf_cookie
 @auth_decorators.login_required
 @render_to('main/report_detail.html')
 def report_detail(request, message_id):

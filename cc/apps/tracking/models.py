@@ -20,10 +20,11 @@ class TrackingEvent(models.Model):
     tracking_session = models.ForeignKey(TrackingSession, null=True)
     page_number = models.IntegerField(_('Page number'), null=True)
     total_time = models.BigIntegerField(_('Total time'), default=0)
+    page_view = models.IntegerField(_('Page view'), default=0)
 
     def __unicode__(self):
-        return 'Page number: %d - Time: %d' % (
-            self.page_number, self.total_time
+        return 'Page number: {} - Time: {} - PV: {}'.format(
+            self.page_number, self.total_time, self.page_view
         )
 
 

@@ -22,7 +22,6 @@ def create_event(request):
             session = create_tracking_session(
                 message=data['message'],
                 user=data['user'],
-                session_key=request.session.session_key,
                 client_ip=get_client_ip(request),
                 device=get_device_name(request)
             )
@@ -39,14 +38,19 @@ def create_event(request):
                 }
         elif request.POST['type'] == 'EVENT':
             # since timer parameters are sent in format: timer[1], timer[2]
-            # we need to get them into a list
-            timer_params = [
-                (x, request.POST.get(x)) 
-                for x in request.POST if x.startswith('timer')
-            ]
+            # we need to get them into a dict and the same for counter
+            timer_params = {}
+            counter_params = {}
+            for req in request.POST:
+                if req.startswith('timer'):
+                    timer_params[req] = request.POST.get(req)
+                elif req.startswith('counter'):
+                    counter_params[req] = request.POST.get(req)
             
             # save events in DB
-            create_tracking_events_from_timer(data['session_id'], timer_params)
+            create_tracking_events(
+                data['session_id'], timer_params, counter_params
+            )
 
             # response doesn't do anything special so just send a blank one
             return {}

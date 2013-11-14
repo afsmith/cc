@@ -2,6 +2,8 @@ from .models import *
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
 
+import re
+
 
 def validate_request(request, type):
     message_id = request.POST.get('message_id')
@@ -44,7 +46,7 @@ def create_tracking_session(**kw):
     )
 
 
-def create_tracking_events_from_timer(session_id, timer_params):
+def create_tracking_events(session_id, timer_params, counter_params):
     try:
         session = TrackingSession.objects.get(pk=session_id)
     except TrackingSession.DoesNotExist:
@@ -52,13 +54,16 @@ def create_tracking_events_from_timer(session_id, timer_params):
         return False
 
     events = []
-    for t in timer_params:
-        page_number = int(t[0].replace('timer[', '').replace(']', ''))
-        total_time = int(t[1])
+    for key in timer_params.keys():
+        # timer_params format example: {'timer[0]': '100', 'timer[1]': '200'}
+        page_number = int(re.search('\d', key).group(0))
+        total_time = int(timer_params.get(key))
+        page_view = int(counter_params.get('counter[{}]'.format(page_number)))
         events.append(TrackingEvent(
             tracking_session=session,
             page_number=page_number,
-            total_time=total_time
+            total_time=total_time,
+            page_view=page_view
         ))
 
     return TrackingEvent.objects.bulk_create(events)

@@ -2,17 +2,25 @@ $(document).ready(function () {
 
     // ----------------------------- Timer ----------------------------- //
     var page_timer = {},
+        page_counter = {},
         i,
         timeout_id,
         tick,
         session_id = 0,
+        incrementCounter,
         windowUnloadHandler,
         pageInitHandler;
 
     // init the page timer object
-    for (i=0; i<message_data.page_count; ++i) {
+    for (i=0; i<message_data.page_count; i+=1) {
         page_timer[i+1] = 0;
+        page_counter[i+1] = 0;
     }
+
+    // function to handle page counter
+    incrementCounter = function (page_number) {
+        page_counter[page_number] += 1;
+    };
 
     // main timer function runs every 100ms
     tick = function (page_number) {
@@ -23,8 +31,9 @@ $(document).ready(function () {
         }, 100);
     };
 
-    // init tick for page 1
+    // init timer and counter for page 1
     tick(1);
+    incrementCounter(1);
 
 
     // ----------------------------- Carousel ----------------------------- //
@@ -34,6 +43,9 @@ $(document).ready(function () {
         // get the page number and run tick() to count time for that page
         var page_number = $(this).find('.active').index() + 1;
         tick(page_number);
+
+        // and increment the counter
+        incrementCounter(page_number);
     });
 
 
@@ -49,8 +61,8 @@ $(document).ready(function () {
                 data: {
                     'type': 'EVENT',
                     'timer': page_timer,
+                    'counter': page_counter,
                     'session_id': session_id,
-                    'csrfmiddlewaretoken': CC_GLOBAL.csrftoken // to make sure the test run correctly
                 }
             });
         });

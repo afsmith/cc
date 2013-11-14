@@ -49,6 +49,8 @@ class ViewMessageLiveTest(LiveServerTestCase):
         # (there can be tolerance that's less than 1 second)
         for i in range(1, 8):
             tt = TrackingEvent.objects.get(page_number=i).total_time / 10
+            pv = TrackingEvent.objects.get(page_number=i).page_view
+            self.assertEqual(pv, 1)
             if i == 1:
                 self.assertIn(tt, [5, 6]) # 5-6 sec
             elif i == 7:

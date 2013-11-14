@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from . import tasks
 from .services import get_message
@@ -12,6 +13,7 @@ from cc.apps.content.forms import FileImportForm
 from annoying.decorators import render_to
 
 
+@ensure_csrf_cookie
 @auth_decorators.login_required
 @render_to('main/send_message.html')
 def send_message(request):
@@ -36,6 +38,7 @@ def send_message(request):
     }
 
 
+@ensure_csrf_cookie
 @render_to('main/view_message.html')
 def view_message(request, message_id=None):
     token = request.GET.get('token')

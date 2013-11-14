@@ -1,7 +1,6 @@
 var CC_GLOBAL = CC_GLOBAL || {};
 
 // CSRF token setup for AJAX
-CC_GLOBAL.csrftoken = $.cookie('csrftoken');
 CC_GLOBAL.csrfSafeMethod = function (method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -10,7 +9,7 @@ $.ajaxSetup({
     crossDomain: false, // obviates need for sameOrigin test
     beforeSend: function(xhr, settings) {
         if (!CC_GLOBAL.csrfSafeMethod(settings.type)) {
-            xhr.setRequestHeader("X-CSRFToken", CC_GLOBAL.csrftoken);
+            xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
         }
     }
 });

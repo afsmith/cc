@@ -108,7 +108,7 @@ $(document).ready(function () {
                 $('#id_attachment').val(response.file_id);
 
                 // populate key page selector and show
-                for (i=1; i<=page_count; i++) {
+                for (i=1; i<=page_count; i+=1) {
                     options += '<option value="'+i+'">'+i+'</option>';
                 }
                 $('#id_key_page').append(options);
