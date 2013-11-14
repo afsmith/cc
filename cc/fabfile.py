@@ -349,7 +349,7 @@ def install():
         "postgresql libpq-dev memcached supervisor redis-server imagemagick")
     sudo("easy_install pip")
     sudo("pip install virtualenv")
-    sudo("install %s -o " % env.user % "-g " % env.user % "-d /var/log/kneto/cc"  )
+    sudo("install -o %s -g %s -d /var/log/kneto/cc" % (env.user, env.user))
 
 @task
 @log_call
