@@ -348,8 +348,8 @@ def install():
     apt("nginx libjpeg-dev python-dev python-setuptools git-core "
         "postgresql libpq-dev memcached supervisor redis-server imagemagick")
     sudo("easy_install pip")
-    sudo("pip install virtualenv mercurial")
-
+    sudo("pip install virtualenv")
+    sudo("install %s -o " % env.user % "-g " % env.user % "-d /var/log/kneto/cc"  )
 
 @task
 @log_call

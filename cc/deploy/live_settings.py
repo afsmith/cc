@@ -2,8 +2,8 @@
 SECRET_KEY = "%(secret_key)s"
 NEVERCACHE_KEY = "%(nevercache_key)s"
 
-#TEMPLATE_DEBUG = True
-#DEBUG = True
+TEMPLATE_DEBUG = False
+DEBUG = False
 
 
 DATABASES = {
@@ -38,7 +38,7 @@ CACHES = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
-#ALLOWED_HOSTS = ['127.0.0.1', 'cc.kneto.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.kneto.com']
 
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
