@@ -3,7 +3,10 @@
 {% block plain %}
 Visit {{ invite_url }} to join the kneto private beta.
 
-If you have pre-registered click the link above then log in. If you have not, don't worry registration just takes a moment
+If you have pre-registered click the link above then log in. 
+
+If not, click the link, then register.  
+Don't worry registration just takes a moment
 
 Look forward to seeing you.
 
@@ -14,7 +17,9 @@ Visit <a href="{{ invite_url }}" target="_blank">{{ invite_url }}</a> to join th
 
 If you have pre-registered click the link above then log in. 
 <p>
-If you have not, don't worry registration just takes a moment.
+If not, click the link, then register.  <br>
+Don't worry registration just takes a moment
+
 <p>
 Look forward to seeing you.
 
