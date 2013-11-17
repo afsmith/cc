@@ -83,9 +83,13 @@ $(document).ready(function () {
             // TODO: improve this later by not copying on every key press
             message_field.val(message_field.code());
             _toggleMessageSubmitButton();
-        }
+        },
     });
 
+    // init the message data
+    message_field.code('<br><br><br><br>[link]');
+
+    // handle render the upload error
     _renderUploadError = function (error_message) {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
     };
