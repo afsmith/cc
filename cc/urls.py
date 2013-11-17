@@ -18,6 +18,9 @@ urlpatterns = patterns(
     url(r'^view/(?P<message_id>\d+)/$',
         'cc.apps.cc_messages.views.view_message', name='view_message'),
     
+    url(r'^remove_file/(?P<file_id>\d+)$',
+        'cc.apps.content.views.remove_file', name='remove_file'),
+
     # tracking
     url(r'^track/email/(?P<message_id>\d+)/(?P<user_id>\d+)/$',
         'cc.apps.tracking.views.track_email', name='track_email'),

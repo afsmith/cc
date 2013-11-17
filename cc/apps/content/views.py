@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .forms import FileImportForm
 from .services import save_file
+from .models import File
 
 from annoying.decorators import ajax_request
 from contextlib import closing
@@ -31,3 +32,11 @@ def upload_file(request):
         'status': 'ERROR',
         'message': unicode(_('Exceeded maximum file upload size.'))
     }
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def remove_file(request, file_id):
+    File.objects.filter(pk=file_id).delete()
+    return {}

@@ -98,12 +98,16 @@ $(document).ready(function () {
         maxFiles: 1,
         clickable: true,
         acceptedFiles: 'application/pdf,.pdf,.PDF',
+        addRemoveLinks: true,
         success: function (file, response) {
             var page_count = response.page_count,
                 i = 1,
                 options = '';
 
             if (response.status === 'OK') {
+                // assign file_id to file object
+                file.server_id = response.file_id;
+
                 // add file ID to hidden input
                 $('#id_attachment').val(response.file_id);
 
@@ -115,7 +119,7 @@ $(document).ready(function () {
                 $('label[for="id_key_page"], #id_key_page').show();
                 
                 // handle some CSS and template
-                upload_form.css({'margin-bottom': '110px'});
+                upload_form.addClass('file_uploaded');
                 $('.dz-success-mark').css('opacity', 1);
                 $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
 
@@ -143,6 +147,21 @@ $(document).ready(function () {
             this.removeFile(file);
             _toggleMessageSubmitButton();
         },
+        removedfile: function (file) {
+            // if the file hasn't been uploaded
+            if (!file.server_id) { return; }
+            // remove the file on server
+            $.post('/remove_file/' + file.server_id, function () {
+                // remove that file from send message form
+                $('#id_attachment').val('');
+
+                // reset everything
+                upload_form.removeClass('file_uploaded');
+                $('label[for="id_key_page"], #id_key_page').hide();
+                $('#id_key_page option[value!=""]').remove();
+                $('.dz-file-preview').remove();
+            });
+        }
     };
 
     // submit the form when clicking Send button
