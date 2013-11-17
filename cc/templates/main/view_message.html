@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block js_scripts %}
-    {% if not ocl_expired %}
+    {% if not ocl_expired and not is_owner_viewing %}
     <script type="text/javascript">
         var message_data = {
             message_id: {{ message.id }},

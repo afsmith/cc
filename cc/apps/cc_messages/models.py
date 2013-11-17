@@ -25,7 +25,7 @@ class Message(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def is_available_for_user(self, user):
-        return self.group in user.groups.all()
+        return self.group in user.groups.all() or self.owner == user
 
     def __unicode__(self):
         return self.subject

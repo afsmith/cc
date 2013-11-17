@@ -23,6 +23,19 @@ def get_message(id, user):
             raise PermissionDenied
 
 
+def _create_ocl_link(user, domain, message_id):
+    # token should be expired after 30 days
+    ocl = OneClickLinkToken.objects.create(
+        user=user,
+        expires_on=datetime.datetime.today() + datetime.timedelta(days=30)
+    )
+
+    # create the OCL link and return
+    return '{}/view/{}/?token={}'.format(
+        domain, message_id, ocl.token
+    )
+
+
 def create_ocl_and_send_message(message, domain):
     '''
     Create OCL link (to the message) for each recipients and send email to them
@@ -30,14 +43,8 @@ def create_ocl_and_send_message(message, domain):
     recipient_emails = []
 
     for r in message.receivers.all():
-        # ocl token should expire after 30 days
-        ocl = OneClickLinkToken.objects.create(
-            user=r,
-            expires_on=datetime.datetime.today() + datetime.timedelta(days=30)
-        )
-        ocl_link = '{}/view/{}/?token={}'.format(
-            domain, message.id, ocl.token
-        )
+        ocl_link = _create_ocl_link(r, domain, message.id)
+        
         tracking_pixel_src = '{}/track/email/{}/{}/'.format(
            domain, message.id, r.id
         )
@@ -64,7 +71,16 @@ def create_ocl_and_send_message(message, domain):
 
     # send a copy if sender chooses to cc himself
     if message.cc_me:
-        text = message.message
+        # create ocl link for message owner
+        ocl_link = _create_ocl_link(message.owner, domain, message.id)
+
+        # add OCL link to email text
+        text = message.message.replace(
+            '[link]',
+            '<a href="{0}">{0}</a>'.format(ocl_link)
+        )
+
+        # and send
         send_templated_mail(
             template_name='message_cc',
             from_email=settings.DEFAULT_FROM_EMAIL,

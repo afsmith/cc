@@ -50,6 +50,9 @@ def view_message(request, message_id=None):
             }
         message = get_message(message_id, ocl_token.user)
 
+        # check if owner is checking message
+        is_owner_viewing = (ocl_token.user == message.owner)
+
         # there is only 1 file per message for now so return that file
         file = message.files.all()[0]
         pages_num = file.pages_num
@@ -63,14 +66,15 @@ def view_message(request, message_id=None):
                 page_list.append('%s/p-%d.png' % (view_url, i))
 
         # notify the sender if "notify when link clicked" option is on
-        if message.notify_link_clicked:
+        if message.notify_link_clicked and not is_owner_viewing:
             send_notification_email(2, message, ocl_token.user)
 
         return {
             'message': message,
             'page_list': page_list,
             'token': token,
-            'ocl_user': ocl_token.user
+            'ocl_user': ocl_token.user,
+            'is_owner_viewing': is_owner_viewing
         }
     else:
         return redirect(reverse('home'))
