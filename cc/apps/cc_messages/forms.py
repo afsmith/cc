@@ -15,7 +15,13 @@ class MessageForm(forms.ModelForm):
 
     class Meta:
         model = Message
-        exclude = ('receivers', 'owner', 'group', 'files',)
+        fields = [
+            'subject', 
+            'cc_me', 'notify_email_opened', 'notify_link_clicked',
+            'message', 
+            'key_page'
+        ]
+        exclude = ['receivers', 'owner', 'group', 'files']
 
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'span6'}),
