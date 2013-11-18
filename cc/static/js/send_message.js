@@ -17,6 +17,8 @@ $(document).ready(function () {
         _toggleMessageSubmitButton,
         _renderUploadError;
 
+// ------------------------ Form init & validation ------------------------ //
+
     // validation rules for message form
     message_form.validate({
         ignore: '',
@@ -89,6 +91,18 @@ $(document).ready(function () {
     // init the message data
     message_field.code('<br><br><br><br>[link]');
 
+    // submit the form when clicking Send button
+    message_submit_btn.click(function() {
+        if (!$(this).hasClass('disabled')) {
+            // copy data from WYSIWYG editor to textarea before submit
+            message_field.val(message_field.code());
+            message_form.trigger('submit');
+        }
+        return false;
+    });
+
+// ------------------------------- Upload ------------------------------- //
+
     // handle render the upload error
     _renderUploadError = function (error_message) {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
@@ -106,7 +120,8 @@ $(document).ready(function () {
         success: function (file, response) {
             var page_count = response.page_count,
                 i = 1,
-                options = '';
+                options = '',
+                upload_form_bottom;
 
             if (response.status === 'OK') {
                 // assign file_id to file object
@@ -115,12 +130,14 @@ $(document).ready(function () {
                 // add file ID to hidden input
                 $('#id_attachment').val(response.file_id);
 
+                // calculate position for key page select box
+                upload_form_bottom = upload_form.offset().top + upload_form.height();
                 // populate key page selector and show
                 for (i=1; i<=page_count; i+=1) {
                     options += '<option value="'+i+'">'+i+'</option>';
                 }
-                $('#id_key_page').append(options);
-                $('label[for="id_key_page"], #id_key_page').show();
+                $('#id_key_page').append(options).css('top', upload_form_bottom + 10).show();
+                $('label[for="id_key_page"]').css('top', upload_form_bottom - 20).show();
                 
                 // handle some CSS and template
                 upload_form.addClass('file_uploaded');
@@ -168,14 +185,22 @@ $(document).ready(function () {
         }
     };
 
-    // submit the form when clicking Send button
-    message_submit_btn.click(function() {
-        if (!$(this).hasClass('disabled')) {
-            // copy data from WYSIWYG editor to textarea before submit
-            message_field.val(message_field.code());
-            message_form.trigger('submit');
-        }
-        return false;
+
+// ------------------------------- Signature ------------------------------- //
+
+    $('#js_addSignature').click(function () {
+        $(this).hide(0, function () {
+            $('#signature_box').show(0, function () {
+                $(this).summernote({
+                    height: 60,
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['color', ['color']],
+                    ]
+                });
+            });
+        });
     });
+
 
 }); // end document ready
