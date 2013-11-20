@@ -61,11 +61,9 @@ HUNGER_ALWAYS_ALLOW_VIEWS = (
 
 
 
-EMAIL_HOST='email-smtp.us-east-1.amazonaws.com'
-EMAIL_HOST_USER='AKIAJJKB7ALYUPX5WMCA'
-EMAIL_HOST_PASSWORD='Ai3vBfuFTRVA/bhYniE4bT6lGDEvaz+1/1xRF3q7w7hn'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER='andrew.smith@kneto.com'
+EMAIL_HOST_PASSWORD='rFUnDlfNA5l)[ncu\'IN6N.P!R'
 DEFAULT_FROM_EMAIL='cc@kneto.com'
-DEFAULT_BCC_EMAIL='app@kneto.fi'
 EMAIL_USE_TLS=True
-#EMAIL_CONTENT_SUBTYPE='html'
 
