@@ -167,6 +167,9 @@ AUTH_USER_MODEL = 'accounts.CUser'
 ACCOUNT_ACTIVATION_DAYS = 7
 DEFAULT_FROM_EMAIL = 'admin@cc.kneto.com'
 
+AUTHENTICATION_BACKENDS = (
+    'cc.apps.accounts.auth.CUserModelBackend',
+)
 
 ##############################################################################
 # Files

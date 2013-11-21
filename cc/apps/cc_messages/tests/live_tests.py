@@ -57,7 +57,7 @@ class ViewMessageLiveTest(LiveServerTestCase):
                 self.assertEqual(tt, 0) # 0 sec
                 self.assertIn(pv, [0, 1]) # there is racing condition here
             else:
-                self.assertIn(tt, [1, 2]) # 1-2 sec
+                self.assertIn(tt, [0, 1, 2]) # 0-2 sec
                 self.assertEqual(pv, 1)
 
             # print to see the actual time
