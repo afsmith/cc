@@ -56,6 +56,7 @@ class CUser(AbstractUser):
     '''
     country = models.CharField(_('Country'), max_length=50)
     industry = models.CharField(_('Industry'), max_length=50)
+    signature = models.TextField(_('Signature'), blank=True)
 
     objects = CustomUserManager()
 
