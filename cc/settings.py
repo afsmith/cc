@@ -145,11 +145,17 @@ ADMINS = (
 MANAGERS = ADMINS
 
 HUNGER_ALWAYS_ALLOW_VIEWS = [
-    'django.contrib.auth.views',
+    'registration_activation_complete',
+    'registration_activate',
+    'registration_complete',
+    'registration_disallowed',
+    'accounts_register',
+    'view_message',
     'track_email',
     'create_event',
-    'view_message',
+    'close_deal',
 ]
+
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 
