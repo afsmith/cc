@@ -36,18 +36,21 @@ form {
 // --------------------------- send message page --------------------------- //
 .send_message_page {
     position: relative;
+
+    // inline checkboxes
     label.label_checkbox {
         width: 33%;
         float: left;
     }
 
-    label[for="id_key_page"] {
-        position: absolute;
-    }
+    // key page
+    label[for="id_key_page"],
     #id_key_page {
+        display: none;
         position: absolute;
     }
 
+    // upload form
     #uploadFileForm {
         margin-top: 20px;
     }
@@ -58,8 +61,13 @@ form {
         cursor: pointer;
     }
 
-    #signature_box {
+    // signature
+    label[for="id_signature"],
+    #id_signature {
         display: none;
+    }
+    .note-editor {
+        margin-bottom: 15px;
     }
 }
 

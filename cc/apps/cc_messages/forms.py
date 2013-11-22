@@ -17,8 +17,10 @@ class MessageForm(forms.ModelForm):
         model = Message
         fields = [
             'subject', 
-            'cc_me', 'notify_email_opened', 'notify_link_clicked',
-            'message', 
+            'cc_me',
+            'notify_email_opened',
+            'notify_link_clicked',
+            'message',
             'key_page'
         ]
         exclude = ['receivers', 'owner', 'group', 'files']
@@ -29,19 +31,13 @@ class MessageForm(forms.ModelForm):
             'key_page': forms.Select(choices=[('', '----------')]),
         }
 
-        '''
-        # error_messages is not supported until 1.6
-        error_messages = {
-            'files': {
-                'required': _('You need to add one file.'),
-            },
-        }
-        '''
-
     def __init__(self, *args, **kwargs):
         super(MessageForm, self).__init__(*args, **kwargs)
         # add To field as a text input, 1 is the order of the field
         self.fields.insert(1, 'to', forms.CharField())
+        # add Signature field as a text input
+        self.fields.insert(6, 'signature', forms.CharField())
+        
 
     def clean_to(self):
         # get list of emails out of text input
@@ -87,6 +83,11 @@ class MessageForm(forms.ModelForm):
 
         # add the receivers group and save
         message.group = create_group(message.receivers.all())
+
+        # add signature to the main message
+        message.message = '{}<div id="signature">{}</div>'.format(
+            self.cleaned_data['message'], self.cleaned_data['signature']
+        )
 
         message.save()
         return message

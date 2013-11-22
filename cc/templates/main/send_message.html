@@ -8,19 +8,12 @@
 
         <div class="row">
     <div class="span6 offset3">
-        <h2>Sent</h2>
-    </div>
+        <h2>{% trans "Sent" %}</h2>
 
-    <div class="span6 offset3">
-        <p class="lead">Ok, your message is being processed and the mail will be sent to your people in just a few minutes.</p> 
-    </div>
+        <p class="lead">{% trans "Ok, your message is being processed and the mail will be sent to your people in just a few minutes." %}</p>
 
-    <div class="span3 offset3">
-        <a href="{% url 'send' %}" class="btn btn-large btn-success">Send another offer</a>
-    </div>
-
-    <div class="span3">
-        <a href="{% url 'report_index' %}" class="btn btn-large btn-success">View reports</a>
+        <a href="{% url 'send' %}" class="btn btn-large btn-success pull-left">{% trans "Send another offer" %}</a>
+        <a href="{% url 'report_index' %}" class="btn btn-large btn-success pull-right">{% trans "View reports" %}</a>
     </div>
 </div>
 
@@ -30,9 +23,8 @@
                 <form id="js_messageForm" action="{% url 'send' %}" method="POST">{% csrf_token %}
                     {% include '_base_form.html' with form=message_form%}
                 </form>
-    
+
                 <button id="js_addSignature" class="btn"><i class="icon-plus"></i>  {% trans "Add / Edit signature" %}</button>
-                <textarea name="signature" id="signature_box" class="span6"></textarea>
 
                 <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
                     {% trans "Drop the attachment (or click) here to upload" %}
@@ -66,5 +58,5 @@
     <script src="{% static 'js/vendor/dropzone.js' %}"></script>
     <script src="{% static 'js/vendor/bootstrap-tokenfield.min.js' %}"></script>
 
-    <script src="{% static 'js/send_message.js' %}?v=0005"></script>
+    <script src="{% static 'js/send_message.js' %}?v=0006"></script>
 {% endblock %}

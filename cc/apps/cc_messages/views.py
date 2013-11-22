@@ -24,13 +24,22 @@ def send_message(request):
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
             message = message_form.save()
+            # save message owner
             message.owner = request.user
             message.save()
+            # save signature of the owner
+            request.user.signature = message_form.cleaned_data['signature']
+            request.user.save()
+
+            # process the PDF and send message
             tasks.process_file_and_send_message(message, request)
 
             return {'thankyou_page': True}
     else:
-        message_form = MessageForm()
+        message_form = MessageForm(initial={
+            'message': '<br><br><br><br>[link]',
+            'signature': request.user.signature
+        })
 
     return {
         'message_form': message_form,
