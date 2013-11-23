@@ -187,27 +187,41 @@ $(document).ready(function () {
 
 
 // ------------------------------- Signature ------------------------------- //
-    initSignatureField = function (val) {
+    initSignatureField = function (text) {
         $('label[for="id_signature"]').show();
-        signature_field.summernote({
-            height: 60,
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['color', ['color']],
-            ]
-        });
-        signature_field.code(val);
+
+        if (typeof text !== 'undefined') {
+            $('#signature_box').html(text).show();
+            $('label[for="id_signature"]').append('<button id="edit_signature" class="js_addSignature btn btn-small">Edit</button>');
+        } else {
+            signature_field.summernote({
+                height: 60,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['color', ['color']],
+                ],
+                focus: true
+            });
+
+            if (signature_field.val() !== '') {
+                signature_field.code(signature_field.val());
+            }
+
+            $('#signature_box').hide();
+        }
     };
 
     if (signature_field.val() !== '') {
         initSignatureField(signature_field.val());
-        $('#js_addSignature').hide();
-    } else {
-        $('#js_addSignature').click(function () {
-            $(this).hide(0, function () {
-                initSignatureField();
-            });
-        });
+        $('label[for="id_signature"]').show();
+        $('#add_signature').hide();
     }
+
+    $('.send_message_page').on('click', '.js_addSignature', function () {
+        $(this).hide(0, function () {
+            initSignatureField();
+        });
+        return false;
+    });
 
 }); // end document ready

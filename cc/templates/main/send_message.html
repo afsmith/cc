@@ -24,7 +24,8 @@
                     {% include '_base_form.html' with form=message_form%}
                 </form>
 
-                <button id="js_addSignature" class="btn"><i class="icon-plus"></i>  {% trans "Add / Edit signature" %}</button>
+                <button id="add_signature" class="js_addSignature btn"><i class="icon-plus"></i>  {% trans "Add signature" %}</button>
+                <div id="signature_box"></div>
 
                 <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
                     {% trans "Drop the attachment (or click) here to upload" %}
