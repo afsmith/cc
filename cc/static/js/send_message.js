@@ -189,6 +189,7 @@ $(document).ready(function () {
 // ------------------------------- Signature ------------------------------- //
     initSignatureField = function (text) {
         $('label[for="id_signature"]').show();
+        $('#add_signature').hide();
 
         if (typeof text !== 'undefined') {
             $('#signature_box').html(text).show();
@@ -211,12 +212,12 @@ $(document).ready(function () {
         }
     };
 
+    // on page init, if there is signature, then show signature box
     if (signature_field.val() !== '') {
         initSignatureField(signature_field.val());
-        $('label[for="id_signature"]').show();
-        $('#add_signature').hide();
     }
 
+    // click handler for add / edit signature
     $('.send_message_page').on('click', '.js_addSignature', function () {
         $(this).hide(0, function () {
             initSignatureField();
