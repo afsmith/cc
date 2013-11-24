@@ -1,18 +1,20 @@
 // custom validator
 $.validator.addMethod(
-    "regex",
+    'regex',
     function(value, element, regexp) {
         var check = false;
         var re = new RegExp(regexp);
         return this.optional(element) || re.test(value);
     },
-    "Please include your keyword(s)."
+    'Please include your keyword(s).'
 );
 
 $(document).ready(function () {
     var message_form = $('#js_messageForm'),
         message_submit_btn = $('#js_submitMessageForm'),
         message_field = $('#id_message'),
+        to_field = $('#id_to'),
+        attachment_field = $('#id_attachment'),
         signature_field = $('#id_signature'),
         upload_form = $('#uploadFileForm'),
         initSignatureField,
@@ -30,16 +32,63 @@ $(document).ready(function () {
             message: {required: true, regex: /\[link\]/},
             attachment: 'required',
         },
-        errorPlacement: function(error, element) {
-            return true;
+        messages: {
+            subject: 'Enter the subject.',
+            to: 'Enter at least one email address of the recipient.',
+            message: {
+                required: 'Enter the message.', 
+                regex: 'The [link] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
+            },
+            attachment: 'Upload the attachment.',
         },
         submitHandler: function(form) {
             form.submit();
+        },
+        onfocusout: function (element) { // check form valid on blur of each element
+            $(element).valid();
+        },
+        showErrors: function(errorMap, error_list) {
+            var remapElementForTooltip = function (element) {
+                var _element;
+                switch (element.prop('id')) {
+                    case 'id_to':
+                        _element = $('.tokenfield');
+                        break
+                    case 'id_message':
+                        _element = $('.note-editor').eq(0);
+                        break;
+                    case 'id_attachment':
+                        _element = $('#uploadFileForm');
+                        break;
+                    default:
+                        _element = element;
+                        break;
+                }
+                return _element;
+            };
+
+            // clean up any tooltips for valid elements
+            $.each(this.validElements(), function (index, element) {
+                var _element = remapElementForTooltip($(element));
+                _element.data('title', '') .removeClass('error').tooltip('destroy');
+            });
+
+            // create new tooltips for invalid elements
+            $.each(error_list, function (index, error) {
+                var _element = remapElementForTooltip($(error.element));
+
+                _element.tooltip('destroy') // destroy any pre-existing tooltip
+                    .data('title', error.message)
+                    .addClass('error')
+                    .tooltip({ // create new tooltip
+                        //placement: 'right',
+                    }).tooltip('show');
+            });
         }
     });
 
     // function to enable / disable send button
-    toggleMessageSubmitButton = function (force_disable) {
+    /*toggleMessageSubmitButton = function (force_disable) {
         if (typeof force_disable !== 'undefined' && force_disable) {
             message_submit_btn.addClass('disabled');
         }
@@ -49,7 +98,7 @@ $(document).ready(function () {
         } else {
             message_submit_btn.addClass('disabled');
         }
-    };
+    };*/
 
     // use tokenfield for To field
     $('#id_to').tokenfield({
@@ -61,15 +110,15 @@ $(document).ready(function () {
         var valid = re.test(e.token.value);
         if (!valid) {
             $(e.relatedTarget).addClass('invalid');
-            toggleMessageSubmitButton(true);
+            //toggleMessageSubmitButton(true);
+            to_field.valid();
         }
     }).on('removeToken', function (e) {
-        toggleMessageSubmitButton();
+        to_field.valid();
     });
 
-    // bind validation on input keyup
-    message_form.find('input[type="text"], textarea').keyup(function () {
-        toggleMessageSubmitButton();
+    $('.token-input').on('blur', function () {
+        to_field.valid();
     });
 
     // summernote config
@@ -83,7 +132,7 @@ $(document).ready(function () {
         onkeyup: function(e) {
             // TODO: improve this later by not copying on every key press
             message_field.val(message_field.code());
-            toggleMessageSubmitButton();
+            message_field.valid();
         },
     });
 
@@ -92,12 +141,10 @@ $(document).ready(function () {
 
     // submit the form when clicking Send button
     message_submit_btn.click(function() {
-        if (!$(this).hasClass('disabled')) {
-            // copy data from WYSIWYG editor to textarea before submit
-            message_field.val(message_field.code());
-            signature_field.val(signature_field.code());
-            message_form.trigger('submit');
-        }
+        // copy data from WYSIWYG editor to textarea before submit
+        message_field.val(message_field.code());
+        signature_field.val(signature_field.code());
+        message_form.trigger('submit');
         return false;
     });
 
@@ -147,26 +194,31 @@ $(document).ready(function () {
                 // remove error message 
                 upload_form.find('.alert').remove();
 
-                toggleMessageSubmitButton();
+                //toggleMessageSubmitButton();
+                attachment_field.valid();
             } else {
                 renderUploadError(response.message);
                 console.log('Conversion error: ' + response.original_error);
 
                 $('.dz-error-mark').css('opacity', 1);
-                toggleMessageSubmitButton();
+                //toggleMessageSubmitButton();
+                attachment_field.valid();
             }
         },
         error: function (file, errorMessage) {
             if (errorMessage !== 'You can only upload 1 files.') {
                 $('.dz-error-mark').css('opacity', 1);
+                this.removeFile(file);
                 console.log(errorMessage);
             }
-            toggleMessageSubmitButton();
+            //toggleMessageSubmitButton();
+            attachment_field.valid();
         },
         maxfilesexceeded: function (file) {
             renderUploadError('You can attach only one file at a time');
             this.removeFile(file);
-            toggleMessageSubmitButton();
+            //toggleMessageSubmitButton();
+            attachment_field.valid();
         },
         removedfile: function (file) {
             // if the file hasn't been uploaded

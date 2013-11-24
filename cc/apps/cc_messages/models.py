@@ -12,10 +12,10 @@ class Message(models.Model):
     '''
     subject = models.CharField(_('Subject'), max_length=130)
     receivers = models.ManyToManyField(CUser, related_name='receivers')
-    cc_me = models.BooleanField(_('CC me'))
+    cc_me = models.BooleanField(_('Send me a copy'))
     message = models.TextField(_('Message'))
-    notify_email_opened = models.BooleanField(_('Notify email opened'))
-    notify_link_clicked = models.BooleanField(_('Notify link clicked'))
+    notify_email_opened = models.BooleanField(_('Notify email is opened'))
+    notify_link_clicked = models.BooleanField(_('Notify link is clicked'))
     files = models.ManyToManyField(File, related_name='files')
     key_page = models.IntegerField(_('Key page'), null=True, blank=True)
 
