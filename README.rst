@@ -5,7 +5,7 @@ How to run
 ----------
 
 1. Clone the repo
-2. Make new virtualenv and activate it
+2. Make new virtualenv and activate it*
 3. cd cc
 4. pip install -r requirement
 5. cp cc/local_settings.py.sample cc/local_settings.py
@@ -16,7 +16,18 @@ How to run
 10. Start celeryd for converting files: python manage.py celeryd
 11. Start django dev server in a different terminal: python manage.py runserver_plus
 
-
+* Or use vagrant.
+1. install vagrant
+2. vagrant box add debain-wheezy  https://dl.dropboxusercontent.com/u/197673519/debian-7.2.0.box
+3. edit the Vagrante file IP to meet your needs
+4. edit bootstrap.sh, set your /vagrant to your workign dir. 
+5. vagrant init  debain-wheezy
+6. vagrant up  
+7. vagrant ssh 
+9. sudo adduser youruser
+10. su - youruser
+11. mkvirtualenv cc-app --no-site-packages --distribute 
+12. workon cc-app
 
 
 Other dependancies
