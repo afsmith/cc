@@ -17,7 +17,7 @@ How to run
 11. Start django dev server in a different terminal: python manage.py runserver_plus
 
 * Or use vagrant.
-1. install vagrant
+1. install vagrant and virtualbox
 2. vagrant box add debain-wheezy  https://dl.dropboxusercontent.com/u/197673519/debian-7.2.0.box
 3. edit the Vagrante file IP to meet your needs
 4. edit bootstrap.sh, set your /vagrant to your workign dir. 
