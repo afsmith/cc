@@ -29,7 +29,6 @@ _build/
 /tmp/*
 reports.log
 
-gunicorn.conf.py
 .metadata
 django.mo
 inst.py
