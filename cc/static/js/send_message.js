@@ -143,7 +143,13 @@ $(document).ready(function () {
     message_submit_btn.click(function() {
         // copy data from WYSIWYG editor to textarea before submit
         message_field.val(message_field.code());
-        signature_field.val(signature_field.code());
+
+        // if there are 2 summernote instance => copy the content of signature summernote to input field
+        if ($('.note-editor').length === 2) {
+            signature_field.val(signature_field.code());    
+        }
+
+        // and trigger submit
         message_form.trigger('submit');
         return false;
     });

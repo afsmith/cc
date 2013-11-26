@@ -37,7 +37,8 @@ class MessageForm(forms.ModelForm):
         self.fields.insert(1, 'to', forms.CharField())
         # add Signature field as a text input
         self.fields.insert(6, 'signature', forms.CharField())
-        
+        self.fields['signature'].required = False
+
 
     def clean_to(self):
         # get list of emails out of text input
