@@ -21,13 +21,12 @@ How to run
 2. vagrant box add debain-wheezy  https://dl.dropboxusercontent.com/u/197673519/debian-7.2.0.box
 3. edit the Vagrante file IP to meet your needs
 4. edit bootstrap.sh, set your /vagrant to your workign dir. 
-5. vagrant init  debain-wheezy
-6. vagrant up  
-7. vagrant ssh 
-9. sudo adduser youruser
-10. su - youruser
-11. mkvirtualenv cc-app --no-site-packages --distribute 
-12. workon cc-app
+5. vagrant up  
+6. vagrant ssh 
+7. sudo adduser youruser
+8. su - youruser
+9. mkvirtualenv cc-app --no-site-packages --distribute 
+10. workon cc-app
 
 
 Other dependancies

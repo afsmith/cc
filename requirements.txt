@@ -19,3 +19,4 @@ django-templated-email==0.4.9
 django-nose==1.2
 selenium==2.37.2
 psycopg2==2.5.1
+python-memcached==1.53
