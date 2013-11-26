@@ -502,10 +502,11 @@ def deploy():
         run("%s > last.commit" % last_commit)
         with update_changed_requirements():
             run("git pull origin master -f" if git else "hg pull && hg up -C")
-        manage("collectstatic -v 0 --noinput")
         manage("syncdb --noinput")
         manage("migrate --noinput")
+        # compile LESS before collect static
         run("/opt/kneto/cc/project/compile-styles.sh")
+        manage("collectstatic -v 0 --noinput")
 
     restart()
     return True
