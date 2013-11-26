@@ -5,6 +5,7 @@ NEVERCACHE_KEY = "%(nevercache_key)s"
 TEMPLATE_DEBUG = False
 DEBUG = False
 
+STATIC_ROOT = '/opt/kneto/static'
 
 DATABASES = {
     "default": {

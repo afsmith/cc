@@ -54,6 +54,8 @@ env.locale = conf.get("LOCALE", "en_US.UTF-8")
 env.secret_key = conf.get("SECRET_KEY", "")
 env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
 
+env.static_path = "%s/static" % env.venv_path
+
 
 ##################
 # Template setup #
@@ -403,6 +405,10 @@ def create():
             else:
                 upload_template(crt_local, crt_file, use_sudo=True)
                 upload_template(key_local, key_file, use_sudo=True)
+
+    # setup static folder
+    if not exists(env.static_path):
+        run("mkdir %s" % env.static_path)
 
     # Set up project.
     upload_template_and_reload("settings")
