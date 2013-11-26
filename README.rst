@@ -23,10 +23,8 @@ How to run
 4. edit bootstrap.sh, set your /vagrant to your workign dir. 
 5. vagrant up  
 6. vagrant ssh 
-7. sudo adduser youruser
-8. su - youruser
-9. mkvirtualenv cc-app --no-site-packages --distribute 
-10. workon cc-app
+7. mkvirtualenv cc-app --no-site-packages --distribute 
+8. workon cc-app
 
 
 Other dependancies
