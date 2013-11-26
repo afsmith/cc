@@ -5,7 +5,7 @@ NEVERCACHE_KEY = "%(nevercache_key)s"
 TEMPLATE_DEBUG = False
 DEBUG = False
 
-
+TIME_ZONE = 'Europe/Helsinki'
 DATABASES = {
     "default": {
         # Ends with "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
