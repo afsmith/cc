@@ -244,7 +244,14 @@ CELERYBEAT_SCHEDULE = {
 #     "SSH_USER": "", # SSH username
 #     "SSH_PASS":  "", # SSH password (consider key-based authentication)
 #     "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
-#     "HOSTS": [''], # List of hosts to deploy to
+#     "ROLE_DEF": {
+#        'staging': ['cc-stage.kneto.com'],
+#        'prod': ['cc.kneto.com']
+#     },
+#     "LIVE_HOSTNAME": { 
+#        'staging': ['cc-stage.kneto.com'],
+#        'prod': ['cc.kneto.com']
+#     },
 #     "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
 #     "PROJECT_NAME": "", # Unique identifier for project
 #     "REQUIREMENTS_PATH": "requirements.txt", # Path to pip requirements, relative to project

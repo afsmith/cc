@@ -7,7 +7,7 @@ from glob import glob
 from contextlib import contextmanager
 from posixpath import join
 
-from fabric.api import env, cd, prefix, sudo as _sudo, run as _run, hide, task
+from fabric.api import env, cd, prefix, sudo as _sudo, run as _run, hide, task, roles
 from fabric.contrib.files import exists, upload_template
 from fabric.colors import yellow, green, blue, red
 
@@ -16,6 +16,10 @@ from fabric.colors import yellow, green, blue, red
 # Config setup #
 ################
 
+if len(env.roles) > 1:
+    print "Sorry, only one roll at a time"
+    exit()    
+
 conf = {}
 if sys.argv[0].split(os.sep)[-1] in ("fab",             # POSIX
                                      "fab-script.py"):  # Windows
@@ -23,11 +27,11 @@ if sys.argv[0].split(os.sep)[-1] in ("fab",             # POSIX
     try:
         conf = __import__("settings", globals(), locals(), [], 0).FABRIC
         try:
-            conf["HOSTS"][0]
+            conf["ROLE_DEF"]
         except (KeyError, ValueError):
             raise ImportError
-    except (ImportError, AttributeError):
-        print "Aborting, no hosts defined."
+    except (ImportError):
+        print "Aborting, no host roles defined."
         exit()
 
 env.db_pass = conf.get("DB_PASS", None)
@@ -35,7 +39,8 @@ env.admin_pass = conf.get("ADMIN_PASS", None)
 env.user = conf.get("SSH_USER", getuser())
 env.password = conf.get("SSH_PASS", None)
 env.key_filename = conf.get("SSH_KEY_PATH", None)
-env.hosts = conf.get("HOSTS", [])
+#env.hosts = conf.get("HOSTS", [])
+env.roledefs = conf.get("ROLE_DEF", [])
 
 env.proj_name = conf.get("PROJECT_NAME", os.getcwd().split(os.sep)[-1])
 env.venv_home = conf.get("VIRTUALENV_HOME", "/home/%s" % env.user)
@@ -43,8 +48,12 @@ env.venv_path = "%s/%s" % (env.venv_home, env.proj_name)
 env.proj_dirname = "project"
 env.proj_path = "%s/%s" % (env.venv_path, env.proj_dirname)
 env.manage = "%s/bin/python %s/project/manage.py" % (env.venv_path,
+ 
                                                      env.venv_path)
-env.live_host = conf.get("LIVE_HOSTNAME", env.hosts[0] if env.hosts else None)
+
+live_host = conf.get("LIVE_HOSTNAME")
+env.live_host = live_host[env.roles[0]]
+#env.live_host = conf.get("LIVE_HOSTNAME", )
 env.repo_url = conf.get("REPO_URL", "")
 env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
 env.reqs_path = conf.get("REQUIREMENTS_PATH", None)
@@ -55,6 +64,9 @@ env.secret_key = conf.get("SECRET_KEY", "")
 env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
 
 env.static_path = "%s/static" % env.venv_path
+
+
+
 
 
 ##################
@@ -161,7 +173,7 @@ def print_command(command):
            yellow(command, bold=True) +
            red(" ->", bold=True))
 
-
+@roles()
 @task
 def run(command, show=True):
     """
@@ -172,7 +184,7 @@ def run(command, show=True):
     with hide("running"):
         return _run(command)
 
-
+@roles()
 @task
 def sudo(command, show=True):
     """
@@ -248,7 +260,14 @@ def db_pass():
         env.db_pass = getpass("Enter the database password: ")
     return env.db_pass
 
-
+@roles()
+@task 
+def echo_hosts():
+    """
+    Prints list of hosts in group
+    """
+    return sudo("ifconfig -a")
+@roles()
 @task
 def apt(packages):
     """
@@ -256,7 +275,7 @@ def apt(packages):
     """
     return sudo("apt-get install -y -q " + packages)
 
-
+@roles()
 @task
 def pip(packages):
     """
@@ -273,7 +292,7 @@ def postgres(command):
     show = not command.startswith("psql")
     return run("sudo -u root sudo -u postgres %s" % command, show=show)
 
-
+@roles()
 @task
 def psql(sql, show=True):
     """
@@ -284,7 +303,7 @@ def psql(sql, show=True):
         print_command(sql)
     return out
 
-
+@roles()
 @task
 def backup(filename):
     """
@@ -292,7 +311,7 @@ def backup(filename):
     """
     return postgres("pg_dump -Fc %s > %s" % (env.proj_name, filename))
 
-
+@roles()
 @task
 def restore(filename):
     """
@@ -300,7 +319,7 @@ def restore(filename):
     """
     return postgres("pg_restore -c -d %s %s" % (env.proj_name, filename))
 
-
+@roles()
 @task
 def python(code, show=True):
     """
@@ -322,7 +341,7 @@ def static():
     return python("from django.conf import settings;"
                   "print settings.STATIC_ROOT", show=False).split("\n")[-1]
 
-
+@roles()
 @task
 def manage(command):
     """
@@ -334,7 +353,7 @@ def manage(command):
 #########################
 # Install and configure #
 #########################
-
+@roles()
 @task
 @log_call
 def install():
@@ -352,7 +371,7 @@ def install():
     sudo("easy_install pip")
     sudo("pip install virtualenv")
     sudo("install -o %s -g %s -d /var/log/kneto/cc" % (env.user, env.user))
-
+@roles()
 @task
 @log_call
 def create():
@@ -438,7 +457,7 @@ def create():
 
     return True
 
-
+@roles()
 @task
 @log_call
 def remove():
@@ -458,7 +477,7 @@ def remove():
 ##############
 # Deployment #
 ##############
-
+@roles()
 @task
 @log_call
 def restart():
@@ -472,7 +491,7 @@ def restart():
         start_args = (env.proj_name, env.proj_name)
         sudo("supervisorctl start %s:gunicorn_%s" % start_args)
 
-
+@roles()
 @task
 @log_call
 def deploy():
@@ -510,7 +529,7 @@ def deploy():
     restart()
     return True
 
-
+@roles()
 @task
 @log_call
 def rollback():
@@ -530,7 +549,7 @@ def rollback():
         restore("last.db")
     restart()
 
-
+@roles()
 @task
 @log_call
 def all():
