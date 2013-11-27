@@ -259,7 +259,10 @@ $(document).ready(function () {
                     ['style', ['bold', 'italic', 'underline', 'clear']],
                     ['color', ['color']],
                 ],
-                focus: true
+                focus: true,
+                onImageUpload: function(files, editor, welEditable) {
+                    sendFile(files[0],editor,welEditable);
+                }
             });
 
             if (signature_field.val() !== '') {
@@ -282,5 +285,20 @@ $(document).ready(function () {
         });
         return false;
     });
+
+
+function sendFile(file, editor, welEditable) {
+    $.ajax({
+        data: {'file': file},
+        type: 'POST',
+        url: '/upload_image/',
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(url) {
+            editor.insertImage(welEditable, url);
+        }
+    });
+}
 
 }); // end document ready

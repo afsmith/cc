@@ -88,7 +88,7 @@ templates = {
     },
     "settings": {
         "local_path": "deploy/live_settings.py",
-        "remote_path": "%(proj_path)s/local_settings.py",
+        "remote_path": "%(proj_path)s/cc/local_settings.py",
     },
 }
 
