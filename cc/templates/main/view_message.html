@@ -1,5 +1,5 @@
 {% extends "base_template.html" %}
-{% load extras i18n static %}
+{% load extras i18n staticfiles %}
 
 {% block meta_title %}{{ message.subject }}{% endblock %}
 
@@ -44,5 +44,5 @@
     </script>
     {% endif %}
 
-    <script src="{% static 'js/view_message.js' %}?v=0001"></script>
+    <script src="{% static 'js/view_message.js' %}"></script>
 {% endblock %}

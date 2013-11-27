@@ -40,3 +40,31 @@ def upload_file(request):
 def remove_file(request, file_id):
     File.objects.filter(pk=file_id).delete()
     return {}
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def upload_image(request):
+    $ext = explode('.',$_FILES['file']['name']);
+    $filename = $name.'.'.$ext[1];
+    $destination = '/home/xxx/public_html/images/'.$filename;
+    $location =  $_FILES["file"]["tmp_name"];
+    move_uploaded_file($location,$destination);
+    echo 'http://xxx.com/images/'.$filename;
+    if form.is_valid():
+        def coping_file_callback(full_orig_file_path):
+            with closing(
+                storage.default_storage.open(full_orig_file_path, 'wb')
+            ) as fh:
+                for chunk in form.cleaned_data['file'].chunks():
+                    fh.write(chunk)
+        return save_file(
+            request.user,
+            form.cleaned_data['file'].name,
+            coping_file_callback
+        )
+    return {
+        'status': 'ERROR',
+        'message': unicode(_('Exceeded maximum file upload size.'))
+    }
