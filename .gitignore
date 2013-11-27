@@ -9,7 +9,12 @@
 *.class
 *.rdb
 *.tmp
-_build/
+
+reports.log
+.metadata
+django.mo
+inst.py
+.coverage
 
 /cc/local_settings.py
 /cc/media/uploads/[A-Za-z0-9]*
@@ -17,9 +22,10 @@ _build/
 /cc/media/thumbnails/[A-Za-z0-9]*
 /cc/media/previews/[A-Za-z0-9]*
 /cc/static/css/*
+/cc/static/js/min
+/cc/static/js/vendor/min
 
-# coverage's stats and html report
-.coverage
+_build/
 /htmlcov
 /.project
 /.pydevproject
@@ -27,11 +33,15 @@ _build/
 /redis
 /tomcat
 /tmp/*
-reports.log
 
-.metadata
-django.mo
-inst.py
+# after deployment
+/gunicorn.conf.py
+/gunicorn.pid
+/last.commit
+/last.tar
 
+
+
+# --------------- EXCEPTION --------------- #
 # one exception for the selenium test
 !/cc/media/pub/sr6qWmlrXFAFjbFuzgl77M_xDGaO.pdf
