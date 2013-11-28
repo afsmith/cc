@@ -206,19 +206,10 @@ class File(models.Model):
     def is_supported_file(cls, name):
         _, _, ext = name.rpartition('.')
         ext = ext.lower()
-        #all_types = (
-        #    list(PLAIN_FILES) +
-        #    list(IMAGE_FILES) +
-        #    list(AUDIO_FILES) +
-        #    list(VIDEO_FILES) +
-        #    list(MSDOC_FILES) +
-        #    list(MSPPT_FILES) +
-        #    list(SCORM_FILES) +
-        #    list(PDF_FILES) +
-        #    list(HTML_FILES) +
-        #    list(MULTITYPE_FILES)
-        #)
-        all_types = list(PDF_FILES)
+        all_types = (
+            list(IMAGE_FILES) +
+            list(PDF_FILES)
+        )
         if ext in all_types:
             return True
         else:

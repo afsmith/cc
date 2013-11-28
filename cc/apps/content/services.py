@@ -6,9 +6,11 @@ from .models import File
 
 from os import path
 from PyPDF2 import PdfFileReader
+import urlparse
+import datetime
 
 
-def save_file(user, orig_filename, coping_file_callback):
+def save_pdf(user, orig_filename, coping_file_callback):
     '''
     Save the uploaded file and return the status and file meta data
     '''
@@ -61,4 +63,32 @@ def save_file(user, orig_filename, coping_file_callback):
         'file_orig_filename': file.orig_filename,
         'file_type': file.type,
         'page_count': page_count
+    }
+
+
+def save_uploaded_image(file):
+    if not File.is_supported_file(file.name):
+        return {
+            'status': 'ERROR',
+            'message': unicode(_('Unsupported file type.'))
+        }
+
+    original_name, file_extension = path.splitext(file.name)
+    filename = '{}{}{}'.format(
+        datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
+        utils.gen_file_key(),
+        file_extension
+    )
+    url = path.join(settings.SUMMERNOTE_FILE_DIR, filename)
+    file_abs_path = path.abspath(path.join(
+        settings.MEDIA_ROOT, url
+    ))
+    destination = open(file_abs_path, 'wb+')
+    for chunk in file.chunks():
+        destination.write(chunk)
+    destination.close()
+
+    return {
+        'status': 'OK',
+        'url': urlparse.urljoin(settings.MEDIA_URL, url)
     }

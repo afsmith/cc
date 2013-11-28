@@ -17,6 +17,7 @@ inst.py
 .coverage
 
 /cc/local_settings.py
+/cc/media/summernote/[A-Za-z0-9]*
 /cc/media/uploads/[A-Za-z0-9]*
 /cc/media/pub/[A-Za-z0-9]*
 /cc/media/thumbnails/[A-Za-z0-9]*

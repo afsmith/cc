@@ -19,7 +19,8 @@ $(document).ready(function () {
         upload_form = $('#uploadFileForm'),
         initSignatureField,
         toggleMessageSubmitButton,
-        renderUploadError;
+        renderUploadError,
+        uploadImage;
 
 // ------------------------ Form init & validation ------------------------ //
 
@@ -87,18 +88,27 @@ $(document).ready(function () {
         }
     });
 
-    // function to enable / disable send button
-    /*toggleMessageSubmitButton = function (force_disable) {
-        if (typeof force_disable !== 'undefined' && force_disable) {
-            message_submit_btn.addClass('disabled');
-        }
+    // image upload handler
+    uploadImage = function (file, editor, welEditable) {
+        var ajax_request = new FormData();
+        ajax_request.append('file', file);
 
-        if (message_form.valid()) {
-            message_submit_btn.removeClass('disabled');
-        } else {
-            message_submit_btn.addClass('disabled');
-        }
-    };*/
+        $.ajax({
+            type: 'POST',
+            url: '/upload_image/',
+            data: ajax_request,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(resp) {
+                if (resp.status === 'OK') {
+                    editor.insertImage(welEditable, resp.url);    
+                } else {
+                    console.log('ERROR: ' + resp.message)
+                }
+            }
+        });
+    };
 
     // use tokenfield for To field
     $('#id_to').tokenfield({
@@ -128,12 +138,16 @@ $(document).ready(function () {
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['color', ['color']],
             ['para', ['ul', 'ol']],
+            ['insert', ['picture', 'link']]
         ],
         onkeyup: function(e) {
             // TODO: improve this later by not copying on every key press
             message_field.val(message_field.code());
             message_field.valid();
         },
+        onImageUpload: function(files, editor, welEditable) {
+            uploadImage(files[0], editor, welEditable);
+        }
     });
 
     // init the message data
@@ -258,10 +272,11 @@ $(document).ready(function () {
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
                     ['color', ['color']],
+                    ['insert', ['picture', 'link']]
                 ],
                 focus: true,
                 onImageUpload: function(files, editor, welEditable) {
-                    sendFile(files[0],editor,welEditable);
+                    uploadImage(files[0], editor, welEditable);
                 }
             });
 
@@ -285,20 +300,5 @@ $(document).ready(function () {
         });
         return false;
     });
-
-
-function sendFile(file, editor, welEditable) {
-    $.ajax({
-        data: {'file': file},
-        type: 'POST',
-        url: '/upload_image/',
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function(url) {
-            editor.insertImage(welEditable, url);
-        }
-    });
-}
 
 }); // end document ready
