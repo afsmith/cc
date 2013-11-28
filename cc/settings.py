@@ -140,7 +140,7 @@ from settings_choices import *
 
 # admin settings
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Hieu Nguyen', 'hieuh25@gmail.com'),
 )
 
 MANAGERS = ADMINS
