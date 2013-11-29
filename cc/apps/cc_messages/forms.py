@@ -7,6 +7,8 @@ from cc.apps.content.models import File
 from cc.apps.accounts.models import CUser
 from cc.apps.accounts.services import create_group
 
+import re
+
 
 class MessageForm(forms.ModelForm):
     attachment = forms.IntegerField(
@@ -86,8 +88,10 @@ class MessageForm(forms.ModelForm):
         message.group = create_group(message.receivers.all())
 
         # add signature to the main message
-        message.message = '{}<div id="signature">{}</div>'.format(
-            self.cleaned_data['message'], self.cleaned_data['signature']
+        message.message = re.sub(
+            r'(<div id="signature">).*(</div>)', 
+            r'\1{}\2'.format(self.cleaned_data['signature']),
+            message.message
         )
 
         message.save()

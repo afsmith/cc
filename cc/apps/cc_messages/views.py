@@ -37,7 +37,8 @@ def send_message(request):
             return {'thankyou_page': True}
     else:
         message_form = MessageForm(initial={
-            'message': '<br><br><br><br>[link]',
+            'message': ('<br><br><br><br>[link]'
+                '<div id="signature">{}</div>'.format(request.user.signature)),
             'signature': request.user.signature
         })
 
