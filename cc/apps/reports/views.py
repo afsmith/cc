@@ -149,8 +149,8 @@ def _format_data_for_chart(log, this_message):
     for p in list(log):
         row = ['Page {}'.format(p[0]), p[1]/10.0]
         if this_message.key_page and this_message.key_page == p[0]:
-            row.append('Key page: {}s'.format(p[1]/10.0))
+            row.append('Key page: {}'.format(p[1]/10.0))
         else:
-            row.append('{}s'.format(p[1]/10.0))
+            row.append('{}'.format(p[1]/10.0))
         formatted_data.append(row)
     return formatted_data
