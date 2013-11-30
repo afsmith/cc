@@ -170,7 +170,7 @@ $(document).ready(function () {
 
     $('#js_resetForm').click(function () {
         location.reload(true);
-    }):
+    });
 
 // ------------------------------- Upload ------------------------------- //
 
