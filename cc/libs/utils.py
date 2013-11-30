@@ -84,6 +84,8 @@ def dictfetchall(cursor):
 
 
 def format_dbtime(time_from_db):
+    if time_from_db is None:
+        return '00:00:00'
     time_in_second = time_from_db / 10.0
     #return str(datetime.timedelta(seconds=time_in_second))
     m, s = divmod(time_in_second, 60)

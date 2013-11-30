@@ -135,12 +135,17 @@ $(document).ready(function () {
                     }
                 }).done(function (resp) {
                     var i = 0,
-                        html = '';
+                        html = '',
+                        iOS_class = '';
 
                     if (resp.length) {
                         for (i; i < resp.length; i+=1) {
+                            iOS_class = ''
+                            if ($.inArray(resp[i].device, ['iPhone', 'iPod', 'iPad']) > -1) {
+                                iOS_class = ' row_iOS';
+                            }
                             html += [
-                                '<tr id="js_session_' + resp[i].id + '" class="log_row js_log_' + this_id + '">',
+                                '<tr id="js_session_' + resp[i].id + '" class="log_row js_log_' + this_id + iOS_class + '">',
                                 '<td></td>',
                                 '<td>' + resp[i].created_ts + '</td>',
                                 '<td></td>',
@@ -172,5 +177,10 @@ $(document).ready(function () {
         }).done(function (resp) {
             _drawChart(resp);
         });
+    });
+
+    $('.report_table').tooltip({
+        selector: '.row_iOS',
+        title: "iOS browser likes to hold on the it's events so we couldn't collect the tracking data. We are working on a way to fix this."
     });
 }); // end document ready

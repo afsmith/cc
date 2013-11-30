@@ -1,6 +1,7 @@
 @report_row_clicked_bg: #B4F0F0;
 @report_row_log_bg: #FAF1BB;
 @error_border: #B94A48;
+@error_bg: #FEE;
 
 
 // --------------------------- global --------------------------- //
@@ -13,7 +14,7 @@
 }
 .error {
     border: 1px solid @error_border !important;
-    background-color: #fee !important;
+    background-color: @error_bg !important;
 }
 form {
     p {
@@ -99,6 +100,10 @@ form {
         cursor: pointer;
         &:hover {
             background: @report_row_log_bg;
+        }
+        &.row_iOS {
+            background: @error_bg;
+            cursor: default;
         }
     }
 }
