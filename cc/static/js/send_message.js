@@ -262,7 +262,7 @@ $(document).ready(function () {
     initSignatureField = function () {
         $('label[for="id_signature"]').show();
         // add apply button here
-        //$('label[for="id_signature"]').append('<button id="js_applySignature" class="btn btn-small" style="margin-left:20px">Apply</button>');
+        $('label[for="id_signature"]').append('<button id="js_applySignature" class="btn btn-small" style="margin-left:20px">Apply</button>');
 
         signature_field.summernote({
             height: 60,
@@ -295,12 +295,10 @@ $(document).ready(function () {
         return false;
     });
 
-    /*$('.send_message_page').on('click', '#js_applySignature', function () {
-        var message_obj = $($.parseHTML(message_field.code()));
-console.log(signature_field.code());
+    $('.send_message_page').on('click', '#js_applySignature', function () {
+        var message_obj = $('<div/>').append($.parseHTML(message_field.code()));
         message_obj.find('#signature').html(signature_field.code());
-console.log($('<div/>').append(message_obj).html());
-        message_field.code($('<div/>').append(message_obj).html());
+        message_field.code(message_obj.html());
         return false;
-    });*/
+    });
 }); // end document ready

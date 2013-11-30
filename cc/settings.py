@@ -266,6 +266,7 @@ FABRIC_GLOBAL = {
     'LOCALE': 'en_US.UTF-8', # Should end with ".UTF-8"
     'REQUIREMENTS_PATH': 'requirements.txt',
     'GUNICORN_PORT': 8000,
+    'VIRTUALENV_HOME':  '/opt/kneto',
 }
 
 
