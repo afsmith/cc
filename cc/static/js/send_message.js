@@ -154,7 +154,7 @@ $(document).ready(function () {
     message_field.code(message_field.val());
 
     // submit the form when clicking Send button
-    message_submit_btn.click(function() {
+    message_submit_btn.click(function () {
         // copy data from WYSIWYG editor to textarea before submit
         message_field.val(message_field.code());
 
@@ -167,6 +167,10 @@ $(document).ready(function () {
         message_form.trigger('submit');
         return false;
     });
+
+    $('#js_resetForm').click(function () {
+        location.reload(true);
+    }):
 
 // ------------------------------- Upload ------------------------------- //
 
