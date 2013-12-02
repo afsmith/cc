@@ -155,8 +155,11 @@ HUNGER_ALWAYS_ALLOW_VIEWS = [
     'track_email',
     'create_event',
     'close_deal',
+    'home',
 ]
 
+
+ALLOWED_HOSTS = ['127.0.0.1', '.kneto.com']
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 
