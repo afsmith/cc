@@ -125,6 +125,11 @@ def send_notification_email(reason_code, message, recipient=None):
         ):
             should_send = False
 
+        # check if the setting is on
+        if not ((reason_code == 1 and message.notify_email_opened)
+            or (reason_code == 2 and message.notify_link_clicked)): 
+            should_send = False
+
         # create log anyway
         TrackingLog.objects.create(
             message=message,
@@ -151,10 +156,8 @@ def notify_email_opened(message_id, user_id):
         qs = Message.objects.filter(id=message_id, receivers=user_id)
         if qs:
             message = qs[0]
-            if message.notify_email_opened:
-                recipient = CUser.objects.get(id=user_id)
-                # if all pass, send notification
-                send_notification_email(1, message, recipient)
+            recipient = CUser.objects.get(id=user_id)
+            send_notification_email(1, message, recipient)
         else:
             return False
     else:

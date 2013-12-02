@@ -76,7 +76,7 @@ def view_message(request, message_id=None):
                 page_list.append('%s/p-%d.png' % (view_url, i))
 
         # notify the sender if "notify when link clicked" option is on
-        if message.notify_link_clicked and not is_owner_viewing:
+        if not is_owner_viewing:
             send_notification_email(2, message, ocl_token.user)
 
         return {
