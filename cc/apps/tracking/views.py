@@ -48,13 +48,15 @@ def create_event(request):
                 elif req.startswith('counter'):
                     counter_params[req] = request.POST.get(req)
             
-            if request.POST['event_type'] == 'beforeunload':
+            if request.POST['js_event_type'] == 'beforeunload':
                 # save events in DB
                 create_tracking_events(
                     data['session_id'], timer_params, counter_params
                 )
-            elif request.POST['event_type'] == 'pagehide':
+            elif request.POST['js_event_type'] == 'pagehide':
                 # do something about it
+                #print request.POST
+                pass
 
             # response doesn't do anything special so just send a blank one
             return {}

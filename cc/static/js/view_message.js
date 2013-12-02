@@ -1,28 +1,33 @@
 $(document).ready(function () {
     var page_timer = {},
-            page_counter = {},
-            i,
-            timeout_id,
-            tick,
-            //session_id = 0,
-            incrementCounter,
-            windowUnloadHandler,
-            pageInitHandler;
+        page_counter = {},
+        i,
+        timeout_id,
+        tick,
+        //session_id = 0,
+        incrementCounter,
+        windowUnloadHandler,
+        pageInitHandler,
+        initTimerCounter;
 
     // init carousel
     $('#message_carousel').carousel({
         interval: false
     });
 
-    // check if there is message_data to start tracking
-    if (typeof message_data !== 'undefined') {
-
-        // ----------------------------- Timer ----------------------------- //
+    initTimerCounter = function(message_data) {
         // init the page timer object
         for (i=0; i<message_data.page_count; i+=1) {
             page_timer[i+1] = 0;
             page_counter[i+1] = 0;
         }
+    };
+
+    // check if there is message_data to start tracking
+    if (typeof message_data !== 'undefined') {
+
+        // ----------------------------- Timer ----------------------------- //
+        initTimerCounter(message_data);
 
         // function to handle page counter
         incrementCounter = function (page_number) {
@@ -55,12 +60,21 @@ $(document).ready(function () {
 
 
         // ----------------------------- Tracking ----------------------------- //
+        windowPageShowHandler = function () {
+            $(window).on('pageshow', function () {
+                initTimerCounter(message_data);
+            });
+        };
+
         windowUnloadHandler = function (session_id, is_iOS) {
             var event_type = 'beforeunload';
 
             // if the device is iOS then use pagehide event instead since iOS doesn't support beforeunload event
             if (is_iOS) {
                 event_type = 'pagehide';
+
+                // bind pageshow event
+                windowPageShowHandler();
             }
 
             $(window).on(event_type, function () {
@@ -71,7 +85,7 @@ $(document).ready(function () {
                     async: false,
                     data: {
                         'type': 'EVENT',
-                        'event_type': event_type,
+                        'js_event_type': event_type,
                         'timer': page_timer,
                         'counter': page_counter,
                         'session_id': session_id,
