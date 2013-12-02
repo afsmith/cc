@@ -20,7 +20,7 @@ def save_pdf(user, orig_filename, coping_file_callback):
             'message': unicode(_('Unsupported file type.'))
         }
 
-    file = File(orig_filename=orig_filename)
+    file = File(orig_filename=orig_filename, owner=user)
 
     full_orig_file_path = path.join(
         settings.CONTENT_UPLOADED_DIR,
