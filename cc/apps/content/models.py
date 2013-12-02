@@ -129,7 +129,6 @@ class File(models.Model):
         (STATUS_REMOVED, _('removed'))
     )
 
-    title = models.CharField(_('Name'), max_length=150)
     type = models.IntegerField(_('Type'), choices=TYPES)
     # In theory (according to an article on a Wikipedia) file name shouldn't
     # be longer than 255 chars.
@@ -150,20 +149,10 @@ class File(models.Model):
         default=utils.gen_file_sub_key)
     subkey_preview = models.CharField(_('Preview Sub Key'), max_length=5,
         default=utils.gen_file_sub_key)
-
     created_on = models.DateTimeField(_('Created on'), auto_now_add=True)
     updated_on = models.DateTimeField(_('Updated on'), auto_now=True)
-    expires_on = models.DateField(_('Expiration date'), null=True)
-    delete_expired = models.BooleanField(_('Delete file after expiration'), default=False)
-    is_downloadable = models.BooleanField(_('Allow downloading'), default=True)
-    duration = models.IntegerField(_('Duration'), null=True)
-    note = models.CharField(_('Note'), max_length=400, null=True)
-    # Currently the longest language code in settings.LANGUAGES has 7 chars.
-    language = models.CharField(_('Language'), choices=settings.LANGUAGES, max_length=7)
     owner = models.ForeignKey(CUser, null=True)
     pages_num = models.IntegerField(_('Number of content pages'), default=0)
-
-    is_removed = models.BooleanField(_('Content is removed'), default=False)
 
     @classmethod
     def type_from_name(cls, name):
