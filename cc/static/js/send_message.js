@@ -20,6 +20,7 @@ $(document).ready(function () {
         initSignatureField,
         toggleMessageSubmitButton,
         renderUploadError,
+        resetUploadForm,
         uploadImage;
 
 // ------------------------ Form init & validation ------------------------ //
@@ -179,6 +180,14 @@ $(document).ready(function () {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
     };
 
+    // reset everything totally
+    resetUploadForm = function () {
+        upload_form.removeClass('file_uploaded');
+        $('label[for="id_key_page"], #id_key_page').hide();
+        $('#id_key_page option[value!=""]').remove();
+        $('.dz-file-preview').remove();
+    };
+
     // dropzone config for file upload form
     Dropzone.options.uploadFileForm = {
         url: $(this).attr('action'),
@@ -218,14 +227,12 @@ $(document).ready(function () {
                 // remove error message 
                 upload_form.find('.alert').remove();
 
-                //toggleMessageSubmitButton();
                 attachment_field.valid();
             } else {
                 renderUploadError(response.message);
                 console.log('Conversion error: ' + response.original_error);
 
                 $('.dz-error-mark').css('opacity', 1);
-                //toggleMessageSubmitButton();
                 attachment_field.valid();
             }
         },
@@ -233,15 +240,15 @@ $(document).ready(function () {
             if (errorMessage !== 'You can only upload 1 files.') {
                 $('.dz-error-mark').css('opacity', 1);
                 this.removeFile(file);
-                console.log(errorMessage);
+                resetUploadForm();
+                renderUploadError(errorMessage);
             }
-            //toggleMessageSubmitButton();
             attachment_field.valid();
         },
         maxfilesexceeded: function (file) {
             renderUploadError('You can attach only one file at a time');
+            $('.dz-file-preview:not(.dz-processing)').remove();
             this.removeFile(file);
-            //toggleMessageSubmitButton();
             attachment_field.valid();
         },
         removedfile: function (file) {
@@ -252,11 +259,7 @@ $(document).ready(function () {
                 // remove that file from send message form
                 $('#id_attachment').val('');
 
-                // reset everything
-                upload_form.removeClass('file_uploaded');
-                $('label[for="id_key_page"], #id_key_page').hide();
-                $('#id_key_page option[value!=""]').remove();
-                $('.dz-file-preview').remove();
+                resetUploadForm();
             });
         }
     };
