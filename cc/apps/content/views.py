@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from .forms import FileImportForm
 from .services import save_pdf, save_uploaded_image
 from .models import File
+from cc.libs.utils import get_domain
 
 from annoying.decorators import ajax_request
 from contextlib import closing
@@ -46,4 +47,5 @@ def remove_file(request, file_id):
 @http_decorators.require_POST
 @ajax_request
 def upload_image(request):
-    return save_uploaded_image(request.FILES.get('file'))
+    domain = get_domain(request)
+    return save_uploaded_image(request.FILES.get('file'), domain)

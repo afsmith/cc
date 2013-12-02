@@ -6,7 +6,7 @@ from .models import File
 
 from os import path
 from PyPDF2 import PdfFileReader
-import urlparse
+from urlparse import urljoin
 import datetime
 
 
@@ -66,7 +66,7 @@ def save_pdf(user, orig_filename, coping_file_callback):
     }
 
 
-def save_uploaded_image(file):
+def save_uploaded_image(file, domain):
     if not File.is_supported_file(file.name):
         return {
             'status': 'ERROR',
@@ -90,5 +90,5 @@ def save_uploaded_image(file):
 
     return {
         'status': 'OK',
-        'url': urlparse.urljoin(settings.MEDIA_URL, url)
+        'url': urljoin(urljoin(domain, settings.MEDIA_URL), url)
     }
