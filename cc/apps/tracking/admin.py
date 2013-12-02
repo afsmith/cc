@@ -1,9 +1,16 @@
 from django.contrib import admin
-from cc.apps.tracking import models
+from django.contrib.admin import DateFieldListFilter
+
+from . import models
 
 
-class TrackingSessionAdmin(admin.ModelAdmin):
-    list_display = ('message', 'participant', 'created_at')
+class TrackingLogAdmin(admin.ModelAdmin):
+    search_fields = ('message',)
+    list_display = ('message', 'participant', 'action', 'created_at')
+    list_filter = (
+        'participant',
+        'action',
+        ('created_at', DateFieldListFilter),
+    )
 
-
-admin.site.register(models.TrackingSession, TrackingSessionAdmin)
+admin.site.register(models.TrackingLog, TrackingLogAdmin)
