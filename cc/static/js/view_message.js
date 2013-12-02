@@ -56,15 +56,14 @@ $(document).ready(function () {
 
         // ----------------------------- Tracking ----------------------------- //
         windowUnloadHandler = function () {
-            // window unload or pagehide => create tracking events
+            var event_type = 'beforeunload';
 
-           if(window.onpagehide || window.onpagehide === null){
-                action_type = 'pagehide';
-            } else {
-                action_type = 'beforeunload';
+            // window unload or pagehide => create tracking events
+            if ('onpagehide' in window) {
+                event_type = 'pagehide';
             }
 
-            $(window).on(action_type, function () {
+            $(window).on(event_type, function () {
                 $.ajax({
                     url: '/track/event/create/',
                     type: 'POST',
