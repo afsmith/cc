@@ -4,7 +4,7 @@ $(document).ready(function () {
             i,
             timeout_id,
             tick,
-            session_id = 0,
+            //session_id = 0,
             incrementCounter,
             windowUnloadHandler,
             pageInitHandler;
@@ -55,11 +55,11 @@ $(document).ready(function () {
 
 
         // ----------------------------- Tracking ----------------------------- //
-        windowUnloadHandler = function () {
+        windowUnloadHandler = function (session_id, is_iOS) {
             var event_type = 'beforeunload';
 
-            // window unload or pagehide => create tracking events
-            if ('onpagehide' in window) {
+            // if the device is iOS then use pagehide event instead since iOS doesn't support beforeunload event
+            if (is_iOS) {
                 event_type = 'pagehide';
             }
 
@@ -71,6 +71,7 @@ $(document).ready(function () {
                     async: false,
                     data: {
                         'type': 'EVENT',
+                        'event_type': event_type,
                         'timer': page_timer,
                         'counter': page_counter,
                         'session_id': session_id,
@@ -88,9 +89,10 @@ $(document).ready(function () {
                 data: $.extend({'type': 'SESSION'}, message_data)
             }).done(function (resp) {
                 if (resp.status === 'OK') {
-                    session_id = resp.session;
+                    var session_id = resp.session_id,
+                        is_iOS = resp.is_iOS;
 
-                    windowUnloadHandler();
+                    windowUnloadHandler(session_id, is_iOS);
                 } else {
                     console.log('ERROR: ' + resp.message);
                 }

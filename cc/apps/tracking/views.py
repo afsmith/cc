@@ -29,7 +29,8 @@ def create_event(request):
             if session:
                 return {
                     'status': 'OK',
-                    'session': session.id
+                    'session_id': session.id,
+                    'is_iOS': session.device in ['iPhone', 'iPad', 'iPod']
                 }
             else:
                 return {
@@ -47,10 +48,13 @@ def create_event(request):
                 elif req.startswith('counter'):
                     counter_params[req] = request.POST.get(req)
             
-            # save events in DB
-            create_tracking_events(
-                data['session_id'], timer_params, counter_params
-            )
+            if request.POST['event_type'] == 'beforeunload':
+                # save events in DB
+                create_tracking_events(
+                    data['session_id'], timer_params, counter_params
+                )
+            elif request.POST['event_type'] == 'pagehide':
+                # do something about it
 
             # response doesn't do anything special so just send a blank one
             return {}
