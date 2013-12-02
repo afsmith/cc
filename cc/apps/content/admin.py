@@ -1,11 +1,14 @@
 from django.contrib import admin
-from cc.apps.content import models
+from django.contrib.admin import DateFieldListFilter
+
+from . import models
 
 
 class FileAdmin(admin.ModelAdmin):
-    search_fields = ('title',)
-    list_display = ('title', 'type', 'status')
-    list_filter = ('status', 'type')
-    date_hierarchy = 'updated_on'
+    search_fields = ('orig_filename',)
+    list_display = ('orig_filename', 'pages_num', 'created_on')
+    list_filter = (
+        ('created_on', DateFieldListFilter),
+    )
 
-#admin.site.register(models.File, FileAdmin)
+admin.site.register(models.File, FileAdmin)
