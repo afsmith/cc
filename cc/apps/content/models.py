@@ -297,11 +297,11 @@ class File(models.Model):
         return urlparse.urljoin(settings.MEDIA_URL, path)
 
     def __repr__(self):
-        return u'<File[%s]: %s; type=%s; status=%s>' % (self.id, repr(self.title),
+        return u'<File[%s]: %s; type=%s; status=%s>' % (self.id, repr(self.orig_filename),
             self.get_type_display(), self.get_status_display())
 
     def __unicode__(self):
-        return self.title
+        return self.orig_filename
 
     class Meta:
         ordering = ('created_on',)
