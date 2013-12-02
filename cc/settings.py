@@ -260,10 +260,11 @@ FABRIC_GLOBAL = {
     'REPO_URL': 'git@github.com:afsmith/cc.git',
     'ROLE_DEF': {
         'staging': ['109.74.12.16'],
+        'prod': ['cc.kneto.com']
     },
     'LIVE_HOSTNAME': {
         'staging': 'cc-stage.kneto.com',
-        'production': 'cc.kneto.com',
+        'prod': 'cc.kneto.com',
     },
     'PROJECT_NAME': 'cc',
     'LOCALE': 'en_US.UTF-8', # Should end with ".UTF-8"
