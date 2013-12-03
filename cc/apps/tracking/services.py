@@ -68,6 +68,20 @@ def create_tracking_events(session_id, timer_params, counter_params):
 
     return TrackingEvent.objects.bulk_create(events)
 
+def edit_or_create_tracking_events(session_id, timer_params, counter_params):
+    events = TrackingEvent.objects.filter(tracking_session=session_id)
+    if events:
+        for event in events:
+            event.total_time += int(
+                timer_params.get('timer[{}]'.format(event.page_number))
+            )
+            event.page_view += int(
+                counter_params.get('counter[{}]'.format(event.page_number))
+            )
+            event.save()
+    else:
+        return create_tracking_events(session_id, timer_params, counter_params)
+
 
 def create_closed_deal(**kw):
     return ClosedDeal.objects.create(

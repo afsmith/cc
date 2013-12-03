@@ -8,27 +8,18 @@ $(document).ready(function () {
         incrementCounter,
         windowUnloadHandler,
         pageInitHandler,
-        initTimerCounter;
+        initTimerCounter,
+        pageChangeHandler;
 
     // init carousel
     $('#message_carousel').carousel({
         interval: false
     });
 
-    initTimerCounter = function(message_data) {
-        // init the page timer object
-        for (i=0; i<message_data.page_count; i+=1) {
-            page_timer[i+1] = 0;
-            page_counter[i+1] = 0;
-        }
-    };
-
     // check if there is message_data to start tracking
     if (typeof message_data !== 'undefined') {
 
         // ----------------------------- Timer ----------------------------- //
-        initTimerCounter(message_data);
-
         // function to handle page counter
         incrementCounter = function (page_number) {
             page_counter[page_number] += 1;
@@ -43,19 +34,32 @@ $(document).ready(function () {
             }, 100);
         };
 
-        // init timer and counter for page 1
-        tick(1);
-        incrementCounter(1);
+        pageChangeHandler = function () {
+            // get current active page
+            var active_page = $('#message_carousel .active').index() + 1;
+
+            // init timer and counter for page 1
+            tick(active_page);
+            incrementCounter(active_page);
+        };
+
+        initTimerCounter = function (message_data) {
+            // init the page timer object
+            for (i=0; i<message_data.page_count; i+=1) {
+                page_timer[i+1] = 0;
+                page_counter[i+1] = 0;
+            }
+
+            pageChangeHandler();
+        };
+
+        initTimerCounter(message_data);
+        
 
 
         // ----------------------------- Carousel ----------------------------- //
         $('#message_carousel').on('slid', function () {
-            // get the page number and run tick() to count time for that page
-            var page_number = $(this).find('.active').index() + 1;
-            tick(page_number);
-
-            // and increment the counter
-            incrementCounter(page_number);
+            pageChangeHandler();
         });
 
 

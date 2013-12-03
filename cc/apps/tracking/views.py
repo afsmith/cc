@@ -54,9 +54,11 @@ def create_event(request):
                     data['session_id'], timer_params, counter_params
                 )
             elif request.POST['js_event_type'] == 'pagehide':
-                # do something about it
+                # sum the data with existing events
                 #print request.POST
-                pass
+                edit_or_create_tracking_events(
+                    data['session_id'], timer_params, counter_params
+                )
 
             # response doesn't do anything special so just send a blank one
             return {}
