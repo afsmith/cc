@@ -19,6 +19,7 @@ def create_event(request):
     data = validate_request(request, 'event')
     if data:
         if request.POST['type'] == 'SESSION':
+            print '\n[DEBUG] Creating a new session\n'
             session = create_tracking_session(
                 message=data['message'],
                 user=data['user'],
@@ -49,11 +50,13 @@ def create_event(request):
                     counter_params[req] = request.POST.get(req)
             
             if request.POST['js_event_type'] == 'beforeunload':
+                print '\n[DEBUG] Creating events after "beforeunload" JS event\n'
                 # save events in DB
                 create_tracking_events(
                     data['session_id'], timer_params, counter_params
                 )
             elif request.POST['js_event_type'] == 'pagehide':
+                print '\n[DEBUG] Creating events after "pagehide" JS event\n'
                 # sum the data with existing events
                 #print request.POST
                 edit_or_create_tracking_events(
