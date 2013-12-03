@@ -1,6 +1,7 @@
 import os
 from os import path
 import sys
+from celery.schedules import crontab
 ROOT_PATH = path.join(path.dirname(__file__))
 
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -210,27 +211,12 @@ BROKER_URL = 'redis://localhost:6379/0'
 CELERYD_CONCURRENCY = 1
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
-'''
 CELERYBEAT_SCHEDULE = {
-    'delete_expired_files_schedule': {
-        'task': 'content.tasks.delete_expired_content',
-        'schedule': crontab(minute='0', hour='0', day_of_week='*'),
-    },
-
-    'generate_reports_schedule': {
-        'task': 'reports.tasks.generate_reports',
-        'schedule': crontab(minute='*', hour='*', day_of_week='*'),
-    },
-    'check_mailbox': {
-        'task': 'messages_custom.tasks.check_mailbox',
-        'schedule': crontab(minute='*'),
-    },
-    'check_ocl_expiration': {
-        'task': 'management.tasks.check_ocl_expiration',
-        'schedule': crontab(minute='*'),
-    }
+    'delete_old_content_schedule': {
+        'task': 'cc.apps.cc.tasks.delete_old_content',
+        'schedule': crontab(minute=0, hour=0),
+    },   
 }
-'''
 
 ##############################################################################
 # Testing
