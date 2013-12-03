@@ -17,12 +17,6 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Name of the directory for the project.
 PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
 
-# Every cache key will get prefixed with this value - here we set it to
-# the name of the directory the project is in to try and use something
-# project specific.
-#CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_DIRNAME
-
-
 # media
 MEDIA_ROOT = path.abspath(path.join(ROOT_PATH, 'media'))
 MEDIA_URL = '/media/'
@@ -247,6 +241,7 @@ if 'test' in sys.argv:
     # remove django hunger middleware in testing
     MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
     MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = ['--nologcapture', '--nocapture']

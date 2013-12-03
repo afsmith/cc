@@ -90,22 +90,14 @@
         "status": 30,
         "subkey_preview": "jtdNx",
         "pages_num": 7,
-        "language": "",
-        "title": "",
-        "is_downloadable": true,
-        "owner": null,
+        "owner": 1,
         "subkey_thumbnail": "0HMdq",
-        "note": null,
-        "delete_expired": false,
         "created_on": "2013-10-15T01:13:48",
         "subkey_conv": "xDGaO",
-        "expires_on": null,
         "key": "sr6qWmlrXFAFjbFuzgl77M",
-        "duration": null,
         "updated_on": "2013-10-15T01:14:49",
         "type": 80,
-        "subkey_orig": "GMBRp",
-        "is_removed": false
+        "subkey_orig": "GMBRp"
     }
 }
 ]
