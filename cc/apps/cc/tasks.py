@@ -18,8 +18,7 @@ def delete_old_content():
         created_on__lt=datetime.today()-timedelta(days=90),
     )
 
-    for file in file_90_days:
-        print file
+    for file in files_90_days:
         if storage.default_storage.exists(file.orig_file_path):
             storage.default_storage.delete(file.orig_file_path)
 
@@ -27,10 +26,10 @@ def delete_old_content():
     files_120_days = File.objects.filter(
         created_on__lt=datetime.today()-timedelta(days=120),
     )
-    for file in file_120_days:
+    for file in files_120_days:
         if storage.default_storage.exists(file.conv_file_path):
             storage.default_storage.delete(file.conv_file_path)
-    file_120_days.delete()
+    #files_120_days.delete()
 
     # after 120 days, remove the expired OCLs
     ocls = OneClickLinkToken.objects.filter(
