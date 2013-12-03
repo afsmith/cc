@@ -99,7 +99,16 @@ INSTALLED_APPS = (
     'cc.apps.cc',          # register cc apps to get the template tags
 )
 
-# See http://docs.djangoproject.com/en/dev/topics/logging
+# disable email for SuspiciousOperation http://stackoverflow.com/a/19534738/2527433
+from django.core.exceptions import SuspiciousOperation
+
+def skip_suspicious_operations(record):
+    if record.exc_info:
+        exc_value = record.exc_info[1]
+        if isinstance(exc_value, SuspiciousOperation):
+            return False
+    return True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -107,11 +116,16 @@ LOGGING = {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         }
+        # Define filter
+        'skip_suspicious_operations': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_suspicious_operations,
+        },
     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
+            'filters': ['require_debug_false', 'skip_suspicious_operations'],
             'class': 'django.utils.log.AdminEmailHandler'
         }
     },
