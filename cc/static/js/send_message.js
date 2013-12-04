@@ -229,6 +229,8 @@ $(document).ready(function () {
 
                 attachment_field.valid();
             } else {
+                this.removeFile(file);
+                resetUploadForm();
                 renderUploadError(response.message);
                 console.log('Conversion error: ' + response.original_error);
 
