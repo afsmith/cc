@@ -7,32 +7,6 @@ from cc.apps.content.models import File
 from cc.apps.content import utils, convert
 from .test_general import FakeFile
 
-'''
-class DeleteExpiredTaskTest(ClientTestCase):
-    fixtures = ('sample.json', 'test-course.json', 'test-tags.json',)
-
-    def test_task_marks_deleted_content(self):
-        files_count = File.objects.filter(expires_on__isnull = False,
-                                                expires_on__lt = datetime.date.today(),
-                                                is_removed = False).count()
-
-        tasks.delete_expired_content()
-
-        files_count_new = File.objects.filter(expires_on__isnull = False,
-                                                     expires_on__lt = datetime.date.today(),
-                                                     is_removed = False).count()
-
-        self.assertTrue(files_count != files_count_new)
-        self.assertEquals(files_count_new, 0)
-
-
-    def test_task_deactivates_modules(self):
-        active_modules = models.Course.objects.filter(segment__file__expires_on__lt = datetime.date.today(),
-                                                      segment__file__is_removed = True,
-                                                      active=True).count()
-        self.assertEquals(active_modules, 0)
-'''
-
 
 class ExceptionalConverter(convert.BaseConverter):
     class Exc(Exception):

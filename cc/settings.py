@@ -229,7 +229,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERYBEAT_SCHEDULE = {
     'delete_old_content_schedule': {
         'task': 'cc.apps.cc.tasks.delete_old_content',
-        'schedule': crontab(minute=0, hour=0),
+        'schedule': crontab(minute=0, hour=0), # once per day at midnight
     },   
 }
 
