@@ -6,6 +6,5 @@
 
 {{ text }}
 
-<p>Best,<br />
-Kneto</p>
+
 {% endblock %}
