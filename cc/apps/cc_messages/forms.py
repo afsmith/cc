@@ -36,7 +36,7 @@ class MessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MessageForm, self).__init__(*args, **kwargs)
         # add To field as a text input, 1 is the order of the field
-        self.fields.insert(1, 'to', forms.CharField())
+        self.fields.insert(0, 'to', forms.CharField())
         # add Signature field as a text input
         self.fields.insert(6, 'signature', forms.CharField())
         self.fields['signature'].required = False
