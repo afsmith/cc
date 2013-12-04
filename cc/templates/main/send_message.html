@@ -27,7 +27,7 @@
                 <button id="js_editSignature" class="btn"><i class="icon-plus"></i>  {% trans "Add signature" %}</button>
 
                 <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
-                    {% trans "Drop the attachment (or click) here to upload" %}
+                    {% trans "Drop the attachment (or click) here to upload. pdf's only" %}
                 </form>
 
                 <button id="js_submitMessageForm" class="btn btn-large btn-success">{% trans "Send" %}</button>
