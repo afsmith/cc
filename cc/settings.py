@@ -115,7 +115,7 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
-        }
+        },
         # Define filter
         'skip_suspicious_operations': {
             '()': 'django.utils.log.CallbackFilter',

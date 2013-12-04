@@ -111,7 +111,7 @@ def user_log(request):
             TrackingSession.objects
             .filter(message=data['message'], participant=data['user'])
             .annotate(total_time=Sum('trackingevent__total_time'))
-            #.filter(total_time__gt=0)
+            .filter(total_time__gt=0)
             .values('id', 'created_at', 'total_time', 'client_ip', 'device')
         )
         for qs in log_groupby_session:
