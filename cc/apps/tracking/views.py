@@ -50,17 +50,29 @@ def create_event(request):
                     counter_params[req] = request.POST.get(req)
             
             if request.POST['js_event_type'] == 'beforeunload':
-                print '\n[DEBUG] Creating events after "beforeunload" JS event\n'
+                print(
+                    '\n[DEBUG] Creating events after "beforeunload" JS event\n'
+                )
                 # save events in DB
                 create_tracking_events(
                     data['session_id'], timer_params, counter_params
                 )
             elif request.POST['js_event_type'] == 'pagehide':
-                print '\n[DEBUG] Creating events after "pagehide" JS event\n'
+                print('\n[DEBUG] Creating events after "pagehide" JS event\n')
                 # sum the data with existing events
                 #print request.POST
                 edit_or_create_tracking_events(
                     data['session_id'], timer_params, counter_params
+                )
+            elif request.POST['js_event_type'] == 'safari_interval':
+                print(
+                    '\n[DEBUG] Creating events after "safari_interval"'
+                    ' JS event\n'
+                )
+                # sum the data with existing events
+                #print request.POST
+                edit_or_create_tracking_events(
+                    data['session_id'], timer_params, counter_params, True
                 )
 
             # response doesn't do anything special so just send a blank one

@@ -68,16 +68,30 @@ def create_tracking_events(session_id, timer_params, counter_params):
 
     return TrackingEvent.objects.bulk_create(events)
 
-def edit_or_create_tracking_events(session_id, timer_params, counter_params):
+def edit_or_create_tracking_events(
+        session_id, timer_params, counter_params, is_replace=False
+    ):
     events = TrackingEvent.objects.filter(tracking_session=session_id)
     if events:
         for event in events:
-            event.total_time += int(
+            current_page_time = int(
                 timer_params.get('timer[{}]'.format(event.page_number))
             )
-            event.page_view += int(
+            current_page_count = int(
                 counter_params.get('counter[{}]'.format(event.page_number))
             )
+
+            # if this is Safari Desktop tracking event, the later data should
+            # replace the previous one
+            if is_replace:    
+                event.total_time = current_page_time
+                event.page_view = current_page_count
+            # otherwise, just sum up the data (in 'pagehide' event)
+            else:
+                event.total_time += current_page_time
+                event.page_view += current_page_count
+
+            # save the event
             event.save()
     else:
         return create_tracking_events(session_id, timer_params, counter_params)

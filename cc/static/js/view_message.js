@@ -4,12 +4,14 @@ $(document).ready(function () {
         i,
         timeout_id,
         tick,
-        //session_id = 0,
         incrementCounter,
         windowUnloadHandler,
+        windowPageShowHandler,
         pageInitHandler,
         initTimerCounter,
-        pageChangeHandler;
+        createEventAjax,
+        pageChangeHandler,
+        safariHandler;
 
     // init carousel
     $('#message_carousel').carousel({
@@ -64,6 +66,22 @@ $(document).ready(function () {
 
 
         // ----------------------------- Tracking ----------------------------- //
+        createTrackingEventAjax = function (event_type, session_id) {
+            $.ajax({
+                url: '/track/event/create/',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {
+                    'type': 'EVENT',
+                    'js_event_type': event_type,
+                    'timer': page_timer,
+                    'counter': page_counter,
+                    'session_id': session_id,
+                }
+            });
+        };
+
         windowPageShowHandler = function () {
             $(window).on('pageshow', function () {
                 initTimerCounter(message_data);
@@ -82,20 +100,14 @@ $(document).ready(function () {
             }
 
             $(window).on(event_type, function () {
-                $.ajax({
-                    url: '/track/event/create/',
-                    type: 'POST',
-                    dataType: 'json',
-                    async: false,
-                    data: {
-                        'type': 'EVENT',
-                        'js_event_type': event_type,
-                        'timer': page_timer,
-                        'counter': page_counter,
-                        'session_id': session_id,
-                    }
-                });
+                createTrackingEventAjax(event_type, session_id);
             });
+        };
+
+        safariHandler = function (session_id) {
+            interval_id = setInterval(function () {
+                createTrackingEventAjax('safari_interval', session_id)
+            }, 500);
         };
 
         pageInitHandler = function () {
@@ -108,9 +120,15 @@ $(document).ready(function () {
             }).done(function (resp) {
                 if (resp.status === 'OK') {
                     var session_id = resp.session_id,
-                        is_iOS = resp.is_iOS;
+                        is_iOS = resp.is_iOS,
+                        is_safari = (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1);
 
-                    windowUnloadHandler(session_id, is_iOS);
+                    // check if this is Safari on desktop
+                    if (is_safari && !is_iOS) {
+                        safariHandler(session_id);
+                    } else {
+                        windowUnloadHandler(session_id, is_iOS);    
+                    }
                 } else {
                     console.log('ERROR: ' + resp.message);
                 }
