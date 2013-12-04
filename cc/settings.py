@@ -149,7 +149,8 @@ from settings_choices import *
 
 # admin settings
 ADMINS = (
-    ('Hieu Nguyen', 'hieuh25@gmail.com'),
+    ('Hieu Nguyen', 'hieu@sudointeractive.com'),
+    ('Andrew Smith', 'andrew.smith@kneto.fi'),
 )
 
 MANAGERS = ADMINS
