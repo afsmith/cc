@@ -525,7 +525,7 @@ def deploy():
         manage("migrate --noinput")
         # compile LESS before collect static
         run("/opt/kneto/cc/project/compile-styles.sh")
-        manage("collectstatic -v 0 --noinput")
+        manage("collectstatic --clear --noinput")
 
     restart()
     return True
