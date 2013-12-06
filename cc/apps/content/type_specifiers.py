@@ -10,7 +10,8 @@
 """
 
 import fnmatch, os, re, shutil, subprocess, tempfile, traceback
-import utils
+
+from cc.libs import utils
 
 from django.conf import settings
 

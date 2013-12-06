@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
-from cc.apps.content.utils import gen_ocl_token
+from cc.libs.utils import gen_ocl_token
 
 
 class CustomUserManager(BaseUserManager):

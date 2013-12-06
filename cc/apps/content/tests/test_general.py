@@ -5,8 +5,8 @@ from django.core.files import storage
 from django.core.urlresolvers import reverse
 
 from cc.apps.content.models import File
-from cc.apps.content import utils
 
+from cc.libs import utils
 from cc.libs.test_utils import ClientTestCase
 
 import json
@@ -178,26 +178,3 @@ class ImportFileTest(ClientTestCase):
         c.post(self.url, {'file': f})
         f.close()
         self.assertTrue(self._storage.last_buf.closed)
-
-
-class UtilsTest(ClientTestCase):
-    """Tests utils from ``content.utils`` module.
-    """
-
-    def test_returned_string_is_exactly_twice_long_as_number_of_bytes(self):
-        s = utils.get_rand_bytes_as_hex(5)
-        self.assertEquals(len(s), 10)
-
-        s = utils.get_rand_bytes_as_hex(200)
-        self.assertEquals(len(s), 400)
-
-    def test_returned_string_is_encoded_as_hex(self):
-        s = utils.get_rand_bytes_as_hex(100)
-        try:
-            int(s, 16)
-        except ValueError:
-            self.fail('String %s contains digits out of hex range.' % (s,))
-
-    def test_gen_file_key_returns_string(self):
-        key = utils.gen_file_key()
-        self.assertTrue(isinstance(key, str))

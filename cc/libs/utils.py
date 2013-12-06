@@ -1,5 +1,9 @@
+from .baseconv import BaseConv
+
 from mdetect import UAgentInfo
 import datetime
+import random
+
 
 def get_domain(request):
     '''
@@ -84,6 +88,9 @@ def dictfetchall(cursor):
 
 
 def format_dbtime(time_from_db):
+    '''
+    Format time from second to HH:MM:SS format
+    '''
     if time_from_db is None:
         return '00:00:00'
     time_in_second = time_from_db / 10.0
@@ -91,3 +98,59 @@ def format_dbtime(time_from_db):
     m, s = divmod(time_in_second, 60)
     h, m = divmod(m, 60)
     return '{0:02.0f}:{1:02.0f}:{2:04.1f}'.format(h, m, s)
+
+# ----------------- Random keys ----------------- #
+
+BASE62_CONV = BaseConv(
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
+)
+
+def gen_file_key():
+    """Generates random file key.
+
+    :return: File key, length is between 1 - 22 bytes.
+    :rtype: ``str``
+    """
+    # 62**22 - 1 (full 22 base-62 digits) > 2**128
+    n = random.randint(1, 62 ** 22 - 1)
+    return BASE62_CONV.encode(n)
+
+
+def gen_file_sub_key():
+    """Generates random file sub key.
+
+    :return: File sub key, length is between 1 - 5 bytes.
+    :rtype: ``str``
+    """
+    n = random.randint(1, 62 ** 5 - 1)
+    return BASE62_CONV.encode(n)
+
+
+def gen_ocl_token():
+    """Generates random ocl token.
+
+    :return: token, length equals 30 bytes.
+    :rtype: ``str``
+    """
+    return BASE62_CONV.encode(random.randint(62 ** 29 - 1, 62 ** 30 - 1))
+
+
+# ----------------- Custom exception ----------------- #
+
+class UnsupportedFileTypeError(Exception):
+    def __init__(self, ext):
+        self.ext = ext
+
+    def __str__(self):
+        return 'Files with extension "%s" are not supported.' % (self.ext,)
+
+
+class CommandError(Exception):
+    def __init__(self, cmd=None, code=None, stdout=None, stderr=None):
+        self.cmd = cmd
+        self.code = code
+        self.stdout = stdout
+        self.stderr = stderr
+
+    def __str__(self):
+        return 'Command [%s] has failed with code: %d' % (self.cmd, self.code)

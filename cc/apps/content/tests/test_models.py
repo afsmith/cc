@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from cc.apps.content.models import File
-from cc.apps.content import utils
+from cc.libs import utils
 
 from cc.libs.test_utils import ClientTestCase
 

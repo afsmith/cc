@@ -4,7 +4,8 @@ from django.core.files import storage
 from django.test import TestCase
 
 from cc.apps.content.models import File
-from cc.apps.content import utils, convert
+from cc.apps.content import convert
+from cc.libs import utils
 from .test_general import FakeFile
 
 

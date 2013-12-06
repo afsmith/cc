@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from . import utils
 from .models import File
+from cc.libs import utils
 
 from os import path
 from PyPDF2 import PdfFileReader

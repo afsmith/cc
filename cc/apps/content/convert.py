@@ -1,6 +1,7 @@
 from django.conf import settings
 
-from . import models, utils
+from . import models
+from cc.libs import utils
 
 import fnmatch
 import os

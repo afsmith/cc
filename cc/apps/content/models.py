@@ -4,9 +4,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.accounts.models import CUser
 
+from cc.libs import utils
+
 import os
 import urlparse
-import utils
 import type_specifiers
 
 
