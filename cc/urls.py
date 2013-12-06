@@ -12,7 +12,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     # ----- CC APP  ----- #
-    url(r'^$', 'cc.apps.cc.views.dashboard', name='home'),
+    url(r'^$', 'cc.apps.main.views.dashboard', name='home'),
     url(r'^send/$', 'cc.apps.cc_messages.views.send_message', name='send'),
     url(r'^upload/$', 'cc.apps.content.views.upload_file', name='upload_file'),
     url(r'^upload_image/$', 'cc.apps.content.views.upload_image', name='upload_image'),

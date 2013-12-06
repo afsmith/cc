@@ -96,7 +96,7 @@ INSTALLED_APPS = (
     'cc.apps.cc_messages',
     'cc.apps.content',
     'cc.apps.tracking',
-    'cc.apps.cc',          # register cc apps to get the template tags
+    'cc.apps.main',        # register main apps to get the template tags
 )
 
 # disable email for SuspiciousOperation http://stackoverflow.com/a/19534738/2527433
@@ -228,7 +228,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
     'delete_old_content_schedule': {
-        'task': 'cc.apps.cc.tasks.delete_old_content',
+        'task': 'cc.apps.main.tasks.delete_old_content',
         'schedule': crontab(minute=0, hour=0), # once per day at midnight
     },   
 }
