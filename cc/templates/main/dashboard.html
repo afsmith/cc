@@ -4,9 +4,37 @@
 {% block meta_title %}{% trans "Dashboard" %}{% endblock %}
 {% block content %}
 <div class="row">
-    <div class="span6 offset3">
-        <h2>{% trans "CC Dashboard" %}</h2>
-        <p class="lead">{% trans "Hey, good to see you. We really believe using kneto you'll close more deals. Thanks for giving it a shot, and if we can help, just send us a mail." %}</p> 
+    <div class="span6">
+        <h3>{% trans "Priority call list" %}</h3>
+        <table class="table table-bordered table-hovered report_table">
+            <tr class="success">
+                <th>{% trans "Sold" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Subject" %}</th>
+            </tr>
+
+            {% for row in call_list %}
+            <tr id="">
+                <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
+                <td>{{ row.status }}</td>
+                <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.subject }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div class="span6">
+    </div>
+
+
+    <div class="span6 offset3" style="padding-top:20px">
+        <!--h2>{% trans "CC Dashboard" %}</h2>
+        <p class="lead">{% trans "Hey, good to see you. We really believe using kneto you'll close more deals. Thanks for giving it a shot, and if we can help, just send us a mail." %}</p-->
 
         <a href="{% url 'send' %}" class="btn btn-large btn-success pull-left">{% trans "Send offers" %}</a>
         <a href="{% url 'report_index' %}" class="btn btn-large btn-success pull-right">{% trans "View reports" %}</a>

@@ -83,7 +83,7 @@ def get_status_color(points):
     '''
     if points < 5:
         return 'Red'
-    elif point < 11:
+    elif points < 11:
         return 'Yellow'
     else:
         return 'Green'

@@ -87,6 +87,13 @@ def dictfetchall(cursor):
     ]
 
 
+def sql(queryset):
+    '''
+    Returns the raw SQL of the queryset
+    '''
+    return queryset.query.__str__()
+
+
 def format_dbtime(time_from_db):
     '''
     Format time from second to HH:MM:SS format
@@ -98,6 +105,16 @@ def format_dbtime(time_from_db):
     m, s = divmod(time_in_second, 60)
     h, m = divmod(m, 60)
     return '{0:02.0f}:{1:02.0f}:{2:04.1f}'.format(h, m, s)
+
+def get_hours_until_now(datetime_obj):
+    # get now object
+    now_obj = datetime.datetime.now()
+    # get timedelta difference
+    diff = now_obj - datetime_obj
+    # calculate the diff in h, m, s
+    m, s = divmod(diff.days * 86400 + diff.seconds, 60)
+    h, m = divmod(m, 60)
+    return h
 
 # ----------------- Random keys ----------------- #
 

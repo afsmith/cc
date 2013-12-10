@@ -6,7 +6,7 @@ from django.views.decorators import http as http_decorators
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from .services import validate_request
+from .services import *
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession, TrackingEvent, ClosedDeal
 from cc.libs.utils import format_dbtime
@@ -47,40 +47,12 @@ def report_detail(request, message_id):
     )
 
     # get log data group by participant
-    log_groupby_user = (
-        TrackingEvent.objects
-        .filter(tracking_session__message=message_id)
-        .values(
-            'tracking_session__participant',
-            'tracking_session__participant__email',
-        )
-        .annotate(
-            total_time=Sum('total_time'),
-            ip_count=Count('tracking_session__client_ip', distinct=True),
-            device_count=Count('tracking_session__device', distinct=True),
-            visit_count=Count('id'),
-            max_date=Max('tracking_session__created_at'),
-        )
-        .order_by()
-    )
-
-    for qs in log_groupby_user:
-        # check if there is closed deal exists
-        qs['closed_deal'] = ClosedDeal.objects.filter(
-            message=message_id,
-            participant=qs['tracking_session__participant']
-        ).exists()
-        # calculate the actual visit count (the above is 1 per page)
-        qs['visit_count'] /= this_message.files.all()[0].pages_num
-        # format time
-        qs['total_time'] = format_dbtime(qs['total_time'])
-    
-    #print log_groupby_user.query.__str__()
+    tracking_data = get_tracking_data_group_by_recipient(this_message)
     
     return {
         'this_message': this_message,
         'messages': all_messages,
-        'log_groupby_user': log_groupby_user
+        'log_groupby_user': tracking_data
     }
 
 
