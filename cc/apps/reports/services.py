@@ -89,11 +89,11 @@ def get_call_list(user):
             point_visit = algorithm.calculate_point(2, row['visit_count'])
             hours_last_visit = get_hours_until_now(row['max_date'])
             point_hours = algorithm.calculate_point(3, hours_last_visit)
-            #print percent, point_completion, point_visit, hours_last_visit, point_hours
+            print percent, point_completion, point_visit, hours_last_visit, point_hours
 
             total_point = point_completion + point_visit + point_hours
             status_color = algorithm.get_status_color(total_point)
-            #print total_point, status_color
+            print total_point, status_color, row['tracking_session__participant__email']
 
             # add a row to call list
             call_list.append({

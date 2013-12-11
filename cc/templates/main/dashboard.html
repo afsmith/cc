@@ -6,7 +6,7 @@
 <div class="row">
     <div class="span6">
         <h3>{% trans "Priority call list" %}</h3>
-        <table class="table table-bordered table-hovered report_table">
+        <table class="table table-bordered">
             <tr class="success">
                 <th>{% trans "Sold" %}</th>
                 <th>{% trans "Status" %}</th>
@@ -18,7 +18,13 @@
             {% for row in call_list %}
             <tr id="">
                 <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
-                <td>{{ row.status }}</td>
+                <td>{% if row.status == 'Green' %}
+                    <span class="badge badge-success"><i class="icon-white icon-ok"></i></span>
+                {% elif row.status == 'Yellow' %}
+                    <span class="badge badge-warning"><i class="icon-white icon-asterisk"></i></span>
+                {% elif row.status == 'Red' %}
+                    <span class="badge badge-important"><i class="icon-white icon-remove"></i></span>
+                {% endif %}</td>
                 <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
                 <td>{{ row.email }}</td>
                 <td>{{ row.subject }}</td>
