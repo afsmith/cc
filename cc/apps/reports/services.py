@@ -78,6 +78,7 @@ def get_call_list(user):
     call_list = []
     messages = Message.objects.filter(owner=user)
     for message in messages:
+        # get tracking data
         tracking_data = get_tracking_data_group_by_recipient(message)
         for row in tracking_data:
             percent = get_completion_percentage(
@@ -94,6 +95,7 @@ def get_call_list(user):
             status_color = algorithm.get_status_color(total_point)
             #print total_point, status_color
 
+            # add a row to call list
             call_list.append({
                 'total_point': total_point,
                 'closed_deal': row['closed_deal'],
@@ -102,7 +104,23 @@ def get_call_list(user):
                 'email': row['tracking_session__participant__email'],
                 'subject': message.subject,
             })
+        
+        # get list of people didn't look at the offer
+        uninterested_recipients = CUser.objects.filter(
+            receivers=message, 
+            trackingsession__isnull=True
+        )
+        for rec in uninterested_recipients:
+            # add a row to call list
+            call_list.append({
+                'total_point': 0,
+                'closed_deal': False,
+                'status': algorithm.get_status_color(0),
+                'date': None,
+                'email': rec.email,
+                'subject': message.subject,
+            })
     
     # sort the call_list based on total_point
-    call_list = sorted(call_list, key=lambda k: k['total_point']) 
+    call_list = sorted(call_list, key=lambda k: k['total_point'], reverse=True) 
     return call_list
