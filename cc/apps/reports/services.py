@@ -100,8 +100,8 @@ def get_call_list(user):
                 'total_point': total_point,
                 'closed_deal': row['closed_deal'],
                 'status': status_color,
-                'date': row['max_date'],
                 'email': row['tracking_session__participant__email'],
+                'date': message.created_at,
                 'subject': message.subject,
             })
         
@@ -116,8 +116,8 @@ def get_call_list(user):
                 'total_point': 0,
                 'closed_deal': False,
                 'status': algorithm.get_status_color(0),
-                'date': None,
                 'email': rec.email,
+                'date': message.created_at,
                 'subject': message.subject,
             })
     

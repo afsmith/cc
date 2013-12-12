@@ -1,23 +1,23 @@
 {% extends 'base_template.html' %}
-{% load i18n %}
+{% load extras i18n staticfiles %}
 
 {% block meta_title %}{% trans "Dashboard" %}{% endblock %}
 {% block content %}
 <div class="row">
     <div class="span6">
         <h3>{% trans "Priority call list" %}</h3>
-        <table class="table table-bordered">
-            <tr class="success">
+        <table class="table table-bordered call_list_table">
+            <tr>
                 <th>{% trans "Sold" %}</th>
                 <th>{% trans "Status" %}</th>
-                <th>{% trans "Date" %}</th>
                 <th>{% trans "Email" %}</th>
+                <th>{% trans "Date" %}</th>
                 <th>{% trans "Subject" %}</th>
             </tr>
 
             {% for row in call_list %}
-            <tr id="">
-                <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
+            <tr class="call_row {% if row.closed_deal %}sold{% endif %}">
+                <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
                 <td>{% if row.status == 'Green' %}
                     <span class="badge badge-success"><i class="icon-white icon-ok"></i></span>
                 {% elif row.status == 'Yellow' %}
@@ -25,8 +25,8 @@
                 {% elif row.status == 'Red' %}
                     <span class="badge badge-important"><i class="icon-white icon-remove"></i></span>
                 {% endif %}</td>
-                <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
                 <td>{{ row.email }}</td>
+                <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
                 <td>{{ row.subject }}</td>
             </tr>
             {% endfor %}
@@ -46,4 +46,10 @@
         <a href="{% url 'report_index' %}" class="btn btn-large btn-success pull-right">{% trans "View reports" %}</a>
     </div>
 </div>
+{% endblock %}
+
+{% block js_scripts %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
