@@ -55,7 +55,8 @@
 {% endblock %}
 
 {% block js_scripts %}
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="{% static 'js/vendor/jquery.flot-1.8.2.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.flot.barnumbers.js' %}"></script>
     
     <script src="{% static 'js/report.js' %}"></script>
 {% endblock %}

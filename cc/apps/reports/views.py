@@ -117,12 +117,14 @@ def session_log(request):
 
 
 def _format_data_for_chart(log, this_message):
-    formatted_data = []
-    for p in list(log):
-        row = ['Page {}'.format(p[0]), p[1]/10.0]
-        if this_message.key_page and this_message.key_page == p[0]:
-            row.append('Key page: {}'.format(p[1]/10.0))
-        else:
-            row.append('{}'.format(p[1]/10.0))
-        formatted_data.append(row)
-    return formatted_data
+    values = []
+    labels = []
+    for idx, p in enumerate(list(log)):
+        values.append([idx, p[1]/10.0])
+        labels.append([idx, 'Page {}'.format(p[0])])
+
+    return {
+        'values': values,
+        'labels': labels,
+        'key_page': this_message.key_page
+    }

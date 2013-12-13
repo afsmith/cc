@@ -105,7 +105,7 @@ $(document).ready(function () {
                 if (resp.status === 'OK') {
                     editor.insertImage(welEditable, resp.url);    
                 } else {
-                    console.log('ERROR: ' + resp.message)
+                    log('ERROR: ' + resp.message)
                 }
             }
         });
@@ -232,7 +232,7 @@ $(document).ready(function () {
                 this.removeFile(file);
                 resetUploadForm();
                 renderUploadError(response.message);
-                console.log('Conversion error: ' + response.original_error);
+                log('Conversion error: ' + response.original_error);
 
                 $('.dz-error-mark').css('opacity', 1);
                 attachment_field.valid();

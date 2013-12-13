@@ -130,7 +130,7 @@ $(document).ready(function () {
                         windowUnloadHandler(session_id, is_iOS);    
                     }
                 } else {
-                    console.log('ERROR: ' + resp.message);
+                    log('ERROR: ' + resp.message);
                 }
             });
         };

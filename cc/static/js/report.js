@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var _drawChart,
+    var _drawBarChart,
         initDrawChart,
         this_message_id = $('#js_selectMessage').val();
 
@@ -9,50 +9,58 @@ $(document).ready(function () {
     });
 
     // draw chart function
-    _drawChart = function (json_data) {
-        var data,
+    _drawBarChart = function (json_data) {
+        var chart_data,
             options,
             chart;
 
-        if (json_data.length > 0) {
-            data = new google.visualization.DataTable();
-            data.addColumn({type: 'string', label: 'Page'});
-            data.addColumn({type: 'number', label: 'Total time'});
-            data.addColumn({type: 'string', role: 'annotation'});
-            data.addRows(json_data);
+        if (typeof json_data === 'object' && json_data.values.length > 0) {
+            log(json_data);
+ 
+            chart_data = [{
+                data: json_data.values,
+                bars: {
+                    show: true,
+                    barWidth: 0.5,
+                    align: 'center',
+                    //lineWidth: 1,
+                    showNumbers: true,
+                    numbers : {
+                        xAlign: function(x) { return x; },
+                        yAlign: function(y) { return y + 0.35; },
+                    },
+                },
+                highlightColor: '#AA4643',
+                color: '#AA4643'
+            }];
 
             options = {
                 title: 'Page graph',
-                hAxis: {
-                    gridlines: {
-                        count: json_data.length
-                    }
+                xaxis: {
+                    axisLabel: 'Page',
+                    axisLabelUseCanvas: true,
+                    ticks: json_data.labels,
                 },
-                vAxis: {
-                    format: '#s'
+                yaxis: {
+                    axisLabel: 'Total time',
+                    axisLabelUseCanvas: true,
                 },
-                series: {
-                    0: {
-                        type: 'bars'
-                    },
-                    1: {
-                        type: 'line',
-                        //color: 'grey', 
-                        lineWidth: 0,
-                        pointSize: 0,
-                        visibleInLegend: false
-                    }
+                grid: {
+                    //hoverable: true,
+                    //clickable: false,
+                    //borderWidth: 1
                 },
-                height: 500
+                legend: {
+                    show: true,
+                    labelBoxBorderColor: "none",
+                    position: "right"
+                },
             };
 
-            var view = new google.visualization.DataView(data);
-            view.setColumns([0, 1, 1, 2]);
-
-            chart = new google.visualization.ComboChart(document.getElementById('report_graph'));
-            chart.draw(view, options);
+            // draw chart and highlight the key page
+            $.plot($("#report_graph"), chart_data, options).highlight(0, json_data.key_page-1); // [0] = series 0, [1] = index of the column
         } else {
-            console.log('No data to display');
+            log('No data to display');
         }
     };
 
@@ -64,12 +72,11 @@ $(document).ready(function () {
             dataType: 'json',
             data: {'message_id': this_message_id},
         }).done(function (resp) {
-            _drawChart(resp);
+            _drawBarChart(resp);
         });
     };
-
     // display the chart on page init
-    google.load("visualization", "1", {packages:["corechart"], "callback" : initDrawChart});
+    initDrawChart();
 
     // close the deal when click checkbox
     $('.js_sold').click(function () {
@@ -175,7 +182,7 @@ $(document).ready(function () {
                 'session_id': this_session_id
             },
         }).done(function (resp) {
-            _drawChart(resp);
+            _drawBarChart(resp);
         });
     });
 
