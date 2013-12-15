@@ -58,24 +58,6 @@ def report_detail(request, message_id):
 
 @http_decorators.require_POST
 @ajax_request
-def summary_log(request):
-    message_id = request.POST.get('message_id')
-    this_message = get_object_or_404(Message, pk=message_id)
-
-    log_groupby_page_number = (
-        TrackingEvent.objects
-        .filter(tracking_session__message=message_id)
-        .values('page_number')
-        .annotate(total_time=Sum('total_time'))
-        .order_by('page_number')
-        .values_list('page_number', 'total_time')
-    )
-
-    return _format_data_for_chart(log_groupby_page_number, this_message)
-
-
-@http_decorators.require_POST
-@ajax_request
 def user_log(request):
     data = validate_request(request)
     if data:
@@ -100,32 +82,43 @@ def user_log(request):
 
 @http_decorators.require_POST
 @ajax_request
-def session_log(request):
+def report_drilldown(request):
     session_id = request.POST.get('session_id')
+    recipient_id = request.POST.get('recipient_id')
     message_id = request.POST.get('message_id')
+
     this_message = get_object_or_404(Message, pk=message_id)
 
-    log_groupby_page_number = (
-        TrackingEvent.objects
-        .filter(tracking_session=session_id)
-        .values('page_number')
-        .annotate(total_time=Sum('total_time'))
-        .order_by('page_number')
-        .values_list('page_number', 'total_time')
-    )
-    return _format_data_for_chart(log_groupby_page_number, this_message)
+    if session_id: # get session log
+        data = get_tracking_data_group_by_page_number(
+            tracking_session=session_id
+        )
+    elif recipient_id: # get recipient log
+        data = get_tracking_data_group_by_page_number(
+            tracking_session__participant=recipient_id,
+            tracking_session__message=message_id
+        )
+    else: # get summary log
+        data = get_tracking_data_group_by_page_number(
+            tracking_session__message=message_id
+        )
+    
+    return _format_data_for_chart(data, this_message)
 
 
 def _format_data_for_chart(log, this_message):
     values = []
     labels = []
+    combo = []
     for idx, p in enumerate(list(log)):
         values.append([idx, p[1]/10.0])
         labels.append([idx, 'Page {}'.format(p[0])])
+        combo.append(['Page {}'.format(p[0]), p[1]/10.0])
 
     return {
         'values': values,
         'labels': labels,
+        'combo': combo,
         'key_page': this_message.key_page,
         'subject': this_message.subject,
     }

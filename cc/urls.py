@@ -33,12 +33,10 @@ urlpatterns = patterns(
     # report
     url(r'^report/(?P<message_id>\d+)/$',
         'cc.apps.reports.views.report_detail', name='report_detail'),
-    url(r'^report/summary/$',
-        'cc.apps.reports.views.summary_log', name='summary_log'),
+    url(r'^report/drilldown/$',
+        'cc.apps.reports.views.report_drilldown', name='report_drilldown'),
     url(r'^report/user/$',
         'cc.apps.reports.views.user_log', name='user_log'),
-    url(r'^report/session/$',
-        'cc.apps.reports.views.session_log', name='session_log'),
     url(r'^report/$',
         'cc.apps.reports.views.report_index', name='report_index'),
 

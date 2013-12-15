@@ -42,7 +42,7 @@ $(document).ready(function () {
                 xAxis: {
                     categories: json_data.labels,
                     labels: {
-                        formatter: function() {
+                        formatter: function () {
                             return this.value[1];
                         }
                     }
@@ -57,11 +57,11 @@ $(document).ready(function () {
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: true,
-                            color: colors[1],
+                            color: '#000000',
                             style: {
                                 fontWeight: 'bold'
                             },
-                            formatter: function() {
+                            formatter: function () {
                                 return this.y +' s';
                             }
                         },
@@ -70,7 +70,7 @@ $(document).ready(function () {
                 },
                 colors: column_colors,
                 tooltip: {
-                    formatter: function() {
+                    formatter: function () {
                         return this.x[1] + ': ' + this.y +' seconds';
                     }
                 },
@@ -78,10 +78,7 @@ $(document).ready(function () {
                     showInLegend: false,
                     data: json_data.values,
                     pointWidth: bar_width,
-                }],
-                exporting: {
-                    enabled: false
-                }
+                }]
             };
 
             // draw chart
@@ -94,7 +91,7 @@ $(document).ready(function () {
     // fetch data from backend and draw column chart
     initDrawChart = function () {
         $.ajax({
-            url: '/report/summary/',
+            url: '/report/drilldown/',
             type: 'POST',
             dataType: 'json',
             data: {'message_id': this_message_id},
@@ -201,7 +198,7 @@ $(document).ready(function () {
     $('.report_table').on('click', '.log_row', function () {
         var this_session_id = $(this).prop('id').replace('js_session_', '');
         $.ajax({
-            url: '/report/session/',
+            url: '/report/drilldown/',
             type: 'POST',
             dataType: 'json',
             data: {

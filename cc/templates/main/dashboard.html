@@ -6,35 +6,43 @@
 <div class="row">
     <div class="span6">
         <h3>{% trans "Priority call list" %}</h3>
-        <table class="table table-bordered call_list_table">
-            <tr>
-                <th>{% trans "Sold" %}</th>
-                <th>{% trans "Status" %}</th>
-                <th>{% trans "Email" %}</th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Subject" %}</th>
-            </tr>
+        <div style="height:500px;overflow-y:scroll;">
+            <table class="table table-bordered call_list_table">
+                <tr>
+                    <th>{% trans "Sold" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Email" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Subject" %}</th>
+                </tr>
 
-            {% for row in call_list %}
-            <tr class="call_row {% if row.closed_deal %}sold{% endif %}">
-                <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
-                <td>{% if row.status == 'Green' %}
-                    <span class="badge badge-success"><i class="icon-white icon-ok"></i></span>
-                {% elif row.status == 'Yellow' %}
-                    <span class="badge badge-warning"><i class="icon-white icon-asterisk"></i></span>
-                {% elif row.status == 'Red' %}
-                    <span class="badge badge-important"><i class="icon-white icon-remove"></i></span>
-                {% endif %}</td>
-                <td>{{ row.email }}</td>
-                <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
-                <td>{{ row.subject }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+                {% for row in call_list %}
+                <tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
+                    <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
+                    <td>{% if row.status == 'Green' %}
+                        <span class="badge badge-success"><i class="icon-white icon-ok"></i></span>
+                    {% elif row.status == 'Yellow' %}
+                        <span class="badge badge-warning"><i class="icon-white icon-asterisk"></i></span>
+                    {% elif row.status == 'Red' %}
+                        <span class="badge badge-important"><i class="icon-white icon-remove"></i></span>
+                    {% endif %}</td>
+                    <td>{{ row.email }}</td>
+                    <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
+                    <td>{{ row.subject }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 
 
     <div class="span6">
+        <h3>{% trans "Summary report" %}</h3>
+        <div id="call_list_graph">
+            <p class="alert alert-info alert-block">
+                {% trans "Click on the row in the call list table to check the summary report" %}
+            </p>
+        </div>
     </div>
 
 
@@ -49,7 +57,7 @@
 {% endblock %}
 
 {% block js_scripts %}
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="{% static 'js/vendor/highcharts.js' %}"></script>
     
     <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

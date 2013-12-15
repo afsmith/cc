@@ -1,92 +1,86 @@
 $(document).ready(function () {
-    var _drawChart,
-        initDrawChart,
-        this_message_id = $('#js_selectMessage').val();
+    var _drawPieChart;
 
     // draw chart function
-    _drawChart = function (json_data) {
-        var data,
+    _drawPieChart = function (json_data) {
+        var chart_data,
             options,
-            chart;
+            colors = Highcharts.getOptions().colors,
+            len = json_data.values.length,
+            column_colors = [],
+            bar_width = Math.log(39 / len) * 80,
+            i = 0;
 
-        if (json_data.length > 0) {
-            data = new google.visualization.DataTable();
-            data.addColumn({type: 'string', label: 'Page'});
-            data.addColumn({type: 'number', label: 'Total time'});
-            data.addColumn({type: 'string', role: 'annotation'});
-            data.addRows(json_data);
+        if (typeof json_data === 'object' && len > 0) {
+            // change color for key page
+            for (i=0; i<len; i+=1) {
+                if (i === json_data.key_page - 1) {
+                    column_colors.push(colors[3]);
+                } else {
+                    column_colors.push(colors[2]);    
+                }
+            }
 
+            // create option
             options = {
-                title: 'Page graph',
-                hAxis: {
-                    gridlines: {
-                        count: json_data.length
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: json_data.subject,
+                },
+                plotOptions: {
+                    pie: {
+                        //allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            connectorColor: '#000000',
+                            format: '<b>{key}</b>: {point.percentage: .1f} %'
+                        },
                     }
                 },
-                vAxis: {
-                    format: '#s'
+                tooltip: {
+                    pointFormat: '{point.y:.1f} seconds - <b>{point.percentage:.1f}%</b>'
                 },
-                series: {
-                    0: {
-                        type: 'bars'
-                    },
-                    1: {
-                        type: 'line',
-                        //color: 'grey', 
-                        lineWidth: 0,
-                        pointSize: 0,
-                        visibleInLegend: false
-                    }
-                },
-                height: 500
+                series: [{
+                    showInLegend: false,
+                    data: json_data.combo,
+                }],
+                exporting: {
+                    enabled: false
+                }
             };
 
-            var view = new google.visualization.DataView(data);
-            view.setColumns([0, 1, 1, 2]);
-
-            chart = new google.visualization.ComboChart(document.getElementById('report_graph'));
-            chart.draw(view, options);
+            // draw chart
+            $('#call_list_graph').highcharts(options);
         } else {
-            log'No data to display');
+            $('#call_list_graph').html('<p class="alert alert-block">This recipient didn\'t look at your offer</p>')
         }
     };
 
-    // fetch data from backend and draw column chart
-    /*initDrawChart = function () {
-        $.ajax({
-            url: '/report/summary/',
-            type: 'POST',
-            dataType: 'json',
-            data: {'message_id': this_message_id},
-        }).done(function (resp) {
-            _drawChart(resp);
-        });
-    };*/
-
-    // display the chart on page init
-    //google.load("visualization", "1", {packages:["corechart"], "callback" : initDrawChart});
-
-
-    // click on email address cell
+    // click on each row
     $('.call_row').click(function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_id = this_row.prop('id'),
             id_pair = this_id.replace('row_', '').split('_'),
             message_id = id_pair[0],
-            user_id = id_pair[1],
-            all_log_rows = $('.js_log_' + this_id);
+            user_id = id_pair[1];
 
         $.ajax({
-            url: '/report/session/',
+            url: '/report/drilldown/',
             type: 'POST',
             dataType: 'json',
             data: {
-                'message_id': this_message_id,
-                'session_id': this_session_id
+                'message_id': message_id,
+                'recipient_id': user_id
             },
         }).done(function (resp) {
-            _drawChart(resp);
+            $('.call_row').removeClass('row_active');
+            _this.addClass('row_active');
+            _drawPieChart(resp);
         });
     });
 }); // end document ready

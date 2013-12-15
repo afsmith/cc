@@ -55,6 +55,18 @@ def get_tracking_data_group_by_recipient(message):
 
     return tracking_data
 
+def get_tracking_data_group_by_page_number(**kwargs):
+    tracking_data = (
+        TrackingEvent.objects
+        .filter(**kwargs)
+        .values('page_number')
+        .annotate(total_time=Sum('total_time'))
+        .order_by('page_number')
+        .values_list('page_number', 'total_time')
+    )
+
+    return tracking_data
+
 
 def get_completion_percentage(recipient_id, message):
     percent = 0
@@ -103,6 +115,8 @@ def get_call_list(user):
                 'email': row['tracking_session__participant__email'],
                 'date': message.created_at,
                 'subject': message.subject,
+                'recipient_id': row['tracking_session__participant'],
+                'message_id': message.id,
             })
         
         # get list of people didn't look at the offer
@@ -119,6 +133,8 @@ def get_call_list(user):
                 'email': rec.email,
                 'date': message.created_at,
                 'subject': message.subject,
+                'recipient_id': rec.id,
+                'message_id': message.id,
             })
     
     # sort the call_list based on total_point
