@@ -126,5 +126,6 @@ def _format_data_for_chart(log, this_message):
     return {
         'values': values,
         'labels': labels,
-        'key_page': this_message.key_page
+        'key_page': this_message.key_page,
+        'subject': this_message.subject,
     }

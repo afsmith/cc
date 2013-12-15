@@ -12,53 +12,80 @@ $(document).ready(function () {
     _drawBarChart = function (json_data) {
         var chart_data,
             options,
-            chart;
+            colors = Highcharts.getOptions().colors,
+            len = json_data.values.length,
+            column_colors = [],
+            bar_width = Math.log(39 / len) * 80, // HIEU's algorithm to set column width nicely
+            i = 0;
 
-        if (typeof json_data === 'object' && json_data.values.length > 0) {
-            log(json_data);
- 
-            chart_data = [{
-                data: json_data.values,
-                bars: {
-                    show: true,
-                    barWidth: 0.5,
-                    align: 'center',
-                    //lineWidth: 1,
-                    showNumbers: true,
-                    numbers : {
-                        xAlign: function(x) { return x; },
-                        yAlign: function(y) { return y + 0.35; },
-                    },
-                },
-                highlightColor: '#AA4643',
-                color: '#AA4643'
-            }];
+        if (typeof json_data === 'object' && len > 0) {
+            // change color for key page
+            for (i=0; i<len; i+=1) {
+                if (i === json_data.key_page - 1) {
+                    column_colors.push(colors[3]);
+                } else {
+                    column_colors.push(colors[2]);    
+                }
+            }
 
+            // create option
             options = {
-                title: 'Page graph',
-                xaxis: {
-                    axisLabel: 'Page',
-                    axisLabelUseCanvas: true,
-                    ticks: json_data.labels,
+                chart: {
+                    type: 'column'
                 },
-                yaxis: {
-                    axisLabel: 'Total time',
-                    axisLabelUseCanvas: true,
+                title: {
+                    text: json_data.subject,
                 },
-                grid: {
-                    //hoverable: true,
-                    //clickable: false,
-                    //borderWidth: 1
+                subtitle: {
+                    //text: 'Subject: '
                 },
-                legend: {
-                    show: true,
-                    labelBoxBorderColor: "none",
-                    position: "right"
+                xAxis: {
+                    categories: json_data.labels,
+                    labels: {
+                        formatter: function() {
+                            return this.value[1];
+                        }
+                    }
                 },
+                yAxis: {
+                    title: {
+                        text: 'Total time spent (seconds)'
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: colors[1],
+                            style: {
+                                fontWeight: 'bold'
+                            },
+                            formatter: function() {
+                                return this.y +' s';
+                            }
+                        },
+                        colorByPoint: true,
+                    }
+                },
+                colors: column_colors,
+                tooltip: {
+                    formatter: function() {
+                        return this.x[1] + ': ' + this.y +' seconds';
+                    }
+                },
+                series: [{
+                    showInLegend: false,
+                    data: json_data.values,
+                    pointWidth: bar_width,
+                }],
+                exporting: {
+                    enabled: false
+                }
             };
 
-            // draw chart and highlight the key page
-            $.plot($("#report_graph"), chart_data, options).highlight(0, json_data.key_page-1); // [0] = series 0, [1] = index of the column
+            // draw chart
+            $('#report_graph').highcharts(options);
         } else {
             log('No data to display');
         }
