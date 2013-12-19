@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'cc.apps.cc_messages',
     'cc.apps.content',
     'cc.apps.tracking',
+    'cc.apps.reports',
     'cc.apps.main',        # register main apps to get the template tags
 )
 

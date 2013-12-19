@@ -43,9 +43,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-45345264-2'
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER='andrew.smith@kneto.com'
-EMAIL_HOST_PASSWORD='rFUnDlfNA5l)[ncu\'IN6N.P!R'
-DEFAULT_FROM_EMAIL='cc@kneto.com'
+EMAIL_HOST_USER = 'andrew.smith@kneto.com'
+EMAIL_HOST_PASSWORD = 'rFUnDlfNA5l)[ncu\'IN6N.P!R'
+DEFAULT_FROM_EMAIL = 'cc@kneto.com'
 EMAIL_USE_TLS=True
 
 FABRIC = {}
