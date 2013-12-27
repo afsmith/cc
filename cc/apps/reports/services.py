@@ -8,6 +8,8 @@ from cc.apps.tracking.models import TrackingSession, TrackingEvent, ClosedDeal
 
 from cc.libs.utils import format_dbtime, get_hours_until_now
 
+from datetime import datetime
+
 
 def validate_request(request):
     message_id = request.POST.get('message_id')
@@ -140,3 +142,10 @@ def get_call_list(user):
     # sort the call_list based on total_point
     call_list = sorted(call_list, key=lambda k: k['total_point'], reverse=True) 
     return call_list
+
+
+def get_message_sent(user, period):
+    now = datetime.now()
+    if period == 'month':
+        m = Message.objects.filter(owner=user, created_at__month=now.month)
+        return m.count()
