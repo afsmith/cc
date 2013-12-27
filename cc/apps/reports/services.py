@@ -1,6 +1,7 @@
 from django.db.models import Sum, Count, Max
 
 from . import algorithm
+from .models import Bounce
 
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
@@ -8,7 +9,7 @@ from cc.apps.tracking.models import TrackingSession, TrackingEvent, ClosedDeal
 
 from cc.libs.utils import format_dbtime, get_hours_until_now
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def validate_request(request):
@@ -149,3 +150,30 @@ def get_message_sent(user, period):
     if period == 'month':
         m = Message.objects.filter(owner=user, created_at__month=now.month)
         return m.count()
+
+
+def get_bounce_list(user):
+    bounces = Bounce.objects.all()
+    result = []
+    for b in bounces:
+        # check if this is a receiver
+        try:
+            receiver = CUser.objects.get(email=b.email)
+        except CUser.DoesNotExist:
+            continue
+
+        # filter the message by the owner, receiver and sent time
+        m = Message.objects.filter(
+            owner=user,
+            receivers=receiver,
+            created_at__gt=(b.created_at + timedelta(hours=-1)),
+            created_at__lt=(b.created_at + timedelta(hours=3)),
+        )
+        if m:
+            # update the sender
+            b.sender = user
+            b.save()
+            result.append(b)
+        # TODO: there might be duplicate here between senders or sender who sends out a lot of emails.
+
+    return result

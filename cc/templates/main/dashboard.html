@@ -57,7 +57,13 @@
                 <th>{% trans "Fix" %}</th>
             </tr>
 
-            {% for row in bounces %}
+            {% for row in bounce_list %}
+            <tr>
+                <td>{{ row.email }}</td>
+                <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.reason }}</td>
+                <td></td>
+            </tr>
             {% endfor %}
         </table>
     </div>
