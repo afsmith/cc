@@ -231,7 +231,11 @@ CELERYBEAT_SCHEDULE = {
     'delete_old_content_schedule': {
         'task': 'cc.apps.main.tasks.delete_old_content',
         'schedule': crontab(minute=0, hour=0), # once per day at midnight
-    },   
+    },
+    'fetch_sendgrid_bounces_schedule': {
+        'task': 'cc.apps.reports.tasks.fetch_bounces',
+        'schedule': crontab(minute=0, hour=0), # once per day at midnight
+    },
 }
 
 ##############################################################################

@@ -7,7 +7,7 @@ from cc.apps.accounts.models import CUser
 class Bounce(models.Model):
     email = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
-    reason = models.CharField(max_length=255)
+    reason = models.TextField()
     sender = models.ForeignKey(CUser, null=True, blank=True)
     created_at = models.DateTimeField()
 
