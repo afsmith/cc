@@ -18,6 +18,7 @@ class Message(models.Model):
     notify_link_clicked = models.BooleanField(_('Notify link is clicked'))
     files = models.ManyToManyField(File, related_name='files')
     key_page = models.IntegerField(_('Key page'), null=True, blank=True)
+    link_text = models.CharField(_('Link text'), max_length=150, blank=True)
 
     owner = models.ForeignKey(CUser, related_name='owner', null=True)
     group = models.ForeignKey(auth_models.Group, null=True)

@@ -14,6 +14,8 @@ class MessageForm(forms.ModelForm):
     attachment = forms.IntegerField(
         label=_('Attachment'), widget=forms.HiddenInput
     )
+    to = forms.CharField()
+    signature = forms.CharField(required=False)
 
     class Meta:
         model = Message
@@ -23,7 +25,8 @@ class MessageForm(forms.ModelForm):
             'notify_email_opened',
             'notify_link_clicked',
             'message',
-            'key_page'
+            'key_page',
+            'link_text',
         ]
         exclude = ['receivers', 'owner', 'group', 'files']
 
@@ -31,15 +34,30 @@ class MessageForm(forms.ModelForm):
             'subject': forms.TextInput(attrs={'class': 'span6'}),
             'message': forms.Textarea(attrs={'class': 'span6'}),
             'key_page': forms.Select(choices=[('', '----------')]),
+            'link_text': forms.TextInput(attrs={
+                'class': 'span6',
+                'placeholder': _(
+                    'Add your link text '
+                    '(this will replace [link] in your message after you send it)'
+                )
+            })
         }
 
     def __init__(self, *args, **kwargs):
         super(MessageForm, self).__init__(*args, **kwargs)
-        # add To field as a text input, 1 is the order of the field
-        self.fields.insert(0, 'to', forms.CharField())
-        # add Signature field as a text input
-        self.fields.insert(6, 'signature', forms.CharField())
-        self.fields['signature'].required = False
+        # manually order the fields
+        self.fields.keyOrder = [
+            'to',
+            'subject',
+            'cc_me',
+            'notify_email_opened',
+            'notify_link_clicked',
+            'message',
+            'link_text',
+            'signature',
+            'attachment',
+            'key_page',
+        ]
 
 
     def clean_to(self):

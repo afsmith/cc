@@ -35,6 +35,16 @@ def _create_ocl_link(user, domain, message_id):
         domain, message_id, ocl.token
     )
 
+def _replace_link_text(message, ocl_link):
+    link_text = message.link_text
+    if link_text == '':
+        link_text = ocl_link
+
+    return message.message.replace(
+        '[link]',
+        '<a href="{0}">{1}</a>'.format(ocl_link, link_text)
+    )
+
 
 def create_ocl_and_send_message(message, domain):
     '''
@@ -45,14 +55,12 @@ def create_ocl_and_send_message(message, domain):
     for r in message.receivers.all():
         ocl_link = _create_ocl_link(r, domain, message.id)
         
+        # replace the token [link] with the actual OCL link
+        text = _replace_link_text(message, ocl_link)
+
+        # create tracking pixel
         tracking_pixel_src = '{}/track/email/{}/{}/'.format(
            domain, message.id, r.id
-        )
-
-        # replace the token [link] with the actual OCL link
-        text = message.message.replace(
-            '[link]',
-            '<a href="{0}">{0}</a>'.format(ocl_link)
         )
 
         send_templated_mail(
@@ -75,10 +83,7 @@ def create_ocl_and_send_message(message, domain):
         ocl_link = _create_ocl_link(message.owner, domain, message.id)
 
         # add OCL link to email text
-        text = message.message.replace(
-            '[link]',
-            '<a href="{0}">{0}</a>'.format(ocl_link)
-        )
+        text = _replace_link_text(message, ocl_link)
 
         # and send
         send_templated_mail(
