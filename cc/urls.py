@@ -61,6 +61,10 @@ urlpatterns = patterns(
     url(r'^verify/(\w+)/$', 
         'hunger.views.verify_invite', name='beta_verify_invite'),
     url(r'hunger', include('hunger.urls')),
+
+    # Sendgrid parse API endpoint
+    url(r'^sendgrid_parse/$',
+        'cc.apps.main.views.sendgrid_parse', name='sendgrid_parse'),
 )
 
 if settings.DEBUG:

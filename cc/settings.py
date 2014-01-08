@@ -167,6 +167,7 @@ HUNGER_ALWAYS_ALLOW_VIEWS = [
     'create_event',
     'close_deal',
     'home',
+    'sendgrid_parse',
 ]
 
 
@@ -180,7 +181,7 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 
 AUTH_USER_MODEL = 'accounts.CUser'
 ACCOUNT_ACTIVATION_DAYS = 7
-DEFAULT_FROM_EMAIL = 'admin@cc.kneto.com'
+DEFAULT_FROM_EMAIL = 'cc@kneto.com'
 
 AUTHENTICATION_BACKENDS = (
     'cc.apps.accounts.auth.CUserModelBackend',
@@ -230,10 +231,6 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERYBEAT_SCHEDULE = {
     'delete_old_content_schedule': {
         'task': 'cc.apps.main.tasks.delete_old_content',
-        'schedule': crontab(minute=0, hour=0), # once per day at midnight
-    },
-    'fetch_sendgrid_bounces_schedule': {
-        'task': 'cc.apps.reports.tasks.fetch_bounces',
         'schedule': crontab(minute=0, hour=0), # once per day at midnight
     },
 }

@@ -152,28 +152,32 @@ def get_message_sent(user, period):
         return m.count()
 
 
+def save_sendgrid_bounce_from_request(post):
+    # http://sendgrid.com/docs/API_Reference/Webhooks/parse.html
+    headers = post.get('headers')
+    subject = post.get('subject')
+    from_email = post.get('from')
+    dkim = post.get('dkim')
+    text = post.get('text')
+
+    # parse email from headers, TODO
+    email = ''
+    reason = 'Blah'
+    msg = Message.objects.filter(
+        subject=subject,
+        owner__email=from_email,
+        #receivers=receiver,
+        #created_at__gt=(b.created_at + timedelta(hours=-1)),
+        #created_at__lt=(b.created_at + timedelta(hours=3)),
+    )
+
+    if len(msg) == 1:
+        return Bounce.objects.create(email=email, reason=reason, message=msg[0])
+    else:
+        # problem here, there is no message like this or many like this
+        print msg
+        return False
+        
+
 def get_bounce_list(user):
-    bounces = Bounce.objects.all()
-    result = []
-    for b in bounces:
-        # check if this is a receiver
-        try:
-            receiver = CUser.objects.get(email=b.email)
-        except CUser.DoesNotExist:
-            continue
-
-        # filter the message by the owner, receiver and sent time
-        m = Message.objects.filter(
-            owner=user,
-            receivers=receiver,
-            created_at__gt=(b.created_at + timedelta(hours=-1)),
-            created_at__lt=(b.created_at + timedelta(hours=3)),
-        )
-        if m:
-            # update the sender
-            b.sender = user
-            b.save()
-            result.append(b)
-        # TODO: there might be duplicate here between senders or sender who sends out a lot of emails.
-
-    return result
+    return Bounce.objects.filter(message__owner=user)
