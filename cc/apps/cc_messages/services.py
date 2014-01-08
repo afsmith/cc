@@ -9,6 +9,7 @@ from cc.apps.tracking.models import TrackingLog
 
 from templated_email import send_templated_mail
 import datetime
+import json
 
 
 def get_message(id, user):
@@ -42,7 +43,7 @@ def _replace_link_text(message, ocl_link):
 
     return message.message.replace(
         '[link]',
-        '<a href="{0}">{1}</a>'.format(ocl_link, link_text)
+        '<a href='{0}'>{1}</a>'.format(ocl_link, link_text)
     )
 
 
@@ -72,6 +73,14 @@ def create_ocl_and_send_message(message, domain):
                 'text': text,
                 'tracking_pixel_src': tracking_pixel_src
             },
+            headers={
+                'X-SMTPAPI': json.dumps({
+                    'unique_args': {
+                        'cc_message_id': message.id, 
+                        'domain': domain
+                    }
+                })
+            }
         )
 
         # add recipient email address to the list
