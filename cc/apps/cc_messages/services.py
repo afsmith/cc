@@ -43,7 +43,7 @@ def _replace_link_text(message, ocl_link):
 
     return message.message.replace(
         '[link]',
-        '<a href='{0}'>{1}</a>'.format(ocl_link, link_text)
+        '<a href="{0}">{1}</a>'.format(ocl_link, link_text)
     )
 
 
