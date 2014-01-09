@@ -18,6 +18,9 @@ urlpatterns = patterns(
     url(r'^upload_image/$', 'cc.apps.content.views.upload_image', name='upload_image'),
     url(r'^view/(?P<message_id>\d+)/$',
         'cc.apps.cc_messages.views.view_message', name='view_message'),
+
+    url(r'^flex/(?P<message_id>\d+)/$',
+        'cc.apps.cc_messages.views.view_message_flex', name='view_message_flex'),
     
     url(r'^remove_file/(?P<file_id>\d+)$',
         'cc.apps.content.views.remove_file', name='remove_file'),

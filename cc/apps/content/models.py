@@ -212,17 +212,8 @@ class File(models.Model):
         :return: URL
         :rtype: ``str``
         """
-        path = os.path.join(settings.CONTENT_AVAILABLE_DIR, self.orig_file_path)
+        path = os.path.join(settings.CONTENT_UPLOADED_DIR, self.orig_file_path)
         return urlparse.urljoin(settings.MEDIA_URL, path)
-
-    @property
-    def download_url(self):
-        """Returns URL to the original version of the file with original name
-
-        :return: URL
-        :rtype: ``str``
-        """
-        return "/content/file/%d/download/" % self.pk
 
     @property
     def view_url(self):
@@ -284,18 +275,8 @@ class File(models.Model):
         return '%s_%s.%s' % (self.key, self.subkey_thumbnail, 'jpg')
 
     @property
-    def thumbnail_url(self):
-        path = os.path.join(settings.CONTENT_THUMBNAILS_DIR, self.thumbnail_file_path)
-        return urlparse.urljoin(settings.MEDIA_URL, path)
-
-    @property
     def preview_file_path(self):
         return '%s_%s.%s' % (self.key, self.subkey_preview, 'jpg')
-
-    @property
-    def preview_url(self):
-        path = os.path.join(settings.CONTENT_PREVIEWS_DIR, self.preview_file_path)
-        return urlparse.urljoin(settings.MEDIA_URL, path)
 
     def __repr__(self):
         return u'<File[%s]: %s; type=%s; status=%s>' % (self.id, repr(self.orig_filename),

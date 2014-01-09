@@ -91,3 +91,36 @@ def view_message(request, message_id=None):
         }
     else:
         return redirect(reverse('home'))
+
+
+@render_to('main/view_message_flex.html')
+def view_message_flex(request, message_id=None):
+    token = request.GET.get('token')
+    if token:
+        ocl_token = verify_ocl_token(token)
+        if not ocl_token:
+            return {
+                'ocl_expired': True
+            }
+        message = get_message(message_id, ocl_token.user)
+
+        # check if owner is checking message
+        is_owner_viewing = (ocl_token.user == message.owner)
+
+        # there is only 1 file per message for now so return that file
+        file = message.files.all()[0]
+        original_url = file.original_url
+
+        # notify the sender if "notify when link clicked" option is on
+        if not is_owner_viewing:
+            send_notification_email(2, message, ocl_token.user)
+
+        return {
+            'message': message,
+            'original_url': original_url,
+            'token': token,
+            'ocl_user': ocl_token.user,
+            'is_owner_viewing': is_owner_viewing
+        }
+    else:
+        return redirect(reverse('home'))

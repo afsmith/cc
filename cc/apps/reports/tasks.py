@@ -6,7 +6,7 @@ from celery.decorators import task
 
 
 @task
-def fetch_bounces():
+def fetch_bounces_OLD():
     '''
     Periodical task to fetch bounces from Sendgrid
     '''
