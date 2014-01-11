@@ -37,3 +37,9 @@ Other dependancies
 - lesscss
 
 Tips: in OSX use homebrew: `brew install redis imagemagick ghostscript`
+
+
+How to deploy
+-------------
+cd cc/
+fab deploy -R staging
