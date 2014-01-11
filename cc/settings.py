@@ -271,6 +271,8 @@ FABRIC_GLOBAL = {
     'VIRTUALENV_HOME':  '/opt/kneto',
 }
 
+FLEXPAPER_KEY = '$ccd1b1d26f39cf5ec44'
+
 
 ##############################################################################
 # Move local settings to bottom so any setting can be overriden
