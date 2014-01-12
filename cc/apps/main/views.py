@@ -3,8 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import decorators as auth_decorators
 
 from cc.apps.reports.services import *
+from cc.libs.utils import get_domain
 
 from annoying.decorators import render_to
+import json
 
 
 @auth_decorators.login_required
@@ -23,8 +25,16 @@ def dashboard(request):
 
 @csrf_exempt
 def sendgrid_parse(request):
-    if request.POST.get('headers') and request.POST.get('subject'):
-        save_sendgrid_bounce_from_request(request.POST)
+    if request.body:
+        json_req = json.loads(request.body)
+        # filter the request
+        if (
+            isinstance(json_req, list) and len(json_req) > 0
+            and json_req[0].get('smtp-id')
+            and json_req[0].get('cc_message_id')
+            and json_req[0].get('domain') == get_domain(request)
+        ):
+            save_sendgrid_bounce_from_request(json_req)
 
     # response with status 200 no matter what
     return HttpResponse(status=200)

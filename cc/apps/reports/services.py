@@ -152,32 +152,29 @@ def get_message_sent(user, period):
         return m.count()
 
 
-def save_sendgrid_bounce_from_request(post):
+def save_sendgrid_bounce_from_request(json_request):
     # http://sendgrid.com/docs/API_Reference/Webhooks/parse.html
-    headers = post.get('headers')
-    subject = post.get('subject')
-    from_email = post.get('from')
-    dkim = post.get('dkim')
-    text = post.get('text')
+    '''
+    Example request
+    [{u'status': u'5.1.1', u'smtp-id': u'<20140112225528.93299.71634@HMacPro.local>', u'sg_event_id': u'BJ7ASXa6RfOSV8Am2ydBiA', u'timestamp': 1389567336, u'domain': u'http://localhost:8000', u'event': u'bounce', u'reason': u"550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. Learn more at http://support.google.com/mail/bin/answer.py?answer=6596 ds9si14897314obc.21 - gsmtp ", u'cc_message_id': 40, u'type': u'bounce', u'email': u'hieu12347586q33@gmail.com'}]
+    '''
+    for req in json_request:
+        event_type = req.get('event')
+        domain = req.get('domain')
+        smtp_id = req.get('smtp-id')
+        cc_message_id = req.get('cc_message_id')
+        email = req.get('email')
+        reason = req.get('reason')
 
-    # parse email from headers, TODO
-    email = ''
-    reason = 'Blah'
-    msg = Message.objects.filter(
-        subject=subject,
-        owner__email=from_email,
-        #receivers=receiver,
-        #created_at__gt=(b.created_at + timedelta(hours=-1)),
-        #created_at__lt=(b.created_at + timedelta(hours=3)),
-    )
+        if event_type in ['bounce', 'dropped']:
+            msg = Message.objects.get(pk=cc_message_id)
+            return Bounce.objects.create(
+                email=email,
+                reason=reason,
+                message=msg,
+                event_type=event_type
+            )
 
-    if len(msg) == 1:
-        return Bounce.objects.create(email=email, reason=reason, message=msg[0])
-    else:
-        # problem here, there is no message like this or many like this
-        print msg
-        return False
-        
 
 def get_bounce_list(user):
     return Bounce.objects.filter(message__owner=user)
