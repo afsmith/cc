@@ -490,6 +490,7 @@ def restart():
     else:
         start_args = (env.proj_name, env.proj_name)
         sudo("supervisorctl start %s:gunicorn_%s" % start_args)
+    sudo("supervisorctl restart celeryd")
 
 @roles()
 @task
