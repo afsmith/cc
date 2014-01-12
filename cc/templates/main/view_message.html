@@ -12,37 +12,48 @@
         {% trans "This link is expired. Please request another link from the sender." %}
     </p>
 {% else %}
-    <div id="message_carousel" class="carousel slide span9 center">
-        <!-- Carousel items -->
-        <div class="carousel-inner">
-            {% for p in page_list %}
-                <div class="item {% if forloop.counter0 == 0 %}active{% endif %}">
-                    <img src="{{ p }}" alt="">
-                </div>
-            {% endfor %}
-        </div>
-        
-        <!-- Carousel nav -->
-        {% if page_list|length > 1 %}
-            <a class="carousel-control left" href="#message_carousel" data-slide="prev">&lsaquo;</a>
-            <a class="carousel-control right" href="#message_carousel" data-slide="next">&rsaquo;</a>
-        {% endif %}
-    </div>
+    <div id="message_viewer" class="flexpaper_viewer"></div>
 {% endif %}
 
 {% endblock %}
 
+
+{% block additional_css %}
+    <link rel="stylesheet" href="{% static 'css/vendor/flexpaper.css' %}">
+{% endblock %}
+
 {% block js_scripts %}
-    {% if not ocl_expired and not is_owner_viewing %}
-    <script type="text/javascript">
-        var message_data = {
-            message_id: {{ message.id }},
-            user_id: {{ ocl_user.id }},
-            page_count: {{ page_list|length }},
-            token: '{{ token }}'
-        };
+    <script src="{% static 'js/vendor/flexpaper/jquery.extensions.min.js' %}"></script>
+    <script src="{% static 'js/vendor/flexpaper/flexpaper.js' %}"></script>
+
+    <script>
+        {% if not ocl_expired and not is_owner_viewing %}
+            CC_GLOBAL.message_data = {
+                message_id: {{ message.id }},
+                user_id: {{ ocl_user.id }},
+                page_count: {{ page_count }},
+                token: '{{ token }}'
+            };
+        {% endif %}
+
+        $('#message_viewer').FlexPaperViewer({ 
+            config : {
+                PDFFile: '{{ original_url }}',
+                
+                Scale: 0.8,
+
+                ViewModeToolsVisible: true,
+                ZoomToolsVisible: true,
+                NavToolsVisible: true,
+                CursorToolsVisible: true,
+                SearchToolsVisible: true,
+
+                jsDirectory: "{% static 'js/vendor/flexpaper/' %}",
+                localeDirectory: "{% static 'js/locale/flexpaper/' %}",
+                key: "{% settings_value 'FLEXPAPER_KEY' %}"
+            }   
+        });
     </script>
-    {% endif %}
 
     <script src="{% static 'js/view_message.js' %}"></script>
 {% endblock %}

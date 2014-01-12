@@ -53,7 +53,7 @@ def send_message(request):
 
 @ensure_csrf_cookie
 @render_to('main/view_message.html')
-def view_message(request, message_id=None):
+def OLD_view_message(request, message_id=None):
     token = request.GET.get('token')
     if token:
         ocl_token = verify_ocl_token(token)
@@ -93,8 +93,9 @@ def view_message(request, message_id=None):
         return redirect(reverse('home'))
 
 
-@render_to('main/view_message_flex.html')
-def view_message_flex(request, message_id=None):
+@ensure_csrf_cookie
+@render_to('main/view_message.html')
+def view_message(request, message_id=None):
     token = request.GET.get('token')
     if token:
         ocl_token = verify_ocl_token(token)
@@ -117,6 +118,7 @@ def view_message_flex(request, message_id=None):
 
         return {
             'message': message,
+            'page_count': file.pages_num,
             'original_url': original_url,
             'token': token,
             'ocl_user': ocl_token.user,

@@ -32,7 +32,7 @@ class UsersLiveTest(LiveServerTestCase):
         password_field.send_keys(Keys.RETURN)
 
         body = self.browser.find_element_by_tag_name('body')
-        self.assertIn('Hey, good to see you.', body.text)
+        self.assertIn('Priority call list', body.text)
 
     def test_login_and_click_on_send(self):
         pass

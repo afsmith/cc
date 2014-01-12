@@ -28,12 +28,12 @@ def _test_view_message_tracking_time(self, go_to_url):
 
     # wait for 5 sec and navigate to next page
     time.sleep(5)
-    self.browser.find_element_by_class_name('right').click()
+    self.browser.find_element_by_class_name('flexpaper_bttnPrevNext').click()
 
     for i in range(5):
         # stay in page 2, 3, 4, 5, 6 for 1 sec
         time.sleep(1)
-        self.browser.find_element_by_class_name('right').click()
+        self.browser.find_element_by_class_name('flexpaper_bttnPrevNext').click()
 
     # then go to Google to close the session
     self.browser.get(go_to_url)
@@ -48,7 +48,7 @@ def _test_view_message_tracking_time(self, go_to_url):
         tt = TrackingEvent.objects.get(page_number=i).total_time / 10
         pv = TrackingEvent.objects.get(page_number=i).page_view
         if i == 1:
-            self.assertIn(tt, [5, 6]) # 5-6 sec
+            self.assertIn(tt, [4, 5]) # 4-6 sec
             self.assertEqual(pv, 1)
         elif i == 7:
             self.assertEqual(tt, 0) # 0 sec
@@ -80,6 +80,7 @@ class ViewMessageLiveTestOnFirefox(LiveServerTestCase):
 
     def test_view_message_then_external_url_tracking_time(self):
         _test_view_message_tracking_time(self, 'http://google.com')
+
 
 class ViewMessageLiveTestOnSafari(LiveServerTestCase):
     fixtures = ['view_message.json']
