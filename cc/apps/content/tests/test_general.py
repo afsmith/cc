@@ -114,7 +114,7 @@ class ImportFileTest(ClientTestCase):
         f = self._get_fh()
         resp = c.post(self.url, {'file': f})
         json_resp = json.loads(resp.content)
-        self.assertEquals(json_resp.get('page_count'), -1)
+        self.assertEquals(json_resp.get('page_count'), 7)
         f.close()
 
     #

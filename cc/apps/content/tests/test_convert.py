@@ -131,24 +131,6 @@ class ConvertTest(TestCase):
         conv.convert()
         self.assertEquals(file.status, File.STATUS_AVAILABLE)
 
-    def test_pdf_files_are_converted_using_mocked_command(self):
-        file = self._create_file('foo.pdf', File.TYPE_PDF)
-        conv = convert.PDFConverter(file, storage.default_storage, FakeLogger())
-        conv._convert_preview = lambda: None
-        conv._convert_thumbnail = lambda: None
-        conv.convert()
-        self.assertEquals(file.status, File.STATUS_AVAILABLE)
-
-    def test_can_recognize_errors_in_pdf_converter(self):
-        file = self._create_file('foo.pdf', File.TYPE_PDF)
-        # FAIL is a magic flag for mocked converter which causes it to fail
-        # like the original converter (pdftohtml).
-        file.subkey_orig = file.subkey_orig[-4] + 'FAIL'
-        file.save()
-        conv = convert.PDFConverter(file, storage.default_storage, FakeLogger())
-        self.assertRaises(convert.ConversionError, conv.convert)
-        self.assertEquals(file.status, File.STATUS_INVALID)
-
     def _create_file(self, name, type):
         file = File(orig_filename=name, type=type)
         file.save()
