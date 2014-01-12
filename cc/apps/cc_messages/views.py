@@ -110,7 +110,6 @@ def view_message(request, message_id=None):
 
         # there is only 1 file per message for now so return that file
         file = message.files.all()[0]
-        original_url = file.original_url
 
         # notify the sender if "notify when link clicked" option is on
         if not is_owner_viewing:
@@ -118,8 +117,7 @@ def view_message(request, message_id=None):
 
         return {
             'message': message,
-            'page_count': file.pages_num,
-            'original_url': original_url,
+            'file': file,
             'token': token,
             'ocl_user': ocl_token.user,
             'is_owner_viewing': is_owner_viewing

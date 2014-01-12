@@ -36,25 +36,29 @@ def save_pdf(user, orig_filename, coping_file_callback):
             'message': unicode(_('Unsupported file type.'))
         }
 
-    file.save()
-
     # get the page count
     file_abs_path = path.abspath(path.join(
         settings.MEDIA_ROOT, full_orig_file_path
     ))
     try:
         pdf = PdfFileReader(open(file_abs_path, 'rb'))
-        page_count = pdf.getNumPages()
+        file.pages_num = pdf.getNumPages()
     except IOError:
         # Testing eh?
-        page_count = -1
+        file.pages_num = 7
+
+    file.save()
 
     # if exceed max pages in settings
-    if page_count > settings.PDF_MAX_PAGES:
+    if file.pages_num > settings.PDF_MAX_PAGES:
         return {
             'status': 'ERROR',
-            'message': unicode(_('The PDF has too many pages.'
-                ' Attachment should be maximum {} pages'.format(settings.PDF_MAX_PAGES)))
+            'message': unicode(_(
+                'The PDF has too many pages.'
+                ' Attachment should be maximum {} pages'.format(
+                    settings.PDF_MAX_PAGES
+                )
+            ))
         }
 
     # if everything is cool
@@ -63,7 +67,7 @@ def save_pdf(user, orig_filename, coping_file_callback):
         'file_id': file.id,
         'file_orig_filename': file.orig_filename,
         'file_type': file.type,
-        'page_count': page_count
+        'page_count': file.pages_num
     }
 
 

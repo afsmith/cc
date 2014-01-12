@@ -219,18 +219,12 @@ class File(models.Model):
     def view_url(self):
         """Returns URL to the converted version of the file.
 
-        In case of Scorm files, returned URL points to the scorm player.
-
         :return: URL
         :rtype: ``str``
         """
-
-        if self.orig_filename.rpartition('.')[2].lower() in CONVERSION_EXCLUSIONS:
-            path = os.path.join(settings.CONTENT_UPLOADED_DIR, self.orig_file_path)
-            return urlparse.urljoin(settings.MEDIA_URL, path)
-        else:
-            path = os.path.join(settings.CONTENT_AVAILABLE_DIR, self.conv_file_path)
-            return urlparse.urljoin(settings.MEDIA_URL, path)
+    
+        path = os.path.join(settings.CONTENT_AVAILABLE_DIR, self.conv_file_path)
+        return urlparse.urljoin(settings.MEDIA_URL, path)
 
     @property
     def ext(self):
@@ -264,7 +258,7 @@ class File(models.Model):
             self.TYPE_MSDOC: 'doc',
             self.TYPE_MSPPT: 'ppt',
             self.TYPE_SCORM: 'zip',
-            self.TYPE_PDF: 'pdf',
+            self.TYPE_PDF: 'swf',
             self.TYPE_HTML: 'html',
         }
         ext = type_to_ext[self.type]

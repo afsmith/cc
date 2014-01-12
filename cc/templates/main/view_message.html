@@ -31,26 +31,28 @@
             CC_GLOBAL.message_data = {
                 message_id: {{ message.id }},
                 user_id: {{ ocl_user.id }},
-                page_count: {{ page_count }},
+                page_count: {{ file.pages_num }},
                 token: '{{ token }}'
             };
         {% endif %}
 
         $('#message_viewer').FlexPaperViewer({ 
             config : {
-                PDFFile: '{{ original_url }}',
+                PDFFile: '{{ file.original_url }}',
+                SwfFile: escape('{{ file.view_url }}'),
                 
-                Scale: 0.8,
+                jsDirectory: "{% static 'js/vendor/flexpaper/' %}",
+                localeDirectory: "{% static 'js/locale/flexpaper/' %}",
+                key: "{% settings_value 'FLEXPAPER_KEY' %}",
 
+                Scale: 0.8,
+                RenderingOrder: 'html5,flash',
+                InitViewMode : 'Portrait',
                 ViewModeToolsVisible: true,
                 ZoomToolsVisible: true,
                 NavToolsVisible: true,
                 CursorToolsVisible: true,
                 SearchToolsVisible: true,
-
-                jsDirectory: "{% static 'js/vendor/flexpaper/' %}",
-                localeDirectory: "{% static 'js/locale/flexpaper/' %}",
-                key: "{% settings_value 'FLEXPAPER_KEY' %}"
             }   
         });
     </script>
