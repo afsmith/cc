@@ -26,6 +26,9 @@ $(document).ready(function () {
                 chart: {
                     type: 'pie'
                 },
+                credits: {
+                    enabled: false
+                },
                 title: {
                     text: json_data.subject,
                 },

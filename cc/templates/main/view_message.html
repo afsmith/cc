@@ -36,6 +36,7 @@
             };
         {% endif %}
 
+
         $('#message_viewer').FlexPaperViewer({ 
             config : {
                 PDFFile: '{{ file.original_url }}',
@@ -54,6 +55,12 @@
                 CursorToolsVisible: false,
                 SearchToolsVisible: true,
                 FitWidthOnLoad: true,
+                ZoomTransition : 'easeOut',
+                ZoomTime : 0.5, 
+                ZoomInterval : 0.2,
+                ProgressiveLoading : true,
+                MinZoomSize : 0.2,
+                MaxZoomSize : 5,
             }   
         });
     </script>
