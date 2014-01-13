@@ -83,4 +83,47 @@ $(document).ready(function () {
             _drawPieChart(resp);
         });
     });
+
+    // click on fix checkbox
+    $('.js_fix').click(function () {
+        var _this = $(this),
+            this_row = _this.closest('tr'),
+            this_email_cell = this_row.find('.email_cell'),
+            old_email_val = this_email_cell.text();
+
+        // change email cell to input
+        this_email_cell.html('<input class="js_emailInput" type="text" value="' + old_email_val + '">');
+        this_email_cell.data('old_value', old_email_val);
+        this_row.find('.fix_cell').html('<button class="btn btn-small js_resendButton">Send</button>');
+    });
+
+    // changing the text in email
+    $('.bounces_table').on('keyup', '.js_emailInput', function () {
+        $(this).closest('tr').find('.js_resendButton').addClass('btn-success');
+    });
+
+    // click on resend button
+    $('.bounces_table').on('click', '.js_resendButton', function () {
+        var _this = $(this),
+            this_row = _this.closest('tr'),
+            this_id = this_row.prop('id'),
+            id_pair = this_id.replace('row_', '').split('_'),
+            message_id = id_pair[0],
+            participant_id = id_pair[1],
+            new_email = this_row.find('.js_emailInput').val(),
+            old_email = this_row.find('.email_cell').data('old_value');
+
+        $.ajax({
+            url: '/resend/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'message_id': message_id,
+                'old_email': old_email,
+                'new_email': new_email
+            },
+        }).done(function (resp) {
+            this_row.remove();
+        });
+    });
 }); // end document ready

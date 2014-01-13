@@ -1,16 +1,17 @@
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
+from django.views.decorators import http as http_decorators
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from . import tasks
 from .services import get_message
 from .forms import MessageForm
-from .services import send_notification_email
+from .services import send_notification_email, edit_email_and_resend_message
 from cc.apps.accounts.services import verify_ocl_token
 from cc.apps.content.forms import FileImportForm
 
-from annoying.decorators import render_to
+from annoying.decorators import render_to, ajax_request
 
 
 @ensure_csrf_cookie
@@ -49,6 +50,19 @@ def send_message(request):
         'message_form': message_form,
         'import_file_form': FileImportForm(),
     }
+
+
+@http_decorators.require_POST
+@auth_decorators.login_required
+@ajax_request
+def resend_message(request):
+    '''
+    Resend the message
+    '''
+    message = get_message(request.POST.get('message_id'), request.user)
+    result = edit_email_and_resend_message(request, message)
+
+    return {}
 
 
 @ensure_csrf_cookie

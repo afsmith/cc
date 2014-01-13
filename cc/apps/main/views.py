@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import decorators as auth_decorators
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from cc.apps.reports.services import *
 from cc.libs.utils import get_domain
@@ -9,6 +10,7 @@ from annoying.decorators import render_to
 import json
 
 
+@ensure_csrf_cookie
 @auth_decorators.login_required
 @render_to('main/dashboard.html')
 def dashboard(request):

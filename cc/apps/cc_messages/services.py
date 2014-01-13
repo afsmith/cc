@@ -4,8 +4,10 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 
 from .models import Message
+from cc.apps.reports.models import Bounce
 from cc.apps.accounts.models import OneClickLinkToken, CUser
 from cc.apps.tracking.models import TrackingLog
+from cc.libs.utils import get_domain
 
 from templated_email import send_templated_mail
 import datetime
@@ -46,6 +48,36 @@ def _replace_link_text(message, ocl_link):
         '<a href="{0}">{1}</a>'.format(ocl_link, link_text)
     )
 
+def _send_message(message, recipient, domain):
+    ocl_link = _create_ocl_link(recipient, domain, message.id)
+        
+    # replace the token [link] with the actual OCL link
+    text = _replace_link_text(message, ocl_link)
+
+    # create tracking pixel
+    tracking_pixel_src = '{}/track/email/{}/{}/'.format(
+       domain, message.id, recipient.id
+    )
+
+    send_templated_mail(
+        template_name='message_default',
+        from_email=message.owner.email,
+        recipient_list=[recipient.email],
+        context={
+            'message': message,
+            'text': text,
+            'tracking_pixel_src': tracking_pixel_src
+        },
+        headers={
+            'X-SMTPAPI': json.dumps({
+                'unique_args': {
+                    'cc_message_id': message.id, 
+                    'domain': domain
+                }
+            })
+        }
+    )
+
 
 def create_ocl_and_send_message(message, domain):
     '''
@@ -54,34 +86,7 @@ def create_ocl_and_send_message(message, domain):
     recipient_emails = []
 
     for r in message.receivers.all():
-        ocl_link = _create_ocl_link(r, domain, message.id)
-        
-        # replace the token [link] with the actual OCL link
-        text = _replace_link_text(message, ocl_link)
-
-        # create tracking pixel
-        tracking_pixel_src = '{}/track/email/{}/{}/'.format(
-           domain, message.id, r.id
-        )
-
-        send_templated_mail(
-            template_name='message_default',
-            from_email=message.owner.email,
-            recipient_list=[r.email],
-            context={
-                'message': message,
-                'text': text,
-                'tracking_pixel_src': tracking_pixel_src
-            },
-            headers={
-                'X-SMTPAPI': json.dumps({
-                    'unique_args': {
-                        'cc_message_id': message.id, 
-                        'domain': domain
-                    }
-                })
-            }
-        )
+        _send_message(message, r, domain)
 
         # add recipient email address to the list
         recipient_emails.append(r.email)
@@ -176,3 +181,30 @@ def notify_email_opened(message_id, user_id):
             return False
     else:
         return False
+
+
+def edit_email_and_resend_message(request, message):
+    domain = get_domain(request)
+    new_email = request.POST.get('new_email')
+    old_email = request.POST.get('old_email')
+
+    recipient = CUser.objects.filter(email=old_email)
+    if recipient:
+        exist_user = CUser.objects.filter(email=new_email)
+        if exist_user:
+            rec = exist_user[0]
+            message.receivers.remove(recipient[0])
+            message.receivers.add(rec)
+        else:
+            rec = recipient[0]
+            # save the new email for that recipient and resend the message
+            rec.email = new_email
+            rec.save()
+
+        _send_message(message, rec, domain)
+
+        # clear record from bounce
+        bounce = Bounce.objects.filter(message=message, email=old_email)
+        bounce.delete()
+
+        # TODO: clear it from Sendgrid too
