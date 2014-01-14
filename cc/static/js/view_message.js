@@ -56,7 +56,7 @@ $(document).ready(function () {
 
             // handle page change event
             $(window).on('onCurrentPageChanged', function (e, page_number) {
-                console.log('Page changed: ' +  page_number);
+                log('Page changed: ' +  page_number);
 
                 pageChangeHandler(page_number);
             });

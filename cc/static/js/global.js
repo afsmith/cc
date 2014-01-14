@@ -27,4 +27,4 @@ var i18 = function (key) {
 // shortcut for console.log()
 if (!window.console) window.console = {};
 if (!window.console.log) window.console.log = function () {};
-var log = window.console.log.bind(console);
+var log = (!window.console.log.bind) ? function () {} : window.console.log.bind(console);
