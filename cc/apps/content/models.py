@@ -250,7 +250,7 @@ class File(models.Model):
 
         :rtype: `str`
         """
-        type_to_ext = {
+        '''type_to_ext = {
             self.TYPE_PLAIN: 'txt',
             self.TYPE_IMAGE: 'png',
             self.TYPE_AUDIO: 'mp3',
@@ -258,11 +258,13 @@ class File(models.Model):
             self.TYPE_MSDOC: 'doc',
             self.TYPE_MSPPT: 'ppt',
             self.TYPE_SCORM: 'zip',
-            self.TYPE_PDF: 'swf',
+            self.TYPE_PDF: 'pdf',
             self.TYPE_HTML: 'html',
         }
         ext = type_to_ext[self.type]
-        return '%s_%s.%s' % (self.key, self.subkey_conv, ext)
+        return '%s_%s.%s' % (self.key, self.subkey_conv, ext)'''
+
+        return '{}_{}'.format(self.key, self.subkey_conv)
 
     @property
     def thumbnail_file_path(self):

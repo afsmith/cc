@@ -12,13 +12,18 @@
         {% trans "This link is expired. Please request another link from the sender." %}
     </p>
 {% else %}
-    <div id="message_viewer" class="flexpaper_viewer" style="width: 100%; height: 700px;"></div>
+    <div id="message_viewer" class="flexpaper_viewer" style="width: 100%;"></div>
 {% endif %}
 
 {% endblock %}
 
 
 {% block additional_css %}
+    <style type="text/css" media="screen"> 
+        html, body  { height:100%; }
+        body { margin:0; padding:0; overflow:auto; }   
+        #flashContent { display:none; }
+    </style>
     <link rel="stylesheet" href="{% static 'css/vendor/flexpaper.css' %}">
 {% endblock %}
 
@@ -39,15 +44,15 @@
 
         $('#message_viewer').FlexPaperViewer({ 
             config : {
-                PDFFile: '{{ file.original_url }}',
-                SwfFile: escape('{{ file.view_url }}'),
+                IMGFiles : '{{ file.view_url }}/{page}.png',
+                JSONFile : '{{ file.view_url }}/pdf.json',
                 
                 jsDirectory: "{% static 'js/vendor/flexpaper/' %}",
                 localeDirectory: "{% static 'js/locale/flexpaper/' %}",
                 key: "{% settings_value 'FLEXPAPER_KEY' %}",
 
                 Scale: 1,
-                RenderingOrder: 'html5,flash',
+                RenderingOrder: 'html',
                 InitViewMode : 'Portrait',
                 ViewModeToolsVisible: true,
                 ZoomToolsVisible: true,

@@ -45,8 +45,11 @@ class BaseConverter(object):
             self._run_command(self._get_command())
         except utils.CommandError, e:
             self._logger.error(
-                'Conversion of file.id=%d from %s has failed (retcode = %d). %s' % (
-                    self._file.id, self._get_src_path(), e.code, e.stdout))
+                'Conversion of file.id=%d from %s has failed '
+                '(retcode = %d). %s' % (
+                    self._file.id, self._get_src_path(), e.code, e.stdout
+                    )
+            )
 
     def _initialize(self):
         pass
@@ -69,12 +72,6 @@ class BaseConverter(object):
         os.close(fd)
         return path
 
-    def _gen_miniature_path(self):
-        root = self._storage.path(settings.CONTENT_UPLOADED_DIR)
-        fd, path = tempfile.mkstemp(dir=root)
-        os.close(fd)
-        return path
-
     def _get_src_path(self):
         path = os.path.join(
             settings.CONTENT_UPLOADED_DIR,
@@ -86,20 +83,6 @@ class BaseConverter(object):
         path = os.path.join(
             settings.CONTENT_AVAILABLE_DIR, 
             self._file.conv_file_path
-        )
-        return self._storage.path(path)
-
-    def _get_thumbnail_path(self):
-        path = os.path.join(
-            settings.CONTENT_THUMBNAILS_DIR, 
-            self._file.thumbnail_file_path
-        )
-        return self._storage.path(path)
-
-    def _get_preview_path(self):
-        path = os.path.join(
-            settings.CONTENT_PREVIEWS_DIR, 
-            self._file.preview_file_path
         )
         return self._storage.path(path)
 
@@ -141,38 +124,48 @@ class BaseConverterWithTempDir(BaseConverter):
                 self._tmp, self._get_dst_path(), str(e)))
 
 
-class PDF2SWFConverter(BaseConverter):
+class PDFConverter(BaseConverterWithTempDir):
     def _get_command(self):
+        dst = os.path.join(self._tmp, '%d.png')
+        quality = '-r{}'.format(settings.PDF_CONVERT_QUALITY)
+
         return [
-            'pdf2swf', self._get_src_path(), '-o', self._get_dst_path(), 
-            '-f', '-T', '9', '-t', '-s', 'storeallcharacters'
+            'mudraw', quality, '-o', dst, self._get_src_path()
         ]
 
     def _run_command(self, cmd, cwd=None):
-        output = super(PDF2SWFConverter, self)._run_command(cmd, cwd)
+        output = super(PDFConverter, self)._run_command(cmd, cwd)
         if output and output.startswith('Error'):
             raise ConversionError(
                 'Error during conversion of a PDF file '
-                '(file id: %d): "%s" to SWF' % (
+                '(file id: %d): "%s"' % (
                     self._file.id, output.splitlines()[0]
                 )
             )
 
+    def _convert_to_json(self):
+        dst = os.path.join(self._tmp, 'pdf.json')
+        super(PDFConverter, self)._run_command([
+            'pdf2json', self._get_src_path(), '-enc', 'UTF-8', 
+            '-compress', '-split', '10', dst
+        ])
+
     def _convert(self):
-        super(PDF2SWFConverter, self)._convert()
+        super(PDFConverter, self)._convert()
+        self._convert_to_json()
 
 
-def register(type, class_):
+def register(type, _class):
     """Registers new converter for the given file type.
 
     :param type: Id of the file type.
-    :param class_: Class impementing converter.
+    :param _class: Class impementing converter.
 
     :return: Previous converter class or None.
     """
 
     old = unregister(type)
-    _converters[type] = class_
+    _converters[type] = _class
     return old
 
 
@@ -191,4 +184,4 @@ def get_converter(file, storage, logger):
 _converters = {}
 
 # Register default converters.
-register(models.File.TYPE_PDF, PDF2SWFConverter)
+register(models.File.TYPE_PDF, PDFConverter)
