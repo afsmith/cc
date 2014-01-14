@@ -35,6 +35,9 @@ Other dependancies
 - Redis 2.4+
 - ImageMagick 6.6+ (http://www.imagemagick.org/). On OS X it can be installed from MacPorts or Homebrew (if you are using Homebrew, Ghostscript has to be install separately). has to be installed with GhostScript, jpeg and png support. Png support can be turned on by passing path to X11 libs during ImageMagick configuration. Jpeg and Ghostscript have to be installed separately and turned on while configuring ImageMagick. NOTE: There is a possible bug of ImageMagick on OSX that multipages PDF can only be converted to one page PNG. The solution is to find imagegick/etc/delegates.xml to replace 'pngalpha' with 'pnmraw' (The detail is described at http://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=18001)
 - lesscss
+- pdf2json
+- mupdf
+- flexpaper
 
 Tips: in OSX use homebrew: `brew install redis imagemagick ghostscript`
 
