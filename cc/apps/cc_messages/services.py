@@ -42,12 +42,10 @@ def _replace_link_text(message, ocl_link):
     link_text = message.link_text
     if link_text == '':
         link_text = ocl_link
-    link_text = u"{0}".format(link_text)
 
     return message.message.replace(
-
         '[link]',
-        '<a href="{0}">{1}</a>'.format(ocl_link, link_text)
+        u'<a href="{0}">{1}</a>'.format(ocl_link, link_text)
     )
 
 def _send_message(message, recipient, domain):
