@@ -367,7 +367,8 @@ def install():
             run("exit")
     sudo("apt-get update -y -q")
     apt("nginx libjpeg-dev python-dev python-setuptools git-core "
-        "postgresql libpq-dev memcached supervisor redis-server imagemagick mupdf")
+        "postgresql libpq-dev memcached supervisor redis-server "
+        "libxtst-dev libx11-dev pkg-config")
     sudo("easy_install pip")
     sudo("pip install virtualenv")
     sudo("install -o %s -g %s -d /var/log/kneto/cc" % (env.user, env.user))
