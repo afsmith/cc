@@ -3,6 +3,8 @@ $(document).ready(function () {
         page_counter = {},
         i,
         timeout_id,
+        pagechange_timeout_id,
+        is_iOS = false,
 
         // function
         incrementTimer,
@@ -38,12 +40,6 @@ $(document).ready(function () {
                 page_counter[page_number] += 1;
             };
 
-            pageChangeHandler = function (page_number) {
-                // init timer and counter for page 1
-                incrementTimer(page_number);
-                incrementCounter(page_number);    
-            };
-
             initTimerCounter = function (message_data) {
                 // init the page timer object
                 for (i=0; i<message_data.page_count; i+=1) {
@@ -54,12 +50,31 @@ $(document).ready(function () {
 
             initTimerCounter(CC_GLOBAL.message_data);
 
-            // handle page change event
-            $(window).on('onCurrentPageChanged', function (e, page_number) {
-                log('Page changed: ' +  page_number);
+            // handle the page change event
+            // TODO: check when onCurrentPageChanged is supported in iOS
+            pageChangeHandler = function () {
+                if (is_iOS) {
+                    var pageChangeHandleriOS = function () {
+                        var page_number = flex_viewer.getCurrPage();
 
-                pageChangeHandler(page_number);
-            });
+                        log(page_number);
+                        incrementTimer(page_number);
+                        incrementCounter(page_number);
+                    };
+                    
+                    pageChangeHandleriOS(); // init when fire
+                    $('.flexpaper_bttnPrevPage, .flexpaper_bttnPrevNext').click(function () {
+                        // even everytime click on change page button, the 0.5s is for page change transition time
+                        clearTimeout(pagechange_timeout_id);
+                        pagechange_timeout_id = setTimeout(pageChangeHandleriOS, 500);
+                    });
+                } else {
+                    $(window).on('onCurrentPageChanged', function (e, page_number) {
+                        incrementTimer(page_number);
+                        incrementCounter(page_number);
+                    });     
+                }
+            };
 
 
             // ----------------------------- Tracking ----------------------------- //
@@ -82,10 +97,11 @@ $(document).ready(function () {
             windowPageShowHandler = function () {
                 $(window).on('pageshow', function () {
                     initTimerCounter(CC_GLOBAL.message_data);
+                    pageChangeHandler();
                 });
             };
 
-            windowUnloadHandler = function (session_id, is_iOS) {
+            windowUnloadHandler = function (session_id) {
                 var event_type = 'beforeunload';
 
                 // if the device is iOS then use pagehide event instead since iOS doesn't support beforeunload event
@@ -117,14 +133,17 @@ $(document).ready(function () {
                 }).done(function (resp) {
                     if (resp.status === 'OK') {
                         var session_id = resp.session_id,
-                            is_iOS = resp.is_iOS,
                             is_safari = (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1);
+                        is_iOS = resp.is_iOS;
+
+                        // init page change handler after getting is_iOS
+                        pageChangeHandler();
 
                         // check if this is Safari on desktop
                         if (is_safari && !is_iOS) {
                             safariHandler(session_id);
                         } else {
-                            windowUnloadHandler(session_id, is_iOS);    
+                            windowUnloadHandler(session_id);    
                         }
                     } else {
                         log('ERROR: ' + resp.message);
