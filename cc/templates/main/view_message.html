@@ -41,6 +41,11 @@
             };
         {% endif %}
 
+        
+
+
+        jQuery.get((!window.isTouchScreen)?' {% static 'html/flexpaper/UI_flexpaper_desktop.html' %}':'{% static 'html/flexpaper/UI_flexpaper_mobile.html' %}',
+                    function(toolbarData) {
 
         $('#message_viewer').FlexPaperViewer({ 
             config : {
@@ -51,7 +56,12 @@
                 localeDirectory: "{% static 'js/locale/flexpaper/' %}",
                 key: "{% settings_value 'FLEXPAPER_KEY' %}",
 
-                Scale: 1,
+                Scale : 0.6,
+                ZoomTransition : 'easeOut',
+                ZoomTime : 0.5,
+                ZoomInterval : 0.2,
+                MinZoomSize : 0.2,
+                MaxZoomSize : 5,
                 RenderingOrder: 'html',
                 InitViewMode : 'Portrait',
                 ViewModeToolsVisible: true,
@@ -59,15 +69,18 @@
                 NavToolsVisible: true,
                 CursorToolsVisible: false,
                 SearchToolsVisible: true,
-                FitWidthOnLoad: true,
+                FitPageOnLoad: true,
                 ProgressiveLoading: true,
-                
+                Toolbar         : toolbarData,
+                WMode : 'window',
+                      
                 /*ZoomTransition: 'easeOut',
                 ZoomTime: 0.5, 
                 ZoomInterval: 0.2,
                 MinZoomSize: 0.2,
                 MaxZoomSize: 5,*/
             }   
+        })
         });
     </script>
 
