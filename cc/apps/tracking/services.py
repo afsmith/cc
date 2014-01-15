@@ -61,7 +61,7 @@ def create_tracking_events(session_id, timer_params, counter_params):
         param_str = timer_params.get(key)
         if param_str == 'NaN':
             param_str = '0'
-        total_time = int(time_str)
+        total_time = int(param_str)
 
         param_str = counter_params.get('counter[{}]'.format(page_number))
         if param_str == 'NaN':
