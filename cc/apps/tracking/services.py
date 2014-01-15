@@ -57,8 +57,17 @@ def create_tracking_events(session_id, timer_params, counter_params):
     for key in timer_params.keys():
         # timer_params format example: {'timer[0]': '100', 'timer[1]': '200'}
         page_number = int(re.search('\d+', key).group(0))
-        total_time = int(timer_params.get(key))
-        page_view = int(counter_params.get('counter[{}]'.format(page_number)))
+        
+        param_str = timer_params.get(key)
+        if param_str == 'NaN':
+            param_str = '0'
+        total_time = int(time_str)
+
+        param_str = counter_params.get('counter[{}]'.format(page_number))
+        if param_str == 'NaN':
+            param_str = '0'
+        page_view = int(param_str)
+        
         events.append(TrackingEvent(
             tracking_session=session,
             page_number=page_number,
