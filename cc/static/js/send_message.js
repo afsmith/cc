@@ -136,7 +136,8 @@ $(document).ready(function () {
     message_field.summernote({
         height: 160,
         toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['style', ['bold', 'italic', 'underline', 'clear',]],
+            ['fontsize', ['fontsize']],
             ['color', ['color']],
             ['para', ['ul', 'ol']],
             ['options', ['codeview']],
@@ -279,6 +280,7 @@ $(document).ready(function () {
             height: 60,
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['options', ['codeview']],
               //  ['insert', ['picture', 'link']]
