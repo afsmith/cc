@@ -139,6 +139,8 @@ $(document).ready(function () {
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['color', ['color']],
             ['para', ['ul', 'ol']],
+            ['options', ['codeview']],
+
         //    ['insert', ['picture', 'link']] // conflics with other js on page. 
         ],
         onkeyup: function(e) {
@@ -278,6 +280,7 @@ $(document).ready(function () {
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['color', ['color']],
+                ['options', ['codeview']],
               //  ['insert', ['picture', 'link']]
             ],
             focus: true,
