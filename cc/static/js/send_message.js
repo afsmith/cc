@@ -278,7 +278,7 @@ $(document).ready(function () {
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['color', ['color']],
-                ['insert', ['picture', 'link']]
+              //  ['insert', ['picture', 'link']]
             ],
             focus: true,
             onImageUpload: function(files, editor, welEditable) {
