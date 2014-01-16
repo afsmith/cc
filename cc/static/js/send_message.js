@@ -139,7 +139,7 @@ $(document).ready(function () {
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['color', ['color']],
             ['para', ['ul', 'ol']],
-            ['insert', ['picture', 'link']]
+        //    ['insert', ['picture', 'link']] // conflics with other js on page. 
         ],
         onkeyup: function(e) {
             // TODO: improve this later by not copying on every key press
