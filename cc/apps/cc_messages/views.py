@@ -78,7 +78,10 @@ def OLD_view_message(request, message_id=None):
         message = get_message(message_id, ocl_token.user)
 
         # check if owner is checking message
-        is_owner_viewing = (ocl_token.user == message.owner)
+        is_owner_viewing = (
+            ocl_token.user == message.owner
+            or request.user == message.owner
+        )
 
         # there is only 1 file per message for now so return that file
         file = message.files.all()[0]

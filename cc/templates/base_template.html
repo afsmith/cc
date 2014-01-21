@@ -89,14 +89,8 @@
     
     <script src="{% static 'js/global.js' %}"></script>
     <script src="{% static 'js/locale/locale_en.js' %}"></script>
-    
-    
-    {% block js_scripts %}{% endblock %}
-
-    {% analytical_body_bottom %}
 
     {% if user.is_authenticated %}
-
     <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
     <style type="text/css" media="screen, projection">
         @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
@@ -114,6 +108,9 @@
         }
     </script>
     {% endif %}
-    
+
+    {% block js_scripts %}{% endblock %}
+
+    {% analytical_body_bottom %}
 </body>
 </html>
