@@ -108,7 +108,7 @@ class MessageForm(forms.ModelForm):
         # add signature to the main message
         message.message = re.sub(
             r'(<div id="signature">).*(</div>)', 
-            r'\1{}\2'.format(self.cleaned_data['signature']),
+            ur'\1{}\2'.format(self.cleaned_data['signature']),
             message.message
         )
 
