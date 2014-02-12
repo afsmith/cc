@@ -70,6 +70,9 @@ urlpatterns = patterns(
     # Sendgrid parse API endpoint
     url(r'^sendgrid_parse/$',
         'cc.apps.main.views.sendgrid_parse', name='sendgrid_parse'),
+
+    # django-stripe
+    url(r"^payments/", include("payments.urls")),
 )
 
 if settings.DEBUG:

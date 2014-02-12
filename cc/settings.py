@@ -45,7 +45,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'hunger.middleware.BetaMiddleware',
+ #   'hunger.middleware.BetaMiddleware',
+    "payments.middleware.ActiveSubscriptionMiddleware",
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -88,8 +89,10 @@ INSTALLED_APPS = (
     'djcelery',            # celery for converting files
     'analytical',          # support for many analytic platforms
     'cookielaw',           # EU cookie law banner
-    'hunger',              # for managing beta signups and invitations
+ #   'hunger',              # for managing beta signups and invitations
     'django_nose',         # django nose for testing
+    'django_forms_bootstrap', #needed for django-stripe
+    'payments',            # django-stripe
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
@@ -241,7 +244,7 @@ CELERYBEAT_SCHEDULE = {
 
 # for testing
 if 'test' in sys.argv:
-    # remove django hunger middleware in testing
+    #remove django hunger middleware in testing
     MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
     MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
