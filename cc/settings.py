@@ -46,7 +46,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
  #   'hunger.middleware.BetaMiddleware',
-    "payments.middleware.ActiveSubscriptionMiddleware",
+ #   "payments.middleware.ActiveSubscriptionMiddleware",
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -179,10 +179,16 @@ SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
  #   'home',
     'auth_login',
     'auth_logout',
-    'payments_subscribe',
     'create_event',
+    'payments_subscribe',
     'payments_ajax_cancel',
     'payments_ajax_subscribe',
+    'payments_ajax_change_card',
+    'payments_ajax_change_plan',
+    'payments_history',
+    'payments_webhook',
+
+
 )
 
 SUBSCRIPTION_REQUIRED_REDIRECT = ('payments_subscribe')
