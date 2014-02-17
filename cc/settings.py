@@ -46,7 +46,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
  #   'hunger.middleware.BetaMiddleware',
- #   "payments.middleware.ActiveSubscriptionMiddleware",
+    "payments.middleware.ActiveSubscriptionMiddleware",
 )
 
 ROOT_URLCONF = 'cc.urls'
