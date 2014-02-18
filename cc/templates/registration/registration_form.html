@@ -1,12 +1,17 @@
 {% extends "registration/registration_base.html" %}
-{% load i18n %}
+{% load i18n bootstrap_tags %}
 
 {% block meta_title %}{% trans "Register an account" %}{% endblock %}
 
 {% block content %}
+{% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
     {% trans "Please start the registration by entering your username" %}
-    <form id="loginForm" method="post" action="" class="well registration_form">{% csrf_token %}
-        {% include "_base_form.html" %}
+    <form id="loginForm" method="post" action="" class="well registration_form">
+        {% csrf_token %}
+        {{ form|as_bootstrap }}
     
         <div>
             <a class="btn btn-success" onclick="$('#loginForm').submit(); return false;" href="#" style="margin-top: 10px;">{% trans "Register" %}</a>
