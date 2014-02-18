@@ -58,28 +58,22 @@
                     </ul>
                     
                     {% if user.is_authenticated %}
-                    <div class="nav-collapse collapse pull-right">
-                        <ul id="top_nav" class="nav">
-                            <li class="{% active request 'payments_subscribe' %}"><a href="{% url 'payments_subscribe' %}">{% trans 'Account' %}</a></li>
-                           
-                            <li class="active">
-                                <a href="#">{{ user.first_name }} {{ user.last_name }}</a>
-                            </li>
-                                 <li>
-                                {% block login_controller %}
-                                    <a href="{% url 'django.contrib.auth.views.logout' %}" id="logout">{% trans "Log out" %}</a>
-                                {% endblock %}
+                    <div class="nav-collapse dropdown collapse pull-right">
+                        <ul id="top_nav" class="nav dropdown">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ user.first_name }} {{ user.last_name }} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                <p class="navbar-text text-center"><a href="{% url 'payments_subscribe' %}">{% trans 'Account' %}</a></p>
+                                </ul>
+                          
+                            <li>
+                            {% block login_controller %}
+                                <a href="{% url 'django.contrib.auth.views.logout' %}" id="logout">{% trans "Log out" %}</a>
+                            {% endblock %}
                             </li>
                         </ul>
                     </div><!--/.nav-collapse -->
                     {% endif %}
-
-
-
-
-
-
-
                 </div><!--/.nav-collapse -->
             </div>
         </div>
