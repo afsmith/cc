@@ -2,11 +2,14 @@
 
 <div class="cancel-subscription">
     <h2>Cancel Subscription</h2>
+    {% include "payments/_subscription_status.html" %}
     <p class="lead">Are you sure that you want to cancel?</p>
-
+<!-- below is not workign, not sure why 
     {% if request.user.customer.current_subscription.status == 'canceled' %}
         <div class="alert alert-danger">Your account has been canceled. It will remain active until <strong>{{ request.user.customer.current_subscription.current_period_end }}.</strong></div>
-    {% else %}
+    {% else %} -->
+
+    {{ request.user.customer.current_subscription.status }}
     {% if error %}
         <div class="alert alert-error">{{ error }}</div>
     {% endif %}

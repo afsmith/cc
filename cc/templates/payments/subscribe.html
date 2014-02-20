@@ -24,7 +24,9 @@
 
 <!-- Tab panes -->
 <div class="tab-content">
-  <div class="tab-pane active" id="home"> <p class="lead">You currently already have an active subscription, which will automatically renew in <strong>{{ subscription.current_period_end|timeuntil }}</strong>. </div>
+  <div class="tab-pane active" id="home"> <p class="lead">
+{% include "payments/_subscription_status.html" %}
+<strong></strong></div>
 
   <div class="tab-pane" id="payment_history">{% include "payments/history.html" %}</div>
   <div class="tab-pane" id="change_card">{% include "payments/_change_card_form.html" %}</div>
