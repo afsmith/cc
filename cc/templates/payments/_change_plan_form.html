@@ -16,6 +16,7 @@
     <form action="{% url 'payments_ajax_change_plan' %}" method="POST" class="form-inline ajax" data-replace-closest=".change-subscription">
         {% csrf_token %}
         {{ form|as_bootstrap }}
+        <br>
         <button type="submit" class="btn btn-primary">Change</button>
     </form>
 </div>

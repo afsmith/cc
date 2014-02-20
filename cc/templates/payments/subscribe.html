@@ -5,9 +5,28 @@
 
 {% block content %}
     {% with request.user.customer.current_subscription as subscription %}
-        {% if not subscription or subscription.status != 'active'  %}
+       {% if subscription.status == "trialing" %} 
+
+        <!-- Nav tabs -->
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+        <li><a href="#change_subscription" data-toggle="tab">Change your subscription</a></li>
+        <li><a href="#cancel_subscription" data-toggle="tab">Cancel your subscription</a></li>
+      </ul>
+
+<!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="home"> <p class="lead">
+        {% include "payments/_subscription_status.html" %}
+        <strong></strong></div>
+          <div class="tab-pane" id="change_subscription">{% include "payments/_change_plan_form.html" %}</div>
+          <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
+        </div>
+    
+        {% elif not subscription or subscription.status != 'active'  %}
           {% include "payments/_subscription_status.html" %}
            {% include "payments/_subscribe_form.html" %}
+
         {% else %}
             <h2>Subscription Management</h2>
            
@@ -34,14 +53,6 @@
   <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
 </div>
 
-
-<!--
-             <a href="{% url 'payments_history' %}">payment history</a>
-             <a href="{% url 'payments_change_card' %}">change your card</a>
-             <a href="{% url 'payments_change_plan' %}">change your subscription</a>
-             <a href="{% url 'payments_cancel' %}">cancel your subscription</a></p>
-
--->
         {% endif %}
     {% endwith %}
 

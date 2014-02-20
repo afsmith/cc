@@ -16,8 +16,10 @@
     <form class="form ajax" data-replace-closest=".cancel-subscription" action="{% url 'payments_ajax_cancel' %}" method="POST">
         {% csrf_token %}
         <div class="actions">
-            <button type="submit" class="btn btn-mini btn-danger">Cancel</button>
+            <button type="submit" id="form-submit" class="btn btn-mini btn-danger ladda-button" data-style="expand-left">
+            <span class="ladda-label">Cancel</span></button>
         </div>
     </form>
+
     {% endif %}
 </div>
