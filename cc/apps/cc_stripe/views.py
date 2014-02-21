@@ -74,6 +74,7 @@ class HistoryView(PaymentsContextMixin, TemplateView):
     template_name = "payments/history.html"
 
 
+
 @require_POST
 @login_required
 def change_card(request):
@@ -133,7 +134,7 @@ def subscribe(request, form_class=PlanForm):
                 customer.update_card(request.POST.get("stripe_token"))
             customer.subscribe(form.cleaned_data["plan"])
             data["form"] = form_class()
-            data["location"] = reverse("payments_history")
+            data["location"] = reverse("payments_subscribe")
         except stripe.StripeError as e:
             data["form"] = form
             try:

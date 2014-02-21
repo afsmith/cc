@@ -72,8 +72,13 @@ urlpatterns = patterns(
         'cc.apps.main.views.sendgrid_parse', name='sendgrid_parse'),
 
     # django-stripe cc_stripe
+ 
+
     url(r'^payments/cancel/$', 'cc.apps.cc_stripe.views.CancelView', name='payments_cancel'),
-    url(r'^payments/a/cancel/', 'cc.apps.cc_stripe.views.cancel', name='payments_ajax_cancel'),
+    url(r'^payments/a/cancel/$', 'cc.apps.cc_stripe.views.cancel', name='payments_ajax_cancel'),
+ #   url(r'^payments/subscribe/$', 'cc.apps.cc_stripe.views.SubscribeView', name='payments_subscribe'),
+    url(r'^payments/a/subscribe/$', 'cc.apps.cc_stripe.views.subscribe', name='payments_ajax_subscribe'),
+ #   url(r'^payments/registration_thanks/$', 'cc.apps.cc_stripe.views.ThanksView', name='payments_reg_thanks'),
 
    url(r"^payments/", include("payments.urls")),
 )
