@@ -1,7 +1,7 @@
 {% extends "payments/base.html" %}
 {% load url from future %}
 
-{% block title %}Purchase a Subscription{% endblock title %}
+<!-- {% block title %}Purchase a Subscription{% endblock title %} -->
 
 {% block content %}
     {% with request.user.customer.current_subscription as subscription %}
@@ -28,9 +28,8 @@
            {% include "payments/_subscribe_form.html" %}
 
         {% else %}
-            <h2>Subscription Management</h2>
            
-            <p class="lead">If you like, you can view your:</p> 
+            <p class="lead">You can:</p> 
 
   <!-- Nav tabs -->
 <ul class="nav nav-tabs">
