@@ -9,7 +9,6 @@
         <div class="alert alert-danger">Your account has been canceled. It will remain active until <strong>{{ request.user.customer.current_subscription.current_period_end }}.</strong></div>
     {% else %} -->
 
-    {{ request.user.customer.current_subscription.status }}
     {% if error %}
         <div class="alert alert-error">{{ error }}</div>
     {% endif %}

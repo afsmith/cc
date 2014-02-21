@@ -93,6 +93,7 @@ INSTALLED_APPS = (
     'django_nose',         # django nose for testing
     'django_forms_bootstrap', #needed for django-stripe
     'payments',            # django-stripe
+  #  'widget_tweaks',       #for form label class 
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',

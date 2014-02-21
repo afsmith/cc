@@ -15,8 +15,18 @@
     {% endif %}
     <form action="{% url 'payments_ajax_change_plan' %}" method="POST" class="form-inline ajax" data-replace-closest=".change-subscription">
         {% csrf_token %}
-        {{ form|as_bootstrap }}
-        <br>
+      {{ form|as_bootstrap }} 
+        <p>
+  <!--       {% for radio in form %} -->
+<!-- <div class="btn-group" data-toggle="buttons"> -->
+   
+  <!--  #{{ radio }}# -->
+   
+<!-- </div> -->
+
+{% endfor %}
+
         <button type="submit" class="btn btn-primary">Change</button>
+        </p>
     </form>
 </div>
