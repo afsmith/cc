@@ -3,9 +3,17 @@ from django.conf import settings
 
 from cc.apps.accounts.forms import UserCreationForm, UserPasswordResetForm
 from registration.backends.default.views import RegistrationView
+from django.contrib.auth.decorators import login_required
 
 from django.contrib import admin
 admin.autodiscover()
+
+from cc.apps.cc_stripe.views import (
+    CancelView,
+    SubscribeView
+)
+
+
 
 urlpatterns = patterns(
     '',
@@ -74,14 +82,18 @@ urlpatterns = patterns(
     # django-stripe cc_stripe
  
 
-    url(r'^payments/cancel/$', 'cc.apps.cc_stripe.views.CancelView', name='payments_cancel'),
-    url(r'^payments/a/cancel/$', 'cc.apps.cc_stripe.views.cancel', name='payments_ajax_cancel'),
- #   url(r'^payments/subscribe/$', 'cc.apps.cc_stripe.views.SubscribeView', name='payments_subscribe'),
-    url(r'^payments/a/subscribe/$', 'cc.apps.cc_stripe.views.subscribe', name='payments_ajax_subscribe'),
- #   url(r'^payments/registration_thanks/$', 'cc.apps.cc_stripe.views.ThanksView', name='payments_reg_thanks'),
+    url(r'^payments/a/cancel/$', 
+        'cc.apps.cc_stripe.views.cancel', name='payments_ajax_cancel'),
+    url(r'^payments/a/subscribe/$', 
+        'cc.apps.cc_stripe.views.subscribe', name='payments_ajax_subscribe'),
+    url(r"^payments/subscribe/$", 
+        login_required(SubscribeView.as_view()), name="payments_subscribe"),
+    url(r"^payments/cancel/$",
+        login_required(CancelView.as_view()), name="payments_cancel"),
+
 
    url(r"^payments/", include("payments.urls")),
-)
+    )
 
 if settings.DEBUG:
     media_url = settings.MEDIA_URL

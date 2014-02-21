@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 import stripe
 
 from payments import settings as app_settings
-from payments.forms import PlanForm
+from cc.apps.cc_stripe.forms import PlanForm
 from payments.models import (
     Customer,
     CurrentSubscription,
