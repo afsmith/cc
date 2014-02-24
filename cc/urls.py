@@ -10,7 +10,8 @@ admin.autodiscover()
 
 from cc.apps.cc_stripe.views import (
     CancelView,
-    SubscribeView
+    SubscribeView,
+    NewSubscriberView,
 )
 
 
@@ -88,8 +89,11 @@ urlpatterns = patterns(
         'cc.apps.cc_stripe.views.subscribe', name='payments_ajax_subscribe'),
     url(r"^payments/subscribe/$", 
         login_required(SubscribeView.as_view()), name="payments_subscribe"),
+    url(r"^payments/new_subscriber/$", 
+        login_required(NewSubscriberView.as_view()), name="new_payments_subscribe"),
     url(r"^payments/cancel/$",
         login_required(CancelView.as_view()), name="payments_cancel"),
+    url(r"^webhook/$", "cc.apps.cc_stripe.views.webhook", name="payments_webhook"),
 
 
    url(r"^payments/", include("payments.urls")),

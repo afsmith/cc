@@ -1,7 +1,7 @@
 {% extends "payments/base.html" %}
 {% load url from future %}
 
-<!-- {% block title %}Purchase a Subscription{% endblock title %} -->
+{% block title %}Account Managemnt{% endblock title %}
 
 {% block content %}
     {% with request.user.customer.current_subscription as subscription %}

@@ -183,6 +183,7 @@ SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
     'auth_logout',
     'create_event',
     'payments_subscribe',
+    'new_payments_subscribe',
     'payments_ajax_cancel',
     'payments_ajax_subscribe',
     'payments_ajax_change_card',
@@ -193,7 +194,7 @@ SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
 
 )
 
-SUBSCRIPTION_REQUIRED_REDIRECT = ('payments_subscribe')
+SUBSCRIPTION_REQUIRED_REDIRECT = ('new_payments_subscribe')
 
 STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_AAXz4ICYdcu4deHMJGmKJsVB")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_804dzBOIcp3RHtJhicEC0Glc")
@@ -226,7 +227,6 @@ PAYMENTS_PLANS = {
         "trial_period_days": 30
     },
 }
-
 
 
 ALLOWED_HOSTS = ['127.0.0.1', '.kneto.com']

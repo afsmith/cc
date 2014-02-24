@@ -57,6 +57,18 @@ class SubscribeView(PaymentsContextMixin, TemplateView):
         })
         return context
 
+class NewSubscriberView(PaymentsContextMixin, TemplateView):
+    template_name = "payments/new_subscriber.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(NewSubscriberView, self).get_context_data(**kwargs)
+        context.update({
+            "form": PlanForm
+        })
+        return context
+
+
+
 
 class ChangeCardView(PaymentsContextMixin, TemplateView):
     template_name = "payments/change_card.html"
