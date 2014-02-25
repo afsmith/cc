@@ -28,7 +28,12 @@ def dashboard(request):
 @csrf_exempt
 def sendgrid_parse(request):
     if request.body:
-        json_req = json.loads(request.body)
+        try:
+            json_req = json.loads(request.body)
+        except ValueError:
+            # if request is not a JSON string, return status 209
+            return HttpResponse(status=200)
+
         # filter the request
         if (
             isinstance(json_req, list) and len(json_req) > 0
