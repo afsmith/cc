@@ -41,7 +41,7 @@ def send_message(request):
             'message': (
                 '<br><br><br><br>'
                 '[link]'
-                u'<div id="signature">{}</div>'.format(request.user.signature)
+                u'<br><br><div id="signature">{}</div>'.format(request.user.signature)
             ),
             'signature': request.user.signature
         })
