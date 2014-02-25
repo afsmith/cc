@@ -202,7 +202,7 @@ SUMMERNOTE_FILE_DIR = 'summernote'
 FILE_UPLOAD_PERMISSIONS = 0644
 FILE_UPLOAD_PERMISSIONS_DIRS = 0775
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 15728640
+FILE_UPLOAD_MAX_MEMORY_SIZE = 41943040 # 40 MB
 FILE_UPLOAD_HANDLERS = (
     'cc.libs.handlers.MaxFileMemoryFileUploadHandler',
     'cc.libs.handlers.MaxFileTemporaryFileUploadHandler',

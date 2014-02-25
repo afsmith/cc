@@ -195,7 +195,7 @@ $(document).ready(function () {
     Dropzone.options.uploadFileForm = {
         url: $(this).attr('action'),
         paramName: 'file',
-        maxFilesize: 15, // MB
+        maxFilesize: 40, // MB
         maxFiles: 1,
         clickable: true,
         acceptedFiles: 'application/pdf,.pdf,.PDF',
