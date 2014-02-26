@@ -79,6 +79,9 @@ urlpatterns = patterns(
     # Sendgrid parse API endpoint
     url(r'^sendgrid_parse/$',
         'cc.apps.main.views.sendgrid_parse', name='sendgrid_parse'),
+    #Profile View
+   # url(r'^profile_view/$',
+    #    'cc.apps.main.views.profile_view', name='profile_view'),
 
     # django-stripe cc_stripe
  
