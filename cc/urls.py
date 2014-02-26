@@ -96,7 +96,7 @@ urlpatterns = patterns(
         login_required(NewSubscriberView.as_view()), name="new_payments_subscribe"),
     url(r"^payments/cancel/$",
         login_required(CancelView.as_view()), name="payments_cancel"),
-    url(r"^webhook/$", "cc.apps.cc_stripe.views.webhook", name="payments_webhook"),
+    url(r"^payments/webhook/$", "cc.apps.cc_stripe.views.webhook", name="payments_webhook"),
 
 
    url(r"^payments/", include("payments.urls")),
