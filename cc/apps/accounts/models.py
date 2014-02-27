@@ -75,20 +75,20 @@ CUser._meta.get_field('email')._unique = True
 CUser._meta.get_field('username')._unique = False
 
 
-class BillingAddress(models.Model):
-    '''
-    Users billing address provided by strip webhook
-    '''
-    user = models.CharField(_('Country'), max_length=50, blank=True)
-    #key to stip id?
-    country_bill = models.CharField(_('Country'), max_length=50, blank=True)
-    name_bill = models.CharField(_('Name'), max_length=128, blank=True)
-    address_line1_bill = models.CharField(_('Address line1'), max_length=128, blank=True)
-    address_line2_bill = models.CharField(_('Address line2'), max_length=128, blank=True)
-    address_city_bill = models.CharField(_('City'), max_length=128, blank=True)
-    address_state_bill = models.CharField(_('State'), max_length=128, blank=True)
-    address_zip_bill = models.CharField(_('State'), max_length=50, blank=True)
-    address_country_bill = models.CharField(_('County'), max_length=50, blank=True)
+#class BillingAddress(models.Model):
+#    '''
+#    Users billing address provided by strip webhook
+#    '''
+#    user = models.CharField(_('Country'), max_length=50, blank=True)
+#    #key to stipe id
+#    country_bill = models.CharField(_('Country'), max_length=50, blank=True)
+#    name_bill = models.CharField(_('Name'), max_length=128, blank=True)
+#    address_line1_bill = models.CharField(_('Address line1'), max_length=128, blank=True)
+#    address_line2_bill = models.CharField(_('Address line2'), max_length=128, blank=True)
+#    address_city_bill = models.CharField(_('City'), max_length=128, blank=True)
+#    address_state_bill = models.CharField(_('State'), max_length=128, blank=True)
+#    address_zip_bill = models.CharField(_('State'), max_length=50, blank=True)
+#    address_country_bill = models.CharField(_('County'), max_length=50, blank=True)
 
 
 

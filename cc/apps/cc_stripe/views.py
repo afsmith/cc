@@ -189,25 +189,7 @@ def webhook(request):
             livemode=data["livemode"],
             webhook_message=data
         )
- #   if data[0].get('country_bill'):
 
-        bill_add = BillingAddress(
-        user = data["id"], 
-        country_bill = data["country"],
-        name_bill = data["name"],
-        address_line1_bill = "address_line1",
-        address_line2_bill = "address_line2",
-        address_city_bill = "address_city",
-        address_state_bill = "address_state",
-        address_zip_bill = "address_zip",
-        address_country_bill = "address_country",
-        )
-#
-#            and json_req[0].get('smtp-id')
-#            and json_req[0].get('cc_message_id')
-#            and json_req[0].get('domain') == get_domain(request)
-
-        bill_add.save()
         event.validate()
         event.process()
     return HttpResponse()
