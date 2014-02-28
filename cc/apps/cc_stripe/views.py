@@ -15,7 +15,7 @@ import stripe
 
 from payments import settings as app_settings
 from cc.apps.cc_stripe.forms import PlanForm
-from cc.apps.accounts.models import BillingAddress
+
 from payments.models import (
     Customer,
     CurrentSubscription,
