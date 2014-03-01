@@ -1,7 +1,7 @@
-{% block subject %}Kneto: your invited to our beta program{% endblock %}
+{% block subject %}Kneto: your invited to our early access program{% endblock %}
 
 {% block plain %}
-Visit {{ invite_url }} to join the kneto private beta.
+Visit {{ invite_url }} to join the kneto early access program.
 
 If you have pre-registered click the link above then log in. 
 
@@ -13,7 +13,7 @@ Look forward to seeing you.
 {% endblock %}
 
 {% block html %}
-Visit <a href="{{ invite_url }}" target="_blank">{{ invite_url }}</a> to join the Kneto private beta. <p>
+Visit <a href="{{ invite_url }}" target="_blank">{{ invite_url }}</a> to join the Kneto early access program. <p>
 
 If you have pre-registered click the link above then log in. 
 <p>
