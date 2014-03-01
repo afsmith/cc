@@ -31,11 +31,11 @@ class MessageForm(forms.ModelForm):
         exclude = ['receivers', 'owner', 'group', 'files']
 
         widgets = {
-            'subject': forms.TextInput(attrs={'class': 'span6'}),
-            'message': forms.Textarea(attrs={'class': 'span6'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control'}),
             'key_page': forms.Select(choices=[('', '----------')]),
             'link_text': forms.TextInput(attrs={
-                'class': 'span6',
+                'class': 'form-control',
                 'placeholder': _(
                     'Add your link text '
                     '(this will replace [link] in your message after you send it)'

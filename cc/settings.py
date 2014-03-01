@@ -31,6 +31,7 @@ STATICFILES_DIRS = (
 
 
 
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -45,7 +46,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'hunger.middleware.BetaMiddleware',
+ #   'hunger.middleware.BetaMiddleware',
+    "payments.middleware.ActiveSubscriptionMiddleware",
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -88,8 +90,11 @@ INSTALLED_APPS = (
     'djcelery',            # celery for converting files
     'analytical',          # support for many analytic platforms
     'cookielaw',           # EU cookie law banner
-    'hunger',              # for managing beta signups and invitations
+ #   'hunger',              # for managing beta signups and invitations
     'django_nose',         # django nose for testing
+    'django_forms_bootstrap', #needed for django-stripe
+    'payments',            # django-stripe
+  #  'widget_tweaks',       #for form label class 
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
@@ -98,6 +103,7 @@ INSTALLED_APPS = (
     'cc.apps.tracking',
     'cc.apps.reports',
     'cc.apps.main',        # register main apps to get the template tags
+    'cc.apps.cc_stripe',
 )
 
 # disable email for SuspiciousOperation http://stackoverflow.com/a/19534738/2527433
@@ -170,10 +176,69 @@ HUNGER_ALWAYS_ALLOW_VIEWS = [
     'sendgrid_parse',
 ]
 
-
 ALLOWED_HOSTS = ['127.0.0.1', '.kneto.com']
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
+
+
+##############################################################################
+# Payments
+##############################################################################
+
+SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
+ #   'home',
+    'auth_login',
+    'auth_logout',
+    'create_event',
+    'payments_subscribe',
+    'new_payments_subscribe',
+    'payments_ajax_cancel',
+    'payments_ajax_subscribe',
+    'payments_ajax_change_card',
+    'payments_ajax_change_plan',
+    'payments_history',
+    'payments_webhook',
+
+
+)
+
+SUBSCRIPTION_REQUIRED_REDIRECT = ('new_payments_subscribe')
+
+STRIPE_PUBLIC_KEY = os.environ.get(
+    "STRIPE_PUBLIC_KEY", "pk_test_AAXz4ICYdcu4deHMJGmKJsVB"
+)
+STRIPE_SECRET_KEY = os.environ.get(
+    "STRIPE_SECRET_KEY", "sk_test_804dzBOIcp3RHtJhicEC0Glc"
+)
+
+PAYMENTS_PLANS = {
+    "monthly": {
+        "stripe_plan_id": "beta-monthly",
+        "name": "Kneto (150/month)",
+        "description": "Monthly subscription to Kneto.",
+        "price": 150,
+        "currency": "eur",
+        "interval": "month"
+    },
+    "yearly": {
+        "stripe_plan_id": "beta-yearly",
+        "name": "Kneto (1500/year)",
+        "description": "Yearly subscription to Kneto.",
+        "price": 1500,
+        "currency": "eur",
+        "interval": "year"
+    },
+    "monthly-trial": {
+        "stripe_plan_id": "monthly-trial",
+        "name": "Monthly subscription to Kneto. 30day trail",
+        "description": "Monthly subscription to Kneto.",
+        "price": 150,
+        "currency": "eur",
+        "interval": "month",
+        "trial_period_days": 30
+    },
+}
+
 
 ##############################################################################
 # Account & registration
@@ -241,7 +306,7 @@ CELERYBEAT_SCHEDULE = {
 
 # for testing
 if 'test' in sys.argv:
-    # remove django hunger middleware in testing
+    #remove django hunger middleware in testing
     MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
     MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'

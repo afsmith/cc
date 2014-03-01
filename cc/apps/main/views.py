@@ -45,3 +45,15 @@ def sendgrid_parse(request):
 
     # response with status 200 no matter what
     return HttpResponse(status=200)
+
+
+@auth_decorators.login_required
+@render_to('main/profile.html')
+def profile_view(request):
+
+    user_profile = list(CUser.objects.all())
+    return {
+        'user_profile':user_profile,
+    }
+
+

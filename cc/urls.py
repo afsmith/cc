@@ -3,9 +3,18 @@ from django.conf import settings
 
 from cc.apps.accounts.forms import UserCreationForm, UserPasswordResetForm
 from registration.backends.default.views import RegistrationView
+from django.contrib.auth.decorators import login_required
 
 from django.contrib import admin
 admin.autodiscover()
+
+from cc.apps.cc_stripe.views import (
+    CancelView,
+    SubscribeView,
+    NewSubscriberView,
+)
+
+
 
 urlpatterns = patterns(
     '',
@@ -70,7 +79,28 @@ urlpatterns = patterns(
     # Sendgrid parse API endpoint
     url(r'^sendgrid_parse/$',
         'cc.apps.main.views.sendgrid_parse', name='sendgrid_parse'),
-)
+    #Profile View
+   # url(r'^profile_view/$',
+    #    'cc.apps.main.views.profile_view', name='profile_view'),
+
+    # django-stripe cc_stripe
+ 
+
+    url(r'^payments/a/cancel/$', 
+        'cc.apps.cc_stripe.views.cancel', name='payments_ajax_cancel'),
+    url(r'^payments/a/subscribe/$', 
+        'cc.apps.cc_stripe.views.subscribe', name='payments_ajax_subscribe'),
+    url(r"^payments/subscribe/$", 
+        login_required(SubscribeView.as_view()), name="payments_subscribe"),
+    url(r"^payments/new_subscriber/$", 
+        login_required(NewSubscriberView.as_view()), name="new_payments_subscribe"),
+    url(r"^payments/cancel/$",
+        login_required(CancelView.as_view()), name="payments_cancel"),
+    url(r"^payments/webhook/$", "cc.apps.cc_stripe.views.webhook", name="payments_webhook"),
+
+
+   url(r"^payments/", include("payments.urls")),
+    )
 
 if settings.DEBUG:
     media_url = settings.MEDIA_URL

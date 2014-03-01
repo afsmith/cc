@@ -1,5 +1,5 @@
 {% extends "registration/registration_base.html" %}
-{% load i18n %}
+{% load i18n bootstrap_tags %}
 
 {% block content_header %}
 <h1>{% trans "Kneto CC" %}</h1>
@@ -7,8 +7,13 @@
 
 {% block content %}
 
+    {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
     <form id="loginForm" action="{% url 'auth_login' %}" method="post" class="well">{% csrf_token %}
-        {% include "_base_form.html" %}
+            {% csrf_token %}
+        {{ form|as_bootstrap }}
 
         <input type="hidden" name="next" value="{% url 'home' %}" />
         
