@@ -24,6 +24,14 @@ class UserCreationForm(forms.ModelForm):
     industry = forms.ChoiceField(
         widget=forms.Select, choices=settings.INDUSTRY_CHOICES
     )
+    tos = forms.BooleanField(
+        label=_('I have read and agree to the <a href="{}">Terms of Service</a>'
+            .format(settings.TOS_URL)),
+        widget=forms.CheckboxInput(attrs={'class': 'label_checkbox'}),
+        error_messages={
+            'required': _('You must agree to the terms to register')
+        }
+    )
 
     PASSWORD_MIN_LENGTH = 8
 

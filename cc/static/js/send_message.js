@@ -274,7 +274,7 @@ $(document).ready(function () {
     initSignatureField = function () {
         $('label[for="id_signature"]').show();
         // add apply button here
-        $('label[for="id_signature"]').append('<button id="js_applySignature" class="btn btn-small" style="margin-left:20px">Apply</button>');
+        $('label[for="id_signature"]').append('<button id="js_applySignature" class="btn btn-default btn-small" style="margin-left:20px">Apply</button>');
 
         signature_field.summernote({
             height: 60,

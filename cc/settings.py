@@ -180,6 +180,8 @@ ALLOWED_HOSTS = ['127.0.0.1', '.kneto.com']
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 
+TOS_URL = 'http://kneto.com/terms-of-service/'
+
 
 ##############################################################################
 # Payments

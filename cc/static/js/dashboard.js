@@ -97,7 +97,7 @@ $(document).ready(function () {
         // change email cell to input
         this_email_cell.html('<input class="js_emailInput" type="text" value="' + old_email_val + '">');
         this_email_cell.data('old_value', old_email_val);
-        this_row.find('.fix_cell').html('<button class="btn btn-small js_resendButton">Send</button>');
+        this_row.find('.fix_cell').html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
     });
 
     // changing the text in email
