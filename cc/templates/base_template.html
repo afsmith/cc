@@ -44,10 +44,11 @@
     <![endif]-->
  <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <div class="container"><div class="navbar-header"><a class="navbar-brand" href="{% url 'home' %}">Chinchilla</a></div>                
+            <div class="container"><div class="navbar-header"><a class="navbar-brand" href="{% url 'home' %}">!Kneto</a></div>                
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         {% if user.is_authenticated %}
+                         <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Dashboard' %}</a></li>
                         <li class="{% active request 'send' %}"><a href="{% url 'send' %}">{% trans 'Send' %}</a></li>
                         <li class="{% active request 'report_index' %}"><a href="{% url 'report_index' %}">{% trans 'Report' %}</a></li>
                         {% endif %}
