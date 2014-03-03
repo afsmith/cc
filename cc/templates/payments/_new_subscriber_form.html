@@ -1,0 +1,77 @@
+{% load url from future %}
+{% load bootstrap_tags %}
+
+<div class="subscribe-form">
+    <h2> </h2>
+    <p class="lead"></p>
+    {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+ 
+<container>
+<div class="row">
+    
+<div class="col-md-4">
+        <div class="jumbotron">
+  <h3>Single User</h3>
+  <p>Give it a shot. €150 a month, cancel anytime.</p>
+  <p>        
+           <form action="{% url 'payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">
+        {% csrf_token %}
+        <input name="stripe_token" type="hidden" />
+        <input type="hidden"  id="id_plan" name="plan" value="monthly">
+        <input type="hidden"  id="id_description" name="description" value="30 day trial">
+    <div class="form-actions">
+
+    <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">Get it</button>
+    </div>
+     </form>
+        </div>
+    </div>
+
+        <div class="col-md-4">
+        <div class="jumbotron">
+  <h3>Early Access small plan</h3>
+  <p>Give your team of up to three people access for three months at a deep discount.</p>
+  <p> 
+     <form action="{% url 'payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">
+        {% csrf_token %}
+<input name="stripe_token" type="hidden" />
+<input type="hidden"  id="id_plan" name="plan" value="early_small">        
+<div class="form-actions">
+ <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing..." >€450</button>
+ </div>
+  </form>
+
+</div>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="jumbotron">
+  <h3>Early Access large plan</h3>
+  <p>Is you team a little bigger? Big discount, more people. Up to 10.</p>
+  <p> 
+     <form action="{% url 'payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">
+        {% csrf_token %}
+    <input name="stripe_token" type="hidden" />  
+    <input type="hidden"  id="id_plan" name="plan" value="early_large">     
+    <div class="form-actions"> 
+    <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">€1500</button>
+    </div>
+     </form>
+</div>
+    </div>
+</row>
+
+</container>
+
+
+</div>
+<script>
+  $('#form-submit').click(function () {
+    var btn = $(this)
+    btn.button('loading')
+
+  });
+</script>
