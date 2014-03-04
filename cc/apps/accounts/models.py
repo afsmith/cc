@@ -75,23 +75,6 @@ CUser._meta.get_field('email')._unique = True
 CUser._meta.get_field('username')._unique = False
 
 
-#class BillingAddress(models.Model):
-#    '''
-#    Users billing address provided by strip webhook
-#    '''
-#    user = models.CharField(_('Country'), max_length=50, blank=True)
-#    #key to stipe id
-#    country_bill = models.CharField(_('Country'), max_length=50, blank=True)
-#    name_bill = models.CharField(_('Name'), max_length=128, blank=True)
-#    address_line1_bill = models.CharField(_('Address line1'), max_length=128, blank=True)
-#    address_line2_bill = models.CharField(_('Address line2'), max_length=128, blank=True)
-#    address_city_bill = models.CharField(_('City'), max_length=128, blank=True)
-#    address_state_bill = models.CharField(_('State'), max_length=128, blank=True)
-#    address_zip_bill = models.CharField(_('State'), max_length=50, blank=True)
-#    address_country_bill = models.CharField(_('County'), max_length=50, blank=True)
-
-
-
 class OneClickLinkToken(models.Model):
     '''
     One click link (OCL) token model
@@ -104,3 +87,24 @@ class OneClickLinkToken(models.Model):
 
     def __unicode__(self):
         return '%s[%s][%s]' % (self.user, self.token, self.expires_on)
+
+
+class BillingAddress(models.Model):
+    '''
+    Users billing address provided by stripe webhook
+    '''
+    user = models.ForeignKey(CUser)
+    name = models.CharField(_('Name'), max_length=128, null=True)
+    address_line1 = models.CharField(
+        _('Address line1'), max_length=128, null=True
+    )
+    address_line2 = models.CharField(
+        _('Address line2'), max_length=128, null=True
+    )
+    address_zip = models.CharField(_('Zip'), max_length=20, null=True)
+    address_city = models.CharField(_('City'), max_length=50, null=True)
+    address_state = models.CharField(_('State'), max_length=50, null=True)
+    address_country = models.CharField(_('Country'), max_length=50, null=True)
+
+    def __unicode__(self):
+        return '{} - {}'.format(self.name, self.address_line1)

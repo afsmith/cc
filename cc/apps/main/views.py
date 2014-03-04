@@ -31,7 +31,7 @@ def sendgrid_parse(request):
         try:
             json_req = json.loads(request.body)
         except ValueError:
-            # if request is not a JSON string, return status 209
+            # if request is not a JSON string, return status 200
             return HttpResponse(status=200)
 
         # filter the request

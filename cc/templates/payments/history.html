@@ -1,9 +1,6 @@
-
-{% block title %}Payment History{% endblock title %}
-
 {% block content %}
-    {% include "payments/_subscription_status.html" %}
     <h2>Payment History</h2>
+    {% include "payments/_subscription_status.html" %}
     <p class="lead">Your transaction history</p>
     {% if request.user.customer.invoices.all %}
         <table class="table table-striped">
