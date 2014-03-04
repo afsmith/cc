@@ -4,6 +4,12 @@
 {% block title %}Account Management{% endblock title %}
 
 {% block content %}
+
+          {% if user.is_staff  %}
+         <h2>Your account is free</h2>
+         <p class="lead">No need to pay.</p>
+         {% endif %}
+
     {% with request.user.customer.current_subscription as subscription %}
        {% if subscription.status == "trialing" %} 
 
@@ -23,9 +29,9 @@
           <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
         </div>
     
-        {% elif not subscription or subscription.status != 'active'  %}
+        {% elif not subscription or subscription.status != 'active' %}
           {% include "payments/_subscription_status.html" %}
-           {% include "payments/_subscribe_form.html" %}
+           {% include "payments/_new_subscriber_form.html" %}
 
         {% else %}
   <!-- Nav tabs -->
