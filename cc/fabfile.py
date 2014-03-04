@@ -52,7 +52,13 @@ env.manage = "%s/bin/python %s/project/manage.py" % (env.venv_path,
                                                      env.venv_path)
 
 live_host = conf.get("LIVE_HOSTNAME")
+live_key = conf.get("LIVE_KEY")
+live_cert = conf.get("LIVE_CERT")
+
 env.live_host = live_host[env.roles[0]]
+env.live_key = live_key[env.roles[0]]
+env.live_cert = live_cert[env.roles[0]]
+
 #env.live_host = conf.get("LIVE_HOSTNAME", )
 env.repo_url = conf.get("REPO_URL", "")
 env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
@@ -419,7 +425,7 @@ def create():
                 crt_local, = glob(join("deploy", "*.crt"))
                 key_local, = glob(join("deploy", "*.key"))
             except ValueError:
-                parts = (crt_file, key_file, env.live_host)
+                parts = (env.live_cert, env.live_key, env.live_host)
                 sudo("openssl req -new -x509 -nodes -out %s -keyout %s "
                      "-subj '/CN=%s' -days 3650" % parts)
             else:

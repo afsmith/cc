@@ -309,6 +309,17 @@ FABRIC_GLOBAL = {
         'staging': 'cc-stage.kneto.com',
         'prod': 'cc.kneto.com',
     },
+    'LIVE_CERT': {
+        'staging': 'cc.crt',
+        'prod': 'cc_kneto_com.pem',
+    },
+    'LIVE_KEY': {
+        'staging': 'cc.key',
+        'prod': 'cc01.key',
+    },
+
+
+
     'PROJECT_NAME': 'cc',
     'LOCALE': 'en_US.UTF-8', # Should end with ".UTF-8"
     'REQUIREMENTS_PATH': 'requirements.txt',
