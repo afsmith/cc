@@ -14,7 +14,7 @@
 <div class="col-md-4">
         <div class="jumbotron">
   <h3>Single User</h3>
-  <p>Give it a shot. €150 a month, cancel anytime.</p>
+  <p>Give it a shot. €149 a month, cancel anytime.</p>
   <p>        
            <form action="{% url 'payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">
         {% csrf_token %}
@@ -38,7 +38,7 @@
 <input name="stripe_token" type="hidden" />
 <input type="hidden"  id="id_plan" name="plan" value="early_small">        
 <div class="form-actions">
- <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing..." >€450</button>
+ <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing..." >€449</button>
  </div>
   </form>
 
@@ -56,7 +56,7 @@
     <input name="stripe_token" type="hidden" />  
     <input type="hidden"  id="id_plan" name="plan" value="early_large">     
     <div class="form-actions"> 
-    <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">€1500</button>
+    <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">€1499</button>
     </div>
      </form>
 </div>
