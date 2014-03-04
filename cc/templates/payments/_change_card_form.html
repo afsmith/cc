@@ -12,7 +12,7 @@
     </p>
 
     {% if request.user.billingaddress_set %}
-    <h2>Current billing address</h2>
+    <h4>Current billing address:</h4>
         {% for addr in request.user.billingaddress_set.all %}
         <p class="lead">
             {{ addr.name|default:'' }}<br />

@@ -44,7 +44,10 @@
     <![endif]-->
  <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <div class="container"><div class="navbar-header"><a class="navbar-brand" href="{% url 'home' %}">!Kneto</a></div>                
+            <div class="container"><div class="navbar-header">                
+                <a class="navbar-brand logo-nav" href="/">
+                    <img src="{% static "img/Kneto_White.png" %}">
+                </a></div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         {% if user.is_authenticated %}
