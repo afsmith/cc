@@ -20,7 +20,6 @@
         {% csrf_token %}
         <input name="stripe_token" type="hidden" />
         <input type="hidden"  id="id_plan" name="plan" value="monthly">
-        <input type="hidden"  id="id_description" name="description" value="30 day trial">
     <div class="form-actions">
 
     <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">Get it</button>
@@ -31,7 +30,7 @@
 
         <div class="col-md-4">
         <div class="jumbotron">
-  <h3>Early Access small plan</h3>
+  <h3>Early Access <br>small plan</h3>
   <p>Give your team of up to three people access for three months at a deep discount.</p>
   <p> 
      <form action="{% url 'payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">
@@ -49,7 +48,7 @@
 
     <div class="col-md-4">
         <div class="jumbotron">
-  <h3>Early Access large plan</h3>
+  <h3>Early Access <br>large plan</h3>
   <p>Is you team a little bigger? Big discount, more people. Up to 10.</p>
   <p> 
      <form action="{% url 'payments_ajax_subscribe' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".subscribe-form" method="POST">

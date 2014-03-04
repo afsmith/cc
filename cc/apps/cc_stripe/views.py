@@ -156,7 +156,7 @@ def subscribe(request, form_class=PlanForm):
     else:
         data['error'] = form.errors
         data['form'] = form
-    return _ajax_response(request, 'payments/_subscribe_form.html', **data)
+    return _ajax_response(request, 'payments/_new_subscriber_form.html', **data)
 
 
 @require_POST

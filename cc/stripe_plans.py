@@ -3,28 +3,11 @@
 PAYMENTS_PLANS = {
     "monthly": {
         "stripe_plan_id": "monthly",
-        "name": "Kneto (€150/month)",
+        "name": "Single User (€150/month)",
         "description": "Monthly subscription to Kneto.",
         "price": 150,
         "currency": "eur",
         "interval": "month"
-    },
-    "yearly": {
-        "stripe_plan_id": "beta-yearly",
-        "name": "Kneto (€1500/year)",
-        "description": "Yearly subscription to Kneto.",
-        "price": 1500,
-        "currency": "eur",
-        "interval": "year"
-    },
-    "monthly-trial": {
-        "stripe_plan_id": "monthly-trial",
-        "name": "Monthly subscription to Kneto. 30day trial",
-        "description": "Monthly subscription to Kneto.",
-        "price": 150,
-        "currency": "eur",
-        "interval": "month",
-        "trial_period_days": 30
     },
     "early_small": {
         "stripe_plan_id": "early_small",

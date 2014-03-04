@@ -26,7 +26,14 @@
 
 {% endfor %}
 
-        <button type="submit" class="btn btn-primary">Change</button>
+        <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">Change</button>
         </p>
     </form>
 </div>
+<script>
+  $('#form-submit').click(function () {
+    var btn = $(this)
+    btn.button('loading')
+
+  });
+</script>

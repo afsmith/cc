@@ -14,10 +14,9 @@
     {% endif %}
     <form class="form ajax" data-replace-closest=".cancel-subscription" action="{% url 'payments_ajax_cancel' %}" method="POST">
         {% csrf_token %}
-        <div class="actions">
-            <button type="submit" id="form-submit" class="btn btn-mini btn-danger"  data-loading-text="Loading...">
-            <span class="">Cancel</span></button>
-        </div>
+    
+    <button type="submit" class="btn btn-primary btn-danger"  id="form-submit" data-loading-text="Processing...">Cancel</button>
+       
     </form>
 
     {% endif %}
@@ -26,7 +25,7 @@
 <script>
   $('#form-submit').click(function () {
     var btn = $(this)
-    btn.button('loading')
+    btn.button('Cancel')
 
   });
 </script>
