@@ -13,23 +13,71 @@
     {% if error %}
         <div class="alert alert-error">{{ error }}</div>
     {% endif %}
-    <form action="{% url 'payments_ajax_change_plan' %}" method="POST" class="form-inline ajax" data-replace-closest=".change-subscription">
+<div class="row">
+<div class="col-md-4">
+        <div class="jumbotron">
+  <h3>Single User</h3>
+  <p>Give it a shot. €149<sup>*</sup> a month, cancel anytime.</p>
+  <p>        
+           <form action="{% url 'payments_ajax_change_plan' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".change-subscription" method="POST">
         {% csrf_token %}
-      {{ form|as_bootstrap }} 
-        <p>
-  <!--       {% for radio in form %} -->
-<!-- <div class="btn-group" data-toggle="buttons"> -->
-   
-  <!--  #{{ radio }}# -->
-   
-<!-- </div> -->
+        <input name="stripe_token" type="hidden" />
+        <input type="hidden"  id="id_plan" name="plan" value="monthly">
+    <div class="form-actions">
 
-{% endfor %}
+    <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">Get it</button>
+    </div>
+     </form>
+        </div>
+    </div>
 
-        <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">Change</button>
-        </p>
-    </form>
+        <div class="col-md-4">
+        <div class="jumbotron">
+  <h3>Early Access <br>small plan</h3>
+  <p>Give your team of up to three people access for three months at a deep discount.</p>
+  <p> 
+     <form action="{% url 'payments_ajax_change_plan' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".change-subscription" method="POST">
+        {% csrf_token %}
+<input name="stripe_token" type="hidden" />
+<input type="hidden"  id="id_plan" name="plan" value="early_small">        
+<div class="form-actions">
+ <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing..." >€449<sup>*</sup></button>
+ </div>
+  </form>
+
 </div>
+
+    </div>
+
+        <div class="col-md-4">
+        <div class="jumbotron">
+  <h3>Early Access <br>large plan</h3>
+  <p>Is you team a little bigger? Big discount, more people. Up to 10.</p>
+  <p> 
+     <form action="{% url 'payments_ajax_change_plan' %}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" data-replace-closest=".change-subscription" method="POST">
+        {% csrf_token %}
+    <input name="stripe_token" type="hidden" />  
+    <input type="hidden"  id="id_plan" name="plan" value="early_large">     
+    <div class="form-actions"> 
+    <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">€1499<sup>*</sup></button>
+    </div>
+     </form>
+</div>
+    </div>
+
+ </div>
+<!--    <form action="{% url 'payments_ajax_change_plan' %}" method="POST" class="form-inline ajax" data-replace-closest=".change-subscription"> -->
+ <!--       {% csrf_token %} -->
+ <!--     {{ form|as_bootstrap }}  -->
+        <p>
+
+
+<!-- {\% endfor \%} -->
+
+ <!--       <button type="submit" class="btn btn-primary" id="form-submit" data-loading-text="Processing...">Change</button> -->
+        </p>
+<!--    </form> -->
+ </div>
 <script>
   $('#form-submit').click(function () {
     var btn = $(this)
