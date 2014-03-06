@@ -33,7 +33,10 @@ class MessageForm(forms.ModelForm):
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'form-control'}),
             'message': forms.Textarea(attrs={'class': 'form-control'}),
-            'key_page': forms.Select(choices=[('', '----------')]),
+            'key_page': forms.Select(
+                choices=[('', '----------')],
+                attrs={'class': 'form-control'}
+            ),
             'link_text': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': _(
