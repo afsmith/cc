@@ -7,7 +7,7 @@
 
 {% if messages %}
     <label for="js_selectMessage">{% trans "Select message:" %}</label>
-    <select id="js_selectMessage" style="width: auto;">
+    <select id="js_selectMessage" class="form-control">
         {% for msg in messages %}
         <option value="{{ msg.id }}" {% if msg.id == this_message.id %}selected="selected"{% endif %}>
             {{ msg.subject }} | {{ msg.created_at }} | {{ msg.receivers.all|join:', '|truncatechars:30 }}
