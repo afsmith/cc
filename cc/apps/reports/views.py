@@ -134,6 +134,7 @@ def _format_data_for_chart(log, this_message):
         'combo': combo,
         'key_page': this_message.key_page,
         'subject': this_message.subject,
+        'total_visits': len(log)
     }
 
 
