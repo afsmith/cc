@@ -18,6 +18,8 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label=_('Password confirmation'), widget=forms.PasswordInput
     )
+    email1 = forms.EmailField(label=_("E-mail"))
+    email = forms.EmailField(label=_("Repeat email"))
     country = forms.ChoiceField(
         widget=forms.Select, choices=settings.COUNTRY_CHOICES
     )
@@ -40,6 +42,7 @@ class UserCreationForm(forms.ModelForm):
         fields = (
             'first_name',
             'last_name',
+            'email1',
             'email',
             'country',
             'industry',
@@ -79,7 +82,16 @@ class UserCreationForm(forms.ModelForm):
         password2 = self.cleaned_data.get('password2')
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError(_('Passwords don\'t match.'))
-        return password2
+        password = password2
+        return password
+
+    def clean_email(self):
+        # Check that the two email entries match
+        email1 = self.cleaned_data.get('email1')
+        email = self.cleaned_data.get('email')
+        if email1 and email and email1 != email:
+            raise forms.ValidationError(_('Email addresses don\'t match.'))
+        return email
 
     def clean(self):
         # allow receiver to update account by bypassing unique in email field
