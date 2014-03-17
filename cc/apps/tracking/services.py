@@ -1,4 +1,4 @@
-from .models import *
+from .models import TrackingSession, TrackingEvent, ClosedDeal
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
 
@@ -57,7 +57,7 @@ def create_tracking_events(session_id, timer_params, counter_params):
     for key in timer_params.keys():
         # timer_params format example: {'timer[0]': '100', 'timer[1]': '200'}
         page_number = int(re.search('\d+', key).group(0))
-        
+
         param_str = timer_params.get(key)
         if param_str == 'NaN':
             param_str = '0'
@@ -67,7 +67,7 @@ def create_tracking_events(session_id, timer_params, counter_params):
         if param_str == 'NaN':
             param_str = '0'
         page_view = int(param_str)
-        
+
         events.append(TrackingEvent(
             tracking_session=session,
             page_number=page_number,
@@ -77,9 +77,10 @@ def create_tracking_events(session_id, timer_params, counter_params):
 
     return TrackingEvent.objects.bulk_create(events)
 
+
 def edit_or_create_tracking_events(
-        session_id, timer_params, counter_params, is_replace=False
-    ):
+    session_id, timer_params, counter_params, is_replace=False
+):
     events = TrackingEvent.objects.filter(tracking_session=session_id)
     if events:
         for event in events:
@@ -92,7 +93,7 @@ def edit_or_create_tracking_events(
 
             # if this is Safari Desktop tracking event, the later data should
             # replace the previous one
-            if is_replace:    
+            if is_replace:
                 event.total_time = current_page_time
                 event.page_view = current_page_count
             # otherwise, just sum up the data (in 'pagehide' event)

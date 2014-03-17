@@ -30,6 +30,6 @@ def delete_old_content():
             storage.default_storage.delete(file.conv_file_path)
 
     # after 120 days, remove the expired OCLs
-    ocls = OneClickLinkToken.objects.filter(
+    OneClickLinkToken.objects.filter(
         expires_on__lt=datetime.today()-timedelta(days=90),
     ).delete()

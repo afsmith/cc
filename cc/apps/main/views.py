@@ -3,8 +3,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from cc.apps.reports.services import *
+from cc.apps.accounts.models import CUser
+from cc.apps.reports.services import (
+    get_message_sent, get_call_list, get_bounce_list,
+    save_sendgrid_bounce_from_request
+)
 from cc.libs.utils import get_domain
+
 
 from annoying.decorators import render_to
 import json

@@ -23,6 +23,7 @@ from payments.models import (
 import stripe
 import json
 
+
 class PaymentsContextMixin(object):
 
     def get_context_data(self, **kwargs):
@@ -57,6 +58,7 @@ class SubscribeView(PaymentsContextMixin, TemplateView):
         })
         return context
 
+
 class NewSubscriberView(PaymentsContextMixin, TemplateView):
     template_name = 'payments/new_subscriber.html'
 
@@ -66,8 +68,6 @@ class NewSubscriberView(PaymentsContextMixin, TemplateView):
             'form': PlanForm
         })
         return context
-
-
 
 
 class ChangeCardView(PaymentsContextMixin, TemplateView):
@@ -84,7 +84,6 @@ class ChangePlanView(SubscribeView):
 
 class HistoryView(PaymentsContextMixin, TemplateView):
     template_name = 'payments/history.html'
-
 
 
 @require_POST
@@ -156,7 +155,9 @@ def subscribe(request, form_class=PlanForm):
     else:
         data['error'] = form.errors
         data['form'] = form
-    return _ajax_response(request, 'payments/_new_subscriber_form.html', **data)
+    return _ajax_response(
+        request, 'payments/_new_subscriber_form.html', **data
+    )
 
 
 @require_POST
@@ -208,17 +209,16 @@ def webhook(request):
                     return HttpResponse(status=200)
 
                 card = json_req['data']['object']
-                address = BillingAddress.objects.create(
+                BillingAddress.objects.create(
                     user=user,
                     name=card.get('name'),
                     address_line1=card.get('address_line1'),
-                    address_line2 =card.get('address_line2'),
+                    address_line2=card.get('address_line2'),
                     address_zip=card.get('address_zip'),
                     address_city=card.get('address_city'),
                     address_state=card.get('address_state'),
                     address_country=card.get('address_country'),
                 )
 
-    
     # response with status 200 no matter what
     return HttpResponse(status=200)

@@ -9,7 +9,7 @@ def process_file_and_send_message(message, request):
     domain = get_domain(request)
     file = message.files.all()[0]
     chain = (
-        process_stored_file.s(file) 
+        process_stored_file.s(file)
         | send_cc_message.s(message, domain)
     )
     try:
@@ -18,6 +18,7 @@ def process_file_and_send_message(message, request):
         print '[CELERY TASK ERROR] %s' % e
         # if converion goes wrong, send notification to sender
         send_notification_email(3, message)
+
 
 @task
 def send_cc_message(convert_result, message, domain):

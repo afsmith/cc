@@ -287,10 +287,10 @@ CELERYBEAT_SCHEDULE = {
 
 # for testing
 if 'test' in sys.argv:
-    #remove django hunger middleware in testing
-    MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-    MIDDLEWARE_CLASSES.remove('hunger.middleware.BetaMiddleware')
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    STATICFILES_STORAGE = (
+        'django.contrib.staticfiles.storage'
+        '.StaticFilesStorage'
+    )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = ['--nologcapture', '--nocapture']

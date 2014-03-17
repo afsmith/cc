@@ -3,7 +3,6 @@ from django.conf import settings
 from . import models
 from cc.libs import utils
 
-import fnmatch
 import os
 import shutil
 import subprocess
@@ -81,7 +80,7 @@ class BaseConverter(object):
 
     def _get_dst_path(self):
         path = os.path.join(
-            settings.CONTENT_AVAILABLE_DIR, 
+            settings.CONTENT_AVAILABLE_DIR,
             self._file.conv_file_path
         )
         return self._storage.path(path)
@@ -146,7 +145,7 @@ class PDFConverter(BaseConverterWithTempDir):
     def _convert_to_json(self):
         dst = os.path.join(self._tmp, 'pdf.json')
         super(PDFConverter, self)._run_command([
-            'pdf2json', self._get_src_path(), '-enc', 'UTF-8', 
+            'pdf2json', self._get_src_path(), '-enc', 'UTF-8',
             '-compress', '-split', '10', dst
         ])
 

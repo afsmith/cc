@@ -16,7 +16,6 @@ class CreateEventTest(ClientTestCase):
         c = self._get_client_user()
         resp = c.post(self.url, {})
         self.assertEquals(resp.status_code, 200)
-        #self.assertTrue(TrackingEvent.objects.get(event_type=TrackingEvent.START_EVENT_TYPE))
 
     def test_should_not_accept_get(self):
         self.should_not_accept_get(self.url)

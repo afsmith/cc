@@ -38,6 +38,7 @@ def _create_ocl_link(user, domain, message_id):
         domain, message_id, ocl.token
     )
 
+
 def _replace_link_text(message, ocl_link):
     link_text = message.link_text
     if link_text == '':
@@ -48,15 +49,16 @@ def _replace_link_text(message, ocl_link):
         u'<a href="{0}">{1}</a>'.format(ocl_link, link_text)
     )
 
+
 def _send_message(message, recipient, domain):
     ocl_link = _create_ocl_link(recipient, domain, message.id)
-        
+
     # replace the token [link] with the actual OCL link
     text = _replace_link_text(message, ocl_link)
 
     # create tracking pixel
     tracking_pixel_src = '{}/track/email/{}/{}/'.format(
-       domain, message.id, recipient.id
+        domain, message.id, recipient.id
     )
 
     send_templated_mail(
@@ -71,7 +73,7 @@ def _send_message(message, recipient, domain):
         headers={
             'X-SMTPAPI': json.dumps({
                 'unique_args': {
-                    'cc_message_id': message.id, 
+                    'cc_message_id': message.id,
                     'domain': domain
                 }
             })
@@ -125,7 +127,9 @@ def send_notification_email(reason_code, message, recipient=None):
         email_template = 'notification_email_opened'
     elif reason_code == 2:
         action = TrackingLog.CLICK_LINK_ACTION
-        subject = _('[Notification] %s clicked on your link.') % recipient.email
+        subject = _(
+            '[Notification] %s clicked on your link.'
+        ) % recipient.email
         email_template = 'notification_link_clicked'
     elif reason_code == 3:
         subject = _('[Notification] Conversion error.')
@@ -145,8 +149,10 @@ def send_notification_email(reason_code, message, recipient=None):
             should_send = False
 
         # check if the setting is on
-        if not ((reason_code == 1 and message.notify_email_opened)
-            or (reason_code == 2 and message.notify_link_clicked)): 
+        if not (
+            (reason_code == 1 and message.notify_email_opened)
+            or (reason_code == 2 and message.notify_link_clicked)
+        ):
             should_send = False
 
         # create log anyway

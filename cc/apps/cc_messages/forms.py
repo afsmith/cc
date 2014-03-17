@@ -20,7 +20,7 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = [
-            'subject', 
+            'subject',
             'cc_me',
             'notify_email_opened',
             'notify_link_clicked',
@@ -40,8 +40,8 @@ class MessageForm(forms.ModelForm):
             'link_text': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': _(
-                    'Add your link text '
-                    '(this will replace [link] in your message after you send it)'
+                    'Add your link text (this will replace [link] '
+                    'in your message ''after you send it)'
                 )
             })
         }
@@ -61,7 +61,6 @@ class MessageForm(forms.ModelForm):
             'attachment',
             'key_page',
         ]
-
 
     def clean_to(self):
         # get list of emails out of text input
@@ -100,7 +99,7 @@ class MessageForm(forms.ModelForm):
         # clean up the To data before saving
         self.cleaned_data['to'] = self._fetch_receiver_ids()
         message = super(MessageForm, self).save()
-        
+
         # then add m2m relationship after saving
         message.receivers = self.cleaned_data['to']
         message.files.add(self.cleaned_data['attachment'])
@@ -110,7 +109,7 @@ class MessageForm(forms.ModelForm):
 
         # add signature to the main message
         message.message = re.sub(
-            r'(<div id="signature">).*(</div>)', 
+            r'(<div id="signature">).*(</div>)',
             ur'\1{}\2'.format(self.cleaned_data['signature']),
             message.message
         )

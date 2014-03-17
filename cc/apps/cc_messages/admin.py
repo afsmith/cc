@@ -7,12 +7,12 @@ from . import models
 class MessageAdmin(admin.ModelAdmin):
     search_fields = ('subject',)
     list_display = (
-        'subject', 'message', 'owner', 
+        'subject', 'message', 'owner',
         'cc_me', 'notify_email_opened', 'notify_link_clicked',
         'created_at'
     )
     list_filter = (
-        'owner', 
+        'owner',
         ('created_at', DateFieldListFilter)
     )
     date_hierarchy = 'modified_at'
