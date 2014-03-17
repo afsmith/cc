@@ -1,14 +1,15 @@
 from django.contrib.auth import decorators as auth_decorators
 from django.shortcuts import redirect, get_object_or_404
-from django.db.models import Sum, Count, Max
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.views.decorators import http as http_decorators
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .services import *
+from .models import Bounce
 from cc.apps.cc_messages.models import Message
-from cc.apps.tracking.models import TrackingSession, TrackingEvent, ClosedDeal
+from cc.apps.tracking.models import TrackingSession
 from cc.libs.utils import format_dbtime
 
 from annoying.decorators import render_to, ajax_request
@@ -27,7 +28,7 @@ def report_index(request):
         )
     except Message.DoesNotExist:
         return {}
-    
+
     return redirect('report_detail', message_id=latest_message.id)
 
 
@@ -48,7 +49,7 @@ def report_detail(request, message_id):
 
     # get log data group by participant
     tracking_data = get_tracking_data_group_by_recipient(this_message)
-    
+
     return {
         'this_message': this_message,
         'messages': all_messages,
@@ -56,6 +57,7 @@ def report_detail(request, message_id):
     }
 
 
+@auth_decorators.login_required
 @http_decorators.require_POST
 @ajax_request
 def user_log(request):
@@ -72,7 +74,9 @@ def user_log(request):
         for qs in log_groupby_session:
             qs['created_ts'] = qs['created_at'].strftime('%d.%m.%Y %H:%M:%S')
             qs['total_time'] = format_dbtime(qs['total_time'])
-        json_resp = json.dumps(list(log_groupby_session), cls=DjangoJSONEncoder)
+        json_resp = json.dumps(
+            list(log_groupby_session), cls=DjangoJSONEncoder
+        )
         return HttpResponse(json_resp, mimetype='application/json')
     else:
         return {
@@ -81,6 +85,7 @@ def user_log(request):
         }
 
 
+@auth_decorators.login_required
 @http_decorators.require_POST
 @ajax_request
 def report_drilldown(request):
@@ -90,20 +95,20 @@ def report_drilldown(request):
 
     this_message = get_object_or_404(Message, pk=message_id)
 
-    if session_id: # get session log
+    if session_id:  # get session log
         data = get_tracking_data_group_by_page_number(
             tracking_session=session_id
         )
-    elif recipient_id: # get recipient log
+    elif recipient_id:  # get recipient log
         data = get_tracking_data_group_by_page_number(
             tracking_session__participant=recipient_id,
             tracking_session__message=message_id
         )
-    else: # get summary log
+    else:  # get summary log
         data = get_tracking_data_group_by_page_number(
             tracking_session__message=message_id
         )
-    
+
     return _format_data_for_chart(data, this_message)
 
 
@@ -123,3 +128,11 @@ def _format_data_for_chart(log, this_message):
         'key_page': this_message.key_page,
         'subject': this_message.subject,
     }
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def remove_bounce(request, bounce_id):
+    Bounce.objects.filter(pk=bounce_id).delete()
+    return {}

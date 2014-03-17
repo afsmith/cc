@@ -5,11 +5,11 @@ from .models import Bounce
 
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
-from cc.apps.tracking.models import TrackingSession, TrackingEvent, ClosedDeal
+from cc.apps.tracking.models import TrackingEvent, ClosedDeal
 
 from cc.libs.utils import format_dbtime, get_hours_until_now
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 def validate_request(request):
@@ -58,6 +58,7 @@ def get_tracking_data_group_by_recipient(message):
 
     return tracking_data
 
+
 def get_tracking_data_group_by_page_number(**kwargs):
     tracking_data = (
         TrackingEvent.objects
@@ -72,7 +73,6 @@ def get_tracking_data_group_by_page_number(**kwargs):
 
 
 def get_completion_percentage(recipient_id, message):
-    percent = 0
     tracking_data = (
         TrackingEvent.objects
         .filter(
@@ -104,11 +104,9 @@ def get_call_list(user):
             point_visit = algorithm.calculate_point(2, row['visit_count'])
             hours_last_visit = get_hours_until_now(row['max_date'])
             point_hours = algorithm.calculate_point(3, hours_last_visit)
-            print percent, point_completion, point_visit, hours_last_visit, point_hours
 
             total_point = point_completion + point_visit + point_hours
             status_color = algorithm.get_status_color(total_point)
-            print total_point, status_color, row['tracking_session__participant__email']
 
             # add a row to call list
             call_list.append({
@@ -121,10 +119,10 @@ def get_call_list(user):
                 'recipient_id': row['tracking_session__participant'],
                 'message_id': message.id,
             })
-        
+
         # get list of people didn't look at the offer
         uninterested_recipients = CUser.objects.filter(
-            receivers=message, 
+            receivers=message,
             trackingsession__isnull=True
         )
         for rec in uninterested_recipients:
@@ -139,9 +137,9 @@ def get_call_list(user):
                 'recipient_id': rec.id,
                 'message_id': message.id,
             })
-    
+
     # sort the call_list based on total_point
-    call_list = sorted(call_list, key=lambda k: k['total_point'], reverse=True) 
+    call_list = sorted(call_list, key=lambda k: k['total_point'], reverse=True)
     return call_list
 
 
@@ -160,8 +158,8 @@ def save_sendgrid_bounce_from_request(json_request):
     '''
     for req in json_request:
         event_type = req.get('event')
-        domain = req.get('domain')
-        smtp_id = req.get('smtp-id')
+        # domain = req.get('domain')
+        # smtp_id = req.get('smtp-id')
         cc_message_id = req.get('cc_message_id')
         email = req.get('email')
         reason = req.get('reason')

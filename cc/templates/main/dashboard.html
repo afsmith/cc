@@ -2,43 +2,43 @@
 {% load extras i18n staticfiles %}
 
 {% block meta_title %}{% trans "Dashboard" %}{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-sm-6 col-md-6">
         <h3>{% trans "Priority call list" %}</h3>
         <div style="height:500px;overflow-y:scroll;">
-            
-
-                {% for row in call_list %}
-                
-                {% endfor %}
             <table class="table table-bordered call_list_table">
-                <tbody><tr>
-                    <th>{% trans "Sold" %}</th>
-                    <th>{% trans "Status" %}</th>
-                    <th>{% trans "Email" %}</th>
-                    <th>{% trans "Date" %}</th>
-                    <th>{% trans "Subject" %}</th>
-                </tr>
-                {% for row in call_list %}
-                <tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
+                <tbody>
+                    <tr>
+                        <th>{% trans "Sold" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Email" %}</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Subject" %}</th>
+                    </tr>
+                    {% for row in call_list %}
+                    <tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
 
-                    <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
-                    <td>{% if row.status == 'Green' %}
-                        <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>
-                    {% elif row.status == 'Yellow' %}
-                        <span class="badge alert-warning"><i class="glyphicon glyphicon-asterisk"></i></span>
-                    {% elif row.status == 'Red' %}
-                        <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
-                    {% endif %}</td>
-                    <td>{{ row.email }}</td>
-                    <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
-                    <td>{{ row.subject }}</td>
-                </tr></tbody> {% endfor %} </table>
+                        <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
+                        <td>{% if row.status == 'Green' %}
+                            <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>
+                        {% elif row.status == 'Yellow' %}
+                            <span class="badge alert-warning"><i class="glyphicon glyphicon-asterisk"></i></span>
+                        {% elif row.status == 'Red' %}
+                            <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                        {% endif %}</td>
+                        <td>{{ row.email }}</td>
+                        <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
+                        <td>{{ row.subject }}</td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
         </div>
     </div>
 
- <div class="col-sm-6 col-md-6">
+    <div class="col-sm-6 col-md-6">
         <h3>{% trans "Summary report" %}</h3>
         <div id="call_list_graph">
             <p class="alert alert-info">
@@ -46,39 +46,45 @@
             </p>
         </div>
     </div>
-    <!-- end of row -->
-    </div>
+</div>
+
 <div class="row">
-<div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-12">
         <h3>{% trans "Postal report" %}</h3>
 
         <h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
         
         <h5>{% trans "Problemed messages" %}</h5>
         <table class="table table-bordered bounces_table">
-            <tbody><tr>
-                <th>{% trans "Problem" %}</th>
-                <th>{% trans "Email" %}</th>
-                <th>{% trans "Subject" %}</th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Reason" %}</th>
-                <th>{% trans "Fix" %}</th>
-            </tr></tbody></table></div>
+            <tbody>
+                <tr>
+                    <th>{% trans "Problem" %}</th>
+                    <th>{% trans "Email" %}</th>
+                    <th>{% trans "Subject" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Reason" %}</th>
+                    <th>{% trans "Fix" %}</th>
+                    <th>{% trans "Remove" %}</th>
+                </tr>
 
-            {% for row in bounce_list %}
-            <tr id="row_{{ row.message.id }}" >
-                <td>{{ row.event_type|capfirst }}</td>
-                <td class="email_cell">{{ row.email }}</td>
-                <td>{{ row.message.subject }}</td>
-                <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
-                <td>{{ row.reason }}</td>
-                <td class="fix_cell"><input type="checkbox" class="js_fix" /></td>
-            </tr>
-            {% endfor %}
+                {% for row in bounce_list %}
+                <tr id="row_{{ row.id }}" class="message_{{ row.message.id }}">
+                    <td>{{ row.event_type|capfirst }}</td>
+                    <td class="email_cell">{{ row.email }}</td>
+                    <td>{{ row.message.subject }}</td>
+                    <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
+                    <td>{{ row.reason }}</td>
+                    <td class="fix_cell"><input type="checkbox" class="js_fix" /></td>
+                    <td class="remove_cell"><input type="checkbox" class="js_remove" /></td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
+</div>
+
 <div class="row">
-<div class="col-lg-offset-3 col-sm-6 col-md-6" style="padding-top:20px">
+    <div class="col-lg-offset-3 col-sm-6 col-md-6" style="padding-top:20px">
         <a href="{% url 'send' %}" class="btn btn-success pull-left btn-lg">{% trans "Send offers" %}</a>
         <a href="{% url 'report_index' %}" class="btn btn-success pull-right btn-lg">{% trans "View reports" %}</a>
     </div>

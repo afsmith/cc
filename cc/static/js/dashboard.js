@@ -109,8 +109,8 @@ $(document).ready(function () {
     $('.bounces_table').on('click', '.js_resendButton', function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
-            this_id = this_row.prop('id'),
-            id_pair = this_id.replace('row_', '').split('_'),
+            this_class = this_row.prop('class'),
+            id_pair = this_class.replace('row_', '').split('_'),
             message_id = id_pair[0],
             participant_id = id_pair[1],
             new_email = this_row.find('.js_emailInput').val(),
@@ -125,6 +125,24 @@ $(document).ready(function () {
                 'old_email': old_email,
                 'new_email': new_email
             },
+        }).done(function (resp) {
+            this_row.remove();
+        });
+    });
+
+    // click on remove checkbox
+    $('.js_remove').click(function () {
+        $(this).closest('tr').find('.remove_cell').html('<button class="btn btn-default btn-small btn-danger js_removeButton">Remove</button>');
+    });
+
+    $('.bounces_table').on('click', '.js_removeButton', function () {
+        var this_row = $(this).closest('tr'),
+            this_id = this_row.prop('id').replace('row_', '');
+
+        $.ajax({
+            url: '/remove_bounce/' + this_id + '/',
+            type: 'POST',
+            dataType: 'json',
         }).done(function (resp) {
             this_row.remove();
         });

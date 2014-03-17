@@ -50,10 +50,7 @@ def sendgrid_parse(request):
 @auth_decorators.login_required
 @render_to('main/profile.html')
 def profile_view(request):
-
     user_profile = list(CUser.objects.all())
     return {
-        'user_profile':user_profile,
+        'user_profile': user_profile,
     }
-
-

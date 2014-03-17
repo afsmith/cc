@@ -29,15 +29,15 @@ STATICFILES_DIRS = (
     path.abspath(path.join(ROOT_PATH, 'static')),
 )
 
-
-
-
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+STATICFILES_STORAGE = (
+    'django.contrib.staticfiles.storage'
+    '.CachedStaticFilesStorage'
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -46,8 +46,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
- #   'hunger.middleware.BetaMiddleware',
-    "payments.middleware.ActiveSubscriptionMiddleware",
+    'payments.middleware.ActiveSubscriptionMiddleware',
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -84,17 +83,17 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     #--- 3rd party modules ---#
-    'south',               # south for DB migration
-    'django_extensions',   # django extensions
-    'registration',        # django registration (Hieu's fork)
-    'djcelery',            # celery for converting files
-    'analytical',          # support for many analytic platforms
-    'cookielaw',           # EU cookie law banner
- #   'hunger',              # for managing beta signups and invitations
-    'django_nose',         # django nose for testing
-    'django_forms_bootstrap', #needed for django-stripe
-    'payments',            # django-stripe
-  #  'widget_tweaks',       #for form label class 
+    'south',                   # south for DB migration
+    'django_extensions',       # django extensions
+    'registration',            # django registration (Hieu's fork)
+    'djcelery',                # celery for converting files
+    'analytical',              # support for many analytic platforms
+    'cookielaw',               # EU cookie law banner
+    # 'hunger',                 # for managing beta signups and invitations
+    'django_nose',             # django nose for testing
+    'django_forms_bootstrap',  # needed for django-stripe
+    'payments',                # django-stripe
+    # 'widget_tweaks',          #for form label class
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',
@@ -106,8 +105,10 @@ INSTALLED_APPS = (
     'cc.apps.cc_stripe',
 )
 
-# disable email for SuspiciousOperation http://stackoverflow.com/a/19534738/2527433
+# disable email for SuspiciousOperation
+# http://stackoverflow.com/a/19534738/2527433
 from django.core.exceptions import SuspiciousOperation
+
 
 def skip_suspicious_operations(record):
     if record.exc_info:
@@ -188,7 +189,7 @@ TOS_URL = 'http://kneto.com/terms-of-service/'
 ##############################################################################
 
 SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
- #   'home',
+    # 'home',
     'auth_login',
     'auth_logout',
     'create_event',
@@ -247,7 +248,7 @@ SUMMERNOTE_FILE_DIR = 'summernote'
 FILE_UPLOAD_PERMISSIONS = 0644
 FILE_UPLOAD_PERMISSIONS_DIRS = 0775
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 41943040 # 40 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 41943040  # 40 MB
 FILE_UPLOAD_HANDLERS = (
     'cc.libs.handlers.MaxFileMemoryFileUploadHandler',
     'cc.libs.handlers.MaxFileTemporaryFileUploadHandler',
@@ -276,7 +277,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERYBEAT_SCHEDULE = {
     'delete_old_content_schedule': {
         'task': 'cc.apps.main.tasks.delete_old_content',
-        'schedule': crontab(minute=0, hour=0), # once per day at midnight
+        'schedule': crontab(minute=0, hour=0),  # once per day at midnight
     },
 }
 
@@ -321,7 +322,7 @@ FABRIC_GLOBAL = {
 
 
     'PROJECT_NAME': 'cc',
-    'LOCALE': 'en_US.UTF-8', # Should end with ".UTF-8"
+    'LOCALE': 'en_US.UTF-8',  # Should end with ".UTF-8"
     'REQUIREMENTS_PATH': 'requirements.txt',
     'GUNICORN_PORT': 8000,
     'VIRTUALENV_HOME':  '/opt/kneto',
