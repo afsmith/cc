@@ -15,6 +15,7 @@ DETAILS
 
 TOTAL: €{{ charge.amount|floatformat:2 }} EUR
 PAID BY CREDIT CARD: -${{ charge.amount|floatformat:2 }}
+Total includes 24% VAT. 
 ========================================================
 {% else %}{% if charge.refunded %}Your credit card ending in {{ charge.card_last_4 }} was refunded ${{ charge.amount|floatformat:2 }}.
 {% else %}We are sorry, but we failed to charge your credit card ending in {{ charge.card_last_4 }} for the amount ${{ charge.amount|floatformat:2 }}.
