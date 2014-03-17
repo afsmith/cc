@@ -201,8 +201,6 @@ SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
     'payments_ajax_change_plan',
     'payments_history',
     'payments_webhook',
-
-
 )
 
 SUBSCRIPTION_REQUIRED_REDIRECT = ('new_payments_subscribe')
@@ -290,6 +288,10 @@ if 'test' in sys.argv:
     STATICFILES_STORAGE = (
         'django.contrib.staticfiles.storage'
         '.StaticFilesStorage'
+    )
+    SUBSCRIPTION_REQUIRED_EXCEPTION_URLS += (
+        'upload_file',
+        'accounts_register'
     )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

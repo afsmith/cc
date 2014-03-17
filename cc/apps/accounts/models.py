@@ -58,8 +58,6 @@ class CUser(AbstractUser):
     industry = models.CharField(_('Industry'), max_length=50)
     signature = models.TextField(_('Signature'), blank=True)
 
-
-
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
@@ -82,7 +80,9 @@ class OneClickLinkToken(models.Model):
     user = models.ForeignKey(CUser)
     token = models.CharField(default=gen_ocl_token, max_length=30, blank=False)
     expired = models.BooleanField(db_index=True, default=False)
-    expires_on = models.DateField(_('Expiration date'), null=True, db_index=True)
+    expires_on = models.DateField(
+        _('Expiration date'), null=True, db_index=True
+    )
     allow_login = models.BooleanField(default=False)
 
     def __unicode__(self):

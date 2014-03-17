@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 
 from cc.apps.content.models import File
 
-from cc.libs import utils
 from cc.libs.test_utils import ClientTestCase
 
 import json
@@ -56,11 +55,15 @@ class ImportFileTest(ClientTestCase):
         self._storage = FakeStorage()
         self._orig_storage = storage.default_storage
         storage.default_storage = self._storage
-        self._FILE_UPLOAD_MAX_MEMORY_SIZE = settings.FILE_UPLOAD_MAX_MEMORY_SIZE
+        self._FILE_UPLOAD_MAX_MEMORY_SIZE = (
+            settings.FILE_UPLOAD_MAX_MEMORY_SIZE
+        )
 
     def tearDown(self):
         storage.default_storage = self._orig_storage
-        settings.FILE_UPLOAD_MAX_MEMORY_SIZE = self._FILE_UPLOAD_MAX_MEMORY_SIZE
+        settings.FILE_UPLOAD_MAX_MEMORY_SIZE = (
+            self._FILE_UPLOAD_MAX_MEMORY_SIZE
+        )
 
     def _get_fh(self, size=1024):
         f = StringIO.StringIO('A' * size)
@@ -116,19 +119,6 @@ class ImportFileTest(ClientTestCase):
         json_resp = json.loads(resp.content)
         self.assertEquals(json_resp.get('page_count'), 7)
         f.close()
-
-    #
-    # I've disabled this test for now as we don't have any way to skip
-    # conversion and it is eager (read: blocking) when tests are run.
-    # That means there is no chance we can see files with UPLOADED status. -- BOL
-    #
-    def _test_new_files_are_in_uploaded_status(self):
-        c = self._get_client_admin()
-        f = self._get_fh()
-        c.post(self.url, {'file': f})
-        f.close()
-        f = File.objects.all()[0]
-        self.assertEquals(f.status, File.STATUS_UPLOADED)
 
     def test_stores_original_filename_of_uploaded_files(self):
         c = self._get_client_admin()

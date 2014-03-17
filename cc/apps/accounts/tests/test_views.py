@@ -6,21 +6,22 @@ from ..models import CUser
 
 class RegistrationViewTestCases(TestCase):
     def test_register_GET_success(self):
-        resp = self.client.get(reverse('registration_register'))
+        resp = self.client.get(reverse('accounts_register'))
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(
             resp.context['form'].__class__.__name__, 'UserCreationForm'
         )
 
     def test_register_POST_success(self):
-        resp = self.client.post(reverse('registration_register'), {
+        resp = self.client.post(reverse('accounts_register'), {
             'email': 'foo@cc.kneto.com',
             'password1': 'abcd1234',
             'password2': 'abcd1234',
             'first_name': 'Foo',
             'last_name': 'Bar',
             'country': 'VN',
-            'industry': 'industry-legal'
+            'industry': 'industry-legal',
+            'tos': True
         })
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(
@@ -29,14 +30,15 @@ class RegistrationViewTestCases(TestCase):
         )
 
     def test_register_with_mixed_case_email(self):
-        resp = self.client.post(reverse('registration_register'), {
+        resp = self.client.post(reverse('accounts_register'), {
             'email': 'BARBAR@cC.knEto.com',
             'password1': 'abcd1234',
             'password2': 'abcd1234',
             'first_name': 'Foo',
             'last_name': 'Bar',
             'country': 'VN',
-            'industry': 'industry-legal'
+            'industry': 'industry-legal',
+            'tos': True
         })
         self.assertEqual(resp.status_code, 302)
 

@@ -17,7 +17,8 @@ class UserCreationFormTests(TestCase):
             'first_name': 'Foo',
             'last_name': 'Bar',
             'country': 'VN',
-            'industry': 'industry-legal'
+            'industry': 'industry-legal',
+            'tos': True
         })
         self.assertTrue(form.is_valid())
 
@@ -31,6 +32,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 'first_name', [u'This field is required.']
             )},
@@ -44,6 +46,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 'email', [u'Enter a valid email address.']
             )},
@@ -57,6 +60,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 '__all__', [u'User with this email address already exists.']
             )},
@@ -70,6 +74,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'foobar',
+                'tos': True
             }, 'error': (
                 'industry', [u'Select a valid choice. foobar is not one of the'
                              ' available choices.']
@@ -84,6 +89,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 'password1', [u'The password must be at least 8 characters'
                               ' long.']
@@ -98,6 +104,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 'password1', [u'The password must contain at least one letter'
                               ' and at least one digit or punctuation'
@@ -113,6 +120,7 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 'password1', [u'The password must contain at least one letter'
                               ' and at least one digit or punctuation'
@@ -128,8 +136,22 @@ class UserCreationFormTests(TestCase):
                 'last_name': 'Bar',
                 'country': 'VN',
                 'industry': 'industry-legal',
+                'tos': True
             }, 'error': (
                 'password2', [u'Passwords don\'t match.']
+            )},
+
+            # mismatch password
+            {'data': {
+                'email': 'foo@cc.kneto.com',
+                'password1': 'abcd1234',
+                'password2': 'abcd1234',
+                'first_name': 'Foo',
+                'last_name': 'Bar',
+                'country': 'VN',
+                'industry': 'industry-legal',
+            }, 'error': (
+                'tos', [u'You must agree to the terms to register']
             )},
         ]
 
