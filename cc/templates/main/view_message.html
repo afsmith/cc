@@ -47,7 +47,8 @@
                 message_id: {{ message.id }},
                 user_id: {{ ocl_user.id }},
                 page_count: {{ file.pages_num }},
-                token: '{{ token }}'
+                token: '{{ token }}',
+                tracking_log_id: {{ tracking_log.id }}
             };
         {% endif %}
 

@@ -139,6 +139,7 @@ def send_notification_email(reason_code, message, recipient=None):
 
     # check if email has been sent
     should_send = True
+    log = None
     if reason_code in [1, 2] and recipient:
         # if there is existing log then should not send email again
         if TrackingLog.objects.filter(
@@ -156,7 +157,7 @@ def send_notification_email(reason_code, message, recipient=None):
             should_send = False
 
         # create log anyway
-        TrackingLog.objects.create(
+        log = TrackingLog.objects.create(
             message=message,
             participant=recipient,
             action=action
@@ -174,6 +175,8 @@ def send_notification_email(reason_code, message, recipient=None):
                 'recipient': getattr(recipient, 'email', None),
             },
         )
+
+    return log
 
 
 def notify_email_opened(message_id, user_id):

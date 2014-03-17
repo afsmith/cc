@@ -23,6 +23,7 @@ def create_event(request):
             session = create_tracking_session(
                 message=data['message'],
                 user=data['user'],
+                tracking_log=data['tracking_log'],
                 client_ip=get_client_ip(request),
                 device=get_device_name(request)
             )
@@ -48,7 +49,7 @@ def create_event(request):
                     timer_params[req] = request.POST.get(req)
                 elif req.startswith('counter'):
                     counter_params[req] = request.POST.get(req)
-            
+
             if request.POST['js_event_type'] == 'beforeunload':
                 print(
                     '\n[DEBUG] Creating events after "beforeunload" JS event\n'

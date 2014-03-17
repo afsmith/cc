@@ -130,14 +130,15 @@ def view_message(request, message_id=None):
 
         # notify the sender if "notify when link clicked" option is on
         if not is_owner_viewing:
-            send_notification_email(2, message, ocl_token.user)
+            log = send_notification_email(2, message, ocl_token.user)
 
         return {
             'message': message,
             'file': file,
             'token': token,
             'ocl_user': ocl_token.user,
-            'is_owner_viewing': is_owner_viewing
+            'is_owner_viewing': is_owner_viewing,
+            'tracking_log': log,
         }
     else:
         return redirect(reverse('home'))

@@ -1,4 +1,5 @@
-from fabric.api import *
+from fabric.api import local, task
+
 
 @task(alias='t')
 def test():
@@ -36,3 +37,16 @@ def shell():
     Another lazy shortcut for shell_plus
     '''
     local('python manage.py shell_plus')
+
+
+@task(alias='cdb')
+def cleanup_db():
+    '''
+    Clean up the current development DB
+    '''
+    local(
+        'echo "TRUNCATE cc_messages_message, cc_messages_message_files, '
+        'cc_messages_message_receivers, reports_bounce, tracking_closeddeal, '
+        'tracking_trackingevent, tracking_trackingsession, '
+        'tracking_trackinglog CASCADE;" | python manage.py dbshell'
+    )

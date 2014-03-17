@@ -1,4 +1,4 @@
-from .models import TrackingSession, TrackingEvent, ClosedDeal
+from .models import TrackingSession, TrackingEvent, TrackingLog, ClosedDeal
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
 
@@ -12,15 +12,25 @@ def validate_request(request, type):
     timer = request.POST.get('timer[1]')
     session_id = request.POST.get('session_id')
     action = request.POST.get('action')
+    tracking_log_id = request.POST.get('tracking_log_id')
 
     if type == 'event':
         if request_type == 'SESSION' and message_id and user_id:
             try:
                 message = Message.objects.get(pk=message_id)
                 user = CUser.objects.get(pk=user_id)
-            except Message.DoesNotExist, CUser.DoesNotExist:
+                tracking_log = TrackingLog.objects.get(pk=tracking_log_id)
+            except (
+                Message.DoesNotExist,
+                CUser.DoesNotExist,
+                TrackingLog.DoesNotExist
+            ):
                 return False
-            return {'message': message, 'user': user}
+            return {
+                'message': message,
+                'user': user,
+                'tracking_log': tracking_log
+            }
         elif request_type == 'EVENT' and timer and int(session_id) > 0:
             return {'session_id': session_id}
         else:
@@ -41,6 +51,7 @@ def create_tracking_session(**kw):
     return TrackingSession.objects.create(
         message=kw['message'],
         participant=kw['user'],
+        tracking_log=kw['tracking_log'],
         client_ip=kw['client_ip'],
         device=kw['device']
     )

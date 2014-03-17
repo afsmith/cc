@@ -5,11 +5,15 @@ from .models import Bounce
 
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
-from cc.apps.tracking.models import TrackingEvent, ClosedDeal
+from cc.apps.tracking.models import (
+    TrackingSession, TrackingEvent, ClosedDeal, TrackingLog
+)
 
 from cc.libs.utils import format_dbtime, get_hours_until_now
 
 from datetime import datetime
+from itertools import chain
+import operator
 
 
 def validate_request(request):
@@ -57,6 +61,22 @@ def get_tracking_data_group_by_recipient(message):
         row['total_time'] = format_dbtime(row['total_time'])
 
     return tracking_data
+
+
+def get_missing_data(message):
+    missing_data = chain(
+        TrackingSession.objects
+        .filter(message=message, trackingevent=None),
+
+        TrackingLog.objects
+        .filter(
+            message=message,
+            action=TrackingLog.CLICK_LINK_ACTION,
+            trackingsession=None
+        )
+    )
+
+    return sorted(missing_data, key=operator.attrgetter('created_at'))
 
 
 def get_tracking_data_group_by_page_number(**kwargs):

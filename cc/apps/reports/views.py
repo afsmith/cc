@@ -6,7 +6,10 @@ from django.views.decorators import http as http_decorators
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from .services import *
+from .services import (
+    get_tracking_data_group_by_recipient, get_missing_data,
+    validate_request, get_tracking_data_group_by_page_number
+)
 from .models import Bounce
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession
@@ -50,10 +53,14 @@ def report_detail(request, message_id):
     # get log data group by participant
     tracking_data = get_tracking_data_group_by_recipient(this_message)
 
+    # get missing data
+    missing_data = get_missing_data(this_message)
+
     return {
         'this_message': this_message,
         'messages': all_messages,
-        'log_groupby_user': tracking_data
+        'log_groupby_user': tracking_data,
+        'missing_data': missing_data,
     }
 
 
