@@ -86,6 +86,12 @@ $(document).ready(function () {
 
             // draw chart
             $('#report_graph').highcharts(options);
+
+            // if there is ?user in GET query then click on it and scroll down a bit
+            if (CC_GLOBAL.GETParam.user !== undefined) {
+                $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
+                $(window).scrollTop(600);
+            }
         } else {
             log('No data to display');
         }

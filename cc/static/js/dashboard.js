@@ -85,6 +85,9 @@ $(document).ready(function () {
             $('.call_row').removeClass('row_active');
             _this.addClass('row_active');
             _drawPieChart(resp);
+            $('#detail_button').prop('href', function(i, val) {
+                return val + message_id + '/?user=' + user_id;
+            }).removeClass('hidden');
         });
     });
 

@@ -45,7 +45,11 @@
                 {% trans "Click on the row in the call list table to check the summary report" %}
             </p>
         </div>
-        <div id="class_list_detail"></div>
+
+        <div id="class_list_detail" class="col-md-6 col-sm-6"></div>
+        <div class="col-md-6 col-sm-6">
+            <a id="detail_button" href="{% url 'report_index' %}" class="btn btn-success pull-right hidden">Detail <i class="glyphicon glyphicon-chevron-right"></i></a>
+        </div>
     </div>
 </div>
 
