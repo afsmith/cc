@@ -84,9 +84,9 @@ def get_tracking_data_group_by_page_number(**kwargs):
         TrackingEvent.objects
         .filter(**kwargs)
         .values('page_number')
-        .annotate(total_time=Sum('total_time'))
+        .annotate(total_time=Sum('total_time'), total_visits=Count('id'))
         .order_by('page_number')
-        .values_list('page_number', 'total_time')
+        .values_list('page_number', 'total_time', 'total_visits')
     )
 
     return tracking_data

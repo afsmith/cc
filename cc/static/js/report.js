@@ -86,12 +86,6 @@ $(document).ready(function () {
 
             // draw chart
             $('#report_graph').highcharts(options);
-
-            // if there is ?user in GET query then click on it and scroll down a bit
-            if (CC_GLOBAL.GETParam.user !== undefined) {
-                $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
-                $(window).scrollTop(600);
-            }
         } else {
             log('No data to display');
         }
@@ -223,4 +217,10 @@ $(document).ready(function () {
         selector: '.row_iOS',
         title: "iOS browser likes to hold on the it's events so we couldn't collect the tracking data. We are working on a way to fix this."
     });*/
+
+    // if there is ?user in GET query then click on it and scroll down a bit
+    if (CC_GLOBAL.GETParam.user !== undefined) {
+        $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
+        $(window).delay(500).scrollTop(600);
+    }
 }); // end document ready

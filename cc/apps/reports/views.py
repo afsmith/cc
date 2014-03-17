@@ -127,14 +127,13 @@ def _format_data_for_chart(log, this_message):
         values.append([idx, p[1]/10.0])
         labels.append([idx, 'Page {}'.format(p[0])])
         combo.append(['Page {}'.format(p[0]), p[1]/10.0])
-
     return {
         'values': values,
         'labels': labels,
         'combo': combo,
         'key_page': this_message.key_page,
         'subject': this_message.subject,
-        'total_visits': len(log)
+        'total_visits': log[0][2]
     }
 
 
