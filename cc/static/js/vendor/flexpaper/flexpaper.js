@@ -83,10 +83,18 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
     _localeDirectory 	= (config.localeDirectory!=null?config.localeDirectory:"locale/");
     if(_SWFFile!=null && _SWFFile.indexOf("{" )==0 && _SWFFile.indexOf("[*," ) > 0 && _SWFFile.indexOf("]" ) > 0){_SWFFile = escape(_SWFFile);} // split file fix
 
-    if(config.StartAtPage==null && FLEXPAPER.getLocationHashParameter){
+    // overwrite StartAtPage with anything off the hash
+    if(FLEXPAPER.getLocationHashParameter){
         var pageFromHash = FLEXPAPER.getLocationHashParameter('page');
         if(pageFromHash!=null){
             config.StartAtPage = pageFromHash;
+        }
+    }
+
+    if(FLEXPAPER.getLocationHashParameter){
+        var previewModeFromHash = FLEXPAPER.getLocationHashParameter('PreviewMode');
+        if(previewModeFromHash!=null){
+            config.PreviewMode = previewModeFromHash;
         }
     }
 
@@ -133,7 +141,7 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
         StartAtPage 			: (config.StartAtPage!=null&&config.StartAtPage.toString().length>0&&!isNaN(config.StartAtPage))?config.StartAtPage:1,
         PrintPaperAsBitmap		: (config.PrintPaperAsBitmap!=null)?config.PrintPaperAsBitmap:((browser.safari||browser.mozilla)?true:false),
         AutoAdjustPrintSize		: (config.AutoAdjustPrintSize!=null)?config.AutoAdjustPrintSize:true,
-
+        EnableSearchAbstracts   : ((config.EnableSearchAbstracts!=null)?config.EnableSearchAbstracts:true),
         EnableCornerDragging 	: ((config.EnableCornerDragging!=null)?config.EnableCornerDragging:true), // FlexPaper Zine parameter
         BackgroundColor 		: config.BackgroundColor, // FlexPaper Zine parameter
         PanelColor 				: config.PanelColor, // FlexPaper Zine parameter
@@ -713,7 +721,22 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
                         cache: true
                     });
 
-					jQuery.getScript(conf.jsDirectory+'FlexPaperViewer.js', function() {
+                    var scriptPromise = new jQuery.Deferred();
+
+                    if(!window["FlexPaperViewer_HTML"]){
+                        jQuery.getScript(conf.jsDirectory+'FlexPaperViewer.js').then(function(){scriptPromise.resolve();}).fail(function(){
+                                if(arguments[0].readyState==0){
+                                    console.log("failed to load FlexPaperViewer.js. Check your resources");
+                                }else{
+                                    //script loaded but failed to parse
+                                    console.log(arguments[2].toString());
+                                }
+                        });
+                    }else{
+                        scriptPromise.resolve();
+                    }
+
+                    if(scriptPromise.then(function(){
                         // If rendering order isnt set but the formats are supplied then assume the rendering order.
                         if(!conf.RenderingOrder){
                             conf.RenderingOrder = "";
@@ -730,8 +753,8 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
                             }
                         }
 
-						var oRenderingList 	= conf.RenderingOrder.split(",");
-						var pageRenderer 	= null;
+                        var oRenderingList 	= conf.RenderingOrder.split(",");
+                        var pageRenderer 	= null;
 
                         // if PDFJS isn't supported and the html formats are supplied, then use these as primary format
                         if(oRenderingList && oRenderingList.length==1 && conf.JSONFile!=null && conf.JSONFile.length>0 && conf.IMGFiles!=null && conf.IMGFiles.length>0 && !supportsCanvasDrawing){
@@ -740,7 +763,7 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
                         }
 
                         if(conf.PdfFile!=null && conf.PdfFile.length>0 && conf.RenderingOrder.split(",").length>=1 && supportsCanvasDrawing && (oRenderingList[0] == 'html5' || (oRenderingList.length > 1 && oRenderingList[0] == 'flash' && oRenderingList[1] == 'html5')) && !(platform.touchonlydevice && oRenderingList.length > 1 && oRenderingList[1] == 'html')){
-							pageRenderer = new CanvasPageRenderer(viewerId,conf.PdfFile,conf.jsDirectory,
+                            pageRenderer = new CanvasPageRenderer(viewerId,conf.PdfFile,conf.jsDirectory,
                                 {
                                     jsonfile                : conf.JSONFile,
                                     pageImagePattern        : conf.IMGFiles,
@@ -751,126 +774,122 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
                                     MixedMode               : conf.MixedMode,
                                     signature               : conf.signature
                                 });
-						}else{
-							pageRenderer = new ImagePageRenderer(
-							viewerId,
-							{
-				   			jsonfile                : conf.JSONFile,
-							pageImagePattern        : conf.IMGFiles,
-                            pageThumbImagePattern   : conf.ThumbIMGFiles,
-                            pageHighResImagePattern : conf.HighResIMGFiles,
-                            pageSVGImagePattern     : conf.SVGFiles,
-							compressedJSONFormat    : !conf.useCustomJSONFormat,
-							JSONPageDataFormat      : conf.JSONPageDataFormat,
-							JSONDataType            : conf.JSONDataType,
-                            SVGMode                 : conf.RenderingOrder.toLowerCase().indexOf('svg')>=0,
-                            MixedMode               : conf.MixedMode,
-                            signature               : conf.signature
-							},
-                            conf.jsDirectory);
-						}					
+                        }else{
+                            pageRenderer = new ImagePageRenderer(
+                                viewerId,
+                                {
+                                    jsonfile                : conf.JSONFile,
+                                    pageImagePattern        : conf.IMGFiles,
+                                    pageThumbImagePattern   : conf.ThumbIMGFiles,
+                                    pageHighResImagePattern : conf.HighResIMGFiles,
+                                    pageSVGImagePattern     : conf.SVGFiles,
+                                    compressedJSONFormat    : !conf.useCustomJSONFormat,
+                                    JSONPageDataFormat      : conf.JSONPageDataFormat,
+                                    JSONDataType            : conf.JSONDataType,
+                                    SVGMode                 : conf.RenderingOrder.toLowerCase().indexOf('svg')>=0,
+                                    MixedMode               : conf.MixedMode,
+                                    signature               : conf.signature
+                                },
+                                conf.jsDirectory);
+                        }
 
-						window[instance] = new FlexPaperViewer_HTML({
-							rootid 		    : viewerId,
+                        var flexpaper_html = window[instance] = new FlexPaperViewer_HTML({
+                            rootid 		    : viewerId,
                             Toolbar 	    : ((conf.Toolbar!=null)?conf.Toolbar:null),
                             BottomToolbar   : ((conf.BottomToolbar!=null)?conf.BottomToolbar:null),
-				            instanceid 	: instance,
-				            document: {
-				                SWFFile 				: conf.SwfFile,
-				                IMGFiles 				: conf.IMGFiles,
+                            instanceid 	: instance,
+                            document: {
+                                SWFFile 				: conf.SwfFile,
+                                IMGFiles 				: conf.IMGFiles,
                                 ThumbIMGFiles           : conf.ThumbIMGFiles,
-				                JSONFile 				: conf.JSONFile,
-				                PDFFile 				: conf.PdfFile,
-								Scale 					: conf.Scale,
-								FitPageOnLoad 			: conf.FitPageOnLoad,
-								FitWidthOnLoad 			: conf.FitWidthOnLoad,
-								MinZoomSize 			: conf.MinZoomSize,
-								MaxZoomSize 			: conf.MaxZoomSize,
-								SearchMatchAll 			: conf.SearchMatchAll,
-								InitViewMode 			: conf.InitViewMode,
+                                JSONFile 				: conf.JSONFile,
+                                PDFFile 				: conf.PdfFile,
+                                Scale 					: conf.Scale,
+                                FitPageOnLoad 			: conf.FitPageOnLoad,
+                                FitWidthOnLoad 			: conf.FitWidthOnLoad,
+                                MinZoomSize 			: conf.MinZoomSize,
+                                MaxZoomSize 			: conf.MaxZoomSize,
+                                SearchMatchAll 			: conf.SearchMatchAll,
+                                InitViewMode 			: conf.InitViewMode,
                                 TouchInitViewMode       : conf.TouchInitViewMode,
                                 PreviewMode             : conf.PreviewMode,
                                 MixedMode               : conf.MixedMode,
-								StartAtPage 			: conf.StartAtPage,
-								RenderingOrder 			: conf.RenderingOrder,
-								useCustomJSONFormat 	: conf.useCustomJSONFormat,
-								JSONPageDataFormat 		: conf.JSONPageDataFormat,
-								JSONDataType 			: conf.JSONDataType,
-								ZoomInterval 			: conf.ZoomInterval,
-								ViewModeToolsVisible 	: conf.ViewModeToolsVisible,
-								ZoomToolsVisible 		: conf.ZoomToolsVisible,
-								NavToolsVisible 		: conf.NavToolsVisible,
-								CursorToolsVisible 		: conf.CursorToolsVisible,
-								SearchToolsVisible 		: conf.SearchToolsVisible,
+                                StartAtPage 			: conf.StartAtPage,
+                                RenderingOrder 			: conf.RenderingOrder,
+                                useCustomJSONFormat 	: conf.useCustomJSONFormat,
+                                JSONPageDataFormat 		: conf.JSONPageDataFormat,
+                                JSONDataType 			: conf.JSONDataType,
+                                ZoomInterval 			: conf.ZoomInterval,
+                                ViewModeToolsVisible 	: conf.ViewModeToolsVisible,
+                                ZoomToolsVisible 		: conf.ZoomToolsVisible,
+                                NavToolsVisible 		: conf.NavToolsVisible,
+                                CursorToolsVisible 		: conf.CursorToolsVisible,
+                                SearchToolsVisible 		: conf.SearchToolsVisible,
                                 AnnotationToolsVisible  : conf.AnnotationToolsVisible,
-								StickyTools 			: conf.StickyTools,
-								PrintPaperAsBitmap 		: conf.PrintPaperAsBitmap,
-								AutoAdjustPrintSize 	: conf.AutoAdjustPrintSize,
-								EnableCornerDragging	: conf.EnableCornerDragging,
+                                StickyTools 			: conf.StickyTools,
+                                PrintPaperAsBitmap 		: conf.PrintPaperAsBitmap,
+                                AutoAdjustPrintSize 	: conf.AutoAdjustPrintSize,
+                                EnableSearchAbstracts   : conf.EnableSearchAbstracts,
+                                EnableCornerDragging	: conf.EnableCornerDragging,
                                 UIConfig                : conf.UIConfig,
                                 BackgroundColor			: conf.BackgroundColor, // FlexPaper Zine parameter
                                 PanelColor				: conf.PanelColor, // FlexPaper Zine parameter
 
-								localeChain 			: conf.localeChain
-				            }, 
-							renderer 			: pageRenderer,
-							key 				: conf.key,
-							jsDirectory 		: conf.jsDirectory,
-							localeDirectory 	: conf.localeDirectory,
-							cssDirectory 		: conf.cssDirectory,
-							docSizeQueryService : conf.DocSizeQueryService
-				        });
-
-						window[instance].initialize();
-						window[instance].bindEvents();
-						
-						window[instance]['load'] = window[instance].loadFromUrl;
-						window[instance]['loadDoc'] = window[instance].loadDoc;
-						window[instance]['fitWidth'] = window[instance].fitwidth;
-						window[instance]['fitHeight'] = window[instance].fitheight;
-						window[instance]['gotoPage'] = window[instance].gotoPage;
-						window[instance]['getCurrPage'] = window[instance].getCurrPage;
-						window[instance]['getTotalPages'] = window[instance].getTotalPages;
-						window[instance]['nextPage'] = window[instance].next;
-						window[instance]['prevPage'] = window[instance].previous;
-						window[instance]['setZoom'] = window[instance].Zoom;
-						window[instance]['Zoom'] = window[instance].Zoom;
-                        window[instance]['ZoomIn'] = window[instance].ZoomIn;
-                        window[instance]['ZoomOut'] = window[instance].ZoomOut;
-						window[instance]['openFullScreen'] = window[instance].openFullScreen;
-						window[instance]['sliderChange'] = window[instance].sliderChange;
-						window[instance]['searchText'] = window[instance].searchText;
-                        window[instance]['resize'] = window[instance].resize;
-                        window[instance]['rotate'] = window[instance].rotate;
-                        window[instance]['addLink'] = window[instance].addLink;
-                        window[instance]['addImage'] = window[instance].addImage;
-                        window[instance]['addVideo'] = window[instance].addVideo;
-
-						//window[instance]['nextSearchMatch'] = window[instance].nextSearchMatch; //TBD
-						//window[instance]['prevSearchMatch'] = window[instance].nextSearchMatch; //TBD
-						window[instance]['switchMode'] = window[instance].switchMode;
-						window[instance]['printPaper'] = window[instance].printPaper;
-						//window[instance]['highlight'] = window[instance].highlight; //TBD
-						//window[instance]['postSnapshot'] = window[instance].postSnapshot; //TBD
-						window[instance]['setCurrentCursor'] = window[instance].setCurrentCursor;
-                        window[instance]['showFullScreen'] = window[instance].openFullScreen;
-
-		   			    pageRenderer.initialize(function(){
-							  window[instance].document.numPages = pageRenderer.getNumPages();
-							  window[instance].document.dimensions = pageRenderer.getDimensions();
-							  window[instance].show();
-						},{
-                              StartAtPage : conf.StartAtPage,
-                              MixedMode : conf.MixedMode
+                                localeChain 			: conf.localeChain
+                            },
+                            renderer 			: pageRenderer,
+                            key 				: conf.key,
+                            jsDirectory 		: conf.jsDirectory,
+                            localeDirectory 	: conf.localeDirectory,
+                            cssDirectory 		: conf.cssDirectory,
+                            docSizeQueryService : conf.DocSizeQueryService
                         });
-					}).fail(function(){
-                            if(arguments[0].readyState==0){
-                                console.log("failed to load FlexPaperViewer.js. Check your resources");
-                            }else{
-                                //script loaded but failed to parse
-                                console.log(arguments[2].toString());
-                            }
+
+                        flexpaper_html.initialize();
+                        flexpaper_html.bindEvents();
+
+                        flexpaper_html['load'] = flexpaper_html.loadFromUrl;
+                        flexpaper_html['loadDoc'] = flexpaper_html.loadDoc;
+                        flexpaper_html['fitWidth'] = flexpaper_html.fitwidth;
+                        flexpaper_html['fitHeight'] = flexpaper_html.fitheight;
+                        flexpaper_html['gotoPage'] = flexpaper_html.gotoPage;
+                        flexpaper_html['getCurrPage'] = flexpaper_html.getCurrPage;
+                        flexpaper_html['getTotalPages'] = flexpaper_html.getTotalPages;
+                        flexpaper_html['nextPage'] = flexpaper_html.next;
+                        flexpaper_html['prevPage'] = flexpaper_html.previous;
+                        flexpaper_html['setZoom'] = flexpaper_html.Zoom;
+                        flexpaper_html['Zoom'] = flexpaper_html.Zoom;
+                        flexpaper_html['ZoomIn'] = flexpaper_html.ZoomIn;
+                        flexpaper_html['ZoomOut'] = flexpaper_html.ZoomOut;
+                        flexpaper_html['openFullScreen'] = flexpaper_html.openFullScreen;
+                        flexpaper_html['sliderChange'] = flexpaper_html.sliderChange;
+                        flexpaper_html['searchText'] = flexpaper_html.searchText;
+                        flexpaper_html['resize'] = flexpaper_html.resize;
+                        flexpaper_html['rotate'] = flexpaper_html.rotate;
+                        flexpaper_html['addLink'] = flexpaper_html.addLink;
+                        flexpaper_html['addImage'] = flexpaper_html.addImage;
+                        flexpaper_html['addVideo'] = flexpaper_html.addVideo;
+
+                        //flexpaper_html['nextSearchMatch'] = flexpaper_html.nextSearchMatch; //TBD
+                        //flexpaper_html['prevSearchMatch'] = flexpaper_html.nextSearchMatch; //TBD
+                        flexpaper_html['switchMode'] = flexpaper_html.switchMode;
+                        flexpaper_html['printPaper'] = flexpaper_html.printPaper;
+                        flexpaper_html['highlight'] = flexpaper_html.highlight;
+                        flexpaper_html['getCurrentRenderingMode'] = flexpaper_html.getCurrentRenderingMode;
+                        //flexpaper_html['postSnapshot'] = flexpaper_html.postSnapshot; //TBD
+                        flexpaper_html['setCurrentCursor'] = flexpaper_html.setCurrentCursor;
+                        flexpaper_html['showFullScreen'] = flexpaper_html.openFullScreen;
+
+                        pageRenderer.initialize(function(){
+                            flexpaper_html.document.numPages = pageRenderer.getNumPages();
+                            flexpaper_html.document.dimensions = pageRenderer.getDimensions();
+                            flexpaper_html.show();
+                            window[instance] = flexpaper_html;
+                        },{
+                            StartAtPage : conf.StartAtPage,
+                            MixedMode : conf.MixedMode
                         });
+                    }));
 				});
 			}else{
 				// fail #2.1 custom content inside container
@@ -908,29 +927,29 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
 		// http://flowplayer.org/forum/8/18186#post-18593
 		if (IE) {
 			window[opts.id] = document.getElementById(opts.id);
-		} 
-		
+		}
+
 		// API methods for callback
 		extend(this, {
-				
+
 			getRoot: function() {
-				return root;	
-			},
-			
-			getOptions: function() {
-				return opts;	
+				return root;
 			},
 
-			
+			getOptions: function() {
+				return opts;
+			},
+
+
 			getConf: function() {
-				return conf;	
-			}, 
-			
+				return conf;
+			},
+
 			getApi: function() {
-				return root.firstChild;	
+				return root.firstChild;
 			}
-			
-		}); 
+
+		});
 	}
 
 	// setup jquery support
@@ -942,6 +961,8 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
 		};
 
         jQuery.fn.FlexPaperViewer = function(args){
+            jQuery('#'+this.attr('id')).empty();
+
             var embed = new FlexPaperViewerEmbedding(this.attr('id'),args);
             this.element = jQuery('#'+embed.id);
             return this.element;
@@ -1345,13 +1366,22 @@ if(window.unsupportedPDFJSieversion){return;}
       error: function() {}
     };
   } else if (!('bind' in console.log)) {
-    // native functions in IE9 might not have bind
-    console.log = (function(fn) {
-      return function(msg) { return fn(msg); };
-    })(console.log);
-    console.error = (function(fn) {
-      return function(msg) { return fn(msg); };
-    })(console.error);
+      try{
+        // native functions in IE9 might not have bind
+        console.log = (function(fn) {
+          return function(msg) { return fn(msg); };
+        })(console.log);
+        console.error = (function(fn) {
+          return function(msg) { return fn(msg); };
+        })(console.error);
+      }catch(e){
+          console.log = (function(fn) {
+              return function(msg) { return fn(msg); };
+          })(console.log);
+          console.error = (function(fn) {
+              return function(msg) { return fn(msg); };
+          })(console.error);
+      }
   }
 })();
 

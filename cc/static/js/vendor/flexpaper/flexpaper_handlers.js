@@ -19,7 +19,7 @@
  home page: http://flexpaper.devaldi.com
  */
 
-$(function() {
+jQuery(function() {
     /**
      * Handles the event of external links getting clicked in the document.
      *
