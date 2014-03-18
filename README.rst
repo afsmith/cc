@@ -38,7 +38,7 @@ Other dependancies
 - mupdf 1.3+ (dependancies in Ubuntu / Debian): libxtst-dev libx11-dev pkg-config
 - flexpaper
 
-Tips: in OSX use homebrew: `brew install redis imagemagick ghostscript`
+Tips: in OSX use homebrew: `brew install redis pdf2json`
 
 
 How to deploy

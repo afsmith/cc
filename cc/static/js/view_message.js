@@ -134,8 +134,6 @@ $(document).ready(function () {
                             is_safari = (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1);
                         is_iOS = resp.is_iOS;
 
-                        log(is_iOS);
-
                         // init page change handler after getting is_iOS
                         pageChangeHandler();
 
