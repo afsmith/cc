@@ -32,7 +32,11 @@ def create_event(request):
                 return {
                     'status': 'OK',
                     'session_id': session.id,
-                    'is_iOS': session.device in ['iPhone', 'iPad', 'iPod']
+                    'is_iOS': session.device in ['iPhone', 'iPad', 'iPod'],
+                    'is_Android': session.device in [
+                        'Android phone', 'Android tablet'
+                    ],
+                    'device': session.device
                 }
             else:
                 return {

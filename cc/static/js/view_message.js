@@ -5,6 +5,8 @@ $(document).ready(function () {
         timeout_id,
         pagechange_interval_id,
         is_iOS = false,
+        is_Android = false,
+        this_device = '',
         current_page = 0,
 
         // function
@@ -16,7 +18,7 @@ $(document).ready(function () {
         initTimerCounter,
         createEventAjax,
         pageChangeHandler,
-        safariHandler;
+        safariOrMobileHandler;
 
     // check if there is global var message_data to start tracking
     if (typeof CC_GLOBAL.message_data !== 'undefined') {
@@ -52,9 +54,10 @@ $(document).ready(function () {
             initTimerCounter(CC_GLOBAL.message_data);
 
             // handle the page change event
-            // TODO: check when onCurrentPageChanged is supported in iOS
+            // TODO: check when onCurrentPageChanged is supported in iOS or Android
             pageChangeHandler = function () {
-                if (is_iOS) {
+                if (is_iOS || is_Android) {
+
                     clearInterval(pagechange_interval_id);
                     pagechange_interval_id = setInterval(function () {
                         if (flex_viewer.getCurrPage() !== current_page) {
@@ -115,7 +118,7 @@ $(document).ready(function () {
                 });
             };
 
-            safariHandler = function (session_id) {
+            safariOrMobileHandler = function (session_id) {
                 interval_id = setInterval(function () {
                     createTrackingEventAjax('safari_interval', session_id)
                 }, 500);
@@ -133,13 +136,17 @@ $(document).ready(function () {
                         var session_id = resp.session_id,
                             is_safari = (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1);
                         is_iOS = resp.is_iOS;
+                        is_Android = resp.is_Android;
+                        this_device = resp.device;
+
+log(this_device);
 
                         // init page change handler after getting is_iOS
                         pageChangeHandler();
 
                         // check if this is Safari on desktop
-                        if (is_safari && !is_iOS) {
-                            safariHandler(session_id);
+                        if ((is_safari && !is_iOS) || is_Android) {
+                            safariOrMobileHandler(session_id);
                         } else {
                             windowUnloadHandler(session_id);    
                         }
