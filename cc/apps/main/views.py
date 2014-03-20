@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.core.mail import send_mail
+from django.conf import settings
 
 from cc.apps.accounts.models import CUser
 from cc.apps.reports.services import (
@@ -36,7 +38,14 @@ def sendgrid_parse(request):
         try:
             json_req = json.loads(request.body)
         except ValueError:
-            # if request is not a JSON string, return status 200
+            # if request is not a JSON string, return status 200 and send email
+            send_mail(
+                'Sendgrid bounce report - non JSON',
+                request.body,
+                settings.DEFAULT_FROM_EMAIL,
+                ['hieu@sudointeractive.com']
+            )
+
             return HttpResponse(status=200)
 
         # filter the request
@@ -47,6 +56,13 @@ def sendgrid_parse(request):
             and json_req[0].get('domain') == get_domain(request)
         ):
             save_sendgrid_bounce_from_request(json_req)
+        elif settings.DEBUG:
+            send_mail(
+                'Sendgrid debug report',
+                request.body,
+                settings.DEFAULT_FROM_EMAIL,
+                ['hieu@sudointeractive.com']
+            )
 
     # response with status 200 no matter what
     return HttpResponse(status=200)
