@@ -5,61 +5,59 @@
 
 {% block content %}
 
-          {% if user.is_staff  %}
-         <h2>Your account is free</h2>
-         <p class="lead">No need to pay.</p>
-         {% endif %}
+{% if user.is_staff  %}
+    <h2>Your account is free</h2>
+    <p class="lead">No need to pay.</p>
+{% endif %}
 
-    {% with request.user.customer.current_subscription as subscription %}
-       {% if subscription.status == "trialing" %} 
+{% with request.user.customer.current_subscription as subscription %}
+    {% if subscription.status == "trialing" %} 
 
         <!-- Nav tabs -->
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
-        <li><a href="#change_subscription" data-toggle="tab">Change your subscription</a></li>
-        <li><a href="#cancel_subscription" data-toggle="tab">Cancel your subscription</a></li>
-      </ul>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+            <li><a href="#change_subscription" data-toggle="tab">Change your subscription</a></li>
+            <li><a href="#cancel_subscription" data-toggle="tab">Cancel your subscription</a></li>
+        </ul>
 
-<!-- Tab panes -->
+        <!-- Tab panes -->
         <div class="tab-content">
           <div class="tab-pane active" id="home"> <p class="lead">
-        {% include "payments/_subscription_status.html" %}
-        <strong></strong></div>
-          <div class="tab-pane" id="change_subscription">{% include "payments/_change_plan_form.html" %}</div>
-          <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
+            {% include "payments/_subscription_status.html" %}
+            <strong></strong></div>
+            <div class="tab-pane" id="change_subscription">{% include "payments/_change_plan_form.html" %}</div>
+            <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
         </div>
+
+    {% elif not subscription or subscription.status != 'active' %}
+
+        {% include "payments/_subscription_status.html" %}
+        {% include "payments/_new_subscriber_form.html" %}
+
+    {% else %}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+            <li><a href="#payment_history" data-toggle="tab">Payment history</a></li>
+            <li><a href="#change_card" data-toggle="tab">Change your card</a></li>
+            <li><a href="#change_subscription" data-toggle="tab">Change your subscription</a></li>
+            <li><a href="#cancel_subscription" data-toggle="tab">Cancel your subscription</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="home"> <p class="lead">
+                {% include "payments/_subscription_status.html" %}
+                {% include "payments/_invitation.html" %}
+            </div>
     
-        {% elif not subscription or subscription.status != 'active' %}
-          {% include "payments/_subscription_status.html" %}
-           {% include "payments/_new_subscriber_form.html" %}
+            <div class="tab-pane" id="payment_history">{% include "payments/history.html" %}</div>
+            <div class="tab-pane" id="change_card">{% include "payments/_change_card_form.html" %}</div>
+            <div class="tab-pane" id="change_subscription">{% include "payments/_change_plan_form.html" %}</div>
+            <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
+        </div>
 
-        {% else %}
-  <!-- Nav tabs -->
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
-  <li><a href="#payment_history" data-toggle="tab">Payment history</a></li>
-  <li><a href="#change_card" data-toggle="tab">Change your card</a></li>
-  <li><a href="#change_subscription" data-toggle="tab">Change your subscription</a></li>
-  <li><a href="#cancel_subscription" data-toggle="tab">Cancel your subscription</a></li>
-</ul>
-
-<!-- Tab panes -->
-<div class="tab-content">
-  <div class="tab-pane active" id="home"> <p class="lead">
-{% include "payments/_subscription_status.html" %}
-<strong></strong></div>
-
-  <div class="tab-pane" id="payment_history">{% include "payments/history.html" %}</div>
-  <div class="tab-pane" id="change_card">{% include "payments/_change_card_form.html" %}</div>
-  <div class="tab-pane" id="change_subscription">{% include "payments/_change_plan_form.html" %}</div>
-  <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
-</div>
-
-        {% endif %}
-    {% endwith %}
-
-
-
+    {% endif %}
+{% endwith %}
 
 {% endblock %}
-

@@ -2,8 +2,9 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-
 register = template.Library()
+
+
 @register.filter('type')
 def type(obj):
     return obj.__class__.__name__
@@ -19,3 +20,8 @@ def active(request, route):
 @register.simple_tag
 def settings_value(name):
     return getattr(settings, name, '')
+
+
+@register.filter
+def get_range(value):
+    return range(value)

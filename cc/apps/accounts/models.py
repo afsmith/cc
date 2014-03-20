@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from cc.libs.utils import gen_ocl_token
 
@@ -68,6 +69,20 @@ class CUser(AbstractUser):
         'industry',
     ]
 
+    def get_invitations(self):
+        try:
+            if not self.customer.has_active_subscription:
+                return False
+        except:
+            return False
+        else:
+            current_plan = self.customer.current_subscription.plan
+            invitations = settings.PAYMENTS_PLANS[
+                current_plan
+            ]['metadata']['users'] - 1
+            return invitations
+
+
 # Email should be unique
 CUser._meta.get_field('email')._unique = True
 CUser._meta.get_field('username')._unique = False
@@ -108,3 +123,26 @@ class BillingAddress(models.Model):
 
     def __unicode__(self):
         return '{} - {}'.format(self.name, self.address_line1)
+
+
+class Invitation(models.Model):
+    '''
+    Invitation model for user who purchased multiple seats to invite
+    other users
+    '''
+
+    STATUS_SENT = 'SENT'
+    STATUS_ACCEPTED = 'ACCEPTED'
+
+    from_user = models.ForeignKey(CUser, related_name='invites_sent')
+    to_user = models.ForeignKey(
+        CUser, null=True, related_name='invites_receive'
+    )
+    to_email = models.CharField(max_length=75)
+    code = models.CharField(max_length=30, default=gen_ocl_token)
+    status = models.CharField(max_length=30, default=STATUS_SENT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return '{} - {}'.format(self.to_email, self.status)
