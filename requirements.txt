@@ -21,8 +21,7 @@ selenium==2.37.2
 psycopg2==2.5.1
 python-memcached==1.53
 requests==2.1.0
-django-stripe-payments==2.0b34
 django-jsonfield==0.9.12
 mock-django==0.6.1
 django-forms-bootstrap==3.0.0
-#django-widget-tweaks==1.3.0
+-e git+git://github.com/H25/django-stripe-payments#egg=payments

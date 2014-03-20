@@ -9,7 +9,9 @@ PAYMENTS_PLANS = {
         "currency": "eur",
         "interval": "month",
         "interval_count": 1,
-        "metadata": { "VAT" : 35.76 }
+        "metadata": {
+            "VAT": 35.76
+        }
     },
     "early_small": {
         "stripe_plan_id": "early_small",
@@ -19,7 +21,9 @@ PAYMENTS_PLANS = {
         "currency": "eur",
         "interval": "month",
         "interval_count": 3,
-        "metadata": { "VAT" : 107.76 }
+        "metadata": {
+            "VAT": 107.76
+        }
     },
     "early_large": {
         "stripe_plan_id": "early_large",
@@ -29,7 +33,8 @@ PAYMENTS_PLANS = {
         "currency": "eur",
         "interval": "month",
         "interval_count": 3,
-        "metadata": { "VAT" : 359.76 }
+        "metadata": {
+            "VAT": 359.76
+        }
     },
-
 }
