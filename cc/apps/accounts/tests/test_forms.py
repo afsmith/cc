@@ -11,7 +11,7 @@ class UserCreationFormTests(TestCase):
 
     def test_registration_form_success(self):
         form = UserCreationForm(data={
- #           'email1': 'foo@cc.kneto.com',
+            'email1': 'foo@cc.kneto.com',
             'email': 'foo@cc.kneto.com',
             'password1': 'abcd1234',
             'password2': 'abcd1234',
@@ -80,7 +80,7 @@ class UserCreationFormTests(TestCase):
                 'country': 'VN',
                 'industry': 'industry-legal',
             }, 'error': (
-                '__all__', [u'Email addresses don\'t match']
+                'email', [u'Email addresses don\'t match.']
             )},
 
             # invalid choice

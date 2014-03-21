@@ -14,6 +14,7 @@ class RegistrationViewTestCases(TestCase):
 
     def test_register_POST_success(self):
         resp = self.client.post(reverse('accounts_register'), {
+            'email1': 'foo@cc.kneto.com',
             'email': 'foo@cc.kneto.com',
             'password1': 'abcd1234',
             'password2': 'abcd1234',
@@ -31,6 +32,7 @@ class RegistrationViewTestCases(TestCase):
 
     def test_register_with_mixed_case_email(self):
         resp = self.client.post(reverse('accounts_register'), {
+            'email1': 'BARBAR@cC.knEto.com',
             'email': 'BARBAR@cC.knEto.com',
             'password1': 'abcd1234',
             'password2': 'abcd1234',

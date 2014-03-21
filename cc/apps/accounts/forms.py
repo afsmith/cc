@@ -14,7 +14,10 @@ class UserCreationForm(forms.ModelForm):
     Form for creating new users. Includes all the required
     fields, plus a repeated password.
     '''
-    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
+    password1 = forms.CharField(
+        label=_('Password'),
+        widget=forms.PasswordInput
+    )
     password2 = forms.CharField(
         label=_('Password confirmation'), widget=forms.PasswordInput
     )
@@ -27,8 +30,10 @@ class UserCreationForm(forms.ModelForm):
         widget=forms.Select, choices=settings.INDUSTRY_CHOICES
     )
     tos = forms.BooleanField(
-        label=_('I have read and agree to the <a href="{}">Terms of Service</a>'
-            .format(settings.TOS_URL)),
+        label=_(
+            'I have read and agree to the <a href="{}">Terms of Service</a>'
+            .format(settings.TOS_URL)
+        ),
         widget=forms.CheckboxInput(attrs={'class': 'label_checkbox'}),
         error_messages={
             'required': _('You must agree to the terms to register')
@@ -82,8 +87,7 @@ class UserCreationForm(forms.ModelForm):
         password2 = self.cleaned_data.get('password2')
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError(_('Passwords don\'t match.'))
-        password = password2
-        return password
+        return password2
 
     def clean_email(self):
         # Check that the two email entries match
