@@ -45,17 +45,24 @@ form {
 
 
 // --------------------------- dashboard --------------------------- //
-.call_list_table {
-    .sold {
-        color: #999;
-    }
-    .call_row {
-        cursor: pointer;
-        &:hover, &.row_active {
-            background: @report_row_log_bg;
+.class_list_wrapper {
+    max-height: 500px;
+    overflow: auto;
+    width: 100%;
+
+    .call_list_table {
+        .sold {
+            color: #999;
+        }
+        .call_row {
+            cursor: pointer;
+            &:hover, &.row_active {
+                background: @report_row_log_bg;
+            }
         }
     }
 }
+
 
 .bounces_table {
     
