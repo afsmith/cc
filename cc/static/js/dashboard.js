@@ -58,10 +58,10 @@ $(document).ready(function () {
 
             // draw chart
             $('#call_list_graph').highcharts(options);
-            log(json_data);
             $('#class_list_detail').html('<p>Total pages: ' + len + '</p><p>Total visits: ' + json_data.total_visits + '</p>');
         } else {
             $('#call_list_graph').html('<p class="alert alert-block">This recipient didn\'t look at your offer</p>')
+            $('#class_list_detail').html('');
         }
     };
 
@@ -89,7 +89,7 @@ $(document).ready(function () {
 
             // add detail button
             $('#detail_button').prop('href', function(i, val) {
-                return val + message_id + '/?user=' + user_id;
+                return '/report/' + message_id + '/?user=' + user_id;
             }).removeClass('hidden');
         });
     });
