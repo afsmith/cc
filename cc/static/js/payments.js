@@ -1,11 +1,11 @@
 $(document).ready(function () {
 
     // Stripe init
-    $('body').on('click', '.change-card, .subscribe-form button[type=submit]', function(e) {
+    $('.subscribe-form button[type="submit"], .js_changeCard').click(function(e) {
         e.preventDefault();
         var _form = $(this).closest('form'),
             token = function(res) {
-                _form.find('input[name=stripe_token]').val(res.id);
+                _form.find('input[name="stripe_token"]').val(res.id);
                 _form.trigger('submit');
             };
 
@@ -23,6 +23,9 @@ $(document).ready(function () {
         return false;
     });
 
+    $('#payment_wrapper button[type="submit"]').click(function () {
+        $(this).button('loading');
+    });
 
     // change class of invitation input
     $('.invitation_wrapper input').keyup(function () {
@@ -37,7 +40,8 @@ $(document).ready(function () {
         }
     });
 
-    $('.invitation_wrapper').on('click', '.btn[disabled!=disabled]', function () {
+    // send invitation
+    $('.invitation_wrapper').on('click', '.btn[disabled!="disabled"]', function () {
         var _this = $(this),
             this_div = _this.closest('.input-group'),
             this_wrapper = _this.closest('.invitation_wrapper'),
@@ -63,6 +67,7 @@ $(document).ready(function () {
         });
     });
 
+    // remove active invitation click handler
     $('.active_invitation_wrapper').on('click', '.btn', function () {
         var _this = $(this),
             this_id = _this.closest('.input-group').prop('id').replace('js_invitation_', '');

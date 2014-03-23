@@ -1,0 +1,54 @@
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="jumbotron">
+            <h3>Single User</h3>
+            <p>Give it a shot. €149<sup>*</sup> a month, cancel anytime.</p>
+            <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
+                {% csrf_token %}
+                <input name="stripe_token" type="hidden" />
+                <input type="hidden" name="plan" value="monthly">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="jumbotron">
+            <h3>Early Access <br>small plan</h3>
+            <p>Give your team of up to three people access for three months at a deep discount.</p>
+            <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
+            {% csrf_token %}
+                <input name="stripe_token" type="hidden" />
+                <input type="hidden" name="plan" value="early_small">        
+                <div class="form-actions">
+                   <button type="submit" class="btn btn-primary" data-loading-text="Processing..." >€449<sup>*</sup></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="jumbotron">
+            <h3>Early Access <br>large plan</h3>
+            <p>Is you team a little bigger? Big discount, more people. Up to 10.</p>
+            <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
+                {% csrf_token %}
+                <input name="stripe_token" type="hidden" />  
+                <input type="hidden" name="plan" value="early_large">     
+                <div class="form-actions"> 
+                    <button type="submit" class="btn btn-primary" data-loading-text="Processing...">€1499<sup>*</sup></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p class="text-left">
+    <sup>*</sup><small>24% VAT will be added</small>
+</p>

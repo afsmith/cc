@@ -15,6 +15,7 @@
     <p class="lead">{% trans "No need to pay." %}</p>
 {% else %}
 
+    <div id="payment_wrapper">
     {% with request.user.customer.current_subscription as subscription %}
         {% if subscription.status == "trialing" %} 
 
@@ -27,9 +28,9 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-              <div class="tab-pane active" id="home"> <p class="lead">
-                {% include "payments/_subscription_status.html" %}
-                <strong></strong></div>
+                <div class="tab-pane active" id="home">
+                    <p class="lead">{% include "payments/_subscription_status.html" %}</p>
+                </div>
                 <div class="tab-pane" id="change_subscription">{% include "payments/_change_plan_form.html" %}</div>
                 <div class="tab-pane" id="cancel_subscription">{% include "payments/_cancel_form.html" %}</div>
             </div>
@@ -64,6 +65,7 @@
 
         {% endif %}
     {% endwith %}
+    </div>
 
 {% endif %}
 
