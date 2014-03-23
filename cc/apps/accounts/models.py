@@ -11,17 +11,44 @@ class CustomUserManager(BaseUserManager):
     Custom User manager
     '''
     def create_user(self, **kwargs):
+        # clean kwargs
         if 'email' not in kwargs:
             raise ValueError('Users must have an email address')
         # turn user email to lowercase on saving
         kwargs['email'] = kwargs['email'].lower()
+        kwargs['password'] = kwargs['password1']
 
+        # if there is invitation code
+        if kwargs.get('invitation_code'):
+            try:
+                invitation = Invitation.objects.get(
+                    to_email=kwargs.get('email'),
+                    code=kwargs.get('invitation_code')
+                )
+            except Invitation.DoesNotExist:
+                raise ValueError('Users must have an email address')
+
+        keys = kwargs.keys()
+        for key in keys:
+            if key not in [
+                'email', 'password', 'first_name', 'last_name',
+                'country', 'industry'
+            ]:
+                kwargs.pop(key, None)
         try:
             user = CUser.objects.get(email__iexact=kwargs['email'])
             user = CUser(id=user.id, **kwargs)
         except CUser.DoesNotExist:
             user = self.model(**kwargs)
         user.set_password(kwargs['password'])
+
+        if invitation:
+            # if there is invitation turn user to invited user and change
+            # invitation status to ACCEPTED
+            user.user_type = 3
+            invitation.status = Invitation.STATUS_ACCEPTED
+            invitation.save()
+
         user.save(using=self._db)
         return user
 
@@ -87,6 +114,18 @@ class CUser(AbstractUser):
                 current_plan
             ]['metadata']['users'] - 1
             return invitations
+
+    @property
+    def is_sender(self):
+        return self.user_type == 1
+
+    @property
+    def is_receiver(self):
+        return self.user_type == 2
+
+    @property
+    def is_invited_user(self):
+        return self.user_type == 3
 
 
 # Email should be unique
