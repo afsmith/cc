@@ -208,3 +208,15 @@ class InvitationForm(forms.ModelForm):
             pass
 
         return email
+
+    def save(self, *args, **kwargs):
+        inv = super(InvitationForm, self).save(*args, **kwargs)
+        try:
+            user = CUser.objects.get(email=inv.to_email)
+        except CUser.DoesNotExist:
+            pass
+        else:
+            inv.to_user = user
+            inv.status = Invitation.STATUS_ACCEPTED
+            inv.save()
+        return inv

@@ -1,0 +1,5 @@
+{% block subject %}Your subscription is renewed{% endblock %}
+
+{% block html %}
+Your subscription is renewed. Please login to use the service again.
+{% endblock %}
