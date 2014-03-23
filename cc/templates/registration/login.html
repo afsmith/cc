@@ -8,7 +8,7 @@
 {% block content %}
 
     {% if error %}
-        <div class="alert alert-error">{{ error }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
 
     <form id="loginForm" action="{% url 'auth_login' %}" method="post" class="well">{% csrf_token %}

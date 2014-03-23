@@ -1,4 +1,11 @@
 {% extends "base_template.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block meta_title %}{% trans "Account management" %}{% endblock %}
+
+{% block js_scripts %}
+    <script>
+        CC_GLOBAL.user_email = '{{ user.email }}';
+    </script>
+    <script src="{% static 'js/payments.js' %}"></script>
+{% endblock %}

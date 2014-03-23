@@ -25,7 +25,7 @@
     {% endif %}
     
     {% if error %}
-        <div class="alert alert-error">{{ error }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
     
     <form action="{% url 'payments_ajax_change_card' %}" data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" class="form ajax" data-replace-closest=".change-card" method="POST">

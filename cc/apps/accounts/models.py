@@ -136,9 +136,9 @@ class Invitation(models.Model):
 
     from_user = models.ForeignKey(CUser, related_name='invites_sent')
     to_user = models.ForeignKey(
-        CUser, null=True, related_name='invites_receive'
+        CUser, null=True, related_name='invites_receive', unique=True
     )
-    to_email = models.CharField(max_length=75)
+    to_email = models.CharField(_('Email'), max_length=75, unique=True)
     code = models.CharField(max_length=30, default=gen_ocl_token)
     status = models.CharField(max_length=30, default=STATUS_SENT)
     created_at = models.DateTimeField(auto_now_add=True)

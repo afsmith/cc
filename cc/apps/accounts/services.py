@@ -1,7 +1,9 @@
 from django.contrib.auth.models import Group
+from django.core.urlresolvers import reverse
 
 from .models import OneClickLinkToken
 
+from templated_email import send_templated_mail
 from datetime import datetime
 
 
@@ -20,3 +22,18 @@ def verify_ocl_token(token):
     if ocl_token.expired:
         return False
     return ocl_token
+
+
+def send_invitation_email(invitation, domain):
+    link = '{}{}?invitation_code={}'.format(
+        domain, reverse('accounts_register'), invitation.code
+    )
+
+    send_templated_mail(
+        template_name='invitation',
+        from_email=invitation.from_user.email,
+        recipient_list=[invitation.to_email],
+        context={
+            'link': link,
+        }
+    )

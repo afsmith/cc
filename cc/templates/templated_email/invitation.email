@@ -1,0 +1,5 @@
+{% block subject %}Invitation{% endblock %}
+
+{% block html %}
+You are invited . Click here <a href="{{ link }}">{{ link }}</a> to register
+{% endblock %}

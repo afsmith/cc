@@ -71,6 +71,9 @@ urlpatterns = patterns(
         'django.contrib.auth.views.password_reset',
         {'password_reset_form': UserPasswordResetForm},
         name='auth_password_reset'),
+    url(r'^accounts/invite/$',
+        'cc.apps.accounts.views.invite',
+        name='accounts_invite'),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
     ## Hunger- its urls is missing beta_verify_invite

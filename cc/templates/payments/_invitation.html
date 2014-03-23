@@ -3,15 +3,15 @@
 {% if request.user.get_invitations %}
     <p>You have {{ request.user.get_invitations }} invitations left.</p>
     
-    <form class="col-sm-4">
+    <div class="col-sm-4 invitation_wrapper">
     {% for i in request.user.get_invitations|get_range %}
         <div class="input-group" style="padding:10px 0">
             <span class="input-group-addon">@</span>
             <input type="email" name="invitation" class="form-control" />
             <span class="input-group-btn">
-                <button class="btn btn-default" type="button">Send</button>
+                <button class="btn btn-default" type="button" disabled="disabled">Send</button>
             </span>
         </div>
     {% endfor %}
-    </form>
+    </div>
 {% endif %}

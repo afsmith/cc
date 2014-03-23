@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import UNUSABLE_PASSWORD
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from .models import CUser
+from .models import CUser, Invitation
 
 
 class UserCreationForm(forms.ModelForm):
@@ -161,3 +161,17 @@ class UserPasswordResetForm(PasswordResetForm):
 
     def save(self, *args, **kwargs):
         super(UserPasswordResetForm, self).save(*args, **kwargs)
+
+
+class InvitationForm(forms.ModelForm):
+    '''
+    Form for invite new users.
+    '''
+    to_email = forms.EmailField(label=_("E-mail"))
+
+    class Meta:
+        model = Invitation
+        fields = (
+            'from_user',
+            'to_email',
+        )
