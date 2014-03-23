@@ -5,6 +5,8 @@ from django.conf import settings
 
 from cc.libs.utils import gen_ocl_token
 
+from payments.models import Customer
+
 
 class CustomUserManager(BaseUserManager):
     '''
@@ -108,7 +110,7 @@ class CUser(AbstractUser):
         try:
             if not self.customer.has_active_subscription():
                 return False
-        except:
+        except Customer.DoesNotExist:
             return False
         current_plan = self.customer.current_subscription.plan
         allowed_users = settings.PAYMENTS_PLANS[
@@ -123,7 +125,7 @@ class CUser(AbstractUser):
         try:
             if not self.customer.has_active_subscription():
                 return False
-        except:
+        except Customer.DoesNotExist:
             return False
         return self.invites_sent.all()
 
@@ -149,10 +151,13 @@ class CUser(AbstractUser):
             return False
 
         # check if the purchaser has active subscription
-        if invitation.from_user.customer.has_active_subscription():
-            return True
-        else:
+        try:
+            if not invitation.from_user.customer.has_active_subscription():
+                return False
+        except Customer.DoesNotExist:
             return False
+
+        return True
 
 # Email should be unique
 CUser._meta.get_field('email')._unique = True

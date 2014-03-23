@@ -8,6 +8,8 @@ from django.conf import settings
 
 from .models import CUser, Invitation
 
+from payments.models import Customer
+
 
 class UserCreationForm(forms.ModelForm):
     '''
@@ -186,3 +188,23 @@ class InvitationForm(forms.ModelForm):
             'from_user',
             'to_email',
         )
+
+    def clean_to_email(self):
+        email = self.cleaned_data['to_email']
+        # check if this user exists
+        try:
+            user = CUser.objects.get(email=email)
+        except CUser.DoesNotExist:
+            pass
+
+        # check if that user has subscription
+        try:
+            if user.customer.has_active_subscription():
+                raise forms.ValidationError(_(
+                    'This user already exists in the service and has active'
+                    ' subscription.'
+                ))
+        except Customer.DoesNotExist:
+            pass
+
+        return email
