@@ -10,7 +10,7 @@
     <p class="lead">{% trans "No need to pay." %}</p>
 {% endif %}
 
-{% if user.is_invited_user  %}
+{% if user.is_invited_user_has_active_subscription  %}
     <h2>{% trans "Your account is invited" %}</h2>
     <p class="lead">{% trans "No need to pay." %}</p>
 {% else %}

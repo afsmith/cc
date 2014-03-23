@@ -13,7 +13,7 @@ class ActiveSubscriptionMiddleware(object):
         if (
             request.user.is_authenticated()
             and not request.user.is_staff
-            and not request.user.is_invited_user
+            and not request.user.is_invited_user_has_active_subscription
         ):
             if request.path not in URLS:
                 try:

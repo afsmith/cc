@@ -41,15 +41,17 @@ class CustomUserManager(BaseUserManager):
         except CUser.DoesNotExist:
             user = self.model(**kwargs)
         user.set_password(kwargs['password'])
+        user.save(using=self._db)
 
         if invitation:
             # if there is invitation turn user to invited user and change
             # invitation status to ACCEPTED
             user.user_type = 3
+            user.save()
+            invitation.to_user = user
             invitation.status = Invitation.STATUS_ACCEPTED
             invitation.save()
 
-        user.save(using=self._db)
         return user
 
     def create_superuser(self, **kwargs):
@@ -104,7 +106,7 @@ class CUser(AbstractUser):
 
     def get_invitations(self):
         try:
-            if not self.customer.has_active_subscription:
+            if not self.customer.has_active_subscription():
                 return False
         except:
             return False
@@ -127,6 +129,20 @@ class CUser(AbstractUser):
     def is_invited_user(self):
         return self.user_type == 3
 
+    @property
+    def is_invited_user_has_active_subscription(self):
+        if not self.is_invited_user:
+            return False
+        try:
+            invitation = self.invites_receive.all()[0]
+        except IndexError:
+            return False
+
+        # check if the purchaser has active subscription
+        if invitation.from_user.customer.has_active_subscription():
+            return True
+        else:
+            return False
 
 # Email should be unique
 CUser._meta.get_field('email')._unique = True
