@@ -104,18 +104,28 @@ class CUser(AbstractUser):
         'industry',
     ]
 
-    def get_invitations(self):
+    def get_unused_invitations(self):
         try:
             if not self.customer.has_active_subscription():
                 return False
         except:
             return False
-        else:
-            current_plan = self.customer.current_subscription.plan
-            invitations = settings.PAYMENTS_PLANS[
-                current_plan
-            ]['metadata']['users'] - 1
-            return invitations
+        current_plan = self.customer.current_subscription.plan
+        allowed_users = settings.PAYMENTS_PLANS[
+            current_plan
+        ]['metadata']['users']
+        used_invitations = self.invites_sent.count()
+        # unused invitation = all - used - 1 (himself)
+        unused_invitations = allowed_users - used_invitations - 1
+        return unused_invitations
+
+    def get_active_invitations(self):
+        try:
+            if not self.customer.has_active_subscription():
+                return False
+        except:
+            return False
+        return self.invites_sent.all()
 
     @property
     def is_sender(self):

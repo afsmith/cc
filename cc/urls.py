@@ -74,6 +74,9 @@ urlpatterns = patterns(
     url(r'^accounts/invite/$',
         'cc.apps.accounts.views.invite',
         name='accounts_invite'),
+    url(r'^accounts/remove_invitation/(?P<invitation_id>\d+)/$',
+        'cc.apps.accounts.views.remove_invitation',
+        name='remove_invitation'),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
     ## Hunger- its urls is missing beta_verify_invite

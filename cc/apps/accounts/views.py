@@ -1,6 +1,7 @@
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators import http as http_decorators
 
+from .models import Invitation
 from .forms import InvitationForm
 from .services import send_invitation_email
 from cc.libs.utils import get_domain
@@ -13,7 +14,7 @@ from annoying.decorators import ajax_request
 @ajax_request
 def invite(request):
     '''
-    invite user
+    Invite user
     '''
     request_data = {}
     request_data['from_user'] = request.user.id
@@ -33,3 +34,14 @@ def invite(request):
             'status': 'ERROR',
             'message': form.errors.get('to_email').as_text()
         }
+
+
+@http_decorators.require_POST
+@auth_decorators.login_required
+@ajax_request
+def remove_invitation(request, invitation_id):
+    '''
+    Remove invitation
+    '''
+    Invitation.objects.filter(pk=invitation_id).delete()
+    return {}

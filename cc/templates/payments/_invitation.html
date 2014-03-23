@@ -1,15 +1,29 @@
-{% load extras %}
+{% load extras i18n %}
 
-{% if request.user.get_invitations %}
-    <p>You have {{ request.user.get_invitations }} invitations left.</p>
-    
-    <div class="col-sm-4 invitation_wrapper">
-    {% for i in request.user.get_invitations|get_range %}
+{% if request.user.get_unused_invitations %}
+    <div class="col-sm-6 invitation_wrapper">
+    <h4>{% trans "Unused invitations" %} ({{ request.user.get_unused_invitations }})</h4>
+    {% for i in request.user.get_unused_invitations|get_range %}
         <div class="input-group" style="padding:10px 0">
             <span class="input-group-addon">@</span>
             <input type="email" name="invitation" class="form-control" />
             <span class="input-group-btn">
-                <button class="btn btn-default" type="button" disabled="disabled">Send</button>
+                <button class="btn btn-default" type="button" disabled="disabled">{% trans "Send" %}</button>
+            </span>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% if request.user.get_active_invitations %}
+    <div class="col-sm-6 active_invitation_wrapper">
+    <h4>{% trans "Active invitations" %} ({{ request.user.get_active_invitations|length }})</h4>
+    {% for inv in request.user.get_active_invitations %}
+        <div id="js_invitation_{{ inv.id }}" class="input-group" style="padding:10px 0">
+            <span class="input-group-addon">@</span>
+            <input type="email" disabled="disabled" class="form-control" value="{{ inv.to_email }} ({{ inv.status }})" />
+            <span class="input-group-btn">
+                <button class="btn btn-danger" type="button">{% trans "Remove" %}</button>
             </span>
         </div>
     {% endfor %}

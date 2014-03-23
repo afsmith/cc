@@ -55,12 +55,25 @@ $(document).ready(function () {
             this_wrapper.find('.alert').remove();
 
             if (resp.status === 'OK') {
-                this_div.removeClass('has-error');
-                log(resp)
+                window.location.reload(true);
             } else {
                 this_div.addClass('has-error');
                 this_wrapper.append('<p class="alert alert-danger">' + resp.message + '</p>');
             }
+        });
+    });
+
+    $('.active_invitation_wrapper').on('click', '.btn', function () {
+        var _this = $(this),
+            this_id = _this.closest('.input-group').prop('id').replace('js_invitation_', '');
+
+        $.ajax({
+            url: '/accounts/remove_invitation/' + this_id + '/',
+            type: 'POST',
+            dataType: 'json',
+        }).done(function (resp) {
+            _this.prop('disabled', true);
+            window.location.reload(true);
         });
     });
     
