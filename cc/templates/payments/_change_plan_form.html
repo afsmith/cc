@@ -11,5 +11,5 @@
     </p>
 
     {% url 'payments_ajax_change_plan' as action %}
-    {% include "payments/_plan_form.html" with data_replace='data-replace-closest=".change-subscription"' %}
+    {% include "payments/_plan_form.html" with data_replace='data-replace-closest=".change-subscription"' current_plan=request.user.customer.current_subscription.plan %}
 </div>

@@ -23,6 +23,7 @@ $(document).ready(function () {
         return false;
     });
 
+    // add loading state
     $('#payment_wrapper button[type="submit"]').click(function () {
         $(this).button('loading');
     });
@@ -82,4 +83,10 @@ $(document).ready(function () {
         });
     });
     
+    // active plan
+    var active_plan = $('.active_plan');
+    if ($('.active_plan').length) {
+        active_plan.find('form').remove();
+    }
+
 }); // end document ready

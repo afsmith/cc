@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <div class="jumbotron">
+        <div class="jumbotron {% ifequal current_plan 'monthly' %}active_plan{% endifequal %}">
             <h3>Single User</h3>
             <p>Give it a shot. €149<sup>*</sup> a month, cancel anytime.</p>
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
@@ -19,7 +19,7 @@
     </div>
 
     <div class="col-md-4">
-        <div class="jumbotron">
+        <div class="jumbotron {% ifequal current_plan 'early_small' %}active_plan{% endifequal %}">
             <h3>Early Access <br>small plan</h3>
             <p>Give your team of up to three people access for three months at a deep discount.</p>
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
@@ -34,7 +34,7 @@
     </div>
 
     <div class="col-md-4">
-        <div class="jumbotron">
+        <div class="jumbotron {% ifequal current_plan 'early_large' %}active_plan{% endifequal %}">
             <h3>Early Access <br>large plan</h3>
             <p>Is you team a little bigger? Big discount, more people. Up to 10.</p>
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
