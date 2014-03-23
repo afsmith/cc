@@ -45,6 +45,7 @@ class CustomUserManager(BaseUserManager):
             last_name='N/A',
             country='N/A',
             industry='N/A',
+            user_type=2,
         )
         user.is_active = False
         user.save(using=self._db)
@@ -54,10 +55,15 @@ class CustomUserManager(BaseUserManager):
 class CUser(AbstractUser):
     '''
     Custom User model
+    User type:
+    1 = registered sender
+    2 = receiver
+    3 = invited user / sender
     '''
     country = models.CharField(_('Country'), max_length=50)
     industry = models.CharField(_('Industry'), max_length=50)
     signature = models.TextField(_('Signature'), blank=True)
+    user_type = models.IntegerField(_('User type'), default=1)
 
     objects = CustomUserManager()
 

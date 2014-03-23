@@ -9,7 +9,7 @@
     {% endif %}
 
     {% trans "Please start the registration by entering your username" %}
-    <form id="loginForm" method="post" action="" class="well registration_form">
+    <form id="loginForm" method="POST" action="" class="well registration_form">
         {% csrf_token %}
         {{ form|as_bootstrap }}
     

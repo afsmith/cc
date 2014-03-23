@@ -39,6 +39,7 @@ class UserCreationForm(forms.ModelForm):
             'required': _('You must agree to the terms to register')
         }
     )
+    invitation_code = forms.CharField(widget=forms.HiddenInput)
 
     PASSWORD_MIN_LENGTH = 8
 
@@ -57,9 +58,10 @@ class UserCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
-        # make all fields required
+        # make all fields required except invitation code
         for key in self.fields:
-            self.fields[key].required = True
+            if key != 'invitation_code':
+                self.fields[key].required = True
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
@@ -98,14 +100,23 @@ class UserCreationForm(forms.ModelForm):
         return email
 
     def clean(self):
-        # allow receiver to update account by bypassing unique in email field
         email = self.cleaned_data.get('email')
+        inv = self.cleaned_data.get('invitation_code')
+
+        # allow receiver to update account by bypassing unique in email field
         if email:
             user_qs = CUser.objects.filter(email__iexact=email)
             if user_qs and user_qs[0].country != 'N/A':
                 raise forms.ValidationError(
                     _('User with this email address already exists.')
                 )
+
+        if email and inv:
+            try:
+                Invitation.objects.get(to_email=email, code=inv)
+            except Invitation.DoesNotExist:
+                raise forms.ValidationError(_('Invitation code is invalid.'))
+
         return self.cleaned_data
 
 
