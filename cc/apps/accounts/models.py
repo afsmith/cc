@@ -21,6 +21,7 @@ class CustomUserManager(BaseUserManager):
         kwargs['password'] = kwargs['password1']
 
         # if there is invitation code
+        invitation = None
         if kwargs.get('invitation_code'):
             try:
                 invitation = Invitation.objects.get(

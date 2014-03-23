@@ -62,8 +62,8 @@ class UserCreationForm(forms.ModelForm):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         # make all fields required except invitation code
         for key in self.fields:
-            if key != 'invitation_code':
-                self.fields[key].required = True
+            self.fields[key].required = True
+        self.fields['invitation_code'].required = False
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
@@ -113,6 +113,7 @@ class UserCreationForm(forms.ModelForm):
                     _('User with this email address already exists.')
                 )
 
+        # check invitation code
         if email and inv:
             try:
                 Invitation.objects.get(to_email=email, code=inv)
