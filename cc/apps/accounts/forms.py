@@ -196,14 +196,14 @@ class InvitationForm(forms.ModelForm):
         try:
             user = CUser.objects.get(email=email)
         except CUser.DoesNotExist:
-            pass
+            return email
 
         # check if that user has subscription
         try:
             if user.customer.has_active_subscription():
                 raise forms.ValidationError(_(
-                    'This user already exists in the service and has active'
-                    ' subscription.'
+                    'This user already exists in the service and has'
+                    ' active subscription.'
                 ))
         except Customer.DoesNotExist:
             pass
