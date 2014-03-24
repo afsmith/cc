@@ -24,7 +24,7 @@ PAYMENTS_PLANS = {
         'interval_count': 3,
         'metadata': {
             'VAT': 107.76,
-            'users': 3
+            'users': 5
         }
     },
     'early_large': {
@@ -37,7 +37,7 @@ PAYMENTS_PLANS = {
         'interval_count': 3,
         'metadata': {
             'VAT': 359.76,
-            'users': 10
+            'users': 12
         }
     },
 }
