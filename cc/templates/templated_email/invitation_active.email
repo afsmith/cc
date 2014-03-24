@@ -1,5 +1,11 @@
-{% block subject %}Your subscription is renewed{% endblock %}
+{% block subject %}Kneto: your subscription is renewed{% endblock %}
 
 {% block html %}
+<p>
 Your subscription is renewed. Please login to use the service again.
+<p>
+Best Regards,
+<p>
+The Kneto team. 
+
 {% endblock %}

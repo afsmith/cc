@@ -1,5 +1,16 @@
-{% block subject %}Invitation{% endblock %}
+{% block subject %}Kneto:Invitation{% endblock %}
 
 {% block html %}
-You are invited . Click here <a href="{{ link }}">{{ link }}</a> to register
+Hello, 
+<p>
+You have been invited to use Kneto and your account has been prepaid, all you need to do is click the link below then register. 
+<p>
+Click here <a href="{{ link }}">{{ link }}</a> to register
+<p>
+If you have a question or run into a problem please drop us a line at support@kneto.com
+<p>
+Best Regards,
+<p>
+The Kneto team
+
 {% endblock %}
