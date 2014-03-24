@@ -630,15 +630,15 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
 		if ((conf.RenderingOrder.indexOf('flash') == 0 || (conf.RenderingOrder.indexOf('flash')>0 &&!supportsHTML4) || (conf.RenderingOrder.indexOf('flash')>0 && conf.RenderingOrder.indexOf('html5')>=0 && !supportsCanvasDrawing)) && f.isSupported(opts.version)) {
             if(conf.Toolbar){
                 var wrapper = jQuery(root).wrap("<div class='flexpaper_toolbar_wrapper' style='"+jQuery(root).attr('style')+"'></div>").parent();
+                wrapper.prepend(jQuery(conf.Toolbar));
+                
                 jQuery(root).css({
                     left : '0px',
                     top: '0px',
                     position : 'relative',
                     width : '100%',
-                    height : '100%'
+                    height : jQuery(root).parent().height() - jQuery(wrapper).find('.flexpaper_toolbar').height()
                 }).addClass('flexpaper_viewer');
-
-                wrapper.prepend(jQuery(conf.Toolbar));
             }
 
 			window['ViewerMode'] = 'flash';
@@ -647,6 +647,10 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
             if(conf.BottomToolbar && conf.AnnotationToolsVisible!=false){
                 jQuery.get(conf.BottomToolbar,function(toolbarData){
                     wrapper.append(toolbarData);
+                    
+                    jQuery(root).css({
+                        height : jQuery(root).height() - jQuery(wrapper).find('.flexpaper_bottomToolbar').height()
+                    });
                 });
             }
 
@@ -676,7 +680,7 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
                     top: '0px',
                     position : 'relative',
                     width : '100%',
-                    height : '100%'
+                    height : jQuery(root).parent().height() - jQuery(wrapper).find('.flexpaper_toolbar').height()
                 }).addClass('flexpaper_viewer');
 
                 wrapper.prepend(jQuery(conf.Toolbar));
@@ -691,6 +695,10 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
             if(conf.BottomToolbar && conf.AnnotationToolsVisible!=false){
                 jQuery.get(conf.BottomToolbar,function(toolbarData){
                     wrapper.append(toolbarData);
+                    
+                    jQuery(root).css({
+                        height : jQuery(root).height() - jQuery(wrapper).find('.flexpaper_bottomToolbar').height()
+                    });
                 });
             }
 
@@ -1365,7 +1373,7 @@ if(window.unsupportedPDFJSieversion){return;}
       log: function() {},
       error: function() {}
     };
-  } else if (!('bind' in console.log)) {
+  } else if (!window.unsupportedPDFJSieversion && !('bind' in console.log)) {
       try{
         // native functions in IE9 might not have bind
         console.log = (function(fn) {
