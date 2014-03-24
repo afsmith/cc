@@ -9,7 +9,7 @@ class UserCreationFormTests(TestCase):
     """
     fixtures = ['test-users-content.json']
 
-    def test_registration_form_success(self):
+    def test_registration_form_success_without_invitation_code(self):
         form = UserCreationForm(data={
             'email1': 'foo@cc.kneto.com',
             'email': 'foo@cc.kneto.com',
@@ -20,6 +20,21 @@ class UserCreationFormTests(TestCase):
             'country': 'VN',
             'industry': 'industry-legal',
             'tos': True
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_registration_form_success_with_invitation_code(self):
+        form = UserCreationForm(data={
+            'email1': 'foo@cc.kneto.com',
+            'email': 'foo@cc.kneto.com',
+            'password1': 'abcd1234',
+            'password2': 'abcd1234',
+            'first_name': 'Foo',
+            'last_name': 'Bar',
+            'country': 'VN',
+            'industry': 'industry-legal',
+            'tos': True,
+            'invitation_code': '123'
         })
         self.assertTrue(form.is_valid())
 
@@ -69,7 +84,7 @@ class UserCreationFormTests(TestCase):
                 '__all__', [u'User with this email address already exists.']
             )},
 
-            # non-matching email
+            # mismatch email
             {'data': {
                 'email1': 'admin@cc.kneto.com',
                 'email': 'admin@bb.kneto.com',
@@ -159,7 +174,7 @@ class UserCreationFormTests(TestCase):
                 'password2', [u'Passwords don\'t match.']
             )},
 
-            # mismatch password
+            # TOS checkbox is ticked
             {'data': {
                 'email': 'foo@cc.kneto.com',
                 'password1': 'abcd1234',

@@ -2,11 +2,19 @@ from fabric.api import local, task
 
 
 @task(alias='t')
-def test():
+def test(mode=''):
     '''
-    Executes test suite, optionally checking coverage.
+    Executes test suite
+    fab t => run ALL tests
+    fab t:n => run normal tests
+    fab t:s => run selenium tests
     '''
-    local('python manage.py test')
+    if mode == 's':
+        local('python manage.py test --where=cc/selenium_tests/')
+    elif mode == 'n':
+        local('python manage.py test --where=cc/apps/')
+    else:
+        local('python manage.py test')
 
 
 @task(alias='d')
