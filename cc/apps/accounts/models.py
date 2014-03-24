@@ -18,7 +18,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Users must have an email address')
         # turn user email to lowercase on saving
         kwargs['email'] = kwargs['email'].lower()
-        kwargs['password'] = kwargs['password1']
+        if 'password' not in kwargs and 'password1' in kwargs:
+            kwargs['password'] = kwargs['password1']
 
         # if there is invitation code
         invitation = None
@@ -35,7 +36,7 @@ class CustomUserManager(BaseUserManager):
         for key in keys:
             if key not in [
                 'email', 'password', 'first_name', 'last_name',
-                'country', 'industry'
+                'country', 'industry', 'user_type'
             ]:
                 kwargs.pop(key, None)
         try:
