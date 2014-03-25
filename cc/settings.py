@@ -295,7 +295,7 @@ if 'test' in sys.argv:
     )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_ARGS = ['--nologcapture', '--nocapture']
+NOSE_ARGS = ['--nologcapture', '--nocapture', '--verbosity=2']
 
 
 ###################

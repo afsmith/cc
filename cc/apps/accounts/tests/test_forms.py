@@ -34,7 +34,7 @@ class UserCreationFormTests(TestCase):
             'country': 'VN',
             'industry': 'industry-legal',
             'tos': True,
-            'invitation_code': '123'
+            'invitation_code': 'O8oKAwG8CnDS9iRQBeFqP950PRMgiM'
         })
         self.assertTrue(form.is_valid())
 
@@ -177,6 +177,7 @@ class UserCreationFormTests(TestCase):
             # TOS checkbox is ticked
             {'data': {
                 'email': 'foo@cc.kneto.com',
+                'email1': 'foo@cc.kneto.com',
                 'password1': 'abcd1234',
                 'password2': 'abcd1234',
                 'first_name': 'Foo',
@@ -185,6 +186,22 @@ class UserCreationFormTests(TestCase):
                 'industry': 'industry-legal',
             }, 'error': (
                 'tos', [u'You must agree to the terms to register']
+            )},
+
+            # invalid invitation code
+            {'data': {
+                'email': 'foo@cc.kneto.com',
+                'email1': 'foo@cc.kneto.com',
+                'password1': 'abcd1234',
+                'password2': 'abcd1234',
+                'first_name': 'Foo',
+                'last_name': 'Bar',
+                'country': 'VN',
+                'industry': 'industry-legal',
+                'tos': True,
+                'invitation_code': 'haha'
+            }, 'error': (
+                '__all__', [u'Invitation code is invalid.']
             )},
         ]
 

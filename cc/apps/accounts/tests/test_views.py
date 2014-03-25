@@ -63,6 +63,13 @@ class RegistrationViewTestCases(TestCase):
 class LoginViewTestCases(TestCase):
     fixtures = ['test-users-content.json']
 
+    def test_login_GET_success(self):
+        resp = self.client.get(reverse('auth_login'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(
+            resp.context['form'].__class__.__name__, 'AuthenticationForm'
+        )
+
     def test_login_POST_success(self):
         resp = self.client.post(reverse('auth_login'), {
             'username': 'admin@cc.kneto.com',
@@ -72,9 +79,6 @@ class LoginViewTestCases(TestCase):
         self.assertEqual(resp.context['user'].first_name, 'marek')
 
     def test_login_POST_failure(self):
-        """
-        If login fails, system debug information should not be shown to users
-        """
         resp = self.client.post(reverse('auth_login'), {
             'username': 'test_user_1',
             'password': 'test_user_1'
