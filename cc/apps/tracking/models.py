@@ -12,6 +12,7 @@ class TrackingLog(models.Model):
     message = models.ForeignKey(Message)
     participant = models.ForeignKey(CUser)
     action = models.CharField(_('Action'), max_length=100)
+    revision = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -21,7 +22,7 @@ class TrackingLog(models.Model):
 class TrackingSession(models.Model):
     message = models.ForeignKey(Message)
     participant = models.ForeignKey(CUser)
-    tracking_log = models.ForeignKey(TrackingLog)
+    tracking_log = models.ForeignKey(TrackingLog, null=True)
     client_ip = models.CharField(_('Client IP'), max_length=50, null=True)
     device = models.CharField(_('Device'), max_length=50, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

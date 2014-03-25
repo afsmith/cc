@@ -69,11 +69,11 @@ def get_missing_data(message):
         .filter(message=message, trackingevent=None),
 
         TrackingLog.objects
-        .exclude(trackingsession=1)
         .filter(
             message=message,
             action=TrackingLog.CLICK_LINK_ACTION,
-            trackingsession=None
+            revision__gt=1,
+            trackingsession=None,
         )
     )
 

@@ -160,7 +160,8 @@ def send_notification_email(reason_code, message, recipient=None):
         log = TrackingLog.objects.create(
             message=message,
             participant=recipient,
-            action=action
+            action=action,
+            revision=2
         )
 
     # then send email if needed

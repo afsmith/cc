@@ -8,14 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'TrackingSession.tracking_log'
-        db.add_column(u'tracking_trackingsession', 'tracking_log',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tracking.TrackingLog'], null=True))
+        # Adding field 'TrackingLog.revision'
+        db.add_column(u'tracking_trackinglog', 'revision',
+                      self.gf('django.db.models.fields.IntegerField')(default=1),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'TrackingSession.tracking_log'
-        db.delete_column(u'tracking_trackingsession', 'tracking_log_id')
+        # Deleting field 'TrackingLog.revision'
+        db.delete_column(u'tracking_trackinglog', 'revision')
 
 
     models = {
@@ -36,6 +37,7 @@ class Migration(SchemaMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'signature': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_type': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'username': ('django.db.models.fields.CharField', [], {'max_length': '30'})
         },
         u'auth.group': {
@@ -72,15 +74,15 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "('created_on',)", 'object_name': 'File'},
             'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'key': ('django.db.models.fields.CharField', [], {'default': "'UNFQE0LGWsdAEGZph2PHRi'", 'unique': 'True', 'max_length': '22'}),
+            'key': ('django.db.models.fields.CharField', [], {'default': "'f8tMkKP7VpFolsr5MNpCjv'", 'unique': 'True', 'max_length': '22'}),
             'orig_filename': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accounts.CUser']", 'null': 'True'}),
             'pages_num': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '10'}),
-            'subkey_conv': ('django.db.models.fields.CharField', [], {'default': "'zuoQW'", 'max_length': '5'}),
-            'subkey_orig': ('django.db.models.fields.CharField', [], {'default': "'vUJBs'", 'max_length': '5'}),
-            'subkey_preview': ('django.db.models.fields.CharField', [], {'default': "'jyugP'", 'max_length': '5'}),
-            'subkey_thumbnail': ('django.db.models.fields.CharField', [], {'default': "'k8S6y'", 'max_length': '5'}),
+            'subkey_conv': ('django.db.models.fields.CharField', [], {'default': "'48i0W'", 'max_length': '5'}),
+            'subkey_orig': ('django.db.models.fields.CharField', [], {'default': "'s0Oaj'", 'max_length': '5'}),
+            'subkey_preview': ('django.db.models.fields.CharField', [], {'default': "'I76B0'", 'max_length': '5'}),
+            'subkey_thumbnail': ('django.db.models.fields.CharField', [], {'default': "'NXlMk'", 'max_length': '5'}),
             'type': ('django.db.models.fields.IntegerField', [], {}),
             'updated_on': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },
@@ -112,7 +114,8 @@ class Migration(SchemaMigration):
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'message': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cc_messages.Message']"}),
-            'participant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accounts.CUser']"})
+            'participant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accounts.CUser']"}),
+            'revision': ('django.db.models.fields.IntegerField', [], {})
         },
         u'tracking.trackingsession': {
             'Meta': {'object_name': 'TrackingSession'},
@@ -122,7 +125,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'message': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cc_messages.Message']"}),
             'participant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['accounts.CUser']"}),
-            'tracking_log': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tracking.TrackingLog']"})
+            'tracking_log': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tracking.TrackingLog']", 'blank': 'True'})
         }
     }
 
