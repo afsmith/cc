@@ -10,9 +10,9 @@
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
                 {% csrf_token %}
                 <input name="stripe_token" type="hidden" />
-                <input type="hidden" name="plan" value="monthly">
+                <input type="hidden" name="plan" value="monthly" />
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it</button>
+                    <button id="js_price_18476" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it</button>
                 </div>
             </form>
         </div>
@@ -25,9 +25,9 @@
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
             {% csrf_token %}
                 <input name="stripe_token" type="hidden" />
-                <input type="hidden" name="plan" value="early_small">        
+                <input type="hidden" name="plan" value="early_small" />        
                 <div class="form-actions">
-                   <button type="submit" class="btn btn-primary" data-loading-text="Processing..." >€449<sup>*</sup></button>
+                   <button id="js_price_55676" type="submit" class="btn btn-primary" data-loading-text="Processing...">€449<sup>*</sup></button>
                 </div>
             </form>
         </div>
@@ -40,9 +40,9 @@
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
                 {% csrf_token %}
                 <input name="stripe_token" type="hidden" />  
-                <input type="hidden" name="plan" value="early_large">     
+                <input type="hidden" name="plan" value="early_large" />     
                 <div class="form-actions"> 
-                    <button type="submit" class="btn btn-primary" data-loading-text="Processing...">€1499<sup>*</sup></button>
+                    <button id="js_price_185876" type="submit" class="btn btn-primary" data-loading-text="Processing...">€1499<sup>*</sup></button>
                 </div>
             </form>
         </div>

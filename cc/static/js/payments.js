@@ -3,21 +3,24 @@ $(document).ready(function () {
     // Stripe init
     $('.subscribe-form button[type="submit"], .js_changeCard').click(function(e) {
         e.preventDefault();
-        var _form = $(this).closest('form'),
+        var _this = $(this),
+            _form = _this.closest('form'),
+            amount = _this.prop('id').replace('js_price_', ''),
             token = function(res) {
                 _form.find('input[name="stripe_token"]').val(res.id);
                 _form.trigger('submit');
             };
 
         StripeCheckout.open({
-            key:            _form.data('stripe-key'),
-            name:           'Payment Method',
-            panelLabel:     'Add Payment Method',
-            billingAddress: 'true',
-            name:           'Kneto',
-            email:          CC_GLOBAL.user_email,
-            description:    'Kneto Subscription',
-            token:          token
+            key:                _form.data('stripe-key'),
+            token:              token,
+            billingAddress:     'true',
+            name:               'Kneto',
+            email:              CC_GLOBAL.user_email,
+            description:        'Kneto Subscription',
+            allowRememberMe:    false,
+            amount:             amount,
+            currency:           'EUR',
         });
 
         return false;

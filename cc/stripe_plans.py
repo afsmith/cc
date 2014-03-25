@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-PAYMENTS_INVOICE_FROM_EMAIL='cc@kneto.com' ;
+PAYMENTS_INVOICE_FROM_EMAIL = 'cc@kneto.com'
 
 PAYMENTS_PLANS = {
     'monthly': {
