@@ -143,6 +143,7 @@ $(document).ready(function () {
             ['insert', [/*'picture',*/ 'link']],
             ['options', ['codeview']],
         ],
+        disableDragAndDrop: true,
         onkeyup: function(e) {
             // TODO: improve this later by not copying on every key press
             message_field.val(message_field.code());
