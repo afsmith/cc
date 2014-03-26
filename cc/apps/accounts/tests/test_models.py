@@ -5,7 +5,7 @@ from ..models import CUser, OneClickLinkToken, BillingAddress, Invitation
 
 
 class CUserModelTestCases(TestCase):
-    fixtures = ['test-users-content.json']
+    fixtures = ['fixture_users.json', 'fixture_payments.json']
 
     def _create_user(self):
         return CUser.objects.create_user(
@@ -17,12 +17,9 @@ class CUserModelTestCases(TestCase):
             industry='IT',
         )
 
-    def test_create_user_success(self):
-        user = self._create_user()
-        self.assertEqual(user.email, 'foo@cc.kneto.com')
-
     def test_create_user_default_values(self):
         user = self._create_user()
+        self.assertEqual(user.email, 'foo@cc.kneto.com')
         self.assertEqual(user.username, '')
         # user type = sender
         self.assertEqual(user.user_type, 1)
@@ -98,12 +95,9 @@ class CUserModelTestCases(TestCase):
             )
         self.assertEqual('Invitation code is invalid', str(cm.exception))
 
-    def test_create_receiver_user_success(self):
-        user = CUser.objects.create_receiver_user('foo@cc.kneto.com')
-        self.assertEqual(user.email, 'foo@cc.kneto.com')
-
     def test_create_receiver_user_default_values(self):
         user = CUser.objects.create_receiver_user('foo@cc.kneto.com')
+        self.assertEqual(user.email, 'foo@cc.kneto.com')
         self.assertEqual(user.first_name, 'N/A')
         self.assertEqual(user.last_name, 'N/A')
         self.assertEqual(user.country, 'N/A')
@@ -142,16 +136,12 @@ class CUserModelTestCases(TestCase):
 
 
 class OneClickLinkTokenModelTestCases(TestCase):
-    fixtures = ['test-users-content.json']
-
-    def test_create_OCL_success(self):
-        user = CUser.objects.get(pk=1)
-        ocl = OneClickLinkToken.objects.create(user=user)
-        self.assertEqual(ocl.user, user)
+    fixtures = ['fixture_users.json', 'fixture_payments.json']
 
     def test_create_OCL_default_values(self):
         user = CUser.objects.get(pk=1)
         ocl = OneClickLinkToken.objects.create(user=user)
+        self.assertEqual(ocl.user, user)
         self.assertIsInstance(ocl.token, str)
         self.assertEqual(len(ocl.token), 30)
         self.assertFalse(ocl.expired)
@@ -160,22 +150,12 @@ class OneClickLinkTokenModelTestCases(TestCase):
 
 
 class BillingAddressTestCases(TestCase):
-    fixtures = ['test-users-content.json']
-
-    def test_create_billing_address_success(self):
-        user = CUser.objects.get(pk=1)
-        ba = BillingAddress.objects.create(
-            user=user,
-            name='Foo',
-            address_city='Bar'
-        )
-        self.assertEqual(ba.user, user)
-        self.assertEqual(ba.name, 'Foo')
-        self.assertEqual(ba.address_city, 'Bar')
+    fixtures = ['fixture_users.json', 'fixture_payments.json']
 
     def test_create_billing_address_default_values(self):
         user = CUser.objects.get(pk=1)
         ba = BillingAddress.objects.create(user=user)
+        self.assertEqual(ba.user, user)
         self.assertIsNone(ba.name)
         self.assertIsNone(ba.address_line1)
         self.assertIsNone(ba.address_line2)
@@ -186,16 +166,7 @@ class BillingAddressTestCases(TestCase):
 
 
 class InvitationTestCases(TestCase):
-    fixtures = ['test-users-content.json']
-
-    def test_create_invitation_success(self):
-        user = CUser.objects.get(pk=1)
-        invitation = Invitation.objects.create(
-            from_user=user,
-            to_email='foo@kneto.com',
-        )
-        self.assertEqual(invitation.from_user, user)
-        self.assertEqual(invitation.to_email, 'foo@kneto.com')
+    fixtures = ['fixture_users.json', 'fixture_payments.json']
 
     def test_create_invitation_default_values(self):
         user = CUser.objects.get(pk=1)
@@ -203,6 +174,8 @@ class InvitationTestCases(TestCase):
             from_user=user,
             to_email='foo@kneto.com',
         )
+        self.assertEqual(invitation.from_user, user)
+        self.assertEqual(invitation.to_email, 'foo@kneto.com')
         self.assertIsNone(invitation.to_user)
         self.assertIsInstance(invitation.code, str)
         self.assertEqual(len(invitation.code), 30)

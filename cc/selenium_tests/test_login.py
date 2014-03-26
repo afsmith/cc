@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 class UsersLiveTest(LiveServerTestCase):
-    fixtures = ['test-users-content.json']
+    fixtures = ['fixture_users.json', 'fixture_payments.json']
 
     @classmethod
     def setUpClass(cls):

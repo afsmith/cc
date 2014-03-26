@@ -47,7 +47,7 @@ class FakeFile(object):
 class ImportFileTest(ClientTestCase):
     """Exercises import_file view.
     """
-    fixtures = ['test-users-content.json']
+    fixtures = ['fixture_users.json']
 
     url = reverse('upload_file')
 

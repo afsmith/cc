@@ -9,7 +9,7 @@ import json
 
 
 class CreateEventTest(ClientTestCase):
-    fixtures = ['test-users-content.json']
+    fixtures = ['fixture_users.json']
     url = reverse('create_event')
 
     def test_should_add_new_event(self):

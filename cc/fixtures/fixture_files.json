@@ -1,0 +1,20 @@
+[
+{
+    "pk": 1,
+    "model": "content.file",
+    "fields": {
+        "orig_filename": "ZenCodingCheatSheet.pdf",
+        "status": 30,
+        "subkey_preview": "jtdNx",
+        "pages_num": 7,
+        "owner": 1,
+        "subkey_thumbnail": "0HMdq",
+        "created_on": "2013-10-15T01:13:48",
+        "subkey_conv": "gdU5E",
+        "key": "RBauHJHSXvqKkAiBYIxdxR",
+        "updated_on": "2013-10-15T01:14:49",
+        "type": 80,
+        "subkey_orig": "a1BMF"
+    }
+}
+]

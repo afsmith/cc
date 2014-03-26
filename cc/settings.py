@@ -13,11 +13,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = False
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-# Name of the directory for the project.
-PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
-
 # media
 MEDIA_ROOT = path.abspath(path.join(ROOT_PATH, 'media'))
 MEDIA_URL = '/media/'
@@ -296,6 +291,10 @@ if 'test' in sys.argv:
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = ['--nologcapture', '--nocapture', '--verbosity=2']
+
+FIXTURE_DIRS = (
+    path.abspath(path.join(ROOT_PATH, 'fixtures')),
+)
 
 
 ###################

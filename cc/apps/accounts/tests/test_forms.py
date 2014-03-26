@@ -7,7 +7,7 @@ class UserCreationFormTests(TestCase):
     """
     Test the registration forms.
     """
-    fixtures = ['test-users-content.json']
+    fixtures = ['fixture_users.json']
 
     def test_registration_form_success_without_invitation_code(self):
         form = UserCreationForm(data={

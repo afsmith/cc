@@ -61,7 +61,7 @@ class RegistrationViewTestCases(TestCase):
 
 
 class LoginViewTestCases(TestCase):
-    fixtures = ['test-users-content.json']
+    fixtures = ['fixture_users.json']
 
     def test_login_GET_success(self):
         resp = self.client.get(reverse('auth_login'))
