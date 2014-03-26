@@ -30,7 +30,7 @@ class CustomUserManager(BaseUserManager):
                     code=kwargs.get('invitation_code')
                 )
             except Invitation.DoesNotExist:
-                raise ValueError('Users must have an email address')
+                raise ValueError('Invitation code is invalid')
 
         keys = kwargs.keys()
         for key in keys:
