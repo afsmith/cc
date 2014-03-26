@@ -12,7 +12,6 @@ from django.contrib.auth.decorators import login_required
 from cc.apps.cc_stripe.forms import PlanForm
 from cc.apps.accounts.models import CUser, BillingAddress
 
-from payments import settings as app_settings
 from payments.models import (
     Customer,
     CurrentSubscription,
@@ -29,9 +28,9 @@ class PaymentsContextMixin(object):
     def get_context_data(self, **kwargs):
         context = super(PaymentsContextMixin, self).get_context_data(**kwargs)
         context.update({
-            'STRIPE_PUBLIC_KEY': app_settings.STRIPE_PUBLIC_KEY,
-            'PLAN_CHOICES': app_settings.PLAN_CHOICES,
-            'PAYMENT_PLANS': app_settings.PAYMENTS_PLANS
+            'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY,
+            'PLAN_CHOICES': settings.PLAN_CHOICES,
+            'PAYMENT_PLANS': settings.PAYMENTS_PLANS
         })
         return context
 
