@@ -29,7 +29,8 @@
             "email": "admin@cc.kneto.com",
             "country": "VN",
             "industry": "industry-it-service-software",
-            "date_joined": "2011-01-07 13:42:01"
+            "date_joined": "2011-01-07 13:42:01",
+            "signature": "Foobar"
         }
     },
     {

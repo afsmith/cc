@@ -77,7 +77,7 @@ class ConvertTest(TestCase):
 
     def test_no_converters_are_registered_with_our_unique_test_only_type(self):
         try:
-            self.assertEquals(None, convert.register(self.fake_type, None))
+            self.assertEqual(None, convert.register(self.fake_type, None))
         finally:
             convert.unregister(self.fake_type)
 
@@ -86,7 +86,7 @@ class ConvertTest(TestCase):
             conv = object()
             convert.register(self.fake_type, conv)
             convert.unregister(self.fake_type)
-            self.assertEquals(None, convert.register(self.fake_type, None))
+            self.assertEqual(None, convert.register(self.fake_type, None))
         finally:
             convert.unregister(self.fake_type)
 
@@ -103,9 +103,9 @@ class ConvertTest(TestCase):
         try:
             converter = object()
             # just to make sure we don't register converter for this magic number
-            self.assertEquals(None, convert.register(self.fake_type, converter))
+            self.assertEqual(None, convert.register(self.fake_type, converter))
 
-            self.assertEquals(converter, convert.register(self.fake_type, None))
+            self.assertEqual(converter, convert.register(self.fake_type, None))
         finally:
             convert.unregister(self.fake_type)
 
@@ -123,13 +123,13 @@ class ConvertTest(TestCase):
         self.assertRaises(
             convert.ConversionError,
             conv.convert)
-        self.assertEquals(file.status, File.STATUS_INVALID)
+        self.assertEqual(file.status, File.STATUS_INVALID)
 
     def test_successful_conversion_marks_file_as_available(self):
         file = self._create_file('foo.jpeg', File.TYPE_IMAGE)
         conv = SuccessfulConverter(file, None, FakeLogger())
         conv.convert()
-        self.assertEquals(file.status, File.STATUS_AVAILABLE)
+        self.assertEqual(file.status, File.STATUS_AVAILABLE)
 
     def _create_file(self, name, type):
         file = File(orig_filename=name, type=type)

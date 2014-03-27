@@ -16,7 +16,7 @@ class TrackingLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return self.message.subject
+        return self.action
 
 
 class TrackingSession(models.Model):

@@ -39,9 +39,10 @@ def send_message(request):
     else:
         message_form = MessageForm(initial={
             'message': (
-                '<br><br><br><br>'
+                u'<br><br><br><br>'
                 '[link]'
-                u'<br><br><div id="signature">{}</div>'.format(request.user.signature)
+                '<br><br>'
+                '<div id="signature">{}</div>'.format(request.user.signature)
             ),
             'signature': request.user.signature
         })
@@ -60,54 +61,9 @@ def resend_message(request):
     Resend the message
     '''
     message = get_message(request.POST.get('message_id'), request.user)
-    result = edit_email_and_resend_message(request, message)
+    edit_email_and_resend_message(request, message)
 
     return {}
-
-
-@ensure_csrf_cookie
-@render_to('main/view_message.html')
-def OLD_view_message(request, message_id=None):
-    token = request.GET.get('token')
-    if token:
-        ocl_token = verify_ocl_token(token)
-        if not ocl_token:
-            return {
-                'ocl_expired': True
-            }
-        message = get_message(message_id, ocl_token.user)
-
-        # check if owner is checking message
-        is_owner_viewing = (
-            ocl_token.user == message.owner
-            or request.user == message.owner
-        )
-
-        # there is only 1 file per message for now so return that file
-        file = message.files.all()[0]
-        pages_num = file.pages_num
-        view_url = file.view_url
-        page_list = []
-
-        if pages_num == 1:
-            page_list.append('%s/p.png' % view_url)
-        elif pages_num > 1:
-            for i in range(0, pages_num):
-                page_list.append('%s/p-%d.png' % (view_url, i))
-
-        # notify the sender if "notify when link clicked" option is on
-        if not is_owner_viewing:
-            send_notification_email(2, message, ocl_token.user)
-
-        return {
-            'message': message,
-            'page_list': page_list,
-            'token': token,
-            'ocl_user': ocl_token.user,
-            'is_owner_viewing': is_owner_viewing
-        }
-    else:
-        return redirect(reverse('home'))
 
 
 @ensure_csrf_cookie
@@ -142,4 +98,4 @@ def view_message(request, message_id=None):
             'tracking_log': log,
         }
     else:
-        return redirect(reverse('home'))
+        return redirect(reverse('auth_login'))

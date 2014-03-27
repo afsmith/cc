@@ -62,7 +62,7 @@ def _test_view_message_tracking_time(self, go_to_url):
 
 
 class ViewMessageLiveTestOnFirefox(LiveServerTestCase):
-    fixtures = ['view_message.json']
+    fixtures = ['fixture_view_message.json']
 
     @classmethod
     def setUpClass(cls):
@@ -83,7 +83,7 @@ class ViewMessageLiveTestOnFirefox(LiveServerTestCase):
 
 
 class ViewMessageLiveTestOnSafari(LiveServerTestCase):
-    fixtures = ['view_message.json']
+    fixtures = ['fixture_view_message.json']
 
     @classmethod
     def setUpClass(cls):

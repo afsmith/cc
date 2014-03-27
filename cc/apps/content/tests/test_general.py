@@ -73,19 +73,19 @@ class ImportFileTest(ClientTestCase):
     def test_get_method_not_allowed(self):
         c = self._get_client_admin()
         r = c.get(self.url)
-        self.assertEquals(r.status_code, 405)
+        self.assertEqual(r.status_code, 405)
 
     def test_invalid_form_post_returns_form(self):
         c = self._get_client_admin()
         response = c.post(self.url)
         data = json.loads(response.content)
-        self.assertEquals(data['status'], "ERROR")
+        self.assertEqual(data['status'], "ERROR")
 
     def test_on_post_file_is_required(self):
         c = self._get_client_admin()
         response = c.post(self.url, {})
         data = json.loads(response.content)
-        self.assertEquals(data['status'], "ERROR")
+        self.assertEqual(data['status'], "ERROR")
 
     def test_upload_of_file_without_ext_results_in_error(self):
         c = self._get_client_admin()
@@ -94,7 +94,7 @@ class ImportFileTest(ClientTestCase):
         response = c.post(self.url, {'file': f})
         f.close()
         data = json.loads(response.content)
-        self.assertEquals(data['status'], "ERROR")
+        self.assertEqual(data['status'], "ERROR")
 
     def test_upload_of_file_with_unknown_ext_results_in_error(self):
         c = self._get_client_admin()
@@ -103,21 +103,21 @@ class ImportFileTest(ClientTestCase):
         response = c.post(self.url, {'file': f})
         f.close()
         data = json.loads(response.content)
-        self.assertEquals(data['status'], "ERROR")
+        self.assertEqual(data['status'], "ERROR")
 
     def test_adds_imported_file_to_database(self):
         c = self._get_client_admin()
         f = self._get_fh()
         c.post(self.url, {'file': f})
         f.close()
-        self.assertEquals(File.objects.all().count(), 1)
+        self.assertEqual(File.objects.all().count(), 1)
 
     def test_upload_file_returns_page_count(self):
         c = self._get_client_admin()
         f = self._get_fh()
         resp = c.post(self.url, {'file': f})
         json_resp = json.loads(resp.content)
-        self.assertEquals(json_resp.get('page_count'), 7)
+        self.assertEqual(json_resp.get('page_count'), 7)
         f.close()
 
     def test_stores_original_filename_of_uploaded_files(self):
@@ -126,7 +126,7 @@ class ImportFileTest(ClientTestCase):
         c.post(self.url, {'file': f})
         f.close()
         f2 = File.objects.all()[0]
-        self.assertEquals(f2.orig_filename, f.name)
+        self.assertEqual(f2.orig_filename, f.name)
 
     def test_uploaded_files_get_assigned_unique_key(self):
         c = self._get_client_admin()
@@ -143,7 +143,7 @@ class ImportFileTest(ClientTestCase):
         c.post(self.url, {'file': f})
         f.close()
         f2 = File.objects.all()[0]
-        self.assertEquals(self._storage.last_filename, f2.orig_file_path)
+        self.assertEqual(self._storage.last_filename, f2.orig_file_path)
 
     def test_writes_all_content_to_file(self):
         size = (1024 ** 2)
@@ -151,7 +151,7 @@ class ImportFileTest(ClientTestCase):
         f = self._get_fh(size=size)
         c.post(self.url, {'file': f})
         f.close()
-        self.assertEquals(self._storage.last_buf.size, size)
+        self.assertEqual(self._storage.last_buf.size, size)
 
     def test_should_not_write_content_reached_max_upload_size(self):
         size = (1024 ** 2) * 11

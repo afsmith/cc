@@ -1,7 +1,10 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from ..models import CUser
+from ..models import CUser, Invitation
+from cc.libs.test_utils import ClientTestCase
+
+import json
 
 
 class RegistrationViewTestCases(TestCase):
@@ -89,3 +92,45 @@ class LoginViewTestCases(TestCase):
             [u'Please enter a correct email address and password.'
              ' Note that both fields may be case-sensitive.']
         )
+
+
+class InvitationViewTestCases(ClientTestCase):
+    def test_invite_success(self):
+        c = self._get_client_user_stripe()
+        resp = c.post(reverse('accounts_invite'), {
+            'email': 'ndhieu88@gmail.com'
+        })
+        json_resp = json.loads(resp.content)
+        self.assertEqual(json_resp.get('status'), 'OK')
+
+    def test_invite_failure(self):
+        c = self._get_client_user_stripe()
+        # duplicate email
+        resp = c.post(reverse('accounts_invite'), {
+            'email': 'foo@cc.kneto.com'
+        })
+        json_resp = json.loads(resp.content)
+        self.assertEqual(json_resp.get('status'), 'ERROR')
+        self.assertEqual(
+            json_resp.get('message'),
+            u'* Invitation with this Email already exists.'
+        )
+
+        # invalid email
+        resp = c.post(reverse('accounts_invite'), {
+            'email': 'fooooooo'
+        })
+        json_resp = json.loads(resp.content)
+        self.assertEqual(json_resp.get('status'), 'ERROR')
+        self.assertEqual(
+            json_resp.get('message'),
+            u'* Enter a valid email address.'
+        )
+
+    def test_remove_invitation_success(self):
+        c = self._get_client_user_stripe()
+        resp = c.post(reverse(
+            'remove_invitation', kwargs={'invitation_id': 1}
+        ))
+        self.assertEqual(resp.content, '{}')
+        self.assertIs(Invitation.objects.count(), 0)

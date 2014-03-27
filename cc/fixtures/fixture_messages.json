@@ -1,0 +1,24 @@
+[
+{
+    "pk": 1,
+    "model": "cc_messages.message",
+    "fields": {
+        "files": [
+            1
+        ],
+        "group": null,
+        "receivers": [
+            3
+        ],
+        "notify_email_opened": false,
+        "cc_me": false,
+        "modified_at": "2013-10-15T01:13:52",
+        "key_page": 1,
+        "owner": 1,
+        "message": "Abcdefmessaasg",
+        "notify_link_clicked": false,
+        "created_at": "2013-10-15T01:13:52",
+        "subject": "Hieu test message"
+    }
+}
+]

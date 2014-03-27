@@ -18,7 +18,7 @@ class UsersLiveTest(LiveServerTestCase):
         cls.browser.quit()
         super(UsersLiveTest, cls).tearDownClass()
 
-    def test_can_login(self):
+    def test_login_admin(self):
         self.browser.get(self.live_server_url + '/accounts/login/')
 
         h1 = self.browser.find_element_by_tag_name('h1')
@@ -32,7 +32,20 @@ class UsersLiveTest(LiveServerTestCase):
         password_field.send_keys(Keys.RETURN)
 
         body = self.browser.find_element_by_tag_name('body')
-        self.assertIn('Early Access', body.text)
+        self.assertIn('Priority call list', body.text)
 
-    def test_login_and_click_on_send(self):
-        pass
+    def test_login_user(self):
+        self.browser.get(self.live_server_url + '/accounts/login/')
+
+        h1 = self.browser.find_element_by_tag_name('h1')
+        self.assertIn('Kneto CC', h1.text)
+
+        username_field = self.browser.find_element_by_name('username')
+        username_field.send_keys('john@cc.kneto.com')
+
+        password_field = self.browser.find_element_by_name('password')
+        password_field.send_keys('admin')
+        password_field.send_keys(Keys.RETURN)
+
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn('Early Access', body.text)

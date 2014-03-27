@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from .models import OneClickLinkToken, Invitation
 
 from templated_email import send_templated_mail
-from datetime import datetime
+from datetime import datetime, date
 
 
 def create_group(user_list):
@@ -19,7 +19,7 @@ def verify_ocl_token(token):
         ocl_token = OneClickLinkToken.objects.get(token=token)
     except OneClickLinkToken.DoesNotExist:
         return False
-    if ocl_token.expired:
+    if ocl_token.expires_on < date.today():
         return False
     return ocl_token
 

@@ -144,9 +144,7 @@ class OneClickLinkTokenModelTestCases(TestCase):
         self.assertEqual(ocl.user, user)
         self.assertIsInstance(ocl.token, str)
         self.assertEqual(len(ocl.token), 30)
-        self.assertFalse(ocl.expired)
         self.assertIsNone(ocl.expires_on)
-        self.assertFalse(ocl.allow_login)
 
 
 class BillingAddressTestCases(TestCase):

@@ -15,46 +15,46 @@ class CreateEventTest(ClientTestCase):
     def test_should_add_new_event(self):
         c = self._get_client_user()
         resp = c.post(self.url, {})
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
 
-    def test_should_not_accept_get(self):
-        self.should_not_accept_get(self.url)
+    def test_should_not_allow_GET(self):
+        self.should_not_allow_GET_login(self.url)
 
 
 class ProgressFormatterTest(TestCase):
     
     def test_returns_zero_if_no_progress(self):
         result = progress_formatter(0)
-        self.assertEquals(result, 0)
+        self.assertEqual(result, 0)
         
     def test_returns_10_if_lt15(self):
         result = progress_formatter(0.01)
-        self.assertEquals(result, 10)
+        self.assertEqual(result, 10)
         result = progress_formatter(0.149)
-        self.assertEquals(result, 10)
+        self.assertEqual(result, 10)
         result = progress_formatter(0.15)
-        self.assertEquals(result, 20)
+        self.assertEqual(result, 20)
         
     def test_returns_round_if_lt95(self):        
         result = progress_formatter(0.249)
-        self.assertEquals(result, 20)
+        self.assertEqual(result, 20)
         result = progress_formatter(0.25)
-        self.assertEquals(result, 30)
+        self.assertEqual(result, 30)
         result = progress_formatter(0.849)
-        self.assertEquals(result, 80)
+        self.assertEqual(result, 80)
         result = progress_formatter(0.85)
-        self.assertEquals(result, 90)
+        self.assertEqual(result, 90)
         result = progress_formatter(0.949)
-        self.assertEquals(result, 90)
+        self.assertEqual(result, 90)
         result = progress_formatter(0.95)
-        self.assertEquals(result, 90)
+        self.assertEqual(result, 90)
         
     def test_returns_90_if_lt100(self):
         result = progress_formatter(0.951)
-        self.assertEquals(result, 90)
+        self.assertEqual(result, 90)
         result = progress_formatter(0.99999)
-        self.assertEquals(result, 90)
+        self.assertEqual(result, 90)
         
     def test_returns_1_if_completed(self):
         result = progress_formatter(1)
-        self.assertEquals(result, 100)
+        self.assertEqual(result, 100)
