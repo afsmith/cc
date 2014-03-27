@@ -117,9 +117,7 @@ $(document).ready(function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_class = this_row.prop('class'),
-            id_pair = this_class.replace('row_', '').split('_'),
-            message_id = id_pair[0],
-            participant_id = id_pair[1],
+            message_id = this_class.replace('message_', ''),
             new_email = this_row.find('.js_emailInput').val(),
             old_email = this_row.find('.email_cell').data('old_value');
 
