@@ -129,6 +129,7 @@ def view_message(request, message_id=None):
         file = message.files.all()[0]
 
         # notify the sender if "notify when link clicked" option is on
+        log = None
         if not is_owner_viewing:
             log = send_notification_email(2, message, ocl_token.user)
 
