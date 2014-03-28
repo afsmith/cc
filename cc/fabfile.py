@@ -7,7 +7,9 @@ from glob import glob
 from contextlib import contextmanager
 from posixpath import join
 
-from fabric.api import env, cd, prefix, sudo as _sudo, run as _run, hide, task, roles
+from fabric.api import (
+    env, cd, prefix, sudo as _sudo, run as _run, hide, task, roles
+)
 from fabric.contrib.files import exists, upload_template
 from fabric.colors import yellow, green, blue, red
 
@@ -18,7 +20,7 @@ from fabric.colors import yellow, green, blue, red
 
 if len(env.roles) > 1:
     print "Sorry, only one roll at a time"
-    exit()    
+    exit()
 
 conf = {}
 if sys.argv[0].split(os.sep)[-1] in ("fab",             # POSIX
@@ -47,9 +49,9 @@ env.venv_home = conf.get("VIRTUALENV_HOME", "/home/%s" % env.user)
 env.venv_path = "%s/%s" % (env.venv_home, env.proj_name)
 env.proj_dirname = "project"
 env.proj_path = "%s/%s" % (env.venv_path, env.proj_dirname)
-env.manage = "%s/bin/python %s/project/manage.py" % (env.venv_path,
- 
-                                                     env.venv_path)
+env.manage = "%s/bin/python %s/project/manage.py" % (
+    env.venv_path, env.venv_path
+)
 
 live_host = conf.get("LIVE_HOSTNAME")
 live_key = conf.get("LIVE_KEY")
@@ -71,8 +73,8 @@ env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
 
 env.static_path = "%s/static" % env.venv_path
 
-
-
+env.stripe_public_key = conf.get("STRIPE_PUBLIC_KEY", "")
+env.stripe_secret_key = conf.get("STRIPE_SECRET_KEY", "")
 
 
 ##################
@@ -179,6 +181,7 @@ def print_command(command):
            yellow(command, bold=True) +
            red(" ->", bold=True))
 
+
 @roles()
 @task
 def run(command, show=True):
@@ -189,6 +192,7 @@ def run(command, show=True):
         print_command(command)
     with hide("running"):
         return _run(command)
+
 
 @roles()
 @task
@@ -266,13 +270,16 @@ def db_pass():
         env.db_pass = getpass("Enter the database password: ")
     return env.db_pass
 
+
 @roles()
-@task 
+@task
 def echo_hosts():
     """
     Prints list of hosts in group
     """
     return sudo("ifconfig -a")
+
+
 @roles()
 @task
 def apt(packages):
@@ -280,6 +287,7 @@ def apt(packages):
     Installs one or more system packages via apt.
     """
     return sudo("apt-get install -y -q " + packages)
+
 
 @roles()
 @task
@@ -298,6 +306,7 @@ def postgres(command):
     show = not command.startswith("psql")
     return run("sudo -u root sudo -u postgres %s" % command, show=show)
 
+
 @roles()
 @task
 def psql(sql, show=True):
@@ -309,6 +318,7 @@ def psql(sql, show=True):
         print_command(sql)
     return out
 
+
 @roles()
 @task
 def backup(filename):
@@ -316,6 +326,7 @@ def backup(filename):
     Backs up the database.
     """
     return postgres("pg_dump -Fc %s > %s" % (env.proj_name, filename))
+
 
 @roles()
 @task
@@ -325,13 +336,14 @@ def restore(filename):
     """
     return postgres("pg_restore -c -d %s %s" % (env.proj_name, filename))
 
+
 @roles()
 @task
 def python(code, show=True):
     """
     Runs Python code in the project's virtual environment, with Django loaded.
     """
-    setup = "import os; os.environ[\'DJANGO_SETTINGS_MODULE\']=\'cc.settings\';"
+    setup = "import os; os.environ['DJANGO_SETTINGS_MODULE']='cc.settings';"
     full_code = 'python -c "%s%s"' % (setup, code.replace("`", "\\\`"))
     with project():
         result = run(full_code, show=False)
@@ -346,6 +358,7 @@ def static():
     """
     return python("from django.conf import settings;"
                   "print settings.STATIC_ROOT", show=False).split("\n")[-1]
+
 
 @roles()
 @task
@@ -378,6 +391,8 @@ def install():
     sudo("easy_install pip")
     sudo("pip install virtualenv")
     sudo("install -o %s -g %s -d /var/log/kneto/cc" % (env.user, env.user))
+
+
 @roles()
 @task
 @log_call
@@ -464,6 +479,7 @@ def create():
 
     return True
 
+
 @roles()
 @task
 @log_call
@@ -498,6 +514,7 @@ def restart():
         start_args = (env.proj_name, env.proj_name)
         sudo("supervisorctl start %s:gunicorn_%s" % start_args)
     sudo("supervisorctl restart celeryd")
+
 
 @roles()
 @task
@@ -538,6 +555,7 @@ def deploy():
     restart()
     return True
 
+
 @roles()
 @task
 @log_call
@@ -557,6 +575,7 @@ def rollback():
             run("tar -xf %s" % join(env.proj_path, "last.tar"))
         restore("last.db")
     restart()
+
 
 @roles()
 @task
