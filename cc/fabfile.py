@@ -73,8 +73,8 @@ env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
 
 env.static_path = "%s/static" % env.venv_path
 
-env.stripe_public_key = conf.get("STRIPE_PUBLIC_KEY", "")
-env.stripe_secret_key = conf.get("STRIPE_SECRET_KEY", "")
+env.stripe_public_key = conf.get("STRIPE_PUBLIC_KEY", {}).get(env.roles[0], "")
+env.stripe_secret_key = conf.get("STRIPE_SECRET_KEY", {}).get(env.roles[0], "")
 
 
 ##################

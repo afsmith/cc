@@ -200,12 +200,8 @@ SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
 
 SUBSCRIPTION_REQUIRED_REDIRECT = ('new_payments_subscribe')
 
-STRIPE_PUBLIC_KEY = os.environ.get(
-    "STRIPE_PUBLIC_KEY", "pk_test_AAXz4ICYdcu4deHMJGmKJsVB"
-)
-STRIPE_SECRET_KEY = os.environ.get(
-    "STRIPE_SECRET_KEY", "sk_test_804dzBOIcp3RHtJhicEC0Glc"
-)
+STRIPE_PUBLIC_KEY = "pk_test_AAXz4ICYdcu4deHMJGmKJsVB"
+STRIPE_SECRET_KEY = "sk_test_804dzBOIcp3RHtJhicEC0Glc"
 
 try:
     from stripe_plans import *

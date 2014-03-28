@@ -2,6 +2,9 @@
 SECRET_KEY = "%(secret_key)s"
 NEVERCACHE_KEY = "%(nevercache_key)s"
 
+STRIPE_PUBLIC_KEY = "%(stripe_public_key)s"
+STRIPE_SECRET_KEY = "%(stripe_secret_key)s"
+
 TEMPLATE_DEBUG = False
 DEBUG = False
 
