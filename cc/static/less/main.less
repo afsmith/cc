@@ -35,6 +35,33 @@ form {
     margin-bottom: 10px;
 }
 
+.spinner_overlay{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: #000;
+    z-index: 100;
+    opacity: 0.5;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+    
+    .spinner_center{
+        width: 42px;
+        height: 42px;
+        display: block;
+        background: transparent url(../img/spinner.gif) no-repeat center center;
+        top: 50%;
+        left: 50%;
+        margin-top: -21px;
+        margin-left: -21px;
+        position: absolute;
+    }
+}
+
 
 // --------------------------- registration page --------------------------- //
 .registration_page {

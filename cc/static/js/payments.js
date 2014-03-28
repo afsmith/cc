@@ -7,6 +7,7 @@ $(document).ready(function () {
             _form = _this.closest('form'),
             amount = _this.prop('id').replace('js_price_', ''),
             token = function(res) {
+                CC_GLOBAL.addSpinner();
                 _form.find('input[name="stripe_token"]').val(res.id);
                 _form.trigger('submit');
             };

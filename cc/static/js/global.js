@@ -1,5 +1,6 @@
 var CC_GLOBAL = CC_GLOBAL || {};
 
+// ------------------------------- AJAX ------------------------------- //
 // CSRF token setup for AJAX
 CC_GLOBAL.csrfSafeMethod = function (method) {
     // these HTTP methods do not require CSRF protection
@@ -14,6 +15,16 @@ $.ajaxSetup({
     }
 });
 
+// handle the spinner
+CC_GLOBAL.addSpinner = function () {
+    $('body').append('<div class="spinner_overlay"><div class="spinner_center"></div></div>');
+};
+CC_GLOBAL.removeSpinner = function () {
+    $('.spinner_overlay').remove();
+};
+
+
+// --------------------------- Global functions --------------------------- //
 // global function to get translated text
 var i18 = function (key) {
     if (key in CC_GLOBAL.i18n) {
@@ -23,6 +34,11 @@ var i18 = function (key) {
         return key;
     }
 };
+
+// shortcut for console.log()
+if (!window.console) window.console = {};
+if (!window.console.log) window.console.log = function () {};
+var log = (!window.console.log.bind) ? function () {} : window.console.log.bind(console);
 
 // global query string function to get query
 CC_GLOBAL.GETParam = (function(a) {
@@ -35,8 +51,3 @@ CC_GLOBAL.GETParam = (function(a) {
     }
     return b;
 })(window.location.search.substr(1).split('&'));
-
-// shortcut for console.log()
-if (!window.console) window.console = {};
-if (!window.console.log) window.console.log = function () {};
-var log = (!window.console.log.bind) ? function () {} : window.console.log.bind(console);
