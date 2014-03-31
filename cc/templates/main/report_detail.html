@@ -38,6 +38,7 @@
                 <th>{% trans "Total visits" %}</th>
                 <th>{% trans "Unique IPs" %}</th>
                 <th>{% trans "Device types" %}</th>
+                <th>{% trans "Re-send" %}</th>
             </tr>
 
             {% for row in log_groupby_user %}
@@ -49,6 +50,20 @@
                 <td>{{ row.visit_count }}</td>
                 <td>{{ row.ip_count }}</td>
                 <td>{{ row.device_count }}</td>
+                <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
+            </tr>
+            {% endfor %}
+
+            {% for row in missing_recipients %}
+            <tr id="row_{{ this_message.id }}_{{ row.id }}" class="no_tracking_data">
+                <td></td>
+                <td></td>
+                <td>{{ row.email }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
             </tr>
             {% endfor %}
         </table>

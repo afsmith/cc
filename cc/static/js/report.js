@@ -213,10 +213,37 @@ $(document).ready(function () {
         });
     });
 
-    /*$('.report_table').tooltip({
-        selector: '.row_iOS',
-        title: "iOS browser likes to hold on the it's events so we couldn't collect the tracking data. We are working on a way to fix this."
-    });*/
+    // tooltip on row with no tracking data
+    $('.report_table').tooltip({
+        selector: '.no_tracking_data',
+        title: "This user hasn't looked at your message yet."
+    });
+
+    // click on resend button
+    $('.js_resend').click(function () {
+        $(this).parent().html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
+    });
+
+    $('.report_table').on('click', '.js_resendButton', function () {
+        var _this = $(this),
+            this_row = _this.closest('tr'),
+            this_id = this_row.prop('id'),
+            id_pair = this_id.replace('row_', '').split('_'),
+            message_id = id_pair[0],
+            user_id = id_pair[1];
+
+        $.ajax({
+            url: '/resend/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'message_id': message_id,
+                'user_id': user_id
+            },
+        }).done(function (resp) {
+            _this.remove();
+        });
+    });
 
     // if there is ?user in GET query then click on it and scroll down a bit
     if (CC_GLOBAL.GETParam.user !== undefined) {

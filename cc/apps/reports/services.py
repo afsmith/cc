@@ -63,6 +63,12 @@ def get_tracking_data_group_by_recipient(message):
     return tracking_data
 
 
+def get_recipient_without_tracking_data(message):
+    return CUser.objects.filter(
+        receivers=message
+    ).exclude(trackingsession__message=message)
+
+
 def get_missing_data(message):
     missing_data = chain(
         TrackingSession.objects

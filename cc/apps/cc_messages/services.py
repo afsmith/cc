@@ -197,24 +197,27 @@ def edit_email_and_resend_message(request, message):
     domain = get_domain(request)
     new_email = request.POST.get('new_email')
     old_email = request.POST.get('old_email')
+    user_id = request.POST.get('user_id')
 
-    recipient = CUser.objects.filter(email=old_email)
-    if recipient:
-        exist_user = CUser.objects.filter(email=new_email)
-        if exist_user:
-            rec = exist_user[0]
-            message.receivers.remove(recipient[0])
-            message.receivers.add(rec)
-        else:
-            rec = recipient[0]
-            # save the new email for that recipient and resend the message
-            rec.email = new_email
-            rec.save()
-
+    if user_id:
+        rec = CUser.objects.get(pk=int(user_id))
         _send_message(message, rec, domain)
+    else:
+        recipient = CUser.objects.filter(email=old_email)
+        if recipient:
+            exist_user = CUser.objects.filter(email=new_email)
+            if exist_user:
+                rec = exist_user[0]
+                message.receivers.remove(recipient[0])
+                message.receivers.add(rec)
+            else:
+                rec = recipient[0]
+                # save the new email for that recipient and resend the message
+                rec.email = new_email
+                rec.save()
 
-        # clear record from bounce
-        bounce = Bounce.objects.filter(message=message, email=old_email)
-        bounce.delete()
+            _send_message(message, rec, domain)
 
-        # TODO: clear it from Sendgrid too
+            # clear record from bounce
+            bounce = Bounce.objects.filter(message=message, email=old_email)
+            bounce.delete()
