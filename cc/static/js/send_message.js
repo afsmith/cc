@@ -21,7 +21,27 @@ $(document).ready(function () {
         toggleMessageSubmitButton,
         renderUploadError,
         resetUploadForm,
-        uploadImage;
+        uploadImage,
+        summernote_keymap = {
+            pc: {
+                'CTRL+Z': 'undo',
+                'CTRL+Y': 'redo',
+                'TAB': 'tab',
+                'SHIFT+TAB': 'untab',
+                'CTRL+B': 'bold',
+                'CTRL+I': 'italic',
+                'CTRL+U': 'underline',
+            },
+            mac: {
+                'CMD+Z': 'undo',
+                'CMD+SHIFT+Z': 'redo',
+                'TAB': 'tab',
+                'SHIFT+TAB': 'untab',
+                'CMD+B': 'bold',
+                'CMD+I': 'italic',
+                'CMD+U': 'underline',
+            }
+        };
 
 // ------------------------ Form init & validation ------------------------ //
 
@@ -151,7 +171,8 @@ $(document).ready(function () {
         },
         onImageUpload: function(files, editor, welEditable) {
             uploadImage(files[0], editor, welEditable);
-        }
+        },
+        keyMap: summernote_keymap
     });
 
     // init the message data
@@ -288,7 +309,8 @@ $(document).ready(function () {
             focus: true,
             onImageUpload: function(files, editor, welEditable) {
                 uploadImage(files[0], editor, welEditable);
-            }
+            },
+            keyMap: summernote_keymap
         });
 
         if (signature_field.val() !== '') {

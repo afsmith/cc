@@ -33,7 +33,9 @@ def _test_view_message_tracking_time(self, go_to_url):
     for i in range(5):
         # stay in page 2, 3, 4, 5, 6 for 1 sec
         time.sleep(1)
-        self.browser.find_element_by_class_name('flexpaper_bttnPrevNext').click()
+        self.browser.find_element_by_class_name(
+            'flexpaper_bttnPrevNext'
+        ).click()
 
     # then go to Google to close the session
     self.browser.get(go_to_url)
@@ -48,13 +50,13 @@ def _test_view_message_tracking_time(self, go_to_url):
         tt = TrackingEvent.objects.get(page_number=i).total_time / 10
         pv = TrackingEvent.objects.get(page_number=i).page_view
         if i == 1:
-            self.assertIn(tt, [3, 4, 5]) # 3-5 sec
+            self.assertIn(tt, [3, 4, 5])  # 3-5 sec
             self.assertEqual(pv, 1)
         elif i == 7:
-            self.assertEqual(tt, 0) # 0 sec
-            self.assertIn(pv, [0, 1]) # there is racing condition here
+            self.assertEqual(tt, 0)  # 0 sec
+            self.assertIn(pv, [0, 1])  # there is racing condition here
         else:
-            self.assertIn(tt, [0, 1, 2]) # 0-2 sec
+            self.assertIn(tt, [0, 1, 2])  # 0-2 sec
             self.assertEqual(pv, 1)
 
         # print to see the actual time
