@@ -22,26 +22,54 @@ $(document).ready(function () {
         renderUploadError,
         resetUploadForm,
         uploadImage,
-        summernote_keymap = {
-            pc: {
-                'CTRL+Z': 'undo',
-                'CTRL+Y': 'redo',
-                'TAB': 'tab',
-                'SHIFT+TAB': 'untab',
-                'CTRL+B': 'bold',
-                'CTRL+I': 'italic',
-                'CTRL+U': 'underline',
+        summernote_config_global = {
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear',]],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol']],
+                ['insert', [/*'picture',*/ 'link']],
+                ['options', ['codeview']],
+            ],
+            disableDragAndDrop: true,
+            onImageUpload: function(files, editor, welEditable) {
+                uploadImage(files[0], editor, welEditable);
             },
-            mac: {
-                'CMD+Z': 'undo',
-                'CMD+SHIFT+Z': 'redo',
-                'TAB': 'tab',
-                'SHIFT+TAB': 'untab',
-                'CMD+B': 'bold',
-                'CMD+I': 'italic',
-                'CMD+U': 'underline',
+            keyMap: {
+                pc: {
+                    'CTRL+Z': 'undo',
+                    'CTRL+Y': 'redo',
+                    'TAB': 'tab',
+                    'SHIFT+TAB': 'untab',
+                    'CTRL+B': 'bold',
+                    'CTRL+I': 'italic',
+                    'CTRL+U': 'underline',
+                },
+                mac: {
+                    'CMD+Z': 'undo',
+                    'CMD+SHIFT+Z': 'redo',
+                    'TAB': 'tab',
+                    'SHIFT+TAB': 'untab',
+                    'CMD+B': 'bold',
+                    'CMD+I': 'italic',
+                    'CMD+U': 'underline',
+                }
             }
-        };
+        }
+        summernote_config_message = $.extend({}, summernote_config_global, {
+            height: 160,
+            onkeyup: function(e) {
+                // TODO: improve this later by not copying on every key press
+                message_field.val(message_field.code());
+                message_field.valid();
+            }
+        }),
+        summernote_config_signature = $.extend({}, summernote_config_global, {
+            height: 60,
+            focus: true
+        });
+
+        log(summernote_config_message);
 
 // ------------------------ Form init & validation ------------------------ //
 
@@ -153,27 +181,7 @@ $(document).ready(function () {
     });
 
     // summernote config
-    message_field.summernote({
-        height: 160,
-        toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear',]],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol']],
-            ['insert', [/*'picture',*/ 'link']],
-            ['options', ['codeview']],
-        ],
-        disableDragAndDrop: true,
-        onkeyup: function(e) {
-            // TODO: improve this later by not copying on every key press
-            message_field.val(message_field.code());
-            message_field.valid();
-        },
-        onImageUpload: function(files, editor, welEditable) {
-            uploadImage(files[0], editor, welEditable);
-        },
-        keyMap: summernote_keymap
-    });
+    message_field.summernote(summernote_config_message);
 
     // init the message data
     message_field.code(message_field.val());
@@ -297,21 +305,7 @@ $(document).ready(function () {
         // add apply button here
         $('label[for="id_signature"]').append('<button id="js_applySignature" class="btn btn-default btn-small" style="margin-left:20px">Apply</button>');
 
-        signature_field.summernote({
-            height: 60,
-            toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['options', ['codeview']],
-              //  ['insert', ['picture', 'link']]
-            ],
-            focus: true,
-            onImageUpload: function(files, editor, welEditable) {
-                uploadImage(files[0], editor, welEditable);
-            },
-            keyMap: summernote_keymap
-        });
+        signature_field.summernote(summernote_config_signature);
 
         if (signature_field.val() !== '') {
             signature_field.code(signature_field.val());
