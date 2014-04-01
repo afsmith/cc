@@ -41,7 +41,7 @@
                     <span class="hidden">3</span>
                 {% endif %}</td>
                 <td>{{ row.email }}</td>
-                <td>{{ row.date|date:'H:i:s d.m.Y' }}</td>
+                <td data-dateformat="HH:mm DD.MM.YYYY">{{ row.date|date:'H:i d.m.Y' }}</td>
                 <td>{{ row.subject }}</td>
             </tr>
             {% endfor %} 
