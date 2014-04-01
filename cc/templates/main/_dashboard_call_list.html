@@ -1,0 +1,34 @@
+{% load i18n %}
+
+<h3>{% trans "Priority call list" %}</h3>
+<div class="class_list_wrapper table-responsive">
+    <table class="table table-bordered call_list_table sortable">
+        <thead>
+            <tr>
+                <th data-defaultsort='disabled'>{% trans "Sold" %}</th>
+                <th data-defaultsort='disabled'>{% trans "Status" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Subject" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in call_list %}
+            <tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
+
+                <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
+                <td>{% if row.status == 'Green' %}
+                    <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>
+                {% elif row.status == 'Yellow' %}
+                    <span class="badge alert-warning"><i class="glyphicon glyphicon-asterisk"></i></span>
+                {% elif row.status == 'Red' %}
+                    <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                {% endif %}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.subject }}</td>
+            </tr>
+            {% endfor %} 
+        </tbody>
+    </table>
+</div>

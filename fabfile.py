@@ -17,7 +17,7 @@ def test(mode=''):
         local('python manage.py test')
 
 
-@task(alias='d')
+@task(alias='dl')
 def deploy_local():
     '''
     Deploy the latest changes to local envinronment
@@ -27,7 +27,6 @@ def deploy_local():
     local('pip install -r requirements.txt')
     local('python manage.py syncdb')
     local('python manage.py migrate')
-    local('fab test')
     local('git stash apply')
 
 

@@ -6,36 +6,7 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-6 col-md-6">
-        <h3>{% trans "Priority call list" %}</h3>
-        <div class="class_list_wrapper table-responsive">
-            <table class="table table-bordered call_list_table">
-                <tbody>
-                    <tr>
-                        <th>{% trans "Sold" %}</th>
-                        <th>{% trans "Status" %}</th>
-                        <th>{% trans "Email" %}</th>
-                        <th>{% trans "Date" %}</th>
-                        <th>{% trans "Subject" %}</th>
-                    </tr>
-                    {% for row in call_list %}
-                    <tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
-
-                        <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
-                        <td>{% if row.status == 'Green' %}
-                            <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>
-                        {% elif row.status == 'Yellow' %}
-                            <span class="badge alert-warning"><i class="glyphicon glyphicon-asterisk"></i></span>
-                        {% elif row.status == 'Red' %}
-                            <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
-                        {% endif %}</td>
-                        <td>{{ row.email }}</td>
-                        <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
-                        <td>{{ row.subject }}</td>
-                    </tr>
-                    {% endfor %} 
-                </tbody>
-            </table>
-        </div>
+        {% include "main/_dashboard_call_list.html" %}
     </div>
 
     <div class="col-sm-6 col-md-6">
@@ -55,36 +26,7 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12">
-        <h3>{% trans "Postal report" %}</h3>
-
-        <h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
-        
-        <h5>{% trans "Problemed messages" %}</h5>
-        <table class="table table-bordered bounces_table">
-            <tbody>
-                <tr>
-                    <th>{% trans "Problem" %}</th>
-                    <th>{% trans "Email" %}</th>
-                    <th>{% trans "Subject" %}</th>
-                    <th>{% trans "Date" %}</th>
-                    <th>{% trans "Reason" %}</th>
-                    <th>{% trans "Fix" %}</th>
-                    <th>{% trans "Remove" %}</th>
-                </tr>
-
-                {% for row in bounce_list %}
-                <tr id="row_{{ row.id }}" class="message_{{ row.message.id }}">
-                    <td>{{ row.event_type|capfirst }}</td>
-                    <td class="email_cell">{{ row.email }}</td>
-                    <td>{{ row.message.subject }}</td>
-                    <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
-                    <td>{{ row.reason }}</td>
-                    <td class="fix_cell"><input type="checkbox" class="js_fix" /></td>
-                    <td class="remove_cell"><input type="checkbox" class="js_remove" /></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% include "main/_dashboard_mail_center.html" %}
     </div>
 </div>
 
@@ -96,8 +38,14 @@
 </div>
 {% endblock %}
 
+{% block additional_css %}
+    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-sortable.css' %}">
+{% endblock %}
+
 {% block js_scripts %}
     <script src="{% static 'js/vendor/highcharts.js' %}"></script>
+    <script src="{% static 'js/vendor/moment.min.js' %}"></script>
+    <script src="{% static 'js/vendor/bootstrap-sortable.js' %}"></script>
     
     <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
