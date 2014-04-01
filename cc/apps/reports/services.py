@@ -148,10 +148,7 @@ def get_call_list(user):
             })
 
         # get list of people didn't look at the offer
-        uninterested_recipients = CUser.objects.filter(
-            receivers=message,
-            trackingsession__isnull=True
-        )
+        uninterested_recipients = get_recipient_without_tracking_data(message)
         for rec in uninterested_recipients:
             # add a row to call list
             call_list.append({

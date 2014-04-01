@@ -5,29 +5,31 @@
 <h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
 
 <h5>{% trans "Problemed messages" %}</h5>
-<table class="table table-bordered bounces_table">
-    <thead>
-        <tr>
-            <th>{% trans "Problem" %}</th>
-            <th>{% trans "Email" %}</th>
-            <th>{% trans "Subject" %}</th>
-            <th>{% trans "Date" %}</th>
-            <th>{% trans "Reason" %}</th>
-            <th>{% trans "Fix" %}</th>
-            <th>{% trans "Remove" %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in bounce_list %}
-        <tr id="row_{{ row.id }}" class="message_{{ row.message.id }}">
-            <td>{{ row.event_type|capfirst }}</td>
-            <td class="email_cell">{{ row.email }}</td>
-            <td>{{ row.message.subject }}</td>
-            <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
-            <td>{{ row.reason }}</td>
-            <td class="fix_cell"><input type="checkbox" class="js_fix" /></td>
-            <td class="remove_cell"><input type="checkbox" class="js_remove" /></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-bordered bounces_table">
+        <thead>
+            <tr>
+                <th>{% trans "Problem" %}</th>
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Subject" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Reason" %}</th>
+                <th>{% trans "Fix" %}</th>
+                <th>{% trans "Remove" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in bounce_list %}
+            <tr id="row_{{ row.id }}" class="message_{{ row.message.id }}">
+                <td>{{ row.event_type|capfirst }}</td>
+                <td class="email_cell">{{ row.email }}</td>
+                <td>{{ row.message.subject }}</td>
+                <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.reason }}</td>
+                <td class="fix_cell"><input type="checkbox" class="js_fix" /></td>
+                <td class="remove_cell"><input type="checkbox" class="js_remove" /></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+</div>

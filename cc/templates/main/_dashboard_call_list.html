@@ -2,13 +2,26 @@
 
 <h3>{% trans "Priority call list" %}</h3>
 <div class="class_list_wrapper table-responsive">
+    {% comment %}
+    <div class="form-group">
+        <label for="js_date_filter" class="form-label">Past days</label>
+        <select id="js_date_filter" class="form-control">
+            <option value="">7</option>
+            <option value="">14</option>
+            <option value="">30</option>
+            <option value="">60</option>
+            <option value="">90</option>
+        </select>
+    </div>    
+    {% endcomment %}
+    
     <table class="table table-bordered call_list_table sortable">
         <thead>
             <tr>
-                <th data-defaultsort='disabled'>{% trans "Sold" %}</th>
-                <th data-defaultsort='disabled'>{% trans "Status" %}</th>
+                <th>{% trans "Sold" %}</th>
+                <th>{% trans "Status" %}</th>
                 <th>{% trans "Email" %}</th>
-                <th>{% trans "Date" %}</th>
+                <th>{% trans "Time sent" %}</th>
                 <th>{% trans "Subject" %}</th>
             </tr>
         </thead>
@@ -19,13 +32,16 @@
                 <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
                 <td>{% if row.status == 'Green' %}
                     <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>
+                    <span class="hidden">1</span>
                 {% elif row.status == 'Yellow' %}
                     <span class="badge alert-warning"><i class="glyphicon glyphicon-asterisk"></i></span>
+                    <span class="hidden">2</span>
                 {% elif row.status == 'Red' %}
                     <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
+                    <span class="hidden">3</span>
                 {% endif %}</td>
                 <td>{{ row.email }}</td>
-                <td>{{ row.date|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.date|date:'H:i:s d.m.Y' }}</td>
                 <td>{{ row.subject }}</td>
             </tr>
             {% endfor %} 
