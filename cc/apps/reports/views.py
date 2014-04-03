@@ -58,14 +58,14 @@ def report_detail(request, message_id):
     missing_data = get_missing_data(this_message)
 
     # get recipient without tracking data
-    missing_recipients = get_recipient_without_tracking_data(this_message)
+    uninterested_recipients = get_recipient_without_tracking_data(this_message)
 
     return {
         'this_message': this_message,
         'messages': all_messages,
         'log_groupby_user': tracking_data,
         'missing_data': missing_data,
-        'missing_recipients': missing_recipients
+        'uninterested_recipients': uninterested_recipients
     }
 
 

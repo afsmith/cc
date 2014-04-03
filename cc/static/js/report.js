@@ -174,10 +174,6 @@ $(document).ready(function () {
 
                     if (resp.length) {
                         for (i; i < resp.length; i+=1) {
-                            /*iOS_class = ''
-                            if ($.inArray(resp[i].device, ['iPhone', 'iPod', 'iPad']) > -1) {
-                                iOS_class = ' row_iOS';
-                            }*/
                             html += [
                                 '<tr id="js_session_' + resp[i].id + '" class="log_row js_log_' + this_id + iOS_class + '">',
                                 '<td></td>',
@@ -214,10 +210,11 @@ $(document).ready(function () {
     });
 
     // tooltip on row with no tracking data
-    $('.report_table').tooltip({
+/*    $('.report_table').tooltip({
         selector: '.no_tracking_data',
         title: "This user hasn't looked at your message yet."
     });
+*/
 
     // click on resend button
     $('.js_resend').click(function () {

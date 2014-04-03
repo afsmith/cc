@@ -30,67 +30,84 @@
         <div id="report_graph"></div>
 
         <table class="table report_table">
-            <tr class="success">
-                <th>{% trans "Sold" %}</th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Viewed by" %}</th>
-                <th>{% trans "Total time" %}</th>
-                <th>{% trans "Total visits" %}</th>
-                <th>{% trans "Unique IPs" %}</th>
-                <th>{% trans "Device types" %}</th>
-                <th>{% trans "Re-send" %}</th>
-            </tr>
-
-            {% for row in log_groupby_user %}
-            <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}" {% if row.closed_deal %}class="sold"{% endif %}>
-                <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
-                <td>{{ row.max_date|date:'d.m.Y H:i:s' }}</td>
-                <td id="user_{{ row.tracking_session__participant }}" class="cell_email">{{ row.tracking_session__participant__email }}</td>
-                <td>{{ row.total_time }}</td>
-                <td>{{ row.visit_count }}</td>
-                <td>{{ row.ip_count }}</td>
-                <td>{{ row.device_count }}</td>
-                <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
-            </tr>
-            {% endfor %}
-
-            {% for row in missing_recipients %}
-            <tr id="row_{{ this_message.id }}_{{ row.id }}" class="no_tracking_data">
-                <td></td>
-                <td></td>
-                <td>{{ row.email }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
-            </tr>
-            {% endfor %}
+            <thead>
+                <tr class="success">
+                    <th>{% trans "Sold" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Viewed by" %}</th>
+                    <th>{% trans "Total time" %}</th>
+                    <th>{% trans "Total visits" %}</th>
+                    <th>{% trans "Unique IPs" %}</th>
+                    <th>{% trans "Device types" %}</th>
+                </tr>    
+            </thead>
+            
+            <tbody>
+                {% for row in log_groupby_user %}
+                <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}" {% if row.closed_deal %}class="sold"{% endif %}>
+                    <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
+                    <td>{{ row.max_date|date:'d.m.Y H:i:s' }}</td>
+                    <td id="user_{{ row.tracking_session__participant }}" class="cell_email">{{ row.tracking_session__participant__email }}</td>
+                    <td>{{ row.total_time }}</td>
+                    <td>{{ row.visit_count }}</td>
+                    <td>{{ row.ip_count }}</td>
+                    <td>{{ row.device_count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
 
     {% endif %}
 </div>
 
-{% if missing_data|length != 0 %}
+{% if uninterested_recipients|length > 0 %}
+<hr><div class="row">
+    <h4>{% trans "These recipients haven't viewed your offer" %}</h4>
+    
+    <table class="table report_table">
+        <thead>
+            <tr class="error">
+                <th>{% trans "Email" %}</th>
+                <th>{% trans "Re-send" %}</th>
+            </tr>    
+        </thead>
+        
+        <tbody>
+            {% for row in uninterested_recipients %}
+            <tr id="row_{{ this_message.id }}_{{ row.id }}">
+                <td>{{ row.email }}</td>
+                <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
+            </tr>
+            {% endfor %}    
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if missing_data|length > 0 %}
 <hr><div class="row">
     <h4>{% trans 'Missing tracking data' %}</h4>
     
     <table class="table report_table">
-        <tr class="error">
-            <th>{% trans "Date" %}</th>
-            <th>{% trans "Viewed by" %}</th>
-            <th>{% trans "Unique IP" %}</th>
-            <th>{% trans "Device type" %}</th>
-        </tr>
-
-        {% for row in missing_data %}
-        <tr>
-            <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
-            <td>{{ row.participant.email }}</td>
-            <td>{{ row.client_ip|default:'N/A' }}</td>
-            <td>{{ row.device|default:'N/A' }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr class="error">
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Viewed by" %}</th>
+                <th>{% trans "Unique IP" %}</th>
+                <th>{% trans "Device type" %}</th>
+            </tr>    
+        </thead>
+        
+        <tbody>
+            {% for row in missing_data %}
+            <tr>
+                <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.participant.email }}</td>
+                <td>{{ row.client_ip|default:'N/A' }}</td>
+                <td>{{ row.device|default:'N/A' }}</td>
+            </tr>
+            {% endfor %}    
+        </tbody>
     </table>
 </div>
 {% endif %}
