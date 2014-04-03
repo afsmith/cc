@@ -42,7 +42,7 @@ class MessageForm(forms.ModelForm):
                 'placeholder': _(
                     'Add your link text (this will replace [link] '
                     'in your message ''after you send it)'
-                )
+                ),
             })
         }
 
@@ -61,6 +61,7 @@ class MessageForm(forms.ModelForm):
             'attachment',
             'key_page',
         ]
+        self.fields['link_text'].required = True
 
     def clean_to(self):
         # get list of emails out of text input

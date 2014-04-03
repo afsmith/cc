@@ -80,6 +80,7 @@ $(document).ready(function () {
             to: 'required',
             message: {required: true, regex: /\[link\]/},
             attachment: 'required',
+            link_text: 'required',
         },
         messages: {
             subject: 'Enter the subject.',
@@ -89,6 +90,7 @@ $(document).ready(function () {
                 regex: 'The [link] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
             },
             attachment: 'Upload the attachment.',
+            link_text: 'Enter the link text.',
         },
         submitHandler: function(form) {
             form.submit();

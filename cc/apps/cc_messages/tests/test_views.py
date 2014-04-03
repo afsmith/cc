@@ -39,6 +39,7 @@ class MessageViewTestCases(ClientTestCase):
             'message': 'lala',
             'attachment': 1,
             'to': 'foo@cc.kneto.com',
+            'link_text': 'blah',
         })
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.context['thankyou_page'])
