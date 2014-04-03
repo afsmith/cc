@@ -51,3 +51,25 @@ CC_GLOBAL.GETParam = (function(a) {
     }
     return b;
 })(window.location.search.substr(1).split('&'));
+
+
+// filter table by text
+$.expr[':'].Contains = function(a,i,m){
+    return (a.textContent || a.innerText || "").toUpperCase().indexOf(unescape(m[3]).toUpperCase())>=0;
+};
+CC_GLOBAL.filterTable = function (table_body, filter_input) {
+    $(filter_input).keyup(function () {
+        var filter = $(this).val(),
+            table = $(table_body);
+
+        if (filter) {
+            filter = escape(filter);
+            table.children('tr:not(:Contains(' + filter + '))').hide();
+            table.children('tr:Contains(' + filter + ')').show();
+        } else {
+            table.children('tr').show();
+        }
+
+        return false;
+    });
+};

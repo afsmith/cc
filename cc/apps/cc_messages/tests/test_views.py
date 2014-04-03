@@ -11,7 +11,7 @@ class MessageViewTestCases(ClientTestCase):
 
     def test_send_message_GET_success(self):
         c = self._get_client_user_stripe()
-        resp = c.get(reverse('send'))
+        resp = c.get(reverse('send_message'))
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(
             resp.context['message_form'].__class__.__name__, 'MessageForm'
@@ -31,7 +31,7 @@ class MessageViewTestCases(ClientTestCase):
 
     def test_send_message_POST_success(self):
         c = self._get_client_user_stripe()
-        resp = c.post(reverse('send'), {
+        resp = c.post(reverse('send_message'), {
             'subject': 'Test',
             'cc_me': False,
             'notify_email_opened': False,
@@ -46,7 +46,7 @@ class MessageViewTestCases(ClientTestCase):
 
     def test_resend_message_success(self):
         c = self._get_client_user_stripe()
-        resp = c.post(reverse('resend'), {
+        resp = c.post(reverse('resend_message'), {
             'message_id': 1
         })
         self.assertEqual(resp.status_code, 200)

@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    var _drawPieChart;
+    var _drawPieChart,
+        _filterTable;
 
     // draw chart function
     _drawPieChart = function (json_data) {
@@ -122,7 +123,7 @@ $(document).ready(function () {
             old_email = this_row.find('.email_cell').data('old_value');
 
         $.ajax({
-            url: '/resend/',
+            url: '/message/resend/',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -145,11 +146,38 @@ $(document).ready(function () {
             this_id = this_row.prop('id').replace('row_', '');
 
         $.ajax({
-            url: '/remove_bounce/' + this_id + '/',
+            url: '/report/remove_bounce/' + this_id + '/',
             type: 'POST',
             dataType: 'json',
         }).done(function (resp) {
             this_row.remove();
         });
     });
+
+    // search call list table
+    CC_GLOBAL.filterTable('.call_list_table > tbody', '#js_search_email');
+
+    // filter call list by date
+    $('#js_date_filter').change(function () {
+        var _this = $(this),
+            this_row = _this.closest('tr'),
+            this_class = this_row.prop('class'),
+            message_id = this_class.replace('message_', ''),
+            new_email = this_row.find('.js_emailInput').val(),
+            old_email = this_row.find('.email_cell').data('old_value');
+
+        $.ajax({
+            url: '/message/resend/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'message_id': message_id,
+                'old_email': old_email,
+                'new_email': new_email
+            },
+        }).done(function (resp) {
+            this_row.remove();
+        });
+    });
+
 }); // end document ready

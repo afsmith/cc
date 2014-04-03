@@ -45,5 +45,6 @@ _build/
 
 # --------------- EXCEPTION --------------- #
 # one exception for the selenium test
-!/cc/media/pub/RBauHJHSXvqKkAiBYIxdxR_gdU5E
+!/cc/media/pub/RBauHJHSXvqKkAiBYIxdxR_gdU5E/*.png
+!/cc/media/pub/RBauHJHSXvqKkAiBYIxdxR_gdU5E/*.json
 !/cc/media/uploads/RBauHJHSXvqKkAiBYIxdxR_a1BMF.pdf

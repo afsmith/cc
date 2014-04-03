@@ -1,20 +1,27 @@
 {% load i18n %}
 
 <h3>{% trans "Priority call list" %}</h3>
-<div class="class_list_wrapper table-responsive">
-    {% comment %}
-    <div class="form-group">
-        <label for="js_date_filter" class="form-label">Past days</label>
+
+<div class="row">
+    <div class="form-group col-md-6 col-lg-6">
+        <label for="js_search_email" class="form-label">{% trans "Search" %}</label>
+        <input id="js_search_email" type="text" class="form-control" />
+    </div>
+
+    <div class="form-group col-md-6 col-lg-6">
+        <label for="js_date_filter" class="form-label">{% trans "Past days" %}</label>
         <select id="js_date_filter" class="form-control">
-            <option value="">7</option>
-            <option value="">14</option>
-            <option value="">30</option>
-            <option value="">60</option>
-            <option value="">90</option>
+            <option value="7">7</option>
+            <option value="14" selected="selected">14</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+            <option value="90">90</option>
         </select>
-    </div>    
-    {% endcomment %}
-    
+    </div>
+</div>
+
+
+<div class="call_list_wrapper table-responsive">    
     <table class="table table-bordered call_list_table sortable">
         <thead>
             <tr>
@@ -40,7 +47,7 @@
                     <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
                     <span class="hidden">3</span>
                 {% endif %}</td>
-                <td>{{ row.email }}</td>
+                <td class="col_email">{{ row.email }}</td>
                 <td data-dateformat="HH:mm DD.MM.YYYY">{{ row.date|date:'H:i d.m.Y' }}</td>
                 <td>{{ row.subject }}</td>
             </tr>

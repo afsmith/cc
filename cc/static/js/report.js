@@ -233,7 +233,7 @@ $(document).ready(function () {
             user_id = id_pair[1];
 
         $.ajax({
-            url: '/resend/',
+            url: '/message/resend/',
             type: 'POST',
             dataType: 'json',
             data: {

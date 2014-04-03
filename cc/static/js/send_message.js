@@ -69,7 +69,6 @@ $(document).ready(function () {
             focus: true
         });
 
-        log(summernote_config_message);
 
 // ------------------------ Form init & validation ------------------------ //
 
@@ -144,7 +143,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/upload_image/',
+            url: '/file/upload_image/',
             data: ajax_request,
             cache: false,
             contentType: false,
@@ -289,7 +288,7 @@ $(document).ready(function () {
             // if the file hasn't been uploaded
             if (!file.server_id) { return; }
             // remove the file on server
-            $.post('/remove_file/' + file.server_id + '/', function () {
+            $.post('/file/remove/' + file.server_id + '/', function () {
                 // remove that file from send message form
                 $('#id_attachment').val('');
 
