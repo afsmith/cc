@@ -1,0 +1,18 @@
+{% for row in call_list %}
+<tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
+    <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
+    <td>{% if row.status == 'Green' %}
+        <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>
+        <span class="hidden">1</span>
+    {% elif row.status == 'Yellow' %}
+        <span class="badge alert-warning"><i class="glyphicon glyphicon-asterisk"></i></span>
+        <span class="hidden">2</span>
+    {% elif row.status == 'Red' %}
+        <span class="badge alert-danger"><i class="glyphicon glyphicon-remove"></i></span>
+        <span class="hidden">3</span>
+    {% endif %}</td>
+    <td class="col_email">{{ row.email }}</td>
+    <td data-dateformat="HH:mm DD.MM.YYYY">{{ row.date|date:'H:i d.m.Y' }}</td>
+    <td>{{ row.subject }}</td>
+</tr>
+{% endfor %}

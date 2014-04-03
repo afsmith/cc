@@ -159,24 +159,17 @@ $(document).ready(function () {
 
     // filter call list by date
     $('#js_date_filter').change(function () {
-        var _this = $(this),
-            this_row = _this.closest('tr'),
-            this_class = this_row.prop('class'),
-            message_id = this_class.replace('message_', ''),
-            new_email = this_row.find('.js_emailInput').val(),
-            old_email = this_row.find('.email_cell').data('old_value');
+        var days = $(this).val();
 
         $.ajax({
-            url: '/message/resend/',
+            url: '/report/call_list/',
             type: 'POST',
-            dataType: 'json',
             data: {
-                'message_id': message_id,
-                'old_email': old_email,
-                'new_email': new_email
+                'days': days,
             },
         }).done(function (resp) {
-            this_row.remove();
+            log(resp);
+            $('.call_list_table > tbody').html(resp);
         });
     });
 

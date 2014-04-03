@@ -11,7 +11,7 @@ from cc.apps.tracking.models import (
 
 from cc.libs.utils import format_dbtime, get_hours_until_now
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import chain
 import operator
 
@@ -116,9 +116,12 @@ def get_completion_percentage(recipient_id, message):
     return (tracking_data['viewed_pages'] / float(total_pages)) * 100
 
 
-def get_call_list(user):
+def get_call_list(user, past_days=14):
     call_list = []
-    messages = Message.objects.filter(owner=user)
+    messages = Message.objects.filter(
+        owner=user,
+        created_at__gte=datetime.today()-timedelta(days=past_days)
+    )
     for message in messages:
         # get tracking data
         tracking_data = get_tracking_data_group_by_recipient(message)
