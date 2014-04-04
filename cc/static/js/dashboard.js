@@ -67,7 +67,7 @@ $(document).ready(function () {
     };
 
     // click on each row
-    $('.call_row').click(function () {
+    $('.call_list_table').on('click', '.call_row', function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_id = this_row.prop('id'),
@@ -168,7 +168,6 @@ $(document).ready(function () {
                 'days': days,
             },
         }).done(function (resp) {
-            log(resp);
             $('.call_list_table > tbody').html(resp);
         });
     });
