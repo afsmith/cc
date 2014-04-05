@@ -1,6 +1,6 @@
 Django==1.5.5
 django-annoying==0.7.7
-django-extensions==1.2.0
+django-extensions==1.3.3
 -e git+git://github.com/H25/django-registration#egg=registration
 Werkzeug==0.9.4
 South==0.8.2

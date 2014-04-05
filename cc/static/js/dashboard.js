@@ -169,6 +169,7 @@ $(document).ready(function () {
             },
         }).done(function (resp) {
             $('.call_list_table > tbody').html(resp);
+            $.bootstrapSortable();
         });
     });
 
