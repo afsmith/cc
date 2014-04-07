@@ -54,7 +54,7 @@ CC_GLOBAL.GETParam = (function(a) {
 
 
 // filter table by text
-$.expr[':'].Contains = function(a,i,m){
+$.expr[':'].Contains = function (a,i,m) {
     return (a.textContent || a.innerText || "").toUpperCase().indexOf(unescape(m[3]).toUpperCase())>=0;
 };
 CC_GLOBAL.filterTable = function (table_body, filter_input) {
@@ -79,3 +79,20 @@ CC_GLOBAL.showErrorPopup = function(message) {
     $('#js_error_modal .modal-body').text(message);
     $('#js_error_modal').modal();
 }
+
+// get browser
+CC_GLOBAL.getCurrentBrowser = function () {
+    var N = navigator.appName,
+        ua = navigator.userAgent,
+        tem,
+        M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\.?\d+(\.\d+)*)/i);
+    if (/trident/i.test(M[1])) {
+        tem = /\brv[ :]+(\d+(\.\d+)?)/g.exec(ua) || [];
+        return ['IE', (tem[1] || '')];
+    }
+    if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) {
+        M[2] = tem[1];
+    }
+    M = M ? [M[1], M[2]] : [N, navigator.appVersion];
+    return M;  // [browser name, browser version]
+};

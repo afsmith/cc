@@ -15,6 +15,7 @@ def get_domain(request):
 
     return '%s://%s' % (protocol, request.get_host())
 
+
 def get_client_ip(request):
     '''
     Get the client IP from request
@@ -25,6 +26,7 @@ def get_client_ip(request):
     else:
         client_ip = request.META.get('REMOTE_ADDR')
     return client_ip
+
 
 def get_device_name(request):
     '''
@@ -63,6 +65,7 @@ def get_device_name(request):
     else:
         raise ValueError('Invalid request')
 
+
 def progress_formatter(progress):
     '''
     Return the nicely rounded progress
@@ -73,8 +76,9 @@ def progress_formatter(progress):
         return 10
     elif progress > 0.85 and progress < 1:
         return 90
- 
+
     return int(round(progress * 10) * 10)
+
 
 def dictfetchall(cursor):
     '''
@@ -106,6 +110,7 @@ def format_dbtime(time_from_db):
     h, m = divmod(m, 60)
     return '{0:02.0f}:{1:02.0f}:{2:04.1f}'.format(h, m, s)
 
+
 def get_hours_until_now(datetime_obj):
     # get now object
     now_obj = datetime.datetime.now()
@@ -121,6 +126,7 @@ def get_hours_until_now(datetime_obj):
 BASE62_CONV = BaseConv(
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
 )
+
 
 def gen_file_key():
     """Generates random file key.

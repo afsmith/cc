@@ -5,41 +5,51 @@
 {% block meta_title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
-    <!--[if lt IE 10]>
-        <p class="alert alert-danger">Unfornunately, currently our application only supports sending message from Internet Explorer version 10 and above. Please upgrade your Internet Explorer or switch to Google Chrome or Mozilla Firefox to have better browsing experience.</p>
-    <![endif]-->
+    <div id="browser_not_supported" class="alert alert-danger hidden">
+        <span class="hidden">{{ device }}</span>
+        <p>Your current browser is: <span></span></p>
+        <p>Unfornunately, currently our application only supports sending message from these desktop browsers: 
+            <ul>
+                <li>Internet Explorer 10+</li>
+                <li>Chrome 7+</li>
+                <li>Firefox 4+</li>
+                <li>Safari 6+</li>
+                <li>Opera 12+</li>
+            </ul>
+        Please upgrade your browser to the latest version.</p>
+    </div>
 
-    {% if thankyou_page %}
+    <div id="send_message_wrapper">
+        {% if thankyou_page %}
+            <div class="row">
+                <div class="center col-sm-6 col-md-6">
+                    <h2>{% trans "Sent" %}</h2>
 
-        <div class="row">
-            <div class="center col-sm-6 col-md-6">
-                <h2>{% trans "Sent" %}</h2>
+                    <p class="lead">{% trans "Ok, your message is being processed and the mail will be sent to your people in just a few minutes." %}</p>
 
-                <p class="lead">{% trans "Ok, your message is being processed and the mail will be sent to your people in just a few minutes." %}</p>
-
-                <a href="{% url 'send_message' %}" class="btn btn-success pull-left btn-lg">{% trans "Send another offer" %}</a>
-                <a href="{% url 'report_index' %}" class="btn btn-success pull-right btn-lg">{% trans "View reports" %}</a>
+                    <a href="{% url 'send_message' %}" class="btn btn-success pull-left btn-lg">{% trans "Send another offer" %}</a>
+                    <a href="{% url 'report_index' %}" class="btn btn-success pull-right btn-lg">{% trans "View reports" %}</a>
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="row">
+                <div class="center send_message_page col-sm-6 col-md-6">
+                    <form role="form" id="js_messageForm" action="{% url 'send_message' %}" method="POST">{% csrf_token %}
+                        {% include '_base_form.html' with form=message_form %}
+                    </form>
 
-    {% else %}
-        <div class="row">
-            <div class="center send_message_page col-sm-6 col-md-6">
-                <form role="form" id="js_messageForm" action="{% url 'send_message' %}" method="POST">{% csrf_token %}
-                    {% include '_base_form.html' with form=message_form %}
-                </form>
+                    <button id="js_editSignature" class="btn btn-default"><i class="icon-plus"></i>  {% trans "Add signature" %}</button>
 
-                <button id="js_editSignature" class="btn btn-default"><i class="icon-plus"></i>  {% trans "Add signature" %}</button>
+                    <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
+                        {% trans "Drop the attachment (or click) here to upload. PDF's only" %}
+                    </form>
 
-                <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
-                    {% trans "Drop the attachment (or click) here to upload. PDF's only" %}
-                </form>
-
-                <button id="js_submitMessageForm" class="btn btn-success btn-lg">{% trans "Send" %}</button>
-                <button id="js_resetForm" class="btn btn-default btn-lg">{% trans "Reset" %}</button>
+                    <button id="js_submitMessageForm" class="btn btn-success btn-lg">{% trans "Send" %}</button>
+                    <button id="js_resetForm" class="btn btn-default btn-lg">{% trans "Reset" %}</button>
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}
 
 

@@ -11,6 +11,7 @@ from .forms import MessageForm
 from .services import send_notification_email, edit_email_and_resend_message
 from cc.apps.accounts.services import verify_ocl_token
 from cc.apps.content.forms import FileImportForm
+from cc.libs.utils import get_device_name
 from cc.libs.exceptions import MessageExpired
 
 from annoying.decorators import render_to, ajax_request
@@ -48,10 +49,12 @@ def send_message(request):
             ),
             'signature': request.user.signature
         })
+    device = get_device_name(request)
 
     return {
         'message_form': message_form,
         'import_file_form': FileImportForm(),
+        'device': device
     }
 
 
