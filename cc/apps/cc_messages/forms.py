@@ -8,6 +8,7 @@ from cc.apps.accounts.models import CUser
 from cc.apps.accounts.services import create_group
 
 import re
+from datetime import timedelta
 
 
 class MessageForm(forms.ModelForm):
@@ -114,6 +115,9 @@ class MessageForm(forms.ModelForm):
             ur'\1{}\2'.format(self.cleaned_data['signature']),
             message.message
         )
+
+        # add expired_at
+        message.expired_at = message.created_at + timedelta(days=120)
 
         message.save()
         return message

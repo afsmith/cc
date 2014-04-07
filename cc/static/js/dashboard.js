@@ -132,7 +132,11 @@ $(document).ready(function () {
                 'new_email': new_email
             },
         }).done(function (resp) {
-            this_row.remove();
+            if (resp.status === 'ERROR') {
+                CC_GLOBAL.showErrorPopup(resp.message);
+            } else {
+                this_row.remove();
+            }            
         });
     });
 

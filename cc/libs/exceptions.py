@@ -1,0 +1,2 @@
+class MessageExpired(Exception):
+    pass

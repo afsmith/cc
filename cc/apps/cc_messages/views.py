@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators import http as http_decorators
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.translation import ugettext_lazy as _
 
 from . import tasks
 from .services import get_message
@@ -10,6 +11,7 @@ from .forms import MessageForm
 from .services import send_notification_email, edit_email_and_resend_message
 from cc.apps.accounts.services import verify_ocl_token
 from cc.apps.content.forms import FileImportForm
+from cc.libs.exceptions import MessageExpired
 
 from annoying.decorators import render_to, ajax_request
 
@@ -60,10 +62,20 @@ def resend_message(request):
     '''
     Resend the message
     '''
-    message = get_message(request.POST.get('message_id'), request.user)
-    edit_email_and_resend_message(request, message)
-
-    return {}
+    try:
+        message = get_message(request.POST.get('message_id'), request.user)
+    except MessageExpired:
+        return {
+            'status': 'ERROR',
+            'message': _(
+                "This message's files are expired, please send a new one."
+            )
+        }
+    else:
+        edit_email_and_resend_message(request, message)
+        return {
+            'status': 'OK'
+        }
 
 
 @ensure_csrf_cookie
@@ -76,26 +88,32 @@ def view_message(request, message_id=None):
             return {
                 'ocl_expired': True
             }
-        message = get_message(message_id, ocl_token.user)
 
-        # check if owner is checking message
-        is_owner_viewing = (ocl_token.user == message.owner)
+        try:
+            message = get_message(message_id, ocl_token.user)
+        except MessageExpired:
+            return {
+                'message_expired': True
+            }
+        else:
+            # check if owner is checking message
+            is_owner_viewing = (ocl_token.user == message.owner)
 
-        # there is only 1 file per message for now so return that file
-        file = message.files.all()[0]
+            # there is only 1 file per message for now so return that file
+            file = message.files.all()[0]
 
-        # notify the sender if "notify when link clicked" option is on
-        log = None
-        if not is_owner_viewing:
-            log = send_notification_email(2, message, ocl_token.user)
+            # notify the sender if "notify when link clicked" option is on
+            log = None
+            if not is_owner_viewing:
+                log = send_notification_email(2, message, ocl_token.user)
 
-        return {
-            'message': message,
-            'file': file,
-            'token': token,
-            'ocl_user': ocl_token.user,
-            'is_owner_viewing': is_owner_viewing,
-            'tracking_log': log,
-        }
+            return {
+                'message': message,
+                'file': file,
+                'token': token,
+                'ocl_user': ocl_token.user,
+                'is_owner_viewing': is_owner_viewing,
+                'tracking_log': log,
+            }
     else:
         return redirect(reverse('auth_login'))

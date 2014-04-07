@@ -238,6 +238,9 @@ $(document).ready(function () {
                 'user_id': user_id
             },
         }).done(function (resp) {
+            if (resp.status === 'ERROR') {
+                CC_GLOBAL.showErrorPopup(resp.message);
+            }
             _this.remove();
         });
     });

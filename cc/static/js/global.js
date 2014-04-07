@@ -73,3 +73,9 @@ CC_GLOBAL.filterTable = function (table_body, filter_input) {
         return false;
     });
 };
+
+// show error modal
+CC_GLOBAL.showErrorPopup = function(message) {
+    $('#js_error_modal .modal-body').text(message);
+    $('#js_error_modal').modal();
+}

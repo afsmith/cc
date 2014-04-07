@@ -51,7 +51,7 @@ class MessageViewTestCases(ClientTestCase):
             'message_id': 1
         })
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content, '{}')
+        self.assertEqual(resp.content, '{"status": "OK"}')
 
 
 class ViewMessageTestCases(ClientTestCase):

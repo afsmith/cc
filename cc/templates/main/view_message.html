@@ -11,6 +11,10 @@
     <p class="alert">
         {% trans "This link is expired. Please request another link from the sender." %}
     </p>
+{% elif message_expired %}
+    <p class="alert">
+        {% trans "This content is no longer available. Please contact the sender if you would like a new copy." %}
+    </p>
 {% else %}
     {% if is_owner_viewing %}
         <p class="alert" style="text-align: center; padding-bottom: 5px;">
@@ -20,9 +24,6 @@
     
     <div id="message_viewer" class="flexpaper_viewer" style="position:absolute;width:100%;height:100%;"></div>
             
-                
-
-
 {% endif %}
 
 {% endblock %}

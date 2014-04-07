@@ -22,6 +22,7 @@ class Message(models.Model):
 
     owner = models.ForeignKey(CUser, related_name='owner', null=True)
     group = models.ForeignKey(auth_models.Group, null=True)
+    expired_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
