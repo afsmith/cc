@@ -103,3 +103,21 @@ class ViewMessageTestCases(ClientTestCase):
         )
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.context['ocl_expired'])
+
+    def test_view_message_expired(self):
+        resp = self.client.get(
+            '{}?token=k2f6PfMMBPPNn1SC7G5pasg2vkVpF'.format(reverse(
+                'view_message', kwargs={'message_id': 2}
+            ))
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp.context['message_expired'])
+
+    def test_view_message_no_permission(self):
+        resp = self.client.get(
+            '{}?token=ag223623AGag362GAHPWnavawGNZS'.format(reverse(
+                'view_message', kwargs={'message_id': 2}
+            ))
+        )
+        self.assertEqual(resp.status_code, 403)
+        self.assertIn('You do not have access to this content.', resp.content)

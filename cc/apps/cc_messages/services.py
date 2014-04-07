@@ -11,7 +11,7 @@ from cc.libs.utils import get_domain
 from cc.libs.exceptions import MessageExpired
 
 from templated_email import send_templated_mail
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
 
 
@@ -34,7 +34,7 @@ def _create_ocl_link(user, domain, message_id):
     # token should be expired after 30 days
     ocl = OneClickLinkToken.objects.create(
         user=user,
-        expires_on=datetime.today() + timedelta(days=30)
+        expires_on=date.today() + timedelta(days=30)
     )
 
     # create the OCL link and return

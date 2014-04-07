@@ -42,6 +42,26 @@
     }
 },
 {
+    "pk": 3,
+    "model": "accounts.cuser",
+    "fields": {
+        "username": "",
+        "first_name": "N/A",
+        "last_name": "N/A",
+        "country": "N/A",
+        "industry": "N/A",
+        "is_active": false,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2013-10-15T01:13:51",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$10000$e57VOn9VXXjj$eIwRHCjYO/olGjavW1kWri0lNzvjdKlrsInUg5l0wxM=",
+        "email": "foooooo@bar.com",
+        "date_joined": "2013-10-15T01:13:51"
+    }
+},
+{
     "pk": 1,
     "model": "auth.group",
     "fields": {
@@ -55,7 +75,7 @@
     "fields": {
         "token": "0ObtsIKxyzNzaeawg4x4Ivlwt5Ikl",
         "user": 2,
-        "expires_on": "2020-11-14"
+        "expires_on": "3000-11-14"
     }
 },
 {
@@ -64,7 +84,7 @@
     "fields": {
         "token": "l1R6PfMMBPPNn1SC7G5pGZMI2vkVpF",
         "user": 1,
-        "expires_on": "2020-11-14"
+        "expires_on": "3000-11-14"
     }
 },
 {
@@ -74,6 +94,24 @@
         "token": "Yz6t9o71cpjnBTzvJ3Ls6eDe3zbtNp",
         "user": 2,
         "expires_on": "2010-11-14"
+    }
+},
+{
+    "pk": 4,
+    "model": "accounts.oneclicklinktoken",
+    "fields": {
+        "token": "k2f6PfMMBPPNn1SC7G5pasg2vkVpF",
+        "user": 2,
+        "expires_on": "3000-11-14"
+    }
+},
+{
+    "pk": 5,
+    "model": "accounts.oneclicklinktoken",
+    "fields": {
+        "token": "ag223623AGag362GAHPWnavawGNZS",
+        "user": 3,
+        "expires_on": "3000-11-14"
     }
 },
 {
@@ -97,6 +135,29 @@
         "created_at": "2013-10-15T01:13:52",
         "expired_at": "3000-10-15T01:13:52",
         "subject": "Hieu test message"
+    }
+},
+{
+    "pk": 2,
+    "model": "cc_messages.message",
+    "fields": {
+        "files": [
+            1
+        ],
+        "group": null,
+        "receivers": [
+            2
+        ],
+        "notify_email_opened": false,
+        "cc_me": false,
+        "modified_at": "2013-10-15T01:13:52",
+        "key_page": null,
+        "owner": 1,
+        "message": "Abcdefmessaasg",
+        "notify_link_clicked": false,
+        "created_at": "2013-10-15T01:13:52",
+        "expired_at": "2013-12-15T01:13:52",
+        "subject": "Hieu test message expired"
     }
 },
 {
