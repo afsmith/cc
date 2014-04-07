@@ -20,7 +20,9 @@ window.$FlexPaper = window.getDocViewer = window["$FlexPaper"] = function(id){
 	}else if(window['ViewerMode'] == 'html'){
 		return window["FlexPaperViewer_Instance"+instance];
 	}
-};
+};  
+
+
 
 /**
  *
@@ -726,7 +728,7 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
 
                     // Enable cache of scripts. You can disable this if you want to force FlexPaper to use a non-cached version every time.
                     jQuery.ajaxSetup({
-                        cache: true
+                        cache: false
                     });
 
                     var scriptPromise = new jQuery.Deferred();
