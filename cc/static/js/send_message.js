@@ -91,7 +91,7 @@ $(document).ready(function () {
                 }
                 break;
             case 'Safari':
-                if (this_browser_version_int < 8) {
+                if (this_browser_version_int < 6) {
                     is_supported_browser = false;
                 }
                 break;
