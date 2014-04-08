@@ -11,6 +11,8 @@ PAYMENTS_PLANS = {
         'currency': 'eur',
         'interval': 'month',
         'interval_count': 1,
+        'trial_period_days': 15,
+
         'metadata': {
             'VAT': 4.79,
             'users': 1
