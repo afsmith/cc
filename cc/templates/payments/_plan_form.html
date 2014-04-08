@@ -6,13 +6,26 @@
     <div class="col-md-4">
         <div class="jumbotron {% ifequal current_plan 'monthly' %}active_plan{% endifequal %}">
             <h3>Single User</h3>
-            <p>Give it a shot. €149<sup>*</sup> a month, cancel anytime.</p>
+           <div class="price">
+                                <span class="dollar">€</span> 
+                                <span class="qty">19,99</span> 
+                                <span class="month">/month</span>
+                            </div>
+            <div class="features">
+                                <ul class="list-unstyled">
+                                    <li><small>1 user </small></li>
+                                    <li><small>15 day trial </small></li>
+                                    <li><small>Send as many offers as you like </small></li>
+                                    <li><small>Full page level analytics </small></li>
+                                    <li><small>Email opened notifications </small></li>
+                                </ul>
+                            </div>
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
                 {% csrf_token %}
                 <input name="stripe_token" type="hidden" />
                 <input type="hidden" name="plan" value="monthly" />
                 <div class="form-actions">
-                    <button id="js_price_18476" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it</button>
+                    <button id="js_price_2478" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it</button>
                 </div>
             </form>
         </div>
@@ -21,13 +34,26 @@
     <div class="col-md-4">
         <div class="jumbotron {% ifequal current_plan 'early_small' %}active_plan{% endifequal %}">
             <h3>Early Access <br>small plan</h3>
-            <p>Give your team of up to three people access for three months at a deep discount.</p>
+            <div class="price">
+                                <span class="dollar">€</span> 
+                                <span class="qty">150</span> 
+                                <span class="month">/month</span>
+                            </div>
+            <div class="features">
+                                <ul class="list-unstyled">
+                                    <li><small>5 team members</small></li>
+                                    <li><small>Send as many offers as you like</small></li>
+                                    <li><small>Full page level analytics</small></li>
+                                    <li><small>Email opened notifications</small></li>
+                                    <li><small>Priority support</small></li>
+                                </ul>
+                            </div>
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
             {% csrf_token %}
                 <input name="stripe_token" type="hidden" />
                 <input type="hidden" name="plan" value="early_small" />        
                 <div class="form-actions">
-                   <button id="js_price_55676" type="submit" class="btn btn-primary" data-loading-text="Processing...">€449<sup>*</sup></button>
+                   <button id="js_price_18600" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it!<sup>*</sup></button>
                 </div>
             </form>
         </div>
@@ -36,13 +62,26 @@
     <div class="col-md-4">
         <div class="jumbotron {% ifequal current_plan 'early_large' %}active_plan{% endifequal %}">
             <h3>Early Access <br>large plan</h3>
-            <p>Is you team a little bigger? Big discount, more people. Up to 10.</p>
+            <div class="price">
+                                <span class="dollar">€</span> 
+                                <span class="qty">499</span> 
+                                <span class="month">/month</span>
+                            </div>
+            <div class="features">
+                                <ul class="list-unstyled">
+                                    <li><small>12 team members</small></li>
+                                    <li><small>Send as many offers as you like</small></li>
+                                    <li><small>Full page level analytics</small></li>
+                                    <li><small>Email opened notifications</small></li>
+                                    <li><small>Priority support</small></li>
+                                </ul>
+                            </div>
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
                 {% csrf_token %}
                 <input name="stripe_token" type="hidden" />  
                 <input type="hidden" name="plan" value="early_large" />     
                 <div class="form-actions"> 
-                    <button id="js_price_185876" type="submit" class="btn btn-primary" data-loading-text="Processing...">€1499<sup>*</sup></button>
+                    <button id="js_price_61876" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it!<sup>*</sup></button>
                 </div>
             </form>
         </div>
