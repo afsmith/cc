@@ -4,7 +4,7 @@ PAYMENTS_INVOICE_FROM_EMAIL = 'cc@kneto.com'
 
 PAYMENTS_PLANS = {
     'monthly': {
-        'stripe_plan_id': 'monthly',
+        'stripe_plan_id': 'monthly_01',
         'name': 'Single User',
         'description': 'Monthly subscription to Kneto.',
         'price': 24.78,
@@ -19,7 +19,7 @@ PAYMENTS_PLANS = {
         }
     },
     'early_small': {
-        'stripe_plan_id': 'early_small',
+        'stripe_plan_id': 'early_small_01',
         'name': 'Early Access small plan',
         'description': 'Early Access, Five users',
         'price': 186.00,
@@ -32,7 +32,7 @@ PAYMENTS_PLANS = {
         }
     },
     'early_large': {
-        'stripe_plan_id': 'early_large',
+        'stripe_plan_id': 'early_large_01',
         'name': 'Early Access large plan',
         'description': 'Early Access, Twelve users',
         'price': 618.76,
