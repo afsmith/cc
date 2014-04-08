@@ -23,7 +23,7 @@
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
                 {% csrf_token %}
                 <input name="stripe_token" type="hidden" />
-                <input type="hidden" name="plan" value="monthly_01" />
+                <input type="hidden" name="plan" value="monthly" />
                 <div class="form-actions">
                     <button id="js_price_2478" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it</button>
                 </div>
@@ -51,7 +51,7 @@
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
             {% csrf_token %}
                 <input name="stripe_token" type="hidden" />
-                <input type="hidden" name="plan" value="early_small_01" />        
+                <input type="hidden" name="plan" value="early_small" />        
                 <div class="form-actions">
                    <button id="js_price_18600" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it!<sup>*</sup></button>
                 </div>
@@ -79,7 +79,7 @@
             <form action="{{ action }}" class="form ajax"  data-stripe-key="{{ STRIPE_PUBLIC_KEY }}" {{ data_replace }} method="POST">
                 {% csrf_token %}
                 <input name="stripe_token" type="hidden" />  
-                <input type="hidden" name="plan" value="early_large_01" />     
+                <input type="hidden" name="plan" value="early_large" />     
                 <div class="form-actions"> 
                     <button id="js_price_61876" type="submit" class="btn btn-primary" data-loading-text="Processing...">Get it!<sup>*</sup></button>
                 </div>
