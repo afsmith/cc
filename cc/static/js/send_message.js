@@ -110,7 +110,7 @@ $(document).ready(function () {
 
     if (!is_supported_browser) {
         $('#browser_not_supported').removeClass('hidden');
-        if (this_device === 'Desktop') {
+        if (this_device !== 'Desktop') {
             $('#browser_not_supported p:eq(0)').hide();
         } else {
             $('#browser_not_supported p:eq(0) span').text(this_browser.join(' '));    
