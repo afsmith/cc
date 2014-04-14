@@ -178,6 +178,8 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
 
 TOS_URL = 'http://kneto.com/terms-of-service/'
 
+MESSAGE_EXPIRED_AFTER = 300  # 10 months ~ 300 days
+
 
 ##############################################################################
 # Payments

@@ -1,6 +1,7 @@
 from django import forms
 from django.core.validators import validate_email
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from .models import Message
 from cc.apps.content.models import File
@@ -117,7 +118,9 @@ class MessageForm(forms.ModelForm):
         )
 
         # add expired_at
-        message.expired_at = message.created_at + timedelta(days=120)
+        message.expired_at = message.created_at + timedelta(
+            days=settings.MESSAGE_EXPIRED_AFTER
+        )
 
         message.save()
         return message

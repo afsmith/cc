@@ -11,7 +11,12 @@ class MessageViewTestCases(ClientTestCase):
 
     def test_send_message_GET_success(self):
         c = self._get_client_user_stripe()
-        resp = c.get(reverse('send_message'))
+        resp = c.get(
+            reverse('send_message'),
+            {},
+            HTTP_USER_AGENT='Mozilla',
+            HTTP_ACCEPT='text/html',
+        )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(
             resp.context['message_form'].__class__.__name__, 'MessageForm'
@@ -28,6 +33,12 @@ class MessageViewTestCases(ClientTestCase):
             resp.context['import_file_form'].__class__.__name__,
             'FileImportForm'
         )
+        self.assertEqual(resp.context['device'], 'Desktop')
+
+    def test_send_message_GET_invalid_request(self):
+        c = self._get_client_user_stripe()
+        with self.assertRaises(ValueError):
+            c.get(reverse('send_message'))
 
     def test_send_message_POST_success(self):
         c = self._get_client_user_stripe()
