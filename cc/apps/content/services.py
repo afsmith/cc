@@ -17,7 +17,8 @@ def save_pdf(user, orig_filename, coping_file_callback):
     if not File.is_supported_file(orig_filename):
         return {
             'status': 'ERROR',
-            'message': unicode(_('Unsupported file type.'))
+            'message': unicode(_('Unsupported file type.')),
+            'file_id': None
         }
 
     file = File(orig_filename=orig_filename, owner=user)
@@ -33,7 +34,8 @@ def save_pdf(user, orig_filename, coping_file_callback):
     except utils.UnsupportedFileTypeError:
         return {
             'status': 'ERROR',
-            'message': unicode(_('Unsupported file type.'))
+            'message': unicode(_('Unsupported file type.')),
+            'file_id': file.id
         }
 
     # get the page count
@@ -58,7 +60,8 @@ def save_pdf(user, orig_filename, coping_file_callback):
                 ' Attachment should be maximum {} pages'.format(
                     settings.PDF_MAX_PAGES
                 )
-            ))
+            )),
+            'file_id': file.id
         }
 
     # if everything is cool

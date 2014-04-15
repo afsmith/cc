@@ -55,7 +55,7 @@ $(document).ready(function () {
                     'CMD+U': 'underline',
                 }
             }
-        }
+        },
         summernote_config_message = $.extend({}, summernote_config_global, {
             height: 250,
             onkeyup: function(e) {
@@ -80,7 +80,6 @@ $(document).ready(function () {
             to: 'required',
             message: {required: true, regex: /\[link\]/},
             attachment: 'required',
-            link_text: 'required',
         },
         messages: {
             subject: 'Enter the subject.',
@@ -89,8 +88,7 @@ $(document).ready(function () {
                 required: 'Enter the message.', 
                 regex: 'The [link] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
             },
-            attachment: 'Upload the attachment.',
-            link_text: 'Enter the link text.',
+            attachment: 'Upload the attachments.',
         },
         submitHandler: function(form) {
             form.submit();
@@ -221,6 +219,51 @@ $(document).ready(function () {
         $('.dz-file-preview').remove();
     };
 
+    _addFileHandler = function (file, resp) {
+        var page_count = resp.page_count,
+            i = 1,
+            options = '',
+            upload_form_bottom;
+
+        // add file ID to hidden input
+        $('#id_attachment').val(function (index, value) {
+            return value + file.server_id + ','; // example: 1,2,3,
+        });
+        
+        // populate key page selector and show
+        /*for (i=1; i<=page_count; i+=1) {
+            options += '<option value="'+i+'">'+i+'</option>';
+        }*/
+        
+        // handle some CSS and template
+        upload_form.addClass('file_uploaded');
+        $('.dz-success-mark').css('opacity', 1);
+        $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
+
+        // remove error message 
+        upload_form.find('.alert').remove();
+
+        attachment_field.valid();
+    };
+
+    _removeFileHandler = function (file) {
+        console.log(file);
+
+        // if the file hasn't been uploaded
+        if (!file.server_id) { return; }
+        // remove the file on server
+        $.post('/file/remove/' + file.server_id + '/', function () {
+            // remove that file from attachment field
+            $('#id_attachment').val(function (index, value) {
+                return value.replace(file.server_id + ',', '');
+            });
+        });
+        var preview_elem = file.previewElement;
+        if (preview_elem !== null) {
+            preview_elem.parentNode.removeChild(preview_elem);
+        }
+    }
+
     // dropzone config for file upload form
     Dropzone.options.uploadFileForm = {
         url: $(this).attr('action'),
@@ -231,39 +274,13 @@ $(document).ready(function () {
         acceptedFiles: 'application/pdf,.pdf,.PDF',
         addRemoveLinks: true,
         success: function (file, response) {
-            var page_count = response.page_count,
-                i = 1,
-                options = '',
-                upload_form_bottom;
+            // assign file_id to file object
+            file.server_id = response.file_id;
 
             if (response.status === 'OK') {
-                // assign file_id to file object
-                file.server_id = response.file_id;
-
-                // add file ID to hidden input
-                $('#id_attachment').val(response.file_id);
-
-                // calculate position for key page select box
-                upload_form_bottom = upload_form.offset().top + upload_form.height();
-                // populate key page selector and show
-                for (i=1; i<=page_count; i+=1) {
-                    options += '<option value="'+i+'">'+i+'</option>';
-                }
-                $('#id_key_page').append(options).css('top', upload_form_bottom + 10).show();
-                $('label[for="id_key_page"]').css('top', upload_form_bottom - 20).show();
-                
-                // handle some CSS and template
-                upload_form.addClass('file_uploaded');
-                $('.dz-success-mark').css('opacity', 1);
-                $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
-
-                // remove error message 
-                upload_form.find('.alert').remove();
-
-                attachment_field.valid();
+                _addFileHandler(file, response);
             } else {
                 this.removeFile(file);
-                //resetUploadForm();
                 renderUploadError(response.message);
                 log('Conversion error: ' + response.original_error);
 
@@ -275,7 +292,6 @@ $(document).ready(function () {
             if (errorMessage !== 'You can only upload 5 files.') {
                 $('.dz-error-mark').css('opacity', 1);
                 this.removeFile(file);
-                //resetUploadForm();
                 renderUploadError(errorMessage);
             }
             attachment_field.valid();
@@ -286,17 +302,7 @@ $(document).ready(function () {
             this.removeFile(file);
             attachment_field.valid();
         },
-        removedfile: function (file) {
-            // if the file hasn't been uploaded
-            if (!file.server_id) { return; }
-            // remove the file on server
-            $.post('/file/remove/' + file.server_id + '/', function () {
-                // remove that file from send message form
-                $('#id_attachment').val('');
-
-                resetUploadForm();
-            });
-        }
+        removedfile: _removeFileHandler
     };
 
 
