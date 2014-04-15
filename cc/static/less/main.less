@@ -97,7 +97,7 @@ form {
 
 
 // --------------------------- send message page --------------------------- //
-.send_message_page {
+.send_message_wrapper {
     position: relative;
 
     select.form-control {
@@ -110,22 +110,34 @@ form {
         float: left;
     }
 
-    // key page
-    label[for="id_key_page"],
-    #id_key_page {
-        display: none;
-        position: absolute;
-    }
-
     // upload form
     #uploadFileForm {
-        margin: 20px 0;
+        width: 100%;
+        float: left;
+        border: 1px dashed #999;
     }
-    .file_uploaded {
-        margin-bottom: 110px !important;
-    }
-    a.dz-remove {
-        cursor: pointer;
+    .dropzone {
+        height: 250px;
+
+        &.file_uploaded {
+            height: auto;
+        }
+        .dz-preview {
+            .dz-details {
+                height: auto;
+                margin-bottom: 0;
+            }
+            .dz-progress {
+                position: relative;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+        a.dz-remove {
+            cursor: pointer;
+        }
     }
 
     // signature

@@ -1,0 +1,27 @@
+{% load extras i18n %}
+
+<div class="row">
+        <div class="col-sm-6 col-md-6">
+            <form role="form" id="js_messageForm" action="{% url 'send_message' %}" method="POST">{% csrf_token %}
+            {% include "_partials/_form.html" with form=message_form %}
+            </form>
+            <button id="js_editSignature" class="btn btn-default"><i class="icon-plus"></i>  {% trans "Add signature" %}</button>
+        </div>
+        
+        
+        <div class="col-sm-6 col-md-6">
+            <label for="">{% trans "Attachments" %}</label>
+            <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
+                {% trans "Drop the attachments (or click) here to upload. Maximum 5 files. PDF only." %}
+            </form>
+            
+        </div>
+    
+</div>
+
+<div class="row">
+    <div class="pull-right">
+        <button id="js_submitMessageForm" class="btn btn-success btn-lg">{% trans "Send" %}</button>
+        <button id="js_resetForm" class="btn btn-default btn-lg">{% trans "Reset" %}</button>    
+    </div>
+</div>

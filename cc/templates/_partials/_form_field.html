@@ -1,0 +1,14 @@
+{% load extras %}
+
+{% if not field.is_hidden %}
+    {% if field.field.widget|type == "CheckboxInput" %}
+        <label for="id_{{ field.html_name }}" class="label_checkbox">{{ field }} {{ field.label }}</label>
+    {% else %}
+        {{ field.label_tag }}
+        <p {% if field.errors %}class="alert alert-danger"{% endif %}>{{ field.errors.as_text }}</p>
+        {{ field }}
+    {% endif %}
+{% else %}
+    {{ field }}
+    <p {% if field.errors %}class="alert alert-danger"{% endif %}>{{ field.errors.as_text }}</p>
+{% endif %}

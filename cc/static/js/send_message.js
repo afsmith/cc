@@ -57,7 +57,7 @@ $(document).ready(function () {
             }
         }
         summernote_config_message = $.extend({}, summernote_config_global, {
-            height: 160,
+            height: 250,
             onkeyup: function(e) {
                 // TODO: improve this later by not copying on every key press
                 message_field.val(message_field.code());
@@ -226,7 +226,7 @@ $(document).ready(function () {
         url: $(this).attr('action'),
         paramName: 'file',
         maxFilesize: 40, // MB
-        maxFiles: 1,
+        maxFiles: 5,
         clickable: true,
         acceptedFiles: 'application/pdf,.pdf,.PDF',
         addRemoveLinks: true,
@@ -263,7 +263,7 @@ $(document).ready(function () {
                 attachment_field.valid();
             } else {
                 this.removeFile(file);
-                resetUploadForm();
+                //resetUploadForm();
                 renderUploadError(response.message);
                 log('Conversion error: ' + response.original_error);
 
@@ -272,16 +272,16 @@ $(document).ready(function () {
             }
         },
         error: function (file, errorMessage) {
-            if (errorMessage !== 'You can only upload 1 files.') {
+            if (errorMessage !== 'You can only upload 5 files.') {
                 $('.dz-error-mark').css('opacity', 1);
                 this.removeFile(file);
-                resetUploadForm();
+                //resetUploadForm();
                 renderUploadError(errorMessage);
             }
             attachment_field.valid();
         },
         maxfilesexceeded: function (file) {
-            renderUploadError('You can attach only one file at a time');
+            renderUploadError('You can attach maximum 5 files at a time');
             $('.dz-file-preview:not(.dz-processing)').remove();
             this.removeFile(file);
             attachment_field.valid();
@@ -326,7 +326,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.send_message_page').on('click', '#js_applySignature', function () {
+    $('.send_message_wrapper').on('click', '#js_applySignature', function () {
         var message_obj = $('<div/>').append($.parseHTML(message_field.code()));
         message_obj.find('#signature').html(signature_field.code());
         message_field.code(message_obj.html());

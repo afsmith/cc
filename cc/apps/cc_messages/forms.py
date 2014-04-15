@@ -13,9 +13,7 @@ from datetime import timedelta
 
 
 class MessageForm(forms.ModelForm):
-    attachment = forms.IntegerField(
-        label=_('Attachment'), widget=forms.HiddenInput
-    )
+    attachment = forms.CharField(widget=forms.HiddenInput)
     to = forms.CharField()
     signature = forms.CharField(required=False)
 
@@ -35,17 +33,8 @@ class MessageForm(forms.ModelForm):
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'form-control'}),
             'message': forms.Textarea(attrs={'class': 'form-control'}),
-            'key_page': forms.Select(
-                choices=[('', '----------')],
-                attrs={'class': 'form-control'}
-            ),
-            'link_text': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': _(
-                    'Add your link text (this will replace [link] '
-                    'in your message ''after you send it)'
-                ),
-            })
+            'key_page': forms.HiddenInput(),
+            'link_text': forms.HiddenInput()
         }
 
     def __init__(self, *args, **kwargs):
@@ -58,10 +47,12 @@ class MessageForm(forms.ModelForm):
             'notify_email_opened',
             'notify_link_clicked',
             'message',
-            'link_text',
             'signature',
-            'attachment',
+
+            # hidden
             'key_page',
+            'attachment',
+            'link_text',
         ]
         self.fields['link_text'].required = True
 

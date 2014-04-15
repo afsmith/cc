@@ -50,7 +50,7 @@ $(document).ready(function () {
         } else {
             $('#browser_not_supported p:eq(0) span').text(this_browser.join(' '));    
         }
-        $('#send_message_wrapper').remove();
+        $('.send_message_wrapper').remove();
     } 
 
 });

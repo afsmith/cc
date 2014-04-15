@@ -25,3 +25,8 @@ def settings_value(name):
 @register.filter
 def get_range(value):
     return range(value)
+
+
+@register.filter
+def is_in(value, list_str):
+    return value in list_str.split(',')
