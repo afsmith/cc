@@ -35,45 +35,44 @@ if sys.argv[0].split(os.sep)[-1] in ("fab", "fab-script.py"):
         print "Aborting, no host roles defined."
         exit()
 
-env.db_pass = conf.get("DB_PASS", None)
-env.admin_pass = conf.get("ADMIN_PASS", None)
-env.user = conf.get("SSH_USER", getuser())
-env.password = conf.get("SSH_PASS", None)
-env.key_filename = conf.get("SSH_KEY_PATH", None)
-#env.hosts = conf.get("HOSTS", [])
-env.roledefs = conf.get("ROLE_DEF", [])
+if len(env.roles) == 1:
+    env.db_pass = conf.get("DB_PASS", None)
+    env.admin_pass = conf.get("ADMIN_PASS", None)
+    env.user = conf.get("SSH_USER", getuser())
+    env.password = conf.get("SSH_PASS", None)
+    env.key_filename = conf.get("SSH_KEY_PATH", None)
+    #env.hosts = conf.get("HOSTS", [])
+    env.roledefs = conf.get("ROLE_DEF", [])
 
-env.proj_name = conf.get("PROJECT_NAME", os.getcwd().split(os.sep)[-1])
-env.venv_home = conf.get("VIRTUALENV_HOME", "/home/%s" % env.user)
-env.venv_path = "%s/%s" % (env.venv_home, env.proj_name)
-env.proj_dirname = "project"
-env.proj_path = "%s/%s" % (env.venv_path, env.proj_dirname)
-env.manage = "%s/bin/python %s/project/manage.py" % (
-    env.venv_path, env.venv_path
-)
+    env.proj_name = conf.get("PROJECT_NAME", os.getcwd().split(os.sep)[-1])
+    env.venv_home = conf.get("VIRTUALENV_HOME", "/home/%s" % env.user)
+    env.venv_path = "%s/%s" % (env.venv_home, env.proj_name)
+    env.proj_dirname = "project"
+    env.proj_path = "%s/%s" % (env.venv_path, env.proj_dirname)
+    env.manage = "%s/bin/python %s/project/manage.py" % (
+        env.venv_path, env.venv_path
+    )
 
-live_host = conf.get("LIVE_HOSTNAME")
-live_key = conf.get("LIVE_KEY")
-live_cert = conf.get("LIVE_CERT")
+    env.repo_url = conf.get("REPO_URL", "")
+    env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
+    env.reqs_path = conf.get("REQUIREMENTS_PATH", None)
+    env.gunicorn_port = conf.get("GUNICORN_PORT", 8000)
+    env.locale = conf.get("LOCALE", "en_US.UTF-8")
 
-env.live_host = live_host[env.roles[0]]
-env.live_key = live_key[env.roles[0]]
-env.live_cert = live_cert[env.roles[0]]
+    env.secret_key = conf.get("SECRET_KEY", "")
+    env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
 
-#env.live_host = conf.get("LIVE_HOSTNAME", )
-env.repo_url = conf.get("REPO_URL", "")
-env.git = env.repo_url.startswith("git") or env.repo_url.endswith(".git")
-env.reqs_path = conf.get("REQUIREMENTS_PATH", None)
-env.gunicorn_port = conf.get("GUNICORN_PORT", 8000)
-env.locale = conf.get("LOCALE", "en_US.UTF-8")
+    env.static_path = "%s/static" % env.venv_path
 
-env.secret_key = conf.get("SECRET_KEY", "")
-env.nevercache_key = conf.get("NEVERCACHE_KEY", "")
-
-env.static_path = "%s/static" % env.venv_path
-
-env.stripe_public_key = conf.get("STRIPE_PUBLIC_KEY", {}).get(env.roles[0], "")
-env.stripe_secret_key = conf.get("STRIPE_SECRET_KEY", {}).get(env.roles[0], "")
+    env.live_host = conf.get("LIVE_HOSTNAME", {}).get(env.roles[0])
+    env.live_key = conf.get("LIVE_KEY", {}).get(env.roles[0])
+    env.live_cert = conf.get("LIVE_CERT", {}).get(env.roles[0])
+    env.stripe_public_key = conf.get(
+        "STRIPE_PUBLIC_KEY", {}
+    ).get(env.roles[0], "")
+    env.stripe_secret_key = conf.get(
+        "STRIPE_SECRET_KEY", {}
+    ).get(env.roles[0], "")
 
 
 ##################
@@ -589,7 +588,7 @@ def all():
         deploy()
 
 
-# -------------------------------- Hieu's -------------------------------- #
+# ------------------------------ Local tasks ------------------------------ #
 @task(alias='t')
 def test(mode=''):
     '''
