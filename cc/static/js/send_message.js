@@ -19,7 +19,7 @@ $(document).ready(function () {
         upload_form = $('#uploadFileForm'),
         initSignatureField,
         toggleMessageSubmitButton,
-        renderUploadError,
+        _renderUploadError,
         resetUploadForm,
         uploadImage,
         summernote_config_global = {
@@ -207,34 +207,31 @@ $(document).ready(function () {
 // ------------------------------- Upload ------------------------------- //
 
     // handle render the upload error
-    renderUploadError = function (error_message) {
+    _renderUploadError = function (error_message) {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
-    };
-
-    // reset everything totally
-    resetUploadForm = function () {
-        upload_form.removeClass('file_uploaded');
-        $('label[for="id_key_page"], #id_key_page').hide();
-        $('#id_key_page option[value!=""]').remove();
-        $('.dz-file-preview').remove();
     };
 
     _addFileHandler = function (file, resp) {
         var file_id = file.server_id,
-            index = upload_form.find('.dz-filename').length;
+            file_index = upload_form.find('.dz-filename').length,
+            file_preview;
 
         // add file ID to hidden input
         $('#id_attachment').val(function (index, value) {
             return value + file.server_id + ','; // example: 1,2,3,
         });
         
-        // add link text input
-        $('.js_link_texts').append('<label for"js_link_text_' + file_id + '">Link text</label><input id="js_link_text_' + file_id + '" type="text" class="form-control js_link_text" />');
-        
+        // add link text input + label
+        $('.js_link_texts').append('<label for="js_link_text_' + file_id + '">Link text '+file_index+'</label><input id="js_link_text_' + file_id + '" type="text" class="form-control js_link_text" />');
+
+        // add id to preview
+        file.previewElement.id = 'js_file_preview_' + file_id;
+        file_preview = $('#js_file_preview_' + file_id)
+
         // handle some CSS and template
         upload_form.addClass('file_uploaded');
-        $('.dz-success-mark').css('opacity', 1);
-        $('.dz-filename').append(' (<span>' + resp.page_count + ' pages</span>)');
+        file_preview.find('.dz-success-mark').css('opacity', 1);
+        file_preview.find('.dz-filename').append(' (<span>' + resp.page_count + ' pages</span>)');
 
         // remove error message 
         upload_form.find('.alert').remove();
@@ -245,6 +242,7 @@ $(document).ready(function () {
     _removeFileHandler = function (file) {
         // if the file hasn't been uploaded
         if (!file.server_id) { return; }
+        
         // remove the file on server
         $.post('/file/remove/' + file.server_id + '/', function () {
             // remove that file from attachment field
@@ -252,10 +250,11 @@ $(document).ready(function () {
                 return value.replace(file.server_id + ',', '');
             });
         });
-        var preview_elem = file.previewElement;
-        if (preview_elem !== null) {
-            preview_elem.parentNode.removeChild(preview_elem);
-        }
+        
+        // remove the preview, link text input + label
+        $('#js_link_text_' + file.server_id).remove();
+        $('label[for="js_link_text_' + file.server_id + '"]').remove();
+        $('#js_file_preview_' + file.server_id).remove();
     }
 
     // dropzone config for file upload form
@@ -275,7 +274,7 @@ $(document).ready(function () {
                 _addFileHandler(file, response);
             } else {
                 this.removeFile(file);
-                renderUploadError(response.message);
+                _renderUploadError(response.message);
                 log('Conversion error: ' + response.original_error);
 
                 $('.dz-error-mark').css('opacity', 1);
@@ -286,12 +285,12 @@ $(document).ready(function () {
             if (errorMessage !== 'You can only upload 5 files.') {
                 $('.dz-error-mark').css('opacity', 1);
                 this.removeFile(file);
-                renderUploadError(errorMessage);
+                _renderUploadError(errorMessage);
             }
             attachment_field.valid();
         },
         maxfilesexceeded: function (file) {
-            renderUploadError('You can attach maximum 5 files at a time');
+            _renderUploadError('You can attach maximum 5 files at a time');
             $('.dz-file-preview:not(.dz-processing)').remove();
             this.removeFile(file);
             attachment_field.valid();
