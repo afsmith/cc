@@ -7,12 +7,13 @@ from celery.utils.log import get_task_logger
 
 
 @task
-def process_stored_file(file):
+def process_stored_files(files):
     logger = get_task_logger(__name__)
-    conv = convert.get_converter(file, storage.default_storage, logger)
-    try:
-        conv.convert()
-    except convert.ConversionError, e:
-        print '[CONVERSION ERROR] %s' % e
-        return False
+    for f in files:
+        conv = convert.get_converter(file, storage.default_storage, logger)
+        try:
+            conv.convert()
+        except convert.ConversionError, e:
+            print '[CONVERSION ERROR] %s' % e
+            return False
     return True

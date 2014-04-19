@@ -1,15 +1,15 @@
 from celery.decorators import task
 
 from .services import create_ocl_and_send_message, send_notification_email
-from cc.apps.content.tasks import process_stored_file
+from cc.apps.content.tasks import process_stored_files
 from cc.libs.utils import get_domain
 
 
-def process_file_and_send_message(message, request):
+def process_files_and_send_message(message, request):
     domain = get_domain(request)
-    file = message.files.all()[0]
+    files = message.files.all()
     chain = (
-        process_stored_file.s(file)
+        process_stored_files.s(files)
         | send_cc_message.s(message, domain)
     )
     try:

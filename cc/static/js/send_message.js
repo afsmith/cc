@@ -220,25 +220,21 @@ $(document).ready(function () {
     };
 
     _addFileHandler = function (file, resp) {
-        var page_count = resp.page_count,
-            i = 1,
-            options = '',
-            upload_form_bottom;
+        var file_id = file.server_id,
+            index = upload_form.find('.dz-filename').length;
 
         // add file ID to hidden input
         $('#id_attachment').val(function (index, value) {
             return value + file.server_id + ','; // example: 1,2,3,
         });
         
-        // populate key page selector and show
-        /*for (i=1; i<=page_count; i+=1) {
-            options += '<option value="'+i+'">'+i+'</option>';
-        }*/
+        // add link text input
+        $('.js_link_texts').append('<label for"js_link_text_' + file_id + '">Link text</label><input id="js_link_text_' + file_id + '" type="text" class="form-control js_link_text" />');
         
         // handle some CSS and template
         upload_form.addClass('file_uploaded');
         $('.dz-success-mark').css('opacity', 1);
-        $('.dz-filename').append(' (<span>' + page_count + ' pages</span>)');
+        $('.dz-filename').append(' (<span>' + resp.page_count + ' pages</span>)');
 
         // remove error message 
         upload_form.find('.alert').remove();
@@ -247,8 +243,6 @@ $(document).ready(function () {
     };
 
     _removeFileHandler = function (file) {
-        console.log(file);
-
         // if the file hasn't been uploaded
         if (!file.server_id) { return; }
         // remove the file on server

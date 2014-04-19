@@ -36,7 +36,7 @@ def send_message(request):
             request.user.save()
 
             # process the PDF and send message
-            tasks.process_file_and_send_message(message, request)
+            tasks.process_files_and_send_message(message, request)
 
             return {'thankyou_page': True}
     else:
