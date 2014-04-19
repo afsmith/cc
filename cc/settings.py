@@ -294,7 +294,7 @@ FIXTURE_DIRS = (
 FABRIC_GLOBAL = {
     'REPO_URL': 'git@github.com:afsmith/cc.git',
     'ROLE_DEF': {
-        'staging': ['109.74.12.16'],
+        'staging': ['cc-stage.kneto.com'],
         'prod': ['cc.kneto.com']
     },
     'LIVE_HOSTNAME': {
