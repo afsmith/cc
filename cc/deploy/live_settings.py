@@ -41,6 +41,8 @@ CACHES = {
     }
 }
 
+PAY_KEY = 'A923C5'
+
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-45345264-2'

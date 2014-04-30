@@ -32,6 +32,7 @@ class CustomUserManager(BaseUserManager):
             except Invitation.DoesNotExist:
                 raise ValueError('Invitation code is invalid')
 
+        f_key = kwargs.get('f_key')
         keys = kwargs.keys()
         for key in keys:
             if key not in [
@@ -45,6 +46,11 @@ class CustomUserManager(BaseUserManager):
         except CUser.DoesNotExist:
             user = self.model(**kwargs)
         user.set_password(kwargs['password'])
+
+        #if has key, make staff to get past paywall
+        if f_key == settings.PAY_KEY:
+            user.is_staff = True
+    
         user.save(using=self._db)
 
         if invitation:

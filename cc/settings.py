@@ -328,7 +328,7 @@ FABRIC_GLOBAL = {
 }
 
 FLEXPAPER_KEY = '$ccd1b1d26f39cf5ec44'
-
+PAY_KEY = 'A923C5'
 
 ##############################################################################
 # Move local settings to bottom so any setting can be overriden

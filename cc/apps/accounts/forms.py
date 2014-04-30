@@ -42,6 +42,8 @@ class UserCreationForm(forms.ModelForm):
         }
     )
     invitation_code = forms.CharField(widget=forms.HiddenInput)
+    f_key = forms.CharField(   
+        label=("Key ( if you have one )"),)
 
     PASSWORD_MIN_LENGTH = 8
 
@@ -56,6 +58,7 @@ class UserCreationForm(forms.ModelForm):
             'industry',
             'password1',
             'password2',
+            'f_key',
         )
 
     def __init__(self, *args, **kwargs):
@@ -64,6 +67,7 @@ class UserCreationForm(forms.ModelForm):
         for key in self.fields:
             self.fields[key].required = True
         self.fields['invitation_code'].required = False
+        self.fields['f_key'].required = False
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
@@ -121,6 +125,15 @@ class UserCreationForm(forms.ModelForm):
                 raise forms.ValidationError(_('Invitation code is invalid.'))
 
         return self.cleaned_data
+
+    def clean_f_key(self):
+        # Check that the key is valid if given
+        f_key = self.cleaned_data.get('f_key')
+        v_key = settings.PAY_KEY
+        if f_key:
+            if f_key != v_key:
+                raise forms.ValidationError(_('This key is invalid.'))
+        return f_key
 
 
 class UserChangeForm(forms.ModelForm):
