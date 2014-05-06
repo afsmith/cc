@@ -23,7 +23,7 @@ class MessageViewTestCases(ClientTestCase):
         )
         self.assertEqual(
             resp.context['message_form'].initial['message'],
-            u'<br><br><br><br>[link]<br><br><div id="signature">Foobar</div>'
+            u'<br><br><br><br>[link1]<br><br><div id="signature">Foobar</div>'
         )
         self.assertEqual(
             resp.context['message_form'].initial['signature'],

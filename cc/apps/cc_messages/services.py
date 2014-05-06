@@ -49,7 +49,7 @@ def _replace_link_text(message, ocl_link):
         link_text = ocl_link
 
     return message.message.replace(
-        '[link]',
+        '[link1]',
         u'<a href="{0}">{1}</a>'.format(ocl_link, link_text)
     )
 
@@ -57,7 +57,7 @@ def _replace_link_text(message, ocl_link):
 def _send_message(message, recipient, domain):
     ocl_link = _create_ocl_link(recipient, domain, message.id)
 
-    # replace the token [link] with the actual OCL link
+    # replace the token [link1] with the actual OCL link
     text = _replace_link_text(message, ocl_link)
 
     # create tracking pixel

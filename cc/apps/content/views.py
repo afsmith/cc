@@ -49,3 +49,19 @@ def remove_file(request, file_id):
 def upload_image(request):
     domain = get_domain(request)
     return save_uploaded_image(request.FILES.get('file'), domain)
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def save_file_info(request):
+    print request.POST
+    from cc.libs.utils import DotExpandedDict
+    print DotExpandedDict(request.POST)
+    files = request.POST.getlist('files[]')
+    file_list = request.POST.getlist('file_list[]')
+    #print file_list
+    for f in file_list:
+        print files.get(f)
+        pass
+    return {}

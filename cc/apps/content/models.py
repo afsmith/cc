@@ -160,6 +160,7 @@ class File(models.Model):
     pages_num = models.IntegerField(_('Number of content pages'), default=0)
 
     link_text = models.CharField(_('Link text'), max_length=150, blank=True)
+    index = models.IntegerField(default=1)
 
     @classmethod
     def type_from_name(cls, name):

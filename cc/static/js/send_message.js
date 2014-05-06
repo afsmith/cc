@@ -28,7 +28,7 @@ $(document).ready(function () {
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol']],
-                ['insert', [/*'picture',*/ 'link']],
+                ['insert', ['picture', 'link']],
                 ['options', ['codeview']],
             ],
             disableDragAndDrop: true,
@@ -78,17 +78,27 @@ $(document).ready(function () {
         rules: {
             subject: 'required',
             to: 'required',
-            message: {required: true, regex: /\[link\]/},
+            message: {required: true, regex: /\[link\d\]/},
             attachment: 'required',
+            link_text_1: 'required',
+            link_text_2: 'required',
+            link_text_3: 'required',
+            link_text_4: 'required',
+            link_text_5: 'required',
         },
         messages: {
             subject: 'Enter the subject.',
             to: 'Enter at least one email address of the recipient.',
             message: {
                 required: 'Enter the message.', 
-                regex: 'The [link] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
+                regex: 'The [link1] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
             },
             attachment: 'Upload the attachments.',
+            link_text_1: 'Enter the link text',
+            link_text_2: 'Enter the link text',
+            link_text_3: 'Enter the link text',
+            link_text_4: 'Enter the link text',
+            link_text_5: 'Enter the link text',
         },
         submitHandler: function(form) {
             form.submit();
@@ -195,9 +205,26 @@ $(document).ready(function () {
             signature_field.val(signature_field.code());    
         }
 
-        // and trigger submit
-        message_form.trigger('submit');
-        return false;
+        // get the request data here
+        var request_data = {};
+        $('.js_link_text').each(function (index) {
+            var _this = $(this)
+                file_id = parseInt(_this.prop('id').replace('js_link_text_', ''), 0),
+                file_index = parseInt(_this.prop('name').replace('link_text_', ''), 0);
+            request_data[file_id + '.index'] = file_index;
+            request_data[file_id + '.value'] = _this.val();
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/file/save_info/',
+            cache: false,
+            data: request_data
+        }).done(function () {
+            // and trigger submit
+            message_form.trigger('submit');
+            return false;
+        });
     });
 
     $('#js_resetForm').click(function () {
@@ -211,6 +238,34 @@ $(document).ready(function () {
         upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
     };
 
+    _linkTokenHanlder = function (add) {
+        var content = message_field.code(),
+            should_add = (add === true),
+            current_token,
+            i;
+
+        if (add === true) {
+            for (i=2; i<6; i++) {
+                current_token = '[link' + i + ']';
+                if (content.indexOf(current_token) === -1) {
+                    content += current_token;
+                    break;
+                }
+            }
+        } else {
+            for (i=5; i>1; i--) {
+                current_token = '[link' + i + ']';
+                if (content.indexOf(current_token) > -1) {
+                    content = content.replace(current_token, '');
+                    break;
+                }
+            }
+        }
+
+        message_field.code(content);
+        
+    };
+
     _addFileHandler = function (file, resp) {
         var file_id = file.server_id,
             file_index = upload_form.find('.dz-filename').length,
@@ -222,11 +277,16 @@ $(document).ready(function () {
         });
         
         // add link text input + label
-        $('.js_link_texts').append('<label for="js_link_text_' + file_id + '">Link text '+file_index+'</label><input id="js_link_text_' + file_id + '" type="text" class="form-control js_link_text" />');
+        $('.js_link_texts').append('<label for="js_link_text_' + file_id + '" class="js_link_label">Link text ' + file_index + '</label><input id="js_link_text_' + file_id + '" name="link_text_' + file_index + '" type="text" class="form-control js_link_text" />');
 
         // add id to preview
         file.previewElement.id = 'js_file_preview_' + file_id;
-        file_preview = $('#js_file_preview_' + file_id)
+        file_preview = $('#js_file_preview_' + file_id);
+
+        // add link token to message textarea
+        if (file_index > 1) {
+            _linkTokenHanlder(true);    
+        }
 
         // handle some CSS and template
         upload_form.addClass('file_uploaded');
@@ -255,6 +315,17 @@ $(document).ready(function () {
         $('#js_link_text_' + file.server_id).remove();
         $('label[for="js_link_text_' + file.server_id + '"]').remove();
         $('#js_file_preview_' + file.server_id).remove();
+
+        // remove link token
+        _linkTokenHanlder();
+
+        // rename the label on text input
+        $('.js_link_label').each(function (index) {
+            $(this).text('Link text ' + (index + 1));
+        });
+        $('.js_link_text').each(function (index) {
+            $(this).prop('name', 'link_text_' + (index + 1));
+        });
     }
 
     // dropzone config for file upload form
