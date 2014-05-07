@@ -99,8 +99,8 @@ class CUser(AbstractUser):
     2 = receiver
     3 = invited user / sender
     '''
-    country = models.CharField(_('Country'), max_length=50, blank=True, null=True)
-    industry = models.CharField(_('Industry'), max_length=50, blank=True, null=True)
+    country = models.CharField(_('Country'), max_length=50, null=True)
+    industry = models.CharField(_('Industry'), max_length=50, null=True)
     signature = models.TextField(_('Signature'), blank=True)
     user_type = models.IntegerField(_('User type'), default=1)
 
