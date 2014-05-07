@@ -37,7 +37,7 @@ class CustomUserManager(BaseUserManager):
         for key in keys:
             if key not in [
                 'email', 'password', 'first_name', 'last_name',
-                'user_type'
+                'country', 'industry', 'user_type'
             ]:
                 kwargs.pop(key, None)
         try:
@@ -82,8 +82,8 @@ class CustomUserManager(BaseUserManager):
             password=random_password,
             first_name='N/A',
             last_name='N/A',
- #           country='N/A',
- #           industry='N/A',
+            country='N/A',
+            industry='N/A',
             user_type=2,
         )
         user.is_active = False
