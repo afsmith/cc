@@ -25,12 +25,12 @@ class UserCreationForm(forms.ModelForm):
     )
     email1 = forms.EmailField(label=_("E-mail"))
     email = forms.EmailField(label=_("Repeat email"))
-    country = forms.ChoiceField(
-        widget=forms.Select, choices=settings.COUNTRY_CHOICES
-    )
-    industry = forms.ChoiceField(
-        widget=forms.Select, choices=settings.INDUSTRY_CHOICES
-    )
+#    country = forms.ChoiceField(
+#        widget=forms.Select, choices=settings.COUNTRY_CHOICES
+#    )
+#    industry = forms.ChoiceField(
+#        widget=forms.Select, choices=settings.INDUSTRY_CHOICES
+#    )
     tos = forms.BooleanField(
         label=_(
             'I have read and agree to the <a href="{}">Terms of Service</a>'
@@ -54,8 +54,8 @@ class UserCreationForm(forms.ModelForm):
             'last_name',
             'email1',
             'email',
-            'country',
-            'industry',
+#            'country',
+#            'industry',
             'password1',
             'password2',
             'f_key',

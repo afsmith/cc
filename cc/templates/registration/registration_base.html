@@ -24,12 +24,44 @@
 
     <script src="{% static 'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
     <script src="{% static 'js/vendor/cookielaw.js' %}"></script>
+    
+    <script type='text/javascript'>//<![CDATA[ 
+window.onload=function(){
+var id_first_name = document.getElementById("id_first_name");
+id_first_name.value = getParameterByName("id_first_name");
+
+var id_last_name = document.getElementById("id_last_name");
+id_last_name.value = getParameterByName("id_last_name");
+
+var id_email1 = document.getElementById("id_email1");
+id_email1.value = getParameterByName("id_email1");
+
+var id_f_key = document.getElementById("id_f_key");
+id_f_key.value = getParameterByName("id_f_key");
+
+
+
+function getParameterByName(name) //courtesy Artem
+{
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.href);
+    if (results == null) return "";
+    else return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+}//]]>  
+
+</script>
+
+
+
+
     {% analytical_head_bottom %}
 </head>
 
 <body>
     {% analytical_body_top %}
-    
     <div class="container">
 
         <div class="row">

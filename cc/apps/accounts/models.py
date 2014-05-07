@@ -37,7 +37,7 @@ class CustomUserManager(BaseUserManager):
         for key in keys:
             if key not in [
                 'email', 'password', 'first_name', 'last_name',
-                'country', 'industry', 'user_type'
+                'user_type'
             ]:
                 kwargs.pop(key, None)
         try:
@@ -82,8 +82,8 @@ class CustomUserManager(BaseUserManager):
             password=random_password,
             first_name='N/A',
             last_name='N/A',
-            country='N/A',
-            industry='N/A',
+ #           country='N/A',
+ #           industry='N/A',
             user_type=2,
         )
         user.is_active = False
@@ -99,8 +99,8 @@ class CUser(AbstractUser):
     2 = receiver
     3 = invited user / sender
     '''
-    country = models.CharField(_('Country'), max_length=50)
-    industry = models.CharField(_('Industry'), max_length=50)
+    country = models.CharField(_('Country'), max_length=50, blank=True, null=True)
+    industry = models.CharField(_('Industry'), max_length=50, blank=True, null=True)
     signature = models.TextField(_('Signature'), blank=True)
     user_type = models.IntegerField(_('User type'), default=1)
 
@@ -110,8 +110,8 @@ class CUser(AbstractUser):
     REQUIRED_FIELDS = [
         'first_name',
         'last_name',
-        'country',
-        'industry',
+ #       'country',
+ #       'industry',
     ]
 
     def get_unused_invitations(self):
