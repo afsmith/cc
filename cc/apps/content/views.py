@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from .forms import FileImportForm
 from .services import save_pdf, save_uploaded_image
 from .models import File
-from cc.libs.utils import get_domain
+from cc.libs.utils import get_domain, DotExpandedDict
 
 from annoying.decorators import ajax_request
 from contextlib import closing
@@ -55,13 +55,15 @@ def upload_image(request):
 @http_decorators.require_POST
 @ajax_request
 def save_file_info(request):
-    print request.POST
-    from cc.libs.utils import DotExpandedDict
-    print DotExpandedDict(request.POST)
-    files = request.POST.getlist('files[]')
-    file_list = request.POST.getlist('file_list[]')
-    #print file_list
-    for f in file_list:
-        print files.get(f)
-        pass
+    params = DotExpandedDict(request.POST)
+    for k in params.keys():
+        try:
+            f = File.objects.get(pk=int(k))
+        except File.DoesNotExist:
+            print 'File {} doesnt exist'.format(k)
+            continue
+        else:
+            f.index = params[k].get('index')
+            f.link_text = params[k].get('value')
+            f.save()
     return {}

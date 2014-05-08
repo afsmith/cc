@@ -1,8 +1,11 @@
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, CC_GLOBAL, log, Dropzone, i18*/
+'use strict';
+
 // custom validator
 $.validator.addMethod(
     'regex',
-    function(value, element, regexp) {
-        var check = false;
+    function (value, element, regexp) {
         var re = new RegExp(regexp);
         return this.optional(element) || re.test(value);
     },
@@ -20,11 +23,14 @@ $(document).ready(function () {
         initSignatureField,
         toggleMessageSubmitButton,
         _renderUploadError,
+        _linkTokenHanlder,
+        _addFileHandler,
+        _removeFileHandler,
         resetUploadForm,
         uploadImage,
         summernote_config_global = {
             toolbar: [
-                ['style', ['bold', 'italic', 'underline', 'clear',]],
+                ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol']],
@@ -32,7 +38,7 @@ $(document).ready(function () {
                 ['options', ['codeview']],
             ],
             disableDragAndDrop: true,
-            onImageUpload: function(files, editor, welEditable) {
+            onImageUpload: function (files, editor, welEditable) {
                 uploadImage(files[0], editor, welEditable);
             },
             keyMap: {
@@ -58,7 +64,7 @@ $(document).ready(function () {
         },
         summernote_config_message = $.extend({}, summernote_config_global, {
             height: 250,
-            onkeyup: function(e) {
+            onkeyup: function () {
                 // TODO: improve this later by not copying on every key press
                 message_field.val(message_field.code());
                 message_field.valid();
@@ -90,7 +96,7 @@ $(document).ready(function () {
             subject: 'Enter the subject.',
             to: 'Enter at least one email address of the recipient.',
             message: {
-                required: 'Enter the message.', 
+                required: 'Enter the message.',
                 regex: 'The [link1] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
             },
             attachment: 'Upload the attachments.',
@@ -100,28 +106,28 @@ $(document).ready(function () {
             link_text_4: 'Enter the link text',
             link_text_5: 'Enter the link text',
         },
-        submitHandler: function(form) {
+        submitHandler: function (form) {
             form.submit();
         },
         onfocusout: function (element) { // check form valid on blur of each element
             $(element).valid();
         },
-        showErrors: function(errorMap, error_list) {
+        showErrors: function (errorMap, error_list) {
             var remapElementForTooltip = function (element) {
                 var _element;
                 switch (element.prop('id')) {
-                    case 'id_to':
-                        _element = $('.tokenfield');
-                        break
-                    case 'id_message':
-                        _element = $('.note-editor').eq(0);
-                        break;
-                    case 'id_attachment':
-                        _element = $('#uploadFileForm');
-                        break;
-                    default:
-                        _element = element;
-                        break;
+                case 'id_to':
+                    _element = $('.tokenfield');
+                    break;
+                case 'id_message':
+                    _element = $('.note-editor').eq(0);
+                    break;
+                case 'id_attachment':
+                    _element = $('#uploadFileForm');
+                    break;
+                default:
+                    _element = element;
+                    break;
                 }
                 return _element;
             };
@@ -129,7 +135,7 @@ $(document).ready(function () {
             // clean up any tooltips for valid elements
             $.each(this.validElements(), function (index, element) {
                 var _element = remapElementForTooltip($(element));
-                _element.data('title', '') .removeClass('error').tooltip('destroy');
+                _element.data('title', '').removeClass('error').tooltip('destroy');
             });
 
             // create new tooltips for invalid elements
@@ -158,11 +164,11 @@ $(document).ready(function () {
             cache: false,
             contentType: false,
             processData: false,
-            success: function(resp) {
+            success: function (resp) {
                 if (resp.status === 'OK') {
-                    editor.insertImage(welEditable, resp.url);    
+                    editor.insertImage(welEditable, resp.url);
                 } else {
-                    log('ERROR: ' + resp.message)
+                    log('ERROR: ' + resp.message);
                 }
             }
         });
@@ -174,14 +180,14 @@ $(document).ready(function () {
         createTokensOnBlur: true
     }).on('afterCreateToken', function (e) {
         // validate the email
-        var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        var valid = re.test(e.token.value);
+        var re = /^[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$/,
+            valid = re.test(e.token.value);
         if (!valid) {
             $(e.relatedTarget).addClass('invalid');
             //toggleMessageSubmitButton(true);
             to_field.valid();
         }
-    }).on('removeToken', function (e) {
+    }).on('removeToken', function () {
         to_field.valid();
     });
 
@@ -202,13 +208,13 @@ $(document).ready(function () {
 
         // if there are 2 summernote instance => copy the content of signature summernote to input field
         if ($('.note-editor').length === 2) {
-            signature_field.val(signature_field.code());    
+            signature_field.val(signature_field.code());
         }
 
         // get the request data here
         var request_data = {};
-        $('.js_link_text').each(function (index) {
-            var _this = $(this)
+        $('.js_link_text').each(function () {
+            var _this = $(this),
                 file_id = parseInt(_this.prop('id').replace('js_link_text_', ''), 0),
                 file_index = parseInt(_this.prop('name').replace('link_text_', ''), 0);
             request_data[file_id + '.index'] = file_index;
@@ -240,12 +246,11 @@ $(document).ready(function () {
 
     _linkTokenHanlder = function (add) {
         var content = message_field.code(),
-            should_add = (add === true),
             current_token,
             i;
 
         if (add === true) {
-            for (i=2; i<6; i++) {
+            for (i = 2; i < 6; i += 1) {
                 current_token = '[link' + i + ']';
                 if (content.indexOf(current_token) === -1) {
                     content += current_token;
@@ -253,7 +258,7 @@ $(document).ready(function () {
                 }
             }
         } else {
-            for (i=5; i>1; i--) {
+            for (i = 5; i > 1; i -= 1) {
                 current_token = '[link' + i + ']';
                 if (content.indexOf(current_token) > -1) {
                     content = content.replace(current_token, '');
@@ -263,7 +268,6 @@ $(document).ready(function () {
         }
 
         message_field.code(content);
-        
     };
 
     _addFileHandler = function (file, resp) {
@@ -275,7 +279,7 @@ $(document).ready(function () {
         $('#id_attachment').val(function (index, value) {
             return value + file.server_id + ','; // example: 1,2,3,
         });
-        
+
         // add link text input + label
         $('.js_link_texts').append('<label for="js_link_text_' + file_id + '" class="js_link_label">Link text ' + file_index + '</label><input id="js_link_text_' + file_id + '" name="link_text_' + file_index + '" type="text" class="form-control js_link_text" />');
 
@@ -285,7 +289,7 @@ $(document).ready(function () {
 
         // add link token to message textarea
         if (file_index > 1) {
-            _linkTokenHanlder(true);    
+            _linkTokenHanlder(true);
         }
 
         // handle some CSS and template
@@ -302,7 +306,7 @@ $(document).ready(function () {
     _removeFileHandler = function (file) {
         // if the file hasn't been uploaded
         if (!file.server_id) { return; }
-        
+
         // remove the file on server
         $.post('/file/remove/' + file.server_id + '/', function () {
             // remove that file from attachment field
@@ -310,7 +314,7 @@ $(document).ready(function () {
                 return value.replace(file.server_id + ',', '');
             });
         });
-        
+
         // remove the preview, link text input + label
         $('#js_link_text_' + file.server_id).remove();
         $('label[for="js_link_text_' + file.server_id + '"]').remove();
@@ -326,7 +330,7 @@ $(document).ready(function () {
         $('.js_link_text').each(function (index) {
             $(this).prop('name', 'link_text_' + (index + 1));
         });
-    }
+    };
 
     // dropzone config for file upload form
     Dropzone.options.uploadFileForm = {

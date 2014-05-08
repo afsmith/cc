@@ -10,7 +10,7 @@ from celery.utils.log import get_task_logger
 def process_stored_files(files):
     logger = get_task_logger(__name__)
     for f in files:
-        conv = convert.get_converter(file, storage.default_storage, logger)
+        conv = convert.get_converter(f, storage.default_storage, logger)
         try:
             conv.convert()
         except convert.ConversionError, e:
