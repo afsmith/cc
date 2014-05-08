@@ -11,6 +11,7 @@ from .forms import MessageForm
 from .services import send_notification_email, edit_email_and_resend_message
 from cc.apps.accounts.services import verify_ocl_token
 from cc.apps.content.forms import FileImportForm
+from cc.apps.content.models import File
 from cc.libs.utils import get_device_name
 from cc.libs.exceptions import MessageExpired
 
@@ -83,7 +84,7 @@ def resend_message(request):
 
 @ensure_csrf_cookie
 @render_to('main/view_message.html')
-def view_message(request, message_id=None):
+def view_message(request, message_id=None, file_index=None):
     token = request.GET.get('token')
     if token:
         ocl_token = verify_ocl_token(token)
@@ -102,8 +103,12 @@ def view_message(request, message_id=None):
             # check if owner is checking message
             is_owner_viewing = (ocl_token.user == message.owner)
 
-            # there is only 1 file per message for now so return that file
-            file = message.files.all()[0]
+            try:
+                f = message.files.get(index=file_index)
+            except File.DoesNotExist:
+                return {
+                    'file_doesnot_exist': True
+                }
 
             # notify the sender if "notify when link clicked" option is on
             log = None
@@ -112,7 +117,7 @@ def view_message(request, message_id=None):
 
             return {
                 'message': message,
-                'file': file,
+                'file': f,
                 'token': token,
                 'ocl_user': ocl_token.user,
                 'is_owner_viewing': is_owner_viewing,
