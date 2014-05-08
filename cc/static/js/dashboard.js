@@ -1,24 +1,25 @@
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, Highcharts, CC_GLOBAL*/
+'use strict';
+
 $(document).ready(function () {
-    var _drawPieChart,
-        _filterTable;
+    var _drawPieChart;
 
     // draw chart function
     _drawPieChart = function (json_data) {
-        var chart_data,
-            options,
+        var options,
             colors = Highcharts.getOptions().colors,
             len = json_data.values.length,
             column_colors = [],
-            bar_width = Math.log(39 / len) * 80,
             i = 0;
 
         if (typeof json_data === 'object' && len > 0) {
             // change color for key page
-            for (i=0; i<len; i+=1) {
+            for (i = 0; i < len; i += 1) {
                 if (i === json_data.key_page - 1) {
                     column_colors.push(colors[3]);
                 } else {
-                    column_colors.push(colors[2]);    
+                    column_colors.push(colors[2]);
                 }
             }
 
@@ -61,7 +62,7 @@ $(document).ready(function () {
             $('#call_list_graph').highcharts(options);
             $('#class_list_detail').html('<p>Total pages: ' + len + '</p><p>Total visits: ' + json_data.total_visits + '</p>');
         } else {
-            $('#call_list_graph').html('<p class="alert alert-block">This recipient didn\'t look at your offer</p>')
+            $('#call_list_graph').html('<p class="alert alert-block">This recipient didn\'t look at your offer</p>');
             $('#class_list_detail').html('');
         }
     };
@@ -89,7 +90,7 @@ $(document).ready(function () {
             _drawPieChart(resp);
 
             // add detail button
-            $('#detail_button').prop('href', function(i, val) {
+            $('#detail_button').prop('href', function () {
                 return '/report/' + message_id + '/?user=' + user_id;
             }).removeClass('hidden');
         });
@@ -136,7 +137,7 @@ $(document).ready(function () {
                 CC_GLOBAL.showErrorPopup(resp.message);
             } else {
                 this_row.remove();
-            }            
+            }
         });
     });
 
@@ -153,7 +154,7 @@ $(document).ready(function () {
             url: '/report/remove_bounce/' + this_id + '/',
             type: 'POST',
             dataType: 'json',
-        }).done(function (resp) {
+        }).done(function () {
             this_row.remove();
         });
     });
