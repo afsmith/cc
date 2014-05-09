@@ -1,4 +1,8 @@
-var CC_GLOBAL = CC_GLOBAL || {};
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, CC_GLOBAL, log, i18, escape, unescape*/
+'use strict';
+
+var CC_GLOBAL = {};
 
 // ------------------------------- AJAX ------------------------------- //
 // CSRF token setup for AJAX
@@ -8,7 +12,7 @@ CC_GLOBAL.csrfSafeMethod = function (method) {
 };
 $.ajaxSetup({
     crossDomain: false, // obviates need for sameOrigin test
-    beforeSend: function(xhr, settings) {
+    beforeSend: function (xhr, settings) {
         if (!CC_GLOBAL.csrfSafeMethod(settings.type)) {
             xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
         }
@@ -27,35 +31,44 @@ CC_GLOBAL.removeSpinner = function () {
 // --------------------------- Global functions --------------------------- //
 // global function to get translated text
 var i18 = function (key) {
-    if (key in CC_GLOBAL.i18n) {
+    if (CC_GLOBAL.i18n.hasOwnProperty(key)) {
         return CC_GLOBAL.i18n[key];
-    } else {
-        console.log('[NOTICE] No translation is available for: ' + key);
-        return key;
     }
+    console.log('[NOTICE] No translation is available for: ' + key);
+    return key;
 };
 
 // shortcut for console.log()
-if (!window.console) window.console = {};
-if (!window.console.log) window.console.log = function () {};
-var log = (!window.console.log.bind) ? function () {} : window.console.log.bind(console);
+if (!window.console) {
+    window.console = {};
+}
+if (!window.console.log) {
+    window.console.log = function () { return; };
+}
+var log = (!window.console.log.bind) ? function () { return; } : window.console.log.bind(console);
 
 // global query string function to get query
-CC_GLOBAL.GETParam = (function(a) {
-    if (a === '') return {};
-    var b = {};
-    for (var i = 0; i < a.length; i+=1) {
-        var p = a[i].split('=');
-        if (p.length != 2) continue;
-        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
+CC_GLOBAL.GETParam = (function (a) {
+    var b = {},
+        i,
+        p;
+
+    if (a === '') {
+        return {};
+    }
+    for (i = 0; i < a.length; i += 1) {
+        p = a[i].split('=');
+        if (p.length === 2) {
+            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
+        }
     }
     return b;
-})(window.location.search.substr(1).split('&'));
+}(window.location.search.substr(1).split('&')));
 
 
 // filter table by text
-$.expr[':'].Contains = function (a,i,m) {
-    return (a.textContent || a.innerText || "").toUpperCase().indexOf(unescape(m[3]).toUpperCase())>=0;
+$.expr[':'].Contains = function (a, i, m) {
+    return (a.textContent || a.innerText || "").toUpperCase().indexOf(unescape(m[3]).toUpperCase()) >= 0;
 };
 CC_GLOBAL.filterTable = function (table_body, filter_input) {
     $(filter_input).keyup(function () {
@@ -75,22 +88,22 @@ CC_GLOBAL.filterTable = function (table_body, filter_input) {
 };
 
 // show error modal
-CC_GLOBAL.showErrorPopup = function(message) {
+CC_GLOBAL.showErrorPopup = function (message) {
     $('#js_error_modal .modal-body').text(message);
     $('#js_error_modal').modal();
-}
+};
 
 // get browser
 CC_GLOBAL.getCurrentBrowser = function () {
     var N = navigator.appName,
         ua = navigator.userAgent,
-        tem,
+        tem = ua.match(/version\/([\.\d]+)/i),
         M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\.?\d+(\.\d+)*)/i);
     if (/trident/i.test(M[1])) {
         tem = /\brv[ :]+(\d+(\.\d+)?)/g.exec(ua) || [];
         return ['IE', (tem[1] || '')];
     }
-    if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) {
+    if (M && (tem !== null)) {
         M[2] = tem[1];
     }
     M = M ? [M[1], M[2]] : [N, navigator.appVersion];

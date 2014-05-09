@@ -1,3 +1,7 @@
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, CC_GLOBAL, log, i18, $FlexPaper*/
+'use strict';
+
 $(document).ready(function () {
     var page_timer = {},
         page_counter = {},
@@ -6,7 +10,6 @@ $(document).ready(function () {
         pagechange_interval_id,
         is_iOS = false,
         is_Android = false,
-        this_device = '',
         current_page = 0,
 
         // function
@@ -16,24 +19,24 @@ $(document).ready(function () {
         windowPageShowHandler,
         pageInitHandler,
         initTimerCounter,
-        createEventAjax,
         pageChangeHandler,
-        safariOrMobileHandler;
+        safariOrMobileHandler,
+        createTrackingEventAjax;
 
     // check if there is global var message_data to start tracking
-    if (typeof CC_GLOBAL.message_data !== 'undefined') {
+    if (CC_GLOBAL.message_data !== undefined) {
         // document is ready inside flexpaper viewer
         $(window).on('onDocumentLoaded', function () {
             var flex_viewer = $FlexPaper('message_viewer');
 
 
             // ----------------------------- Timer ----------------------------- //
-            
+
             // main timer function runs every 100ms
             incrementTimer = function (page_number) {
                 page_timer[page_number] += 1;
                 clearTimeout(timeout_id);
-                timeout_id = setTimeout(function() {
+                timeout_id = setTimeout(function () {
                     incrementTimer(page_number);
                 }, 100);
             };
@@ -45,9 +48,9 @@ $(document).ready(function () {
 
             initTimerCounter = function (message_data) {
                 // init the page timer object
-                for (i=0; i<message_data.page_count; i+=1) {
-                    page_timer[i+1] = 0;
-                    page_counter[i+1] = 0;
+                for (i = 0; i < message_data.page_count; i += 1) {
+                    page_timer[i + 1] = 0;
+                    page_counter[i + 1] = 0;
                 }
             };
 
@@ -72,7 +75,7 @@ $(document).ready(function () {
                     $(window).on('onCurrentPageChanged', function (e, page_number) {
                         incrementTimer(page_number);
                         incrementCounter(page_number);
-                    });     
+                    });
                 }
             };
 
@@ -119,8 +122,8 @@ $(document).ready(function () {
             };
 
             safariOrMobileHandler = function (session_id) {
-                interval_id = setInterval(function () {
-                    createTrackingEventAjax('safari_interval', session_id)
+                setInterval(function () {
+                    createTrackingEventAjax('safari_interval', session_id);
                 }, 500);
             };
 
@@ -134,12 +137,11 @@ $(document).ready(function () {
                 }).done(function (resp) {
                     if (resp.status === 'OK') {
                         var session_id = resp.session_id,
-                            is_safari = (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1);
+                            is_safari = (navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1);
                         is_iOS = resp.is_iOS;
                         is_Android = resp.is_Android;
-                        this_device = resp.device;
 
-log(this_device);
+                        log(resp.device);
 
                         // init page change handler after getting is_iOS
                         pageChangeHandler();
@@ -148,7 +150,7 @@ log(this_device);
                         if ((is_safari && !is_iOS) || is_Android) {
                             safariOrMobileHandler(session_id);
                         } else {
-                            windowUnloadHandler(session_id);    
+                            windowUnloadHandler(session_id);
                         }
                     } else {
                         log('ERROR: ' + resp.message);
@@ -158,7 +160,7 @@ log(this_device);
 
             // init page
             pageInitHandler();
-    
+
         // ----------------------------- END ----------------------------- //
         }); // end onDocumentLoaded 
     } // end if CC_GLOBAL.message_data
