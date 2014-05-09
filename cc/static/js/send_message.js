@@ -21,12 +21,10 @@ $(document).ready(function () {
         signature_field = $('#id_signature'),
         upload_form = $('#uploadFileForm'),
         initSignatureField,
-        toggleMessageSubmitButton,
         _renderUploadError,
         _linkTokenHanlder,
         _addFileHandler,
         _removeFileHandler,
-        resetUploadForm,
         uploadImage,
         summernote_config_global = {
             toolbar: [

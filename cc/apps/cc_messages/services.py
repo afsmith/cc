@@ -45,11 +45,13 @@ def _create_ocl_link_replace_link_texts(message, user, domain):
             domain, message.id, f.index, ocl.token
         )
 
+        # get link text for each file
         link_text = f.link_text
         if link_text == '':
             link_text = ocl_link
 
-        return message.message.replace(
+        # and replace the token
+        text = text.replace(
             '[link{}]'.format(f.index),
             u'<a href="{}">{}</a>'.format(ocl_link, link_text)
         )
@@ -115,7 +117,9 @@ def create_ocl_and_send_message(message, domain):
         )
 
 
-def send_notification_email(reason_code, message, recipient=None):
+def send_notification_email(
+    reason_code, message, recipient=None, file_index=None
+):
     '''
     Send notification email to sender, log the action if not exist
     reason_code 1: email is opened
@@ -142,11 +146,16 @@ def send_notification_email(reason_code, message, recipient=None):
     should_send = True
     log = None
     if reason_code in [1, 2] and recipient:
+        # if this is open email action, set the file_index to 0
+        if reason_code == 1:
+            file_index = 0
+
         # if there is existing log then should not send email again
         if TrackingLog.objects.filter(
             message=message,
             participant=recipient,
-            action=action
+            action=action,
+            file_index=file_index,
         ):
             should_send = False
 
@@ -162,7 +171,8 @@ def send_notification_email(reason_code, message, recipient=None):
             message=message,
             participant=recipient,
             action=action,
-            revision=2
+            revision=2,
+            file_index=file_index,
         )
 
     # then send email if needed

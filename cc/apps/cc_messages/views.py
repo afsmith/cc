@@ -109,19 +109,21 @@ def view_message(request, message_id=None, file_index=None):
                 return {
                     'file_doesnot_exist': True
                 }
+            else:
+                # notify the sender if "notify when link clicked" option is on
+                log = None
+                if not is_owner_viewing:
+                    log = send_notification_email(
+                        2, message, ocl_token.user, file_index
+                    )
 
-            # notify the sender if "notify when link clicked" option is on
-            log = None
-            if not is_owner_viewing:
-                log = send_notification_email(2, message, ocl_token.user)
-
-            return {
-                'message': message,
-                'file': f,
-                'token': token,
-                'ocl_user': ocl_token.user,
-                'is_owner_viewing': is_owner_viewing,
-                'tracking_log': log,
-            }
+                return {
+                    'message': message,
+                    'file': f,
+                    'token': token,
+                    'ocl_user': ocl_token.user,
+                    'is_owner_viewing': is_owner_viewing,
+                    'tracking_log': log,
+                }
     else:
         return redirect(reverse('auth_login'))
