@@ -20,6 +20,8 @@ urlpatterns = patterns(
     url(r'^$', 'cc.apps.main.views.dashboard', name='home'),
     url(r'^view/(?P<message_id>\d+)/(?P<file_index>\d+)/$',
         'cc.apps.cc_messages.views.view_message', name='view_message'),
+    url(r'^view/(?P<message_id>\d+)/$',
+        'cc.apps.cc_messages.views.view_message', name='view_message_old'),
     url(r'^sendgrid_parse/$',
         'cc.apps.main.views.sendgrid_parse', name='sendgrid_parse'),
 )

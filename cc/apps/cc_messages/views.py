@@ -103,6 +103,10 @@ def view_message(request, message_id=None, file_index=None):
             # check if owner is checking message
             is_owner_viewing = (ocl_token.user == message.owner)
 
+            # to support old links
+            if file_index is None:
+                file_index = 1
+
             try:
                 f = message.files.get(index=file_index)
             except File.DoesNotExist:
