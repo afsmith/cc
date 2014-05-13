@@ -227,12 +227,14 @@ $(document).ready(function () {
         }).done(function () {
             // and trigger submit
             message_form.trigger('submit');
-            return false;
         });
+
+        return false;
     });
 
     $('#js_resetForm').click(function () {
         location.reload(true);
+        return false;
     });
 
 // ------------------------------- Upload ------------------------------- //

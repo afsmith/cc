@@ -246,11 +246,14 @@ $(document).ready(function () {
         }).done(function (resp) {
             drawBarChart(resp);
         });
+
+        return false;
     });
 
     // click on resend button
     $('.js_resend').click(function () {
         $(this).parent().html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
+        return false;
     });
 
     $('.report_table').on('click', '.js_resendButton', function () {
@@ -275,11 +278,17 @@ $(document).ready(function () {
             }
             _this.remove();
         });
+
+        return false;
     });
 
     // if there is ?user in GET query then click on it and scroll down a bit
-    if (CC_GLOBAL.GETParam.user !== undefined) {
-        $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
-        $(window).delay(500).scrollTop(600);
+    if (!_.isUndefined(CC_GLOBAL.GETParam.tab)) {
+        $('a[href="#tab_' + CC_GLOBAL.GETParam.tab + '"').trigger('click');
+
+        if (!_.isUndefined(CC_GLOBAL.GETParam.user)) {
+            $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
+            $(window).delay(500).scrollTop(600);
+        }
     }
 }); // end document ready

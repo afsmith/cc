@@ -123,16 +123,17 @@ def report_drilldown(request):
 
     this_message = get_object_or_404(Message, pk=message_id)
 
-    if session_id:  # get session log
+    if session_id:  # get session log from report detail
         data = get_tracking_data_group_by_page_number(
             tracking_session=session_id
         )
-    elif recipient_id:  # get recipient log
+    elif recipient_id:  # get recipient log from dashboard
         data = get_tracking_data_group_by_page_number(
             tracking_session__participant=recipient_id,
-            tracking_session__message=message_id
+            tracking_session__message=message_id,
+            tracking_session__file_index=file_index
         )
-    else:  # get summary log
+    else:  # get summary log from report detail
         data = get_tracking_data_group_by_page_number(
             tracking_session__message=message_id,
             tracking_session__file_index=file_index,
@@ -141,11 +142,44 @@ def report_drilldown(request):
     return _format_data_for_chart(data, this_message)
 
 
-def _format_data_for_chart(log, this_message):
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def report_dashboard(request):
+    recipient_id = request.POST.get('recipient_id')
+    message_id = request.POST.get('message_id')
+    file_index = request.POST.get('file_index')
+
+    this_message = get_object_or_404(Message, pk=message_id)
+
+    if recipient_id and message_id and file_index:
+        data = get_tracking_data_group_by_page_number(
+            tracking_session__participant=recipient_id,
+            tracking_session__message=message_id,
+            tracking_session__file_index=file_index
+        )
+        formatted_data = _format_data_for_chart(data, this_message)
+        #files = list(
+        #    this_message.files.values_list('orig_filename').order_by('index')
+        #)
+
+        return {
+            'status': 'OK',
+            #'files': files,
+            'file_count': this_message.files.count(),
+            'data': formatted_data
+        }
+    else:
+        return {
+            'status': 'ERROR'
+        }
+
+
+def _format_data_for_chart(data, this_message):
     values = []
     labels = []
     combo = []
-    for idx, p in enumerate(list(log)):
+    for idx, p in enumerate(list(data)):
         values.append([idx, p[1]/10.0])
         labels.append([idx, 'Page {}'.format(p[0])])
         combo.append(['Page {}'.format(p[0]), p[1]/10.0])
@@ -154,7 +188,7 @@ def _format_data_for_chart(log, this_message):
         'labels': labels,
         'combo': combo,
         'subject': this_message.subject,
-        'total_visits': log[0][2] if len(log) > 0 else 0
+        'total_visits': data[0][2] if len(data) > 0 else 0
     }
 
 

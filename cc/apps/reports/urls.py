@@ -10,5 +10,6 @@ urlpatterns = patterns(
     url(r'^user/$', 'user_log', name='user_log'),
     url(r'^remove_bounce/(?P<bounce_id>\d+)/$',
         'remove_bounce', name='remove_bounce'),
+    url(r'^dashboard/$', 'report_dashboard', name='report_dashboard'),
     url(r'^call_list/$', 'report_call_list', name='report_call_list'),
 )
