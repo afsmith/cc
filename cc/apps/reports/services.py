@@ -19,6 +19,7 @@ import operator
 def validate_request(request):
     message_id = request.POST.get('message_id')
     user_id = request.POST.get('user_id')
+    file_index = request.POST.get('file_index')
 
     if message_id and user_id:
         try:
@@ -26,7 +27,7 @@ def validate_request(request):
             user = CUser.objects.get(pk=user_id)
         except Message.DoesNotExist, CUser.DoesNotExist:
             return False
-        return {'message': message, 'user': user}
+        return {'message': message, 'user': user, 'file_index': file_index}
     else:
         return False
 
@@ -43,6 +44,7 @@ def get_tracking_data_group_by_recipient(message, file_index=None):
         qs.values(
             'tracking_session__participant',
             'tracking_session__participant__email',
+            'tracking_session__file_index',
         )
         .annotate(
             total_time=Sum('total_time'),

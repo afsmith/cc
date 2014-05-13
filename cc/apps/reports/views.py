@@ -51,9 +51,6 @@ def report_detail(request, message_id):
         .order_by('created_at').reverse()
     )
 
-    # get log data group by participant
-    tracking_data = get_tracking_data_group_by_recipient(this_message, 1)
-
     # get missing data
     missing_data = get_missing_data(this_message)
 
@@ -63,9 +60,23 @@ def report_detail(request, message_id):
     return {
         'this_message': this_message,
         'messages': all_messages,
-        'log_groupby_user_file_1': tracking_data,
         'missing_data': missing_data,
         'uninterested_recipients': uninterested_recipients
+    }
+
+
+@ensure_csrf_cookie
+@auth_decorators.login_required
+@render_to('main/_report_graph_table.html')
+def report_detail_per_file(request, message_id, file_index):
+    this_message = get_object_or_404(Message, pk=message_id)
+    # get log data group by participant
+    tracking_data = get_tracking_data_group_by_recipient(
+        this_message, file_index
+    )
+    return {
+        'this_message': this_message,
+        'tracking_data': tracking_data
     }
 
 
@@ -77,7 +88,11 @@ def user_log(request):
     if data:
         log_groupby_session = (
             TrackingSession.objects
-            .filter(message=data['message'], participant=data['user'])
+            .filter(
+                message=data['message'],
+                participant=data['user'],
+                file_index=data['file_index'],
+            )
             .annotate(total_time=Sum('trackingevent__total_time'))
             .filter(total_time__gt=0)
             .values('id', 'created_at', 'total_time', 'client_ip', 'device')
@@ -104,6 +119,7 @@ def report_drilldown(request):
     session_id = request.POST.get('session_id')
     recipient_id = request.POST.get('recipient_id')
     message_id = request.POST.get('message_id')
+    file_index = request.POST.get('file_index')
 
     this_message = get_object_or_404(Message, pk=message_id)
 
@@ -118,7 +134,8 @@ def report_drilldown(request):
         )
     else:  # get summary log
         data = get_tracking_data_group_by_page_number(
-            tracking_session__message=message_id
+            tracking_session__message=message_id,
+            tracking_session__file_index=file_index,
         )
 
     return _format_data_for_chart(data, this_message)

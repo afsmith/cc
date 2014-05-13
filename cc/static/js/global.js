@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, CC_GLOBAL, log, i18, escape, unescape*/
+/*global $, jQuery, _, CC_GLOBAL, log, i18, escape, unescape*/
 'use strict';
 
 var CC_GLOBAL = {};
@@ -26,6 +26,10 @@ CC_GLOBAL.addSpinner = function () {
 CC_GLOBAL.removeSpinner = function () {
     $('.spinner_overlay').remove();
 };
+
+
+// ------------------------------- AJAX ------------------------------- //
+_.templateSettings.variable = 'data';
 
 
 // --------------------------- Global functions --------------------------- //
