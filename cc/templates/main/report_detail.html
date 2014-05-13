@@ -28,13 +28,13 @@
     {% else %}
         <ul class="nav nav-tabs">
             {% for f in this_message.files.all %}
-                <li {% if forloop.counter == 1 %}class="active"{% endif %}><a href="#tab_{{ f.index }}" data-toggle="tab">&lt;{{ f.orig_filename }}&gt;</a></li>
+                <li {% if forloop.counter == 1 %}class="active"{% endif %}><a href="#tab_{{ f.index }}" data-toggle="tab"><strong>{{ f.orig_filename }}</strong></a></li>
             {% endfor %}
         </ul>        
         
         <div class="tab-content">
             <div class="tab-pane active" id="tab_1">
-                <div id="report_graph"></div>
+                <div class="report_graph"></div>
 
                 <table class="table report_table">
                     <thead>
@@ -50,7 +50,7 @@
                     </thead>
                     
                     <tbody>
-                        {% for row in log_groupby_user %}
+                        {% for row in log_groupby_user_file_1 %}
                         <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}" {% if row.closed_deal %}class="sold"{% endif %}>
                             <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
                             <td>{{ row.max_date|date:'d.m.Y H:i:s' }}</td>

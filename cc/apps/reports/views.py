@@ -52,7 +52,7 @@ def report_detail(request, message_id):
     )
 
     # get log data group by participant
-    tracking_data = get_tracking_data_group_by_recipient(this_message)
+    tracking_data = get_tracking_data_group_by_recipient(this_message, 1)
 
     # get missing data
     missing_data = get_missing_data(this_message)
@@ -63,7 +63,7 @@ def report_detail(request, message_id):
     return {
         'this_message': this_message,
         'messages': all_messages,
-        'log_groupby_user': tracking_data,
+        'log_groupby_user_file_1': tracking_data,
         'missing_data': missing_data,
         'uninterested_recipients': uninterested_recipients
     }

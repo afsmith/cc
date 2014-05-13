@@ -1,3 +1,7 @@
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, CC_GLOBAL, log, i18, Highcharts*/
+'use strict';
+
 $(document).ready(function () {
     var _drawBarChart,
         initDrawChart,
@@ -10,8 +14,7 @@ $(document).ready(function () {
 
     // draw chart function
     _drawBarChart = function (json_data) {
-        var chart_data,
-            options,
+        var options,
             colors = Highcharts.getOptions().colors,
             len = json_data.values.length,
             column_colors = [],
@@ -20,11 +23,11 @@ $(document).ready(function () {
 
         if (typeof json_data === 'object' && len > 0) {
             // change color for key page
-            for (i=0; i<len; i+=1) {
+            for (i = 0; i < len; i += 1) {
                 if (i === json_data.key_page - 1) {
                     column_colors.push(colors[3]);
                 } else {
-                    column_colors.push(colors[2]);    
+                    column_colors.push(colors[2]);
                 }
             }
 
@@ -65,7 +68,7 @@ $(document).ready(function () {
                                 fontWeight: 'bold'
                             },
                             formatter: function () {
-                                return this.y +' s';
+                                return this.y + ' s';
                             }
                         },
                         colorByPoint: true,
@@ -74,7 +77,7 @@ $(document).ready(function () {
                 colors: column_colors,
                 tooltip: {
                     formatter: function () {
-                        return this.x[1] + ': ' + this.y +' seconds';
+                        return this.x[1] + ': ' + this.y + ' seconds';
                     }
                 },
                 series: [{
@@ -85,7 +88,7 @@ $(document).ready(function () {
             };
 
             // draw chart
-            $('#report_graph').highcharts(options);
+            $('.report_graph').highcharts(options);
         } else {
             log('No data to display');
         }
@@ -168,12 +171,12 @@ $(document).ready(function () {
                         'user_id': user_id,
                     }
                 }).done(function (resp) {
-                    var i = 0,
+                    var i,
                         html = '',
                         iOS_class = '';
 
                     if (resp.length) {
-                        for (i; i < resp.length; i+=1) {
+                        for (i = 0; i < resp.length; i += 1) {
                             html += [
                                 '<tr id="js_session_' + resp[i].id + '" class="log_row js_log_' + this_id + iOS_class + '">',
                                 '<td></td>',
