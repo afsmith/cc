@@ -15,6 +15,34 @@ $(document).ready(function () {
         window.location = '/report/' + $(this).val();
     });
 
+    // handler after click the tab navs
+    tabClickHandler = function (file_index) {
+        // send ajax to fetch detail for log table
+        $.ajax({
+            url: _.template(
+                '/report/detail/<%= data.message_id %>/<%= data.file_index %>/',
+                {message_id: this_message_id, file_index: file_index}
+            ),
+            type: 'POST',
+            data: {'message_id': this_message_id, 'file_index': file_index},
+        }).done(function (resp) {
+            // render the table
+            $('#tab_' + file_index).html(resp);
+
+            // draw the graph
+            fetchDataAndDrawChart(file_index);
+        });
+    };
+
+    // bind handler to tab navs
+    $('.nav-tabs a').click(function () {
+        var file_index = $(this).data('index');
+        tabClickHandler(file_index);
+    });
+
+    // when init page, click on tab 1 to load the 1st file report
+    tabClickHandler(1);
+
     // draw chart function
     drawBarChart = function (json_data) {
         var options,
@@ -108,34 +136,6 @@ $(document).ready(function () {
             drawBarChart(resp);
         });
     };
-
-    // handler after click the tab navs
-    tabClickHandler = function (file_index) {
-        // send ajax to fetch detail for log table
-        $.ajax({
-            url: _.template(
-                '/report/detail/<%= data.message_id %>/<%= data.file_index %>/',
-                {message_id: this_message_id, file_index: file_index}
-            ),
-            type: 'POST',
-            data: {'message_id': this_message_id, 'file_index': file_index},
-        }).done(function (resp) {
-            // render the table
-            $('#tab_' + file_index).html(resp);
-
-            // draw the graph
-            fetchDataAndDrawChart(file_index);
-        });
-    };
-
-    // bind handler to tab navs
-    $('.nav-tabs a').click(function () {
-        var file_index = $(this).data('index');
-        tabClickHandler(file_index);
-    });
-
-    // when init page, click on tab 1 to load the 1st file report
-    tabClickHandler(1);
 
     // close the deal when click checkbox
     $('.report_wrapper').on('click', '.js_sold', function () {
