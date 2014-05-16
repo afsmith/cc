@@ -261,14 +261,16 @@ $(document).ready(function () {
 
     linkTokenHanlder = function (add) {
         var content = message_field.code(),
+            previous_token,
             current_token,
             i;
 
         if (add === true) {
             for (i = 2; i < 6; i += 1) {
+                previous_token = '[link' + (i - 1) + ']';
                 current_token = '[link' + i + ']';
-                if (content.indexOf(current_token) === -1) {
-                    content += current_token;
+                if (content.indexOf(current_token) === -1 && content.indexOf(previous_token) !== -1) {
+                    content = content.replace(previous_token, previous_token + '<br />' + current_token);
                     break;
                 }
             }
@@ -296,7 +298,12 @@ $(document).ready(function () {
         });
 
         // add link text input + label
-        $('.js_link_texts').append('<label for="js_link_text_' + file_id + '" class="js_link_label">Link text ' + file_index + '</label><input id="js_link_text_' + file_id + '" name="link_text_' + file_index + '" type="text" class="form-control js_link_text" />');
+        $('.js_link_texts').append(
+            _.template('<label for="js_link_text_<%= data.file_id %>" class="js_link_label">Link text <%= data.file_index %></label><input id="js_link_text_<%= data.file_id %>" name="link_text_<%= data.file_index %>" type="text" class="form-control js_link_text" />', {
+                file_id: file_id,
+                file_index: file_index
+            })
+        );
 
         // add id to preview
         file.previewElement.id = 'js_file_preview_' + file_id;
@@ -331,13 +338,16 @@ $(document).ready(function () {
         });
 
         // remove the preview, link text input + label
-        file.previewElement.parentNode.removeChild(file.previewElement);
-        $('#js_link_text_' + file.server_id).remove();
-        $('label[for="js_link_text_' + file.server_id + '"]').remove();
-        $('#js_file_preview_' + file.server_id).remove();
-
-        // remove link token
-        linkTokenHanlder();
+        if ($('#js_link_text_' + file.server_id).length) {
+            $('#js_link_text_' + file.server_id).remove();
+            $('label[for="js_link_text_' + file.server_id + '"]').remove();
+            $('#js_file_preview_' + file.server_id).remove();
+            // remove link token
+            linkTokenHanlder();
+        } else {
+            // in case there is error and the file is removed rightaway
+            file.previewElement.parentNode.removeChild(file.previewElement);
+        }
 
         // rename the label on text input
         $('.js_link_label').each(function (index) {
