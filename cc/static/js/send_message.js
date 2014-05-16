@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, CC_GLOBAL, log, Dropzone, i18*/
+/*global $, jQuery, _, CC_GLOBAL, log, Dropzone, i18*/
 'use strict';
 
 // custom validator
@@ -20,12 +20,18 @@ $(document).ready(function () {
         attachment_field = $('#id_attachment'),
         signature_field = $('#id_signature'),
         upload_form = $('#uploadFileForm'),
+        link_text_form = $('.js_link_texts'),
+
+        // function
         initSignatureField,
-        _renderUploadError,
-        _linkTokenHanlder,
-        _addFileHandler,
-        _removeFileHandler,
+        validateErrorHandler,
+        renderUploadError,
+        linkTokenHanlder,
+        addFileHandler,
+        removeFileHandler,
         uploadImage,
+
+        // config
         summernote_config_global = {
             toolbar: [
                 ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -75,6 +81,44 @@ $(document).ready(function () {
 
 
 // ------------------------ Form init & validation ------------------------ //
+    validateErrorHandler = function (errorMap, error_list) {
+        var remapElementForTooltip = function (element) {
+            var _element;
+            switch (element.prop('id')) {
+            case 'id_to':
+                _element = $('.tokenfield');
+                break;
+            case 'id_message':
+                _element = $('.note-editor').eq(0);
+                break;
+            case 'id_attachment':
+                _element = $('#uploadFileForm');
+                break;
+            default:
+                _element = element;
+                break;
+            }
+            return _element;
+        };
+
+        // clean up any tooltips for valid elements
+        $.each(this.validElements(), function (index, element) {
+            var _element = remapElementForTooltip($(element));
+            _element.data('title', '').removeClass('error').tooltip('destroy');
+        });
+
+        // create new tooltips for invalid elements
+        $.each(error_list, function (index, error) {
+            var _element = remapElementForTooltip($(error.element));
+
+            _element.tooltip('destroy') // destroy any pre-existing tooltip
+                .data('title', error.message)
+                .addClass('error')
+                .tooltip({ // create new tooltip
+                    //placement: 'right',
+                }).tooltip('show');
+        });
+    };
 
     // validation rules for message form
     message_form.validate({
@@ -84,11 +128,6 @@ $(document).ready(function () {
             to: 'required',
             message: {required: true, regex: /\[link\d\]/},
             attachment: 'required',
-            link_text_1: 'required',
-            link_text_2: 'required',
-            link_text_3: 'required',
-            link_text_4: 'required',
-            link_text_5: 'required',
         },
         messages: {
             subject: 'Enter the subject.',
@@ -98,11 +137,6 @@ $(document).ready(function () {
                 regex: 'The [link1] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
             },
             attachment: 'Upload the attachments.',
-            link_text_1: 'Enter the link text',
-            link_text_2: 'Enter the link text',
-            link_text_3: 'Enter the link text',
-            link_text_4: 'Enter the link text',
-            link_text_5: 'Enter the link text',
         },
         submitHandler: function (form) {
             form.submit();
@@ -110,44 +144,7 @@ $(document).ready(function () {
         onfocusout: function (element) { // check form valid on blur of each element
             $(element).valid();
         },
-        showErrors: function (errorMap, error_list) {
-            var remapElementForTooltip = function (element) {
-                var _element;
-                switch (element.prop('id')) {
-                case 'id_to':
-                    _element = $('.tokenfield');
-                    break;
-                case 'id_message':
-                    _element = $('.note-editor').eq(0);
-                    break;
-                case 'id_attachment':
-                    _element = $('#uploadFileForm');
-                    break;
-                default:
-                    _element = element;
-                    break;
-                }
-                return _element;
-            };
-
-            // clean up any tooltips for valid elements
-            $.each(this.validElements(), function (index, element) {
-                var _element = remapElementForTooltip($(element));
-                _element.data('title', '').removeClass('error').tooltip('destroy');
-            });
-
-            // create new tooltips for invalid elements
-            $.each(error_list, function (index, error) {
-                var _element = remapElementForTooltip($(error.element));
-
-                _element.tooltip('destroy') // destroy any pre-existing tooltip
-                    .data('title', error.message)
-                    .addClass('error')
-                    .tooltip({ // create new tooltip
-                        //placement: 'right',
-                    }).tooltip('show');
-            });
-        }
+        showErrors: validateErrorHandler
     });
 
     // image upload handler
@@ -209,25 +206,27 @@ $(document).ready(function () {
             signature_field.val(signature_field.code());
         }
 
-        // get the request data here
-        var request_data = {};
-        $('.js_link_text').each(function () {
-            var _this = $(this),
-                file_id = parseInt(_this.prop('id').replace('js_link_text_', ''), 0),
-                file_index = parseInt(_this.prop('name').replace('link_text_', ''), 0);
-            request_data[file_id + '.index'] = file_index;
-            request_data[file_id + '.value'] = _this.val();
-        });
+        if (link_text_form.valid()) {
+            // get the request data here
+            var request_data = {};
+            $('.js_link_text').each(function () {
+                var _this = $(this),
+                    file_id = parseInt(_this.prop('id').replace('js_link_text_', ''), 0),
+                    file_index = parseInt(_this.prop('name').replace('link_text_', ''), 0);
+                request_data[file_id + '.index'] = file_index;
+                request_data[file_id + '.value'] = _this.val();
+            });
 
-        $.ajax({
-            type: 'POST',
-            url: '/file/save_info/',
-            cache: false,
-            data: request_data
-        }).done(function () {
-            // and trigger submit
-            message_form.trigger('submit');
-        });
+            $.ajax({
+                type: 'POST',
+                url: '/file/save_info/',
+                cache: false,
+                data: request_data
+            }).done(function () {
+                // and trigger submit
+                message_form.trigger('submit');
+            });
+        }
 
         return false;
     });
@@ -238,13 +237,40 @@ $(document).ready(function () {
     });
 
 // ------------------------------- Upload ------------------------------- //
+    link_text_form.validate({
+        ignore: '',
+        rules: {
+            link_text_1: 'required',
+            link_text_2: 'required',
+            link_text_3: 'required',
+            link_text_4: 'required',
+            link_text_5: 'required',
+        },
+        messages: {
+            link_text_1: 'Enter the link text',
+            link_text_2: 'Enter the link text',
+            link_text_3: 'Enter the link text',
+            link_text_4: 'Enter the link text',
+            link_text_5: 'Enter the link text',
+        },
+        onfocusout: function (element) { // check form valid on blur of each element
+            $(element).valid();
+        },
+        showErrors: validateErrorHandler
+    });
 
     // handle render the upload error
-    _renderUploadError = function (error_message) {
-        upload_form.prepend('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' + i18('ERROR_OCURRED') + ': ' + error_message + '</p>');
+    renderUploadError = function (error_message) {
+        upload_form.addClass('error');
+        upload_form.prepend(
+            _.template('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><%= data.error %>: <%= data.message %></p>', {
+                error: i18('ERROR_OCURRED'),
+                message: error_message
+            })
+        );
     };
 
-    _linkTokenHanlder = function (add) {
+    linkTokenHanlder = function (add) {
         var content = message_field.code(),
             current_token,
             i;
@@ -270,7 +296,7 @@ $(document).ready(function () {
         message_field.code(content);
     };
 
-    _addFileHandler = function (file, resp) {
+    addFileHandler = function (file, resp) {
         var file_id = file.server_id,
             file_index = upload_form.find('.dz-filename').length,
             file_preview;
@@ -289,7 +315,7 @@ $(document).ready(function () {
 
         // add link token to message textarea
         if (file_index > 1) {
-            _linkTokenHanlder(true);
+            linkTokenHanlder(true);
         }
 
         // handle some CSS and template
@@ -303,7 +329,7 @@ $(document).ready(function () {
         attachment_field.valid();
     };
 
-    _removeFileHandler = function (file) {
+    removeFileHandler = function (file) {
         // if the file hasn't been uploaded
         if (!file.server_id) { return; }
 
@@ -316,12 +342,13 @@ $(document).ready(function () {
         });
 
         // remove the preview, link text input + label
+        file.previewElement.parentNode.removeChild(file.previewElement);
         $('#js_link_text_' + file.server_id).remove();
         $('label[for="js_link_text_' + file.server_id + '"]').remove();
         $('#js_file_preview_' + file.server_id).remove();
 
         // remove link token
-        _linkTokenHanlder();
+        linkTokenHanlder();
 
         // rename the label on text input
         $('.js_link_label').each(function (index) {
@@ -346,31 +373,29 @@ $(document).ready(function () {
             file.server_id = response.file_id;
 
             if (response.status === 'OK') {
-                _addFileHandler(file, response);
+                addFileHandler(file, response);
             } else {
                 this.removeFile(file);
-                _renderUploadError(response.message);
-                log('Conversion error: ' + response.original_error);
+                renderUploadError(response.message);
+                log('Conversion error: ' + response.message);
 
-                $('.dz-error-mark').css('opacity', 1);
                 attachment_field.valid();
             }
         },
         error: function (file, errorMessage) {
             if (errorMessage !== 'You can only upload 5 files.') {
-                $('.dz-error-mark').css('opacity', 1);
+                renderUploadError(errorMessage);
                 this.removeFile(file);
-                _renderUploadError(errorMessage);
             }
             attachment_field.valid();
         },
         maxfilesexceeded: function (file) {
-            _renderUploadError('You can attach maximum 5 files at a time');
+            renderUploadError('You can attach maximum 5 files at a time');
             $('.dz-file-preview:not(.dz-processing)').remove();
             this.removeFile(file);
             attachment_field.valid();
         },
-        removedfile: _removeFileHandler
+        removedfile: removeFileHandler
     };
 
 
