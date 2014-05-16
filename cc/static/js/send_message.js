@@ -2,16 +2,6 @@
 /*global $, jQuery, _, CC_GLOBAL, log, Dropzone, i18*/
 'use strict';
 
-// custom validator
-$.validator.addMethod(
-    'regex',
-    function (value, element, regexp) {
-        var re = new RegExp(regexp);
-        return this.optional(element) || re.test(value);
-    },
-    'Please include your keyword(s).'
-);
-
 $(document).ready(function () {
     var message_form = $('#js_messageForm'),
         message_submit_btn = $('#js_submitMessageForm'),
@@ -126,7 +116,7 @@ $(document).ready(function () {
         rules: {
             subject: 'required',
             to: 'required',
-            message: {required: true, regex: /\[link\d\]/},
+            message: {required: true, check_token: true},
             attachment: 'required',
         },
         messages: {
@@ -134,7 +124,6 @@ $(document).ready(function () {
             to: 'Enter at least one email address of the recipient.',
             message: {
                 required: 'Enter the message.',
-                regex: 'The [link1] token should not be removed, it will be replaced with the link your recipient will click. Please add it back.'
             },
             attachment: 'Upload the attachments.',
         },
