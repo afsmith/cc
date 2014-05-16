@@ -14,6 +14,7 @@ class TrackingLog(models.Model):
     action = models.CharField(_('Action'), max_length=100)
     revision = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    file_index = models.IntegerField(default=1)
 
     def __unicode__(self):
         return self.action
@@ -26,6 +27,7 @@ class TrackingSession(models.Model):
     client_ip = models.CharField(_('Client IP'), max_length=50, null=True)
     device = models.CharField(_('Device'), max_length=50, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    file_index = models.IntegerField(default=1)
 
     def __unicode__(self):
         return self.message.subject

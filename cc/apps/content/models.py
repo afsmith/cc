@@ -97,7 +97,6 @@ class File(models.Model):
     '''
     Represents single file managed by the system.
     '''
-
     TYPE_PLAIN = 10
     TYPE_IMAGE = 20
     TYPE_AUDIO = 30
@@ -139,21 +138,29 @@ class File(models.Model):
         choices=STATUSES, default=STATUS_UPLOADED
     )
     # Unique identifier of the file.
-    key = models.CharField(_('Key'), max_length=22, unique=True,
-        default=utils.gen_file_key)
+    key = models.CharField(
+        _('Key'), max_length=22, unique=True, default=utils.gen_file_key
+    )
 
-    subkey_orig = models.CharField(_('Original Sub Key'), max_length=5,
-        default=utils.gen_file_sub_key)
-    subkey_conv = models.CharField(_('Converted Sub Key'), max_length=5,
-        default=utils.gen_file_sub_key)
-    subkey_thumbnail = models.CharField(_('Thumbnail Sub Key'), max_length=5,
-        default=utils.gen_file_sub_key)
-    subkey_preview = models.CharField(_('Preview Sub Key'), max_length=5,
-        default=utils.gen_file_sub_key)
+    subkey_orig = models.CharField(
+        _('Original Sub Key'), max_length=5, default=utils.gen_file_sub_key
+    )
+    subkey_conv = models.CharField(
+        _('Converted Sub Key'), max_length=5, default=utils.gen_file_sub_key
+    )
+    subkey_thumbnail = models.CharField(
+        _('Thumbnail Sub Key'), max_length=5, default=utils.gen_file_sub_key
+    )
+    subkey_preview = models.CharField(
+        _('Preview Sub Key'), max_length=5, default=utils.gen_file_sub_key
+    )
     created_on = models.DateTimeField(_('Created on'), auto_now_add=True)
     updated_on = models.DateTimeField(_('Updated on'), auto_now=True)
     owner = models.ForeignKey(CUser, null=True)
     pages_num = models.IntegerField(_('Number of content pages'), default=0)
+
+    link_text = models.CharField(_('Link text'), max_length=150, blank=True)
+    index = models.IntegerField(default=1)
 
     @classmethod
     def type_from_name(cls, name):
@@ -165,7 +172,7 @@ class File(models.Model):
         :return: File's type identifier.
         :rtype: ``int``
 
-        :raises: UnsupportedFileTypeError -- if cannot map file name to type identifier.
+        :raises: UnsupportedFileTypeError
         """
         _, _, ext = name.rpartition('.')
         ext = ext.lower()
@@ -222,8 +229,9 @@ class File(models.Model):
         :return: URL
         :rtype: ``str``
         """
-    
-        path = os.path.join(settings.CONTENT_AVAILABLE_DIR, self.conv_file_path)
+        path = os.path.join(
+            settings.CONTENT_AVAILABLE_DIR, self.conv_file_path
+        )
         return urlparse.urljoin(settings.MEDIA_URL, path)
 
     @property
@@ -275,12 +283,14 @@ class File(models.Model):
         return '%s_%s.%s' % (self.key, self.subkey_preview, 'jpg')
 
     def __repr__(self):
-        return u'<File[%s]: %s; type=%s; status=%s>' % (self.id, repr(self.orig_filename),
-            self.get_type_display(), self.get_status_display())
+        return u'<File[%s]: %s; type=%s; status=%s>' % (
+            self.id,
+            repr(self.orig_filename),
+            self.get_type_display(), self.get_status_display()
+        )
 
     def __unicode__(self):
         return self.orig_filename
 
     class Meta:
         ordering = ('created_on',)
-

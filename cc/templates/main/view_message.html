@@ -15,6 +15,10 @@
     <p class="alert">
         {% trans "This content is no longer available. Please contact the sender if you would like a new copy." %}
     </p>
+{% elif file_doesnot_exist %}
+    <p class="alert">
+        {% trans "This content does not exist." %}
+    </p>
 {% else %}
     {% if is_owner_viewing %}
         <p class="alert" style="text-align: center; padding-bottom: 5px;">

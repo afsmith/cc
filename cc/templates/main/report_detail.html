@@ -16,7 +16,7 @@
     </select>
 {% endif %}
 
-<div class="row">
+<div class="row report_wrapper">
     {% if log_groupby_user|length == 0 %}
 
         {% if missing_data|length == 0 %}
@@ -26,36 +26,19 @@
         {% endif %}
 
     {% else %}
-
-        <div id="report_graph"></div>
-
-        <table class="table report_table">
-            <thead>
-                <tr class="success">
-                    <th>{% trans "Sold" %}</th>
-                    <th>{% trans "Date" %}</th>
-                    <th>{% trans "Viewed by" %}</th>
-                    <th>{% trans "Total time" %}</th>
-                    <th>{% trans "Total visits" %}</th>
-                    <th>{% trans "Unique IPs" %}</th>
-                    <th>{% trans "Device types" %}</th>
-                </tr>    
-            </thead>
-            
-            <tbody>
-                {% for row in log_groupby_user %}
-                <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}" {% if row.closed_deal %}class="sold"{% endif %}>
-                    <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
-                    <td>{{ row.max_date|date:'d.m.Y H:i:s' }}</td>
-                    <td id="user_{{ row.tracking_session__participant }}" class="cell_email">{{ row.tracking_session__participant__email }}</td>
-                    <td>{{ row.total_time }}</td>
-                    <td>{{ row.visit_count }}</td>
-                    <td>{{ row.ip_count }}</td>
-                    <td>{{ row.device_count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <ul class="nav nav-tabs">
+            {% for f in this_message.files.all %}
+                <li {% if forloop.counter == 1 %}class="active"{% endif %}>
+                    <a href="#tab_{{ f.index }}" data-toggle="tab" data-index="{{ f.index }}"><strong>{{ f.orig_filename }}</strong></a>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <div class="tab-content">
+            {% for f in this_message.files.all %}
+                <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="tab_{{ f.index }}"></div>
+            {% endfor %}
+        </div>
 
     {% endif %}
 </div>
@@ -78,7 +61,7 @@
                 <td>{{ row.email }}</td>
                 <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
             </tr>
-            {% endfor %}    
+            {% endfor %}
         </tbody>
     </table>
 </div>

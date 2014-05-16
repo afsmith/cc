@@ -1,17 +1,9 @@
-from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 
 from .models import OneClickLinkToken, Invitation
 
 from templated_email import send_templated_mail
-from datetime import datetime, date
-
-
-def create_group(user_list):
-    group = Group.objects.create(name=datetime.now())
-    for user in user_list:
-        user.groups.add(group)
-    return group
+from datetime import date
 
 
 def verify_ocl_token(token):

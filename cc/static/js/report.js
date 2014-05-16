@@ -1,17 +1,51 @@
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, _, CC_GLOBAL, log, i18, Highcharts*/
+'use strict';
+
 $(document).ready(function () {
-    var _drawBarChart,
-        initDrawChart,
-        this_message_id = $('#js_selectMessage').val();
+    var this_message_id = $('#js_selectMessage').val(),
+
+        // function
+        drawBarChart,
+        fetchDataAndDrawChart,
+        tabClickHandler;
 
     // navigate with the dropdown
     $('#js_selectMessage').change(function () {
         window.location = '/report/' + $(this).val();
     });
 
+    // handler after click the tab navs
+    tabClickHandler = function (file_index) {
+        // send ajax to fetch detail for log table
+        $.ajax({
+            url: _.template(
+                '/report/detail/<%= data.message_id %>/<%= data.file_index %>/',
+                {message_id: this_message_id, file_index: file_index}
+            ),
+            type: 'POST',
+            data: {'message_id': this_message_id, 'file_index': file_index},
+        }).done(function (resp) {
+            // render the table
+            $('#tab_' + file_index).html(resp);
+
+            // draw the graph
+            fetchDataAndDrawChart(file_index);
+        });
+    };
+
+    // bind handler to tab navs
+    $('.nav-tabs a').click(function () {
+        var file_index = $(this).data('index');
+        tabClickHandler(file_index);
+    });
+
+    // when init page, click on tab 1 to load the 1st file report
+    tabClickHandler(1);
+
     // draw chart function
-    _drawBarChart = function (json_data) {
-        var chart_data,
-            options,
+    drawBarChart = function (json_data) {
+        var options,
             colors = Highcharts.getOptions().colors,
             len = json_data.values.length,
             column_colors = [],
@@ -20,11 +54,11 @@ $(document).ready(function () {
 
         if (typeof json_data === 'object' && len > 0) {
             // change color for key page
-            for (i=0; i<len; i+=1) {
+            for (i = 0; i < len; i += 1) {
                 if (i === json_data.key_page - 1) {
                     column_colors.push(colors[3]);
                 } else {
-                    column_colors.push(colors[2]);    
+                    column_colors.push(colors[2]);
                 }
             }
 
@@ -65,7 +99,7 @@ $(document).ready(function () {
                                 fontWeight: 'bold'
                             },
                             formatter: function () {
-                                return this.y +' s';
+                                return this.y + ' s';
                             }
                         },
                         colorByPoint: true,
@@ -74,7 +108,7 @@ $(document).ready(function () {
                 colors: column_colors,
                 tooltip: {
                     formatter: function () {
-                        return this.x[1] + ': ' + this.y +' seconds';
+                        return this.x[1] + ': ' + this.y + ' seconds';
                     }
                 },
                 series: [{
@@ -85,35 +119,33 @@ $(document).ready(function () {
             };
 
             // draw chart
-            $('#report_graph').highcharts(options);
+            $('.report_graph:visible').highcharts(options);
         } else {
             log('No data to display');
         }
     };
 
     // fetch data from backend and draw column chart
-    initDrawChart = function () {
+    fetchDataAndDrawChart = function (file_index) {
         $.ajax({
             url: '/report/drilldown/',
             type: 'POST',
             dataType: 'json',
-            data: {'message_id': this_message_id},
+            data: {'message_id': this_message_id, 'file_index': file_index},
         }).done(function (resp) {
-            _drawBarChart(resp);
+            drawBarChart(resp);
         });
     };
-    // display the chart on page init
-    initDrawChart();
 
     // close the deal when click checkbox
-    $('.js_sold').click(function () {
+    $('.report_wrapper').on('click', '.js_sold', function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_id = this_row.prop('id'),
             action = _this.prop('checked') ? 'create' : 'remove',
-            id_pair = this_id.replace('row_', '').split('_'),
-            message_id = id_pair[0],
-            user_id = id_pair[1];
+            id_arr = this_id.replace('row_', '').split('_'),
+            message_id = id_arr[0],
+            user_id = id_arr[1];
 
         $.ajax({
             url: '/track/close_deal/',
@@ -137,13 +169,13 @@ $(document).ready(function () {
     });
 
     // click on email address cell
-    $('.cell_email').click(function () {
+    $('.report_wrapper').on('click', '.cell_email', function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_id = this_row.prop('id'),
-            id_pair = this_id.replace('row_', '').split('_'),
-            message_id = id_pair[0],
-            user_id = id_pair[1],
+            id_arr = this_id.replace('row_', '').split('_'),
+            message_id = id_arr[0],
+            user_id = id_arr[1],
             all_log_rows = $('.js_log_' + this_id);
 
         // if the log rows are shown
@@ -166,25 +198,32 @@ $(document).ready(function () {
                     data: {
                         'message_id': message_id,
                         'user_id': user_id,
+                        'file_index': $('.nav-tabs li.active a').data('index')
                     }
                 }).done(function (resp) {
-                    var i = 0,
+                    var i,
                         html = '',
-                        iOS_class = '';
+                        html_row = _.template(
+                            '<tr id="js_session_<%= data.session_id %>" class="log_row js_log_<%= data.this_id %>"> \
+                                <td></td> \
+                                <td><%= data.created_ts %></td> \
+                                <td></td> \
+                                <td><%= data.total_time %></td> \
+                                <td></td> \
+                                <td><%= data.client_ip %></td> \
+                                <td><%= data.device %></td> \
+                            </tr>'
+                        );
 
                     if (resp.length) {
-                        for (i; i < resp.length; i+=1) {
-                            html += [
-                                '<tr id="js_session_' + resp[i].id + '" class="log_row js_log_' + this_id + iOS_class + '">',
-                                '<td></td>',
-                                '<td>' + resp[i].created_ts + '</td>',
-                                '<td></td>',
-                                '<td>' + resp[i].total_time + '</td>',
-                                '<td></td>',
-                                '<td>' + resp[i].client_ip + '</td>',
-                                '<td>' + resp[i].device + '</td>',
-                                '</tr>'
-                            ].join('');
+                        for (i = 0; i < resp.length; i += 1) {
+                            html += html_row({
+                                session_id: resp[i].id,
+                                this_id: this_id,
+                                created_ts: resp[i].created_ts,
+                                total_time: resp[i].total_time,
+                                device: resp[i].device,
+                            });
                         }
                     }
                     this_row.after(html);
@@ -194,7 +233,7 @@ $(document).ready(function () {
     });
 
     // draw the chart again for each session after click on each session log row
-    $('.report_table').on('click', '.log_row', function () {
+    $('.report_wrapper').on('click', '.log_row', function () {
         var this_session_id = $(this).prop('id').replace('js_session_', '');
         $.ajax({
             url: '/report/drilldown/',
@@ -205,29 +244,25 @@ $(document).ready(function () {
                 'session_id': this_session_id
             },
         }).done(function (resp) {
-            _drawBarChart(resp);
+            drawBarChart(resp);
         });
-    });
 
-    // tooltip on row with no tracking data
-/*    $('.report_table').tooltip({
-        selector: '.no_tracking_data',
-        title: "This user hasn't looked at your message yet."
+        return false;
     });
-*/
 
     // click on resend button
     $('.js_resend').click(function () {
         $(this).parent().html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
+        return false;
     });
 
     $('.report_table').on('click', '.js_resendButton', function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_id = this_row.prop('id'),
-            id_pair = this_id.replace('row_', '').split('_'),
-            message_id = id_pair[0],
-            user_id = id_pair[1];
+            id_arr = this_id.replace('row_', '').split('_'),
+            message_id = id_arr[0],
+            user_id = id_arr[1];
 
         $.ajax({
             url: '/message/resend/',
@@ -243,11 +278,17 @@ $(document).ready(function () {
             }
             _this.remove();
         });
+
+        return false;
     });
 
     // if there is ?user in GET query then click on it and scroll down a bit
-    if (CC_GLOBAL.GETParam.user !== undefined) {
-        $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
-        $(window).delay(500).scrollTop(600);
+    if (!_.isUndefined(CC_GLOBAL.GETParam.tab)) {
+        $('a[href="#tab_' + CC_GLOBAL.GETParam.tab + '"').trigger('click');
+
+        if (!_.isUndefined(CC_GLOBAL.GETParam.user)) {
+            $('#user_' + CC_GLOBAL.GETParam.user).trigger('click');
+            $(window).delay(500).scrollTop(600);
+        }
     }
 }); // end document ready

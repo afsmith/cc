@@ -30,35 +30,36 @@ def get_message(id, user):
             raise PermissionDenied
 
 
-def _create_ocl_link(user, domain, message_id):
+def _create_ocl_link_replace_link_texts(message, user, domain):
+    text = message.message
     # token should be expired after 30 days
     ocl = OneClickLinkToken.objects.create(
         user=user,
         expires_on=date.today() + timedelta(days=30)
     )
 
-    # create the OCL link and return
-    return '{}/view/{}/?token={}'.format(
-        domain, message_id, ocl.token
-    )
+    # loop through all files of message
+    for f in message.files.all():
+        # create the OCL link
+        ocl_link = '{}/view/{}/{}/?token={}'.format(
+            domain, message.id, f.index, ocl.token
+        )
 
+        # get link text for each file
+        link_text = f.link_text
+        if link_text == '':
+            link_text = ocl_link
 
-def _replace_link_text(message, ocl_link):
-    link_text = message.link_text
-    if link_text == '':
-        link_text = ocl_link
-
-    return message.message.replace(
-        '[link]',
-        u'<a href="{0}">{1}</a>'.format(ocl_link, link_text)
-    )
+        # and replace the token
+        text = text.replace(
+            '[link{}]'.format(f.index),
+            u'<a href="{}">{}</a>'.format(ocl_link, link_text)
+        )
+    return text
 
 
 def _send_message(message, recipient, domain):
-    ocl_link = _create_ocl_link(recipient, domain, message.id)
-
-    # replace the token [link] with the actual OCL link
-    text = _replace_link_text(message, ocl_link)
+    text = _create_ocl_link_replace_link_texts(message, recipient, domain)
 
     # create tracking pixel
     tracking_pixel_src = '{}/track/email/{}/{}/'.format(
@@ -99,11 +100,9 @@ def create_ocl_and_send_message(message, domain):
 
     # send a copy if sender chooses to cc himself
     if message.cc_me:
-        # create ocl link for message owner
-        ocl_link = _create_ocl_link(message.owner, domain, message.id)
-
-        # add OCL link to email text
-        text = _replace_link_text(message, ocl_link)
+        text = _create_ocl_link_replace_link_texts(
+            message, message.owner, domain
+        )
 
         # and send
         send_templated_mail(
@@ -118,7 +117,9 @@ def create_ocl_and_send_message(message, domain):
         )
 
 
-def send_notification_email(reason_code, message, recipient=None):
+def send_notification_email(
+    reason_code, message, recipient=None, file_index=None
+):
     '''
     Send notification email to sender, log the action if not exist
     reason_code 1: email is opened
@@ -145,11 +146,16 @@ def send_notification_email(reason_code, message, recipient=None):
     should_send = True
     log = None
     if reason_code in [1, 2] and recipient:
+        # if this is open email action, set the file_index to 0
+        if reason_code == 1:
+            file_index = 0
+
         # if there is existing log then should not send email again
         if TrackingLog.objects.filter(
             message=message,
             participant=recipient,
-            action=action
+            action=action,
+            file_index=file_index,
         ):
             should_send = False
 
@@ -165,7 +171,8 @@ def send_notification_email(reason_code, message, recipient=None):
             message=message,
             participant=recipient,
             action=action,
-            revision=2
+            revision=2,
+            file_index=file_index,
         )
 
     # then send email if needed

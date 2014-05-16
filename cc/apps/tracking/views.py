@@ -25,7 +25,8 @@ def create_event(request):
                 user=data['user'],
                 tracking_log=data['tracking_log'],
                 client_ip=get_client_ip(request),
-                device=get_device_name(request)
+                device=get_device_name(request),
+                file_index=data['tracking_log'].file_index
             )
 
             if session:

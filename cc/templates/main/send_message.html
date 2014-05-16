@@ -34,21 +34,8 @@
             Please upgrade your browser to the latest version.</p>
         </div>
 
-        <div id="send_message_wrapper" class="row">
-            <div class="center send_message_page col-sm-6 col-md-6">
-                <form role="form" id="js_messageForm" action="{% url 'send_message' %}" method="POST">{% csrf_token %}
-                    {% include '_base_form.html' with form=message_form %}
-                </form>
-
-                <button id="js_editSignature" class="btn btn-default"><i class="icon-plus"></i>  {% trans "Add signature" %}</button>
-
-                <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
-                    {% trans "Drop the attachment (or click) here to upload. PDF's only" %}
-                </form>
-
-                <button id="js_submitMessageForm" class="btn btn-success btn-lg">{% trans "Send" %}</button>
-                <button id="js_resetForm" class="btn btn-default btn-lg">{% trans "Reset" %}</button>
-            </div>
+        <div class="send_message_wrapper">
+            {% include "main/_send_message_form.html" %}
         </div>
     {% endif %}
     
@@ -70,6 +57,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/dropzone/3.7.1/dropzone.min.js"></script>
     <script src="{% static 'js/vendor/summernote.min.js' %}"></script>
     <script src="{% static 'js/vendor/bootstrap-tokenfield.min.js' %}"></script>
-
+    
+    <script src="{% static 'js/custom_validators.js' %}"></script>
     <script src="{% static 'js/send_message.js' %}"></script>
 {% endblock %}

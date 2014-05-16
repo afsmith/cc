@@ -19,6 +19,7 @@ import operator
 def validate_request(request):
     message_id = request.POST.get('message_id')
     user_id = request.POST.get('user_id')
+    file_index = request.POST.get('file_index')
 
     if message_id and user_id:
         try:
@@ -26,18 +27,24 @@ def validate_request(request):
             user = CUser.objects.get(pk=user_id)
         except Message.DoesNotExist, CUser.DoesNotExist:
             return False
-        return {'message': message, 'user': user}
+        return {'message': message, 'user': user, 'file_index': file_index}
     else:
         return False
 
 
-def get_tracking_data_group_by_recipient(message):
+def get_tracking_data_group_by_recipient(message, file_index=None):
+    qs = TrackingEvent.objects.filter(tracking_session__message=message)
+    if file_index:
+        qs = TrackingEvent.objects.filter(
+            tracking_session__message=message,
+            tracking_session__file_index=file_index
+        )
+
     tracking_data = (
-        TrackingEvent.objects
-        .filter(tracking_session__message=message)
-        .values(
+        qs.values(
             'tracking_session__participant',
             'tracking_session__participant__email',
+            'tracking_session__file_index',
         )
         .annotate(
             total_time=Sum('total_time'),
@@ -56,7 +63,13 @@ def get_tracking_data_group_by_recipient(message):
             participant=row['tracking_session__participant']
         ).exists()
         # calculate the actual visit count (the above is 1 per page)
-        row['visit_count'] /= message.files.all()[0].pages_num
+        if file_index:
+            row['visit_count'] /= message.files.get(index=file_index).pages_num
+        else:
+            row['visit_count'] /= (
+                message.files.all()
+                .aggregate(total_pages=Sum('pages_num'))['total_pages']
+            )
         # format time
         row['total_time'] = format_dbtime(row['total_time'])
 

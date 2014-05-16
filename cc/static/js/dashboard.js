@@ -1,24 +1,26 @@
+/*jslint browser: true, nomen: true, unparam: true*/
+/*global $, jQuery, _, Highcharts, CC_GLOBAL*/
+'use strict';
+
 $(document).ready(function () {
-    var _drawPieChart,
-        _filterTable;
+    var drawPieChart,
+        tabClickHandler;
 
     // draw chart function
-    _drawPieChart = function (json_data) {
-        var chart_data,
-            options,
+    drawPieChart = function (json_data) {
+        var options,
             colors = Highcharts.getOptions().colors,
             len = json_data.values.length,
             column_colors = [],
-            bar_width = Math.log(39 / len) * 80,
             i = 0;
 
         if (typeof json_data === 'object' && len > 0) {
             // change color for key page
-            for (i=0; i<len; i+=1) {
+            for (i = 0; i < len; i += 1) {
                 if (i === json_data.key_page - 1) {
                     column_colors.push(colors[3]);
                 } else {
-                    column_colors.push(colors[2]);    
+                    column_colors.push(colors[2]);
                 }
             }
 
@@ -59,11 +61,59 @@ $(document).ready(function () {
 
             // draw chart
             $('#call_list_graph').highcharts(options);
-            $('#class_list_detail').html('<p>Total pages: ' + len + '</p><p>Total visits: ' + json_data.total_visits + '</p>');
+            $('#call_list_detail').html('<p>Total pages: ' + len + '</p><p>Total visits: ' + json_data.total_visits + '</p>');
         } else {
-            $('#call_list_graph').html('<p class="alert alert-block">This recipient didn\'t look at your offer</p>')
-            $('#class_list_detail').html('');
+            $('#call_list_graph').html('<p class="alert alert-warning alert-block">This recipient didn\'t look at this file</p>');
+            $('#call_list_detail').html('');
         }
+    };
+
+    tabClickHandler = function (message_id, user_id, file_index) {
+        $.ajax({
+            url: '/report/dashboard/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'message_id': message_id,
+                'recipient_id': user_id,
+                'file_index': file_index
+            }
+        }).done(function (resp) {
+            var i,
+                html = '',
+                html_partial = _.template(
+                    '<li class="<%= data.li_class %>"><a href="#" data-toggle="tab" id="tab_<%= data.a_class %>"> \
+                        <strong><%= data.name %></strong> \
+                    </a></li>'
+                );
+
+            if (resp.status === 'OK') {
+                for (i = 1; i <= resp.file_count; i += 1) {
+                    html += html_partial({
+                        li_class: i === parseInt(file_index, 10) ? 'active' : '',
+                        a_class: [message_id, user_id, i].join('_'),
+                        name: 'File ' + i, //resp.files[i - 1],
+                        index: i
+                    });
+                }
+
+                // render the nav
+                $('#call_list_graph_nav').html(html).removeClass('hidden');
+
+                // render the chart
+                drawPieChart(resp.data);
+
+                // render the detail button
+                if (resp.data.total_visits !== 0) {
+                    $('#detail_button').prop('href', function () {
+                        return _.template(
+                            '/report/<%= data.message_id %>/?user_id=<%= data.user_id %>&tab=<%= data.tab %>',
+                            {message_id: message_id, user_id: user_id, tab: file_index}
+                        );
+                    }).removeClass('hidden');
+                }
+            }
+        });
     };
 
     // click on each row
@@ -71,28 +121,31 @@ $(document).ready(function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_id = this_row.prop('id'),
-            id_pair = this_id.replace('row_', '').split('_'),
-            message_id = id_pair[0],
-            user_id = id_pair[1];
+            id_arr = this_id.replace('row_', '').split('_'),
+            message_id = id_arr[0],
+            user_id = id_arr[1];
 
-        $.ajax({
-            url: '/report/drilldown/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'message_id': message_id,
-                'recipient_id': user_id
-            },
-        }).done(function (resp) {
-            $('.call_row').removeClass('row_active');
-            _this.addClass('row_active');
-            _drawPieChart(resp);
+        // reset state of right hand graph
+        $('#call_list_graph_nav').addClass('hidden');
+        $('#detail_button').addClass('hidden');
 
-            // add detail button
-            $('#detail_button').prop('href', function(i, val) {
-                return '/report/' + message_id + '/?user=' + user_id;
-            }).removeClass('hidden');
-        });
+        // get graph for 1st file
+        tabClickHandler(message_id, user_id, 1);
+
+        // handle css
+        $('.call_row').removeClass('row_active');
+        _this.addClass('row_active');
+
+        return false;
+    });
+
+    // click on the tab nav on dashboard
+    $('#call_list_graph_nav').on('click', 'a', function () {
+        var this_id = $(this).prop('id'),
+            id_arr = this_id.replace('tab_', '').split('_');
+
+        tabClickHandler(id_arr[0], id_arr[1], id_arr[2]);
+        return false;
     });
 
     // click on fix checkbox
@@ -106,6 +159,8 @@ $(document).ready(function () {
         this_email_cell.html('<input class="js_emailInput" type="text" value="' + old_email_val + '">');
         this_email_cell.data('old_value', old_email_val);
         this_row.find('.fix_cell').html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
+
+        return false;
     });
 
     // changing the text in email
@@ -136,13 +191,16 @@ $(document).ready(function () {
                 CC_GLOBAL.showErrorPopup(resp.message);
             } else {
                 this_row.remove();
-            }            
+            }
         });
+
+        return false;
     });
 
     // click on remove checkbox
     $('.js_remove').click(function () {
         $(this).closest('tr').find('.remove_cell').html('<button class="btn btn-default btn-small btn-danger js_removeButton">Remove</button>');
+        return false;
     });
 
     $('.bounces_table').on('click', '.js_removeButton', function () {
@@ -153,9 +211,11 @@ $(document).ready(function () {
             url: '/report/remove_bounce/' + this_id + '/',
             type: 'POST',
             dataType: 'json',
-        }).done(function (resp) {
+        }).done(function () {
             this_row.remove();
         });
+
+        return false;
     });
 
     // search call list table

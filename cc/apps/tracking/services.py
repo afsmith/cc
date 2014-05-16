@@ -53,7 +53,8 @@ def create_tracking_session(**kw):
         participant=kw['user'],
         tracking_log=kw['tracking_log'],
         client_ip=kw['client_ip'],
-        device=kw['device']
+        device=kw['device'],
+        file_index=kw['file_index'],
     )
 
 

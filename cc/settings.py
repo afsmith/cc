@@ -1,8 +1,8 @@
-import os
-from os import path
+from os.path import join, dirname, abspath
 import sys
 from celery.schedules import crontab
-ROOT_PATH = path.join(path.dirname(__file__))
+
+ROOT_PATH = join(dirname(__file__))
 
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
@@ -14,14 +14,14 @@ USE_L10N = True
 USE_TZ = False
 
 # media
-MEDIA_ROOT = path.abspath(path.join(ROOT_PATH, 'media'))
+MEDIA_ROOT = abspath(join(ROOT_PATH, 'media'))
 MEDIA_URL = '/media/'
 
 # static
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    path.abspath(path.join(ROOT_PATH, 'static')),
+    abspath(join(ROOT_PATH, 'static')),
 )
 
 STATICFILES_FINDERS = (
@@ -49,7 +49,7 @@ WSGI_APPLICATION = 'cc.wsgi.application'
 
 # templates
 TEMPLATE_DIRS = (
-    path.abspath(path.join(ROOT_PATH, 'templates')),
+    abspath(join(ROOT_PATH, 'templates')),
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
@@ -184,6 +184,7 @@ MESSAGE_EXPIRED_AFTER = 300  # 10 months ~ 300 days
 ##############################################################################
 # Payments
 ##############################################################################
+from stripe_plans import *
 
 SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
     # 'home',
@@ -204,13 +205,6 @@ SUBSCRIPTION_REQUIRED_REDIRECT = ('new_payments_subscribe')
 
 STRIPE_PUBLIC_KEY = "pk_test_AAXz4ICYdcu4deHMJGmKJsVB"
 STRIPE_SECRET_KEY = "sk_test_804dzBOIcp3RHtJhicEC0Glc"
-
-try:
-    from stripe_plans import *
-except ImportError:
-    print 'stripe_plans.py doesnt exist yet. Make sure you have created it.'
-
-
 
 ##############################################################################
 # Account & registration
@@ -247,8 +241,6 @@ FILE_UPLOAD_HANDLERS = (
 
 PDF_MAX_PAGES = 30
 PDF_CONVERT_QUALITY = 150
-
-
 
 ##############################################################################
 # Celery
@@ -291,7 +283,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = ['--nologcapture', '--nocapture', '--verbosity=2']
 
 FIXTURE_DIRS = (
-    path.abspath(path.join(ROOT_PATH, 'fixtures')),
+    abspath(join(ROOT_PATH, 'fixtures')),
 )
 
 
@@ -302,7 +294,7 @@ FIXTURE_DIRS = (
 FABRIC_GLOBAL = {
     'REPO_URL': 'git@github.com:afsmith/cc.git',
     'ROLE_DEF': {
-        'staging': ['109.74.12.16'],
+        'staging': ['cc-stage.kneto.com'],
         'prod': ['cc.kneto.com']
     },
     'LIVE_HOSTNAME': {
@@ -317,8 +309,6 @@ FABRIC_GLOBAL = {
         'staging': 'cc.key',
         'prod': 'cc01.key',
     },
-
-
 
     'PROJECT_NAME': 'cc',
     'LOCALE': 'en_US.UTF-8',  # Should end with ".UTF-8"

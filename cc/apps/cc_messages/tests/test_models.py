@@ -19,6 +19,4 @@ class MessageModelTestCases(TestCase):
         self.assertEqual(msg.subject, 'Foo')
         self.assertIs(len(msg.receivers.all()), 0)
         self.assertIs(len(msg.files.all()), 0)
-        self.assertIsNone(msg.key_page)
-        self.assertIs(msg.link_text, u'')
         self.assertIsNone(msg.group)

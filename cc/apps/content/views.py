@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from .forms import FileImportForm
 from .services import save_pdf, save_uploaded_image
 from .models import File
-from cc.libs.utils import get_domain
+from cc.libs.utils import get_domain, DotExpandedDict
 
 from annoying.decorators import ajax_request
 from contextlib import closing
@@ -49,3 +49,21 @@ def remove_file(request, file_id):
 def upload_image(request):
     domain = get_domain(request)
     return save_uploaded_image(request.FILES.get('file'), domain)
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def save_file_info(request):
+    params = DotExpandedDict(request.POST)
+    for k in params.keys():
+        try:
+            f = File.objects.get(pk=int(k))
+        except File.DoesNotExist:
+            print 'File {} doesnt exist'.format(k)
+            continue
+        else:
+            f.index = params[k].get('index')
+            f.link_text = params[k].get('value')
+            f.save()
+    return {}

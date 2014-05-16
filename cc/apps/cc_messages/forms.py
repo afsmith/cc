@@ -6,18 +6,15 @@ from django.conf import settings
 from .models import Message
 from cc.apps.content.models import File
 from cc.apps.accounts.models import CUser
-from cc.apps.accounts.services import create_group
 
 import re
 from datetime import timedelta
 
 
 class MessageForm(forms.ModelForm):
-    attachment = forms.IntegerField(
-        label=_('Attachment'), widget=forms.HiddenInput
-    )
     to = forms.CharField()
     signature = forms.CharField(required=False)
+    attachment = forms.CharField(widget=forms.HiddenInput)
 
     class Meta:
         model = Message
@@ -27,25 +24,12 @@ class MessageForm(forms.ModelForm):
             'notify_email_opened',
             'notify_link_clicked',
             'message',
-            'key_page',
-            'link_text',
         ]
-        exclude = ['receivers', 'owner', 'group', 'files']
+        exclude = ['receivers', 'owner', 'files']
 
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'form-control'}),
             'message': forms.Textarea(attrs={'class': 'form-control'}),
-            'key_page': forms.Select(
-                choices=[('', '----------')],
-                attrs={'class': 'form-control'}
-            ),
-            'link_text': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': _(
-                    'Add your link text (this will replace [link] '
-                    'in your message ''after you send it)'
-                ),
-            })
         }
 
     def __init__(self, *args, **kwargs):
@@ -58,12 +42,11 @@ class MessageForm(forms.ModelForm):
             'notify_email_opened',
             'notify_link_clicked',
             'message',
-            'link_text',
             'signature',
+
+            # hidden
             'attachment',
-            'key_page',
         ]
-        self.fields['link_text'].required = True
 
     def clean_to(self):
         # get list of emails out of text input
@@ -77,13 +60,14 @@ class MessageForm(forms.ModelForm):
         return email_list
 
     def clean_attachment(self):
-        file_id = self.cleaned_data['attachment']
-        if not File.objects.filter(pk=file_id).exists():
-            raise forms.ValidationError(
-                _('File with ID %d does not exist') % file_id
-            )
+        file_ids = self.cleaned_data['attachment'][:-1].split(',')
+        for id in file_ids:
+            if not File.objects.filter(pk=id).exists():
+                raise forms.ValidationError(
+                    _('File with ID %d does not exist') % id
+                )
 
-        return file_id
+        return file_ids
 
     def _fetch_receiver_ids(self):
         receiver_list = []
@@ -105,10 +89,7 @@ class MessageForm(forms.ModelForm):
 
         # then add m2m relationship after saving
         message.receivers = self.cleaned_data['to']
-        message.files.add(self.cleaned_data['attachment'])
-
-        # add the receivers group and save
-        message.group = create_group(message.receivers.all())
+        message.files = self.cleaned_data['attachment']
 
         # add signature to the main message
         message.message = re.sub(

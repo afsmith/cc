@@ -51,9 +51,6 @@ def report_detail(request, message_id):
         .order_by('created_at').reverse()
     )
 
-    # get log data group by participant
-    tracking_data = get_tracking_data_group_by_recipient(this_message)
-
     # get missing data
     missing_data = get_missing_data(this_message)
 
@@ -63,9 +60,23 @@ def report_detail(request, message_id):
     return {
         'this_message': this_message,
         'messages': all_messages,
-        'log_groupby_user': tracking_data,
         'missing_data': missing_data,
         'uninterested_recipients': uninterested_recipients
+    }
+
+
+@ensure_csrf_cookie
+@auth_decorators.login_required
+@render_to('main/_report_graph_table.html')
+def report_detail_per_file(request, message_id, file_index):
+    this_message = get_object_or_404(Message, pk=message_id)
+    # get log data group by participant
+    tracking_data = get_tracking_data_group_by_recipient(
+        this_message, file_index
+    )
+    return {
+        'this_message': this_message,
+        'tracking_data': tracking_data
     }
 
 
@@ -77,7 +88,11 @@ def user_log(request):
     if data:
         log_groupby_session = (
             TrackingSession.objects
-            .filter(message=data['message'], participant=data['user'])
+            .filter(
+                message=data['message'],
+                participant=data['user'],
+                file_index=data['file_index'],
+            )
             .annotate(total_time=Sum('trackingevent__total_time'))
             .filter(total_time__gt=0)
             .values('id', 'created_at', 'total_time', 'client_ip', 'device')
@@ -104,31 +119,67 @@ def report_drilldown(request):
     session_id = request.POST.get('session_id')
     recipient_id = request.POST.get('recipient_id')
     message_id = request.POST.get('message_id')
+    file_index = request.POST.get('file_index')
 
     this_message = get_object_or_404(Message, pk=message_id)
 
-    if session_id:  # get session log
+    if session_id:  # get session log from report detail
         data = get_tracking_data_group_by_page_number(
             tracking_session=session_id
         )
-    elif recipient_id:  # get recipient log
+    elif recipient_id:  # get recipient log from dashboard
         data = get_tracking_data_group_by_page_number(
             tracking_session__participant=recipient_id,
-            tracking_session__message=message_id
+            tracking_session__message=message_id,
+            tracking_session__file_index=file_index
         )
-    else:  # get summary log
+    else:  # get summary log from report detail
         data = get_tracking_data_group_by_page_number(
-            tracking_session__message=message_id
+            tracking_session__message=message_id,
+            tracking_session__file_index=file_index,
         )
 
     return _format_data_for_chart(data, this_message)
 
 
-def _format_data_for_chart(log, this_message):
+@auth_decorators.login_required
+@http_decorators.require_POST
+@ajax_request
+def report_dashboard(request):
+    recipient_id = request.POST.get('recipient_id')
+    message_id = request.POST.get('message_id')
+    file_index = request.POST.get('file_index')
+
+    this_message = get_object_or_404(Message, pk=message_id)
+
+    if recipient_id and message_id and file_index:
+        data = get_tracking_data_group_by_page_number(
+            tracking_session__participant=recipient_id,
+            tracking_session__message=message_id,
+            tracking_session__file_index=file_index
+        )
+        formatted_data = _format_data_for_chart(data, this_message)
+        #files = list(
+        #    this_message.files.values_list('orig_filename').order_by('index')
+        #)
+
+        return {
+            'status': 'OK',
+            #'files': files,
+            'file_count': this_message.files.count(),
+            'data': formatted_data
+        }
+    else:
+        return {
+            'status': 'ERROR'
+        }
+
+
+def _format_data_for_chart(data, this_message):
     values = []
     labels = []
     combo = []
-    for idx, p in enumerate(list(log)):
+    for idx, p in enumerate(list(data)):
         values.append([idx, p[1]/10.0])
         labels.append([idx, 'Page {}'.format(p[0])])
         combo.append(['Page {}'.format(p[0]), p[1]/10.0])
@@ -136,9 +187,8 @@ def _format_data_for_chart(log, this_message):
         'values': values,
         'labels': labels,
         'combo': combo,
-        'key_page': this_message.key_page,
         'subject': this_message.subject,
-        'total_visits': log[0][2] if len(log) > 0 else 0
+        'total_visits': data[0][2] if len(data) > 0 else 0
     }
 
 

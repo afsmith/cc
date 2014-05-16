@@ -1,0 +1,37 @@
+{% load i18n %}
+
+{% if tracking_data %}
+    <div class="report_graph"></div>
+
+    <table class="table report_table">
+        <thead>
+            <tr class="success">
+                <th>{% trans "Sold" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Viewed by" %}</th>
+                <th>{% trans "Total time" %}</th>
+                <th>{% trans "Total visits" %}</th>
+                <th>{% trans "Unique IPs" %}</th>
+                <th>{% trans "Device types" %}</th>
+            </tr>    
+        </thead>
+        
+        <tbody>
+            {% for row in tracking_data %}
+            <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}_{{ row.tracking_session__file_index }}" {% if row.closed_deal %}class="sold"{% endif %}>
+                <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
+                <td>{{ row.max_date|date:'d.m.Y H:i:s' }}</td>
+                <td id="user_{{ row.tracking_session__participant }}_{{ row.tracking_session__file_index }}" class="cell_email">{{ row.tracking_session__participant__email }}</td>
+                <td>{{ row.total_time }}</td>
+                <td>{{ row.visit_count }}</td>
+                <td>{{ row.ip_count }}</td>
+                <td>{{ row.device_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="alert alert-info">
+        {% trans "Looks like no one has viewed this file yet." %}
+    </p>
+{% endif %}
