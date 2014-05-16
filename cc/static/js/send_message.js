@@ -28,7 +28,7 @@ $(document).ready(function () {
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol']],
-                ['insert', ['picture', 'link']],
+                ['insert', ['link', 'picture', 'video']],
                 ['options', ['codeview']],
             ],
             disableDragAndDrop: true,
