@@ -7,6 +7,7 @@ from .models import Message
 from cc.apps.reports.models import Bounce
 from cc.apps.accounts.models import OneClickLinkToken, CUser
 from cc.apps.tracking.models import TrackingLog
+from cc.apps.tracking.services import create_tracking_log
 from cc.libs.utils import get_domain
 from cc.libs.exceptions import MessageExpired
 
@@ -167,11 +168,10 @@ def send_notification_email(
             should_send = False
 
         # create log anyway
-        log = TrackingLog.objects.create(
+        log = create_tracking_log(
             message=message,
             participant=recipient,
             action=action,
-            revision=2,
             file_index=file_index,
         )
 

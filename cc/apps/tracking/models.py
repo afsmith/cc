@@ -8,6 +8,7 @@ from cc.apps.accounts.models import CUser
 class TrackingLog(models.Model):
     OPEN_EMAIL_ACTION = 'OPEN_EMAIL'
     CLICK_LINK_ACTION = 'CLICK_LINK'
+    DOWNLOAD_ACTION = 'DOWNLOAD'
 
     message = models.ForeignKey(Message)
     participant = models.ForeignKey(CUser)

@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, CC_GLOBAL, log, i18, $FlexPaper*/
+/*global $, jQuery, _, CC_GLOBAL, log, i18, $FlexPaper*/
 'use strict';
 
 $(document).ready(function () {
@@ -156,6 +156,17 @@ $(document).ready(function () {
                         log('ERROR: ' + resp.message);
                     }
                 });
+
+                // init download button
+                if (!_.isUndefined(CC_GLOBAL.download_url)) {
+                    $('.js_download_button').click(function () {
+                        window.location = _.template('<%= data.url %>?user=<%= data.user %>&message=<%= data.message %>', {
+                            url: CC_GLOBAL.download_url,
+                            user: CC_GLOBAL.message_data.user_id,
+                            message: CC_GLOBAL.message_data.message_id,
+                        });
+                    }).show();
+                }
             };
 
             // init page

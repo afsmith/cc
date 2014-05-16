@@ -32,7 +32,6 @@
 
 {% endblock %}
 
-
 {% block additional_css %}
     <style type="text/css" media="screen"> 
         html, body  { height:100%; }
@@ -55,10 +54,11 @@
                 token: '{{ token }}',
                 tracking_log_id: {{ tracking_log.id }}
             };
-        {% endif %}
 
-        // get download URL
-        CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}',
+            {% if message.allow_download %}
+                CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}',    
+            {% endif %}
+        {% endif %}
 
         $.get(
             (!window.isTouchScreen) ? '{% static "html/flexpaper/UI_flexpaper_desktop.html" %}' : '{% static "html/flexpaper/UI_flexpaper_mobile.html" %}',

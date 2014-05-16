@@ -13,8 +13,13 @@ class Message(models.Model):
     receivers = models.ManyToManyField(CUser, related_name='receivers')
     cc_me = models.BooleanField(_('Send me a copy'))
     message = models.TextField(_('Message'))
-    notify_email_opened = models.BooleanField(_('Notify email is opened'))
-    notify_link_clicked = models.BooleanField(_('Notify link is clicked'))
+    notify_email_opened = models.BooleanField(
+        _('Notify me when email is opened')
+    )
+    notify_link_clicked = models.BooleanField(
+        _('Notify me when the link is clicked')
+    )
+    allow_download = models.BooleanField(_('Allow download'))
     files = models.ManyToManyField(File, related_name='files')
     owner = models.ForeignKey(CUser, related_name='owner', null=True)
     expired_at = models.DateTimeField(null=True)

@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .forms import FileImportForm
 from .services import save_pdf, save_uploaded_image
 from .models import File
-from cc.apps.tracking.models import TrackingLog
+from cc.apps.tracking.services import create_tracking_log
 from cc.libs.utils import get_domain, DotExpandedDict
 
 from annoying.decorators import ajax_request
@@ -87,13 +87,14 @@ def download_file(request, file_id):
         smart_str(f.orig_file_path)
     )
 
-    # log in DB
-    #log = TrackingLog.objects.create(
-    #    message=message,
-    #    participant=recipient,
-    #    action=action,
-    #    revision=2,
-    #    file_index=file_index,
-    #)
+    # create the tracking log
+    message_id = request.GET.get('message')
+    user_id = request.GET.get('user')
+    create_tracking_log(
+        message=message_id,
+        participant=user_id,
+        action='DOWNLOAD',
+        file_index=f.index,
+    )
 
     return response

@@ -23,6 +23,7 @@ class MessageForm(forms.ModelForm):
             'cc_me',
             'notify_email_opened',
             'notify_link_clicked',
+            'allow_download',
             'message',
         ]
         exclude = ['receivers', 'owner', 'files']
@@ -40,6 +41,7 @@ class MessageForm(forms.ModelForm):
             'subject',
             'cc_me',
             'notify_email_opened',
+            'allow_download',
             'notify_link_clicked',
             'message',
             'signature',

@@ -47,6 +47,28 @@ def validate_request(request, type):
             return False
 
 
+def create_tracking_log(**kw):
+    message = kw['message']
+    participant = kw['participant']
+    if not isinstance(message, Message):
+        try:
+            message = Message.objects.get(pk=message)
+        except Message.DoesNotExist:
+            return False
+    if not isinstance(participant, CUser):
+        try:
+            participant = CUser.objects.get(pk=participant)
+        except CUser.DoesNotExist:
+            return False
+    return TrackingLog.objects.create(
+        message=message,
+        participant=participant,
+        action=kw['action'],
+        file_index=kw['file_index'],
+        revision=2,
+    )
+
+
 def create_tracking_session(**kw):
     return TrackingSession.objects.create(
         message=kw['message'],
