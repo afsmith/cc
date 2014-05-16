@@ -1,29 +1,30 @@
-<div id='toolbar1' class='flexpaper_toolbar flexpaper_toolbarstd'>
-    <img src='/static/img/flexpaper/print-icon.gif' class='flexpaper_tbbutton flexpaper_bttnPrint' title='Print' alt='Print' onclick='$FlexPaper("message_viewer").printPaper();' />
-    <img src='/static/img/flexpaper/bar.gif' class='flexpaper_tbseparator' alt='' />
-    <img src='/static/img/flexpaper/singlepage.gif' border='0' class='flexpaper_bttnSinglePage flexpaper_tbbutton_pressed flexpaper_tbbutton flexpaper_tbbutton_viewmode flexpaper_viewmode' onclick='$FlexPaper("message_viewer").switchMode("Portrait")' title='Single Page' alt='Single Page' />
-  <!--  <img src='/static/img/flexpaper/twopage.gif' border='0' class='flexpaper_bttnTwoPage flexpaper_tbbutton flexpaper_tbbutton_viewmode flexpaper_viewmode' title='Two Pages' alt='Two Pages' onclick='$FlexPaper("message_viewer").switchMode("TwoPage")'  /> -->
-    <img src='/static/img/flexpaper/thumbs.gif' border='0' class='flexpaper_bttnThumbView flexpaper_tbbutton flexpaper_tbbutton_viewmode flexpaper_viewmode' title='Thumb View' alt='Thumb View' onclick='$FlexPaper("message_viewer").switchMode("Tile")'  />
-    <img src='/static/img/flexpaper/fit.gif' class='flexpaper_bttnFitWidth flexpaper_tbbutton flexpaper_tbbutton_fitmode flexpaper_fitmode' title='Fit Width' alt='Fit Width' onclick='$FlexPaper("message_viewer").fitWidth()'  />
-    <img src='/static/img/flexpaper/pagefit.gif' class='flexpaper_bttnFitHeight flexpaper_tbbutton flexpaper_tbbutton_fitmode flexpaper_fitmode' title='Fit Page' alt='Fit Page' onclick='$FlexPaper("message_viewer").fitHeight()'  />
-    <img src='/static/img/flexpaper/flip.gif' class='flexpaper_tbbutton' title='Rotate' alt='Rotate' onclick='$FlexPaper("message_viewer").rotate()'  />
-    <img src='/static/img/flexpaper/bar.gif' class='flexpaper_tbseparator' alt='' />
-    <div class='flexpaper_slider flexpaper_zoomSlider'><div class='flexpaper_handle'></div></div>
-    <input type='text' class='flexpaper_tbtextinput flexpaper_txtZoomFactor' style='width:36px;' />
-    <img src='/static/img/flexpaper/fullscreen.gif' class='flexpaper_bttnFullScreen flexpaper_tbbutton' title='Fullscreen' alt='Fullscreen' onclick='jQuery("#message_viewer").showFullScreen();'  />
-    <img src='/static/img/flexpaper/bar.gif' class='flexpaper_tbseparator' alt='' />
-    <img src='/static/img/flexpaper/icon-arrow-left.gif' class='flexpaper_bttnPrevPage flexpaper_tbbutton' onclick='$FlexPaper("message_viewer").prevPage()' title='Previous Page' alt='Previous Page'/>
-    <input type='text' class='flexpaper_txtPageNumber flexpaper_tbtextinput' style='width:36px;' />
-    <div class='flexpaper_lblTotalPages flexpaper_tblabel'> / </div>
-    <img src='/static/img/flexpaper/icon-arrow-right.gif' class='flexpaper_bttnPrevNext flexpaper_tbbutton' onclick='$FlexPaper("message_viewer").nextPage()' title='Next Page' alt='Next Page'/>
-    <img src='/static/img/flexpaper/bar.gif' class='flexpaper_tbseparator' alt='' />
-  <!--  <img src='/static/img/flexpaper/textselect.gif' class='flexpaper_bttnTextSelect flexpaper_tbbutton' title='Select Text' alt='Select Text' onclick="$FlexPaper('message_viewer').setCurrentCursor('TextSelectorCursor')"/>
-    <img src='/static/img/flexpaper/hand2.gif' class='flexpaper_bttnHand flexpaper_tbbutton flexpaper_tbbutton_pressed' title='Drag Cursor' alt='Drag Cursor'  onclick="$FlexPaper('message_viewer').setCurrentCursor('ArrowCursor')"/> -->
-    <img src='/static/img/flexpaper/bar.gif' class='flexpaper_tbseparator' alt='' />
-    <input type='text' class='flexpaper_txtSearch flexpaper_tbtextinput' style='width:56px;margin-left:4px;' />
-    <img src='/static/img/flexpaper/find.gif' class='flexpaper_bttnTextSearch flexpaper_tbbutton' onclick='$FlexPaper("message_viewer").searchText(jQuery(this).parent().find(".flexpaper_txtSearch").val());' title='Search' alt='Search'/>
-    <img src='/static/img/flexpaper/bar.gif' class='flexpaper_tbseparator' alt='' />
-    <img src='/static/img/flexpaper/loader.gif' class='flexpaper_progress flexpaper_tbloader' alt='' />
+<div id="toolbar1" class="flexpaper_toolbar flexpaper_toolbarstd">
+    <img src="/static/img/download.png" class="flexpaper_tbbutton" title="Download" alt="Download" onclick="javascript:location.href=CC_GLOBAL.download_url" />
+    <!--img src="/static/img/flexpaper/print-icon.gif" class="flexpaper_tbbutton flexpaper_bttnPrint" title="Print" alt="Print" onclick="$FlexPaper("message_viewer").printPaper();" /-->
+    <img src="/static/img/flexpaper/bar.gif" class="flexpaper_tbseparator" alt="" />
+    <img src="/static/img/flexpaper/singlepage.gif" border="0" class="flexpaper_bttnSinglePage flexpaper_tbbutton_pressed flexpaper_tbbutton flexpaper_tbbutton_viewmode flexpaper_viewmode" onclick="$FlexPaper("message_viewer").switchMode("Portrait")" title="Single Page" alt="Single Page" />
+    <!--img src="/static/img/flexpaper/twopage.gif" border="0" class="flexpaper_bttnTwoPage flexpaper_tbbutton flexpaper_tbbutton_viewmode flexpaper_viewmode" title="Two Pages" alt="Two Pages" onclick="$FlexPaper("message_viewer").switchMode("TwoPage")"  /-->
+    <img src="/static/img/flexpaper/thumbs.gif" border="0" class="flexpaper_bttnThumbView flexpaper_tbbutton flexpaper_tbbutton_viewmode flexpaper_viewmode" title="Thumb View" alt="Thumb View" onclick="$FlexPaper("message_viewer").switchMode("Tile")"  />
+    <img src="/static/img/flexpaper/fit.gif" class="flexpaper_bttnFitWidth flexpaper_tbbutton flexpaper_tbbutton_fitmode flexpaper_fitmode" title="Fit Width" alt="Fit Width" onclick="$FlexPaper("message_viewer").fitWidth()"  />
+    <img src="/static/img/flexpaper/pagefit.gif" class="flexpaper_bttnFitHeight flexpaper_tbbutton flexpaper_tbbutton_fitmode flexpaper_fitmode" title="Fit Page" alt="Fit Page" onclick="$FlexPaper("message_viewer").fitHeight()"  />
+    <img src="/static/img/flexpaper/flip.gif" class="flexpaper_tbbutton" title="Rotate" alt="Rotate" onclick="$FlexPaper("message_viewer").rotate()"  />
+    <img src="/static/img/flexpaper/bar.gif" class="flexpaper_tbseparator" alt="" />
+    <div class="flexpaper_slider flexpaper_zoomSlider"><div class="flexpaper_handle"></div></div>
+    <input type="text" class="flexpaper_tbtextinput flexpaper_txtZoomFactor" style="width:36px;" />
+    <img src="/static/img/flexpaper/fullscreen.gif" class="flexpaper_bttnFullScreen flexpaper_tbbutton" title="Fullscreen" alt="Fullscreen" onclick="jQuery("#message_viewer").showFullScreen();"  />
+    <img src="/static/img/flexpaper/bar.gif" class="flexpaper_tbseparator" alt="" />
+    <img src="/static/img/flexpaper/icon-arrow-left.gif" class="flexpaper_bttnPrevPage flexpaper_tbbutton" onclick="$FlexPaper("message_viewer").prevPage()" title="Previous Page" alt="Previous Page"/>
+    <input type="text" class="flexpaper_txtPageNumber flexpaper_tbtextinput" style="width:36px;" />
+    <div class="flexpaper_lblTotalPages flexpaper_tblabel"> / </div>
+    <img src="/static/img/flexpaper/icon-arrow-right.gif" class="flexpaper_bttnPrevNext flexpaper_tbbutton" onclick="$FlexPaper("message_viewer").nextPage()" title="Next Page" alt="Next Page"/>
+    <img src="/static/img/flexpaper/bar.gif" class="flexpaper_tbseparator" alt="" />
+    <!--img src="/static/img/flexpaper/textselect.gif" class="flexpaper_bttnTextSelect flexpaper_tbbutton" title="Select Text" alt="Select Text" onclick="$FlexPaper("message_viewer").setCurrentCursor("TextSelectorCursor")"/>
+    <img src="/static/img/flexpaper/hand2.gif" class="flexpaper_bttnHand flexpaper_tbbutton flexpaper_tbbutton_pressed" title="Drag Cursor" alt="Drag Cursor"  onclick="$FlexPaper("message_viewer").setCurrentCursor("ArrowCursor")"/-->
+    <img src="/static/img/flexpaper/bar.gif" class="flexpaper_tbseparator" alt="" />
+    <input type="text" class="flexpaper_txtSearch flexpaper_tbtextinput" style="width:56px;margin-left:4px;" />
+    <img src="/static/img/flexpaper/find.gif" class="flexpaper_bttnTextSearch flexpaper_tbbutton" onclick="$FlexPaper("message_viewer").searchText(jQuery(this).parent().find(".flexpaper_txtSearch").val());" title="Search" alt="Search"/>
+    <img src="/static/img/flexpaper/bar.gif" class="flexpaper_tbseparator" alt="" />
+    <img src="/static/img/flexpaper/loader.gif" class="flexpaper_progress flexpaper_tbloader" alt="" />
 </div>
 
 <script language="javascript">
@@ -33,6 +34,6 @@
     var browser_v   = (userAgent.match(/.+?(?:rv|it|ra|ie)[\/: ]([\d.]+)(?!.+opera)/) || [])[1];
 
     if(ismsie && browser_v < 8){
-        jQuery('.flexpaper_tbtextinput').css('height','12px');
+        jQuery('.flexpaper_tbtextinput').css('height', '12px');
     }
 </script>

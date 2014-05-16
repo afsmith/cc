@@ -3,10 +3,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.accounts.models import CUser
-
 from cc.libs import utils
 
-import os
+from os.path import join, abspath
 import urlparse
 import type_specifiers
 
@@ -219,7 +218,7 @@ class File(models.Model):
         :return: URL
         :rtype: ``str``
         """
-        path = os.path.join(settings.CONTENT_UPLOADED_DIR, self.orig_file_path)
+        path = join(settings.CONTENT_UPLOADED_DIR, self.orig_file_path)
         return urlparse.urljoin(settings.MEDIA_URL, path)
 
     @property
@@ -229,9 +228,7 @@ class File(models.Model):
         :return: URL
         :rtype: ``str``
         """
-        path = os.path.join(
-            settings.CONTENT_AVAILABLE_DIR, self.conv_file_path
-        )
+        path = join(settings.CONTENT_AVAILABLE_DIR, self.conv_file_path)
         return urlparse.urljoin(settings.MEDIA_URL, path)
 
     @property
@@ -251,6 +248,11 @@ class File(models.Model):
         :rtype: `str`
         """
         return '%s_%s.%s' % (self.key, self.subkey_orig, self.ext)
+
+    @property
+    def orig_file_abspath(self):
+        path = join(settings.CONTENT_UPLOADED_DIR, self.orig_file_path)
+        return abspath(join(settings.MEDIA_ROOT, path))
 
     @property
     def conv_file_path(self):

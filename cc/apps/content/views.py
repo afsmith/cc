@@ -2,10 +2,13 @@ from django.core.files import storage
 from django.contrib.auth import decorators as auth_decorators
 from django.views.decorators import http as http_decorators
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_str
+from django.http import HttpResponse
 
 from .forms import FileImportForm
 from .services import save_pdf, save_uploaded_image
 from .models import File
+from cc.apps.tracking.models import TrackingLog
 from cc.libs.utils import get_domain, DotExpandedDict
 
 from annoying.decorators import ajax_request
@@ -67,3 +70,30 @@ def save_file_info(request):
             f.link_text = params[k].get('value')
             f.save()
     return {}
+
+
+def download_file(request, file_id):
+    try:
+        f = File.objects.get(pk=file_id)
+    except File.DoesNotExist:
+        return HttpResponse()
+
+    file_stream = open(f.orig_file_abspath, 'r')
+    response = HttpResponse(
+        file_stream.read(),
+        mimetype='application/octet-stream'  # 'application/force-download'
+    )
+    response['Content-Disposition'] = 'attachment; filename={}'.format(
+        smart_str(f.orig_file_path)
+    )
+
+    # log in DB
+    #log = TrackingLog.objects.create(
+    #    message=message,
+    #    participant=recipient,
+    #    action=action,
+    #    revision=2,
+    #    file_index=file_index,
+    #)
+
+    return response

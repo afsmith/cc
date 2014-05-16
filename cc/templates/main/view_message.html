@@ -57,7 +57,9 @@
             };
         {% endif %}
 
-            
+        // get download URL
+        CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}',
+
         $.get(
             (!window.isTouchScreen) ? '{% static "html/flexpaper/UI_flexpaper_desktop.html" %}' : '{% static "html/flexpaper/UI_flexpaper_mobile.html" %}',
             function(toolbarData) {
