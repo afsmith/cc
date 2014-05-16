@@ -177,7 +177,11 @@ window.FlexPaperViewerEmbedding = window.$f = function(id, args) {
     // add TrackingNumber to the data collection for easier use in events later
     if(config.TrackingNumber && config.TrackingNumber.length>0){
 
-        jQuery('#'+id).data('TrackingDocument',(_PDFFile || _SWFFile?(unescape(_SWFFile).replace(/\{/g,"")):null || _JSONFile?(unescape(_JSONFile).replace(/\{/g,"")):null));
+        var _trackSWFFile = _SWFFile; if(_trackSWFFile){_trackSWFFile = (_trackSWFFile.indexOf("/")>0?_trackSWFFile.substr(_trackSWFFile.lastIndexOf("/")+1):_trackSWFFile); _trackSWFFile = _trackSWFFile.replace("_[*,0]",""); _trackSWFFile = _trackSWFFile.replace(".swf",".pdf"); _trackSWFFile = (_trackSWFFile.indexOf("}")>0?_trackSWFFile.substr(0,_trackSWFFile.lastIndexOf(",")):_trackSWFFile);}
+        var _trackPDFFile = _PDFFile; if(_trackPDFFile){_trackPDFFile = (_trackPDFFile.indexOf("/")>0?_trackPDFFile.substr(_trackPDFFile.lastIndexOf("/")+1):_trackPDFFile); _trackPDFFile = _trackPDFFile.replace("_[*,0]","").replace("_[*,2]","");}
+        var _trackJSONFile = _JSONFile; if(_JSONFile){_trackJSONFile = (_trackJSONFile.indexOf("/")>0?_trackJSONFile.substr(_trackJSONFile.lastIndexOf("/")+1):_trackJSONFile); _trackJSONFile = _trackJSONFile.replace("{page}",""); _trackJSONFile = _trackJSONFile.replace(".js",".pdf");}
+
+        jQuery('#'+id).data('TrackingDocument',(_trackPDFFile || _trackSWFFile || _trackJSONFile));
         jQuery('#'+id).data('TrackingNumber',config.TrackingNumber);
     }
 };
