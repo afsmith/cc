@@ -4,11 +4,10 @@
 {% block meta_title %}{% trans "Register an account" %}{% endblock %}
 
 {% block content %}
-{% if error %}
+    {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
 
-    {% trans "Please start the registration by entering your username" %}
     <form id="loginForm" method="POST" action="" class="well registration_form">
         {% csrf_token %}
         {{ form|as_bootstrap }}
