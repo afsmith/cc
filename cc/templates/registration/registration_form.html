@@ -3,7 +3,7 @@
 
 {% block meta_title %}{% trans "Register an account" %}{% endblock %}
 
-{% block content %}
+{% block registration_content %}
     {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
@@ -19,6 +19,5 @@
         <div style="margin-top: 10px;">
             <a class="btn btn-default" href="{% url 'home' %}" style="margin-top: 10px;">{% trans "Cancel" %}</a>
         </div>
-
     </form>
 {% endblock %}
