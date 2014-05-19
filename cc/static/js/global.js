@@ -1,10 +1,29 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, _, CC_GLOBAL, log, i18, escape, unescape*/
+/*global $, jQuery, _, CC_GLOBAL, log, escape, unescape*/
 'use strict';
 
 var CC_GLOBAL = {};
 
 // ------------------------------- AJAX ------------------------------- //
+// get cookie function
+CC_GLOBAL.getCookie = function (name) {
+    var cookieValue = null,
+        cookies,
+        cookie,
+        i;
+    if (document.cookie && document.cookie !== '') {
+        cookies = document.cookie.split(';');
+        for (i = 0; i < cookies.length; i += 1) {
+            cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+};
+
 // CSRF token setup for AJAX
 CC_GLOBAL.csrfSafeMethod = function (method) {
     // these HTTP methods do not require CSRF protection
@@ -14,7 +33,7 @@ $.ajaxSetup({
     crossDomain: false, // obviates need for sameOrigin test
     beforeSend: function (xhr, settings) {
         if (!CC_GLOBAL.csrfSafeMethod(settings.type)) {
-            xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+            xhr.setRequestHeader("X-CSRFToken", CC_GLOBAL.getCookie('csrftoken'));
         }
     }
 });
@@ -28,20 +47,11 @@ CC_GLOBAL.removeSpinner = function () {
 };
 
 
-// ------------------------------- AJAX ------------------------------- //
+// ------------------------------- Settings ------------------------------- //
 _.templateSettings.variable = 'data';
 
 
 // --------------------------- Global functions --------------------------- //
-// global function to get translated text
-var i18 = function (key) {
-    if (CC_GLOBAL.i18n.hasOwnProperty(key)) {
-        return CC_GLOBAL.i18n[key];
-    }
-    console.log('[NOTICE] No translation is available for: ' + key);
-    return key;
-};
-
 // shortcut for console.log()
 if (!window.console) {
     window.console = {};
@@ -68,7 +78,6 @@ CC_GLOBAL.GETParam = (function (a) {
     }
     return b;
 }(window.location.search.substr(1).split('&')));
-
 
 // filter table by text
 $.expr[':'].Contains = function (a, i, m) {

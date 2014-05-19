@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, _, CC_GLOBAL, log, i18, $FlexPaper*/
+/*global $, jQuery, _, CC_GLOBAL, log, $FlexPaper*/
 'use strict';
 
 $(document).ready(function () {

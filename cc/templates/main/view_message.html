@@ -56,7 +56,7 @@
             };
 
             {% if message.allow_download %}
-                CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}',    
+                CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}';
             {% endif %}
         {% endif %}
 

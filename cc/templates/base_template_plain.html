@@ -1,14 +1,14 @@
-{% load i18n staticfiles extras analytical cookielaw_tags %}
+{% load i18n staticfiles extras analytical %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-   {% analytical_head_top %}
+    {% analytical_head_top %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>CC - {% block meta_title %}{% endblock %}</title>
+    <title>Kneto CC - {% block meta_title %}{% endblock %}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     
@@ -22,18 +22,13 @@
 <body{% block bodyclass %}{% endblock %}>
     {% analytical_body_top %}
 
-    <div>
-        {% block content %}{% endblock %}
-    </div> <!-- /container -->
+    {% block content %}{% endblock %}
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{% static "js/vendor/jquery-1.9.1.min.js" %}"><\/script>')</script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     
     <script src="{% static 'js/global.js' %}"></script>
-    <script src="{% static 'js/locale/locale_en.js' %}"></script>
-    
     
     {% block js_scripts %}{% endblock %}
 

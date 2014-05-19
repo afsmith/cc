@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, _, CC_GLOBAL, log, i18, Highcharts*/
+/*global $, jQuery, _, CC_GLOBAL, log, Highcharts*/
 'use strict';
 
 $(document).ready(function () {

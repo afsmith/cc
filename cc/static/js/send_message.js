@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, _, CC_GLOBAL, log, Dropzone, i18*/
+/*global $, jQuery, _, CC_GLOBAL, log, Dropzone*/
 'use strict';
 
 $(document).ready(function () {
@@ -252,9 +252,8 @@ $(document).ready(function () {
     renderUploadError = function (error_message) {
         upload_form.addClass('error');
         upload_form.prepend(
-            _.template('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button><%= data.error %>: <%= data.message %></p>', {
-                error: i18('ERROR_OCURRED'),
-                message: error_message
+            _.template('<p class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>An error occurred: <%= data.error %></p>', {
+                error: error_message
             })
         );
     };
