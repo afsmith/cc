@@ -84,7 +84,7 @@ def download_file(request, file_id):
         mimetype='application/octet-stream'  # 'application/force-download'
     )
     response['Content-Disposition'] = 'attachment; filename={}'.format(
-        smart_str(f.orig_file_path)
+        smart_str(f.orig_filename)
     )
 
     # create the tracking log
