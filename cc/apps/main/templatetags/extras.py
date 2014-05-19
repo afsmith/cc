@@ -1,6 +1,8 @@
 from django import template
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.conf import settings
+
+import re
 
 register = template.Library()
 
@@ -12,8 +14,17 @@ def type(obj):
 
 @register.simple_tag
 def active(request, route):
-    if request.path == reverse(route):
+    try:
+        pattern = reverse(route)
+    except NoReverseMatch:
+        pattern = route
+    path = request.path
+    if path == pattern:
         return 'active'
+    else:
+        match = re.search(pattern, path)
+        if match and match.group() != '/':
+            return 'active'
     return ''
 
 

@@ -52,7 +52,7 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                         {% if user.is_authenticated %}
-                         <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Dashboard' %}</a></li>
+                        <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Dashboard' %}</a></li>
                         <li class="{% active request 'send_message' %}"><a href="{% url 'send_message' %}">{% trans 'Send' %}</a></li>
                         <li class="{% active request 'report_index' %}"><a href="{% url 'report_index' %}">{% trans 'Report' %}</a></li>
                         {% endif %}
@@ -61,7 +61,7 @@
                     {% if user.is_authenticated %}
                     <div class="dropdown collapse pull-right navbar-collapse">
                         <ul id="top_nav" class="nav dropdown navbar-nav">
-                            <li class="dropdown">
+                            <li class="dropdown {% active request 'payments' %}">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ user.first_name }} {{ user.last_name }} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{% url 'payments_subscribe' %}">{% trans 'Account' %}</a></li>
