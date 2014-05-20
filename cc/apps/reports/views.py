@@ -74,9 +74,13 @@ def report_detail_per_file(request, message_id, file_index):
     tracking_data = get_tracking_data_group_by_recipient(
         this_message, file_index
     )
+    # get the file
+    f = this_message.files.get(index=file_index)
+
     return {
         'this_message': this_message,
-        'tracking_data': tracking_data
+        'tracking_data': tracking_data,
+        'file': f
     }
 
 

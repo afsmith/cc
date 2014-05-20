@@ -3,6 +3,8 @@
 {% if tracking_data %}
     <div class="report_graph"></div>
 
+    <a href="{% url "download_file" file_id=file.id %}" class="btn btn-info pull-right download_btn">{% trans "Download original file" %}   <span class="glyphicon glyphicon-cloud-download"></span></a>
+    
     <table class="table report_table">
         <thead>
             <tr class="success">
@@ -34,4 +36,6 @@
     <p class="alert alert-info">
         {% trans "Looks like no one has viewed this file yet." %}
     </p>
+
+    <a href="{% url "download_file" file_id=file.id %}" class="btn btn-info pull-right download_btn">{% trans "Download original file" %}   <span class="glyphicon glyphicon-cloud-download"></span></a>
 {% endif %}

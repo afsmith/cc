@@ -163,38 +163,45 @@ form {
 }
 
 // --------------------------- report page --------------------------- //
-.report_graph {
-    width: 100%;
-    height: 500px;
-    margin: 10px 0 30px 0;
+.report_wrapper {
+    .report_graph {
+        width: 100%;
+        height: 500px;
+        margin: 10px 0 30px 0;
+    }
+
+    .report_table {
+        .cell_email {
+            cursor: pointer;
+        }
+        .log_opened {
+            background: @report_row_clicked_bg;
+        }
+        .sold {
+            color: #999;
+        }
+        .log_row {
+            cursor: pointer;
+            &:hover {
+                background: @report_row_log_bg;
+            }
+            &.row_iOS {
+                background: @error_bg;
+                cursor: default;
+            }
+        }
+    }
+
+    .report_thumbnail {
+        display: block;
+        min-height: 350px;
+    }
+
+    .download_btn {
+        margin-bottom: 30px;
+    }
 }
 
-.report_table {
-    .cell_email {
-        cursor: pointer;
-    }
-    .log_opened {
-        background: @report_row_clicked_bg;
-    }
-    .sold {
-        color: #999;
-    }
-    .log_row {
-        cursor: pointer;
-        &:hover {
-            background: @report_row_log_bg;
-        }
-        &.row_iOS {
-            background: @error_bg;
-            cursor: default;
-        }
-    }
-}
-
-.report_thumbnail {
-    display: block;
-    min-height: 350px;
-}
 
 // --------------------------- payments page --------------------------- //
 #payment_wrapper {
