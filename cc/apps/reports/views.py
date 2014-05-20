@@ -139,7 +139,7 @@ def report_drilldown(request):
             tracking_session__file_index=file_index,
         )
 
-    return _format_data_for_chart(data, this_message)
+    return _format_data_for_chart(data, this_message, file_index)
 
 
 @auth_decorators.login_required
@@ -175,25 +175,34 @@ def report_dashboard(request):
         }
 
 
-def _format_data_for_chart(data, this_message):
+def _format_data_for_chart(data, this_message, file_index):
     values = []
     labels = []
     combo = []
+    imgs = []
     limit = 10 * 60  # 10 minutes
     is_bigger_than_limit = False
+
+    # get images for file
+    f = this_message.files.get(index=file_index)
+
+    # get tracking data
     for idx, p in enumerate(list(data)):
         values.append([idx, p[1]/10.0])
         labels.append([idx, 'Page {}'.format(p[0])])
         combo.append(['Page {}'.format(p[0]), p[1]/10.0])
+        imgs.append('{}/{}.png'.format(f.view_url, (idx+1)))
         if p[1]/10.0 > limit:
             is_bigger_than_limit = True
+
     return {
         'values': values,
         'labels': labels,
         'combo': combo,
+        'imgs': imgs,
         'subject': this_message.subject,
         'total_visits': data[0][2] if len(data) > 0 else 0,
-        'is_bigger_than_limit': is_bigger_than_limit
+        'is_bigger_than_limit': is_bigger_than_limit,
     }
 
 

@@ -46,22 +46,10 @@ $(document).ready(function () {
     // draw chart function
     drawBarChart = function (json_data) {
         var options,
-            colors = Highcharts.getOptions().colors,
             len = json_data.values.length,
-            column_colors = [],
-            bar_width = Math.log(39 / len) * 80, // HIEU's algorithm to set column width nicely
-            i = 0;
+            bar_width = Math.log(39 / len) * 80; // HIEU's algorithm to set column width nicely
 
         if (typeof json_data === 'object' && len > 0) {
-            // change color for key page
-            for (i = 0; i < len; i += 1) {
-                if (i === json_data.key_page - 1) {
-                    column_colors.push(colors[3]);
-                } else {
-                    column_colors.push(colors[2]);
-                }
-            }
-
             // create option
             options = {
                 chart: {
@@ -105,10 +93,15 @@ $(document).ready(function () {
                         colorByPoint: true,
                     }
                 },
-                colors: column_colors,
+                colors: ['#008CBA'], // match color of top navigation
                 tooltip: {
+                    useHTML: true,
                     formatter: function () {
-                        return this.x[1] + ': ' + CC_GLOBAL.second2time(this.y);
+                        return _.template('<div class="report_thumbnail"><p><%= data.page %>: <%= data.time %></p><img src="<%= data.img %>" width="250" /></div>', {
+                            page: this.x[1],
+                            time: CC_GLOBAL.second2time(this.y),
+                            img: json_data.imgs[this.x[0]]
+                        });
                     }
                 },
                 series: [{
@@ -118,6 +111,7 @@ $(document).ready(function () {
                 }]
             };
 
+            // set the y axis limit to 600 (10 minutes) if there is a page data over that limit
             if (json_data.is_bigger_than_limit) {
                 options.yAxis.max = 600;
                 options.yAxis.labels = {
@@ -143,7 +137,10 @@ $(document).ready(function () {
             url: '/report/drilldown/',
             type: 'POST',
             dataType: 'json',
-            data: {'message_id': this_message_id, 'file_index': file_index},
+            data: {
+                'message_id': this_message_id,
+                'file_index': file_index
+            },
         }).done(function (resp) {
             drawBarChart(resp);
         });
@@ -254,7 +251,8 @@ $(document).ready(function () {
             dataType: 'json',
             data: {
                 'message_id': this_message_id,
-                'session_id': this_session_id
+                'session_id': this_session_id,
+                'file_index': $('.nav-tabs li.active a').data('index')
             },
         }).done(function (resp) {
             drawBarChart(resp);
