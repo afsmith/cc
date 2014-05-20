@@ -158,10 +158,7 @@ def report_dashboard(request):
             tracking_session__message=message_id,
             tracking_session__file_index=file_index
         )
-        formatted_data = _format_data_for_chart(data, this_message)
-        #files = list(
-        #    this_message.files.values_list('orig_filename').order_by('index')
-        #)
+        formatted_data = _format_data_for_chart(data, this_message, file_index)
 
         return {
             'status': 'OK',
