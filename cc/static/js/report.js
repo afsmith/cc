@@ -222,6 +222,7 @@ $(document).ready(function () {
                                 this_id: this_id,
                                 created_ts: resp[i].created_ts,
                                 total_time: resp[i].total_time,
+                                client_ip: resp[i].client_ip,
                                 device: resp[i].device,
                             });
                         }
