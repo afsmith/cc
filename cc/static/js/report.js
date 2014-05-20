@@ -108,7 +108,7 @@ $(document).ready(function () {
                 colors: column_colors,
                 tooltip: {
                     formatter: function () {
-                        return this.x[1] + ': ' + this.y + ' seconds';
+                        return this.x[1] + ': ' + CC_GLOBAL.second2time(this.y);
                     }
                 },
                 series: [{
@@ -117,6 +117,18 @@ $(document).ready(function () {
                     pointWidth: bar_width,
                 }]
             };
+
+            if (json_data.is_bigger_than_limit) {
+                options.yAxis.max = 600;
+                options.yAxis.labels = {
+                    formatter: function () {
+                        if (this.value < 600) {
+                            return this.value;
+                        }
+                        return '600+';
+                    }
+                };
+            }
 
             // draw chart
             $('.report_graph:visible').highcharts(options);

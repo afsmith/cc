@@ -179,16 +179,21 @@ def _format_data_for_chart(data, this_message):
     values = []
     labels = []
     combo = []
+    limit = 10 * 60  # 10 minutes
+    is_bigger_than_limit = False
     for idx, p in enumerate(list(data)):
         values.append([idx, p[1]/10.0])
         labels.append([idx, 'Page {}'.format(p[0])])
         combo.append(['Page {}'.format(p[0]), p[1]/10.0])
+        if p[1]/10.0 > limit:
+            is_bigger_than_limit = True
     return {
         'values': values,
         'labels': labels,
         'combo': combo,
         'subject': this_message.subject,
-        'total_visits': data[0][2] if len(data) > 0 else 0
+        'total_visits': data[0][2] if len(data) > 0 else 0,
+        'is_bigger_than_limit': is_bigger_than_limit
     }
 
 

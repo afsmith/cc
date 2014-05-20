@@ -33,7 +33,7 @@ $.ajaxSetup({
     crossDomain: false, // obviates need for sameOrigin test
     beforeSend: function (xhr, settings) {
         if (!CC_GLOBAL.csrfSafeMethod(settings.type)) {
-            xhr.setRequestHeader("X-CSRFToken", CC_GLOBAL.getCookie('csrftoken'));
+            xhr.setRequestHeader('X-CSRFToken', CC_GLOBAL.getCookie('csrftoken'));
         }
     }
 });
@@ -81,7 +81,7 @@ CC_GLOBAL.GETParam = (function (a) {
 
 // filter table by text
 $.expr[':'].Contains = function (a, i, m) {
-    return (a.textContent || a.innerText || "").toUpperCase().indexOf(unescape(m[3]).toUpperCase()) >= 0;
+    return (a.textContent || a.innerText || '').toUpperCase().indexOf(unescape(m[3]).toUpperCase()) >= 0;
 };
 CC_GLOBAL.filterTable = function (table_body, filter_input) {
     $(filter_input).keyup(function () {
@@ -121,4 +121,22 @@ CC_GLOBAL.getCurrentBrowser = function () {
     }
     M = M ? [M[1], M[2]] : [N, navigator.appVersion];
     return M;  // [browser name, browser version]
+};
+
+// convert seconds to time
+CC_GLOBAL.second2time = function (seconds) {
+    var hours = Math.floor(seconds / 3600),
+        minutes = Math.floor((seconds - (hours * 3600)) / 60),
+        time = '';
+    seconds = Math.round((seconds - (hours * 3600) - (minutes * 60)) * 10) / 10;
+
+    if (hours !== 0) {
+        time = hours + 'h';
+    }
+    if (minutes !== 0 || time !== '') {
+        time += minutes + 'm';
+    }
+    time += seconds + 's';
+
+    return time;
 };
