@@ -33,28 +33,30 @@ def validate_request(request):
 
 
 def get_tracking_data_group_by_recipient(message, file_index=None):
-    qs = TrackingEvent.objects.filter(tracking_session__message=message)
+    qs = TrackingEvent.objects.filter(
+        tracking_session__message=message
+    ).values(
+        'tracking_session__participant',
+        'tracking_session__participant__email',
+    )
+    # if there is file_index, query per file
     if file_index:
         qs = TrackingEvent.objects.filter(
             tracking_session__message=message,
             tracking_session__file_index=file_index
-        )
-
-    tracking_data = (
-        qs.values(
+        ).values(
             'tracking_session__participant',
             'tracking_session__participant__email',
             'tracking_session__file_index',
         )
-        .annotate(
-            total_time=Sum('total_time'),
-            ip_count=Count('tracking_session__client_ip', distinct=True),
-            device_count=Count('tracking_session__device', distinct=True),
-            visit_count=Count('id'),
-            max_date=Max('tracking_session__created_at'),
-        )
-        .order_by()
-    )
+
+    tracking_data = qs.annotate(
+        total_time=Sum('total_time'),
+        ip_count=Count('tracking_session__client_ip', distinct=True),
+        device_count=Count('tracking_session__device', distinct=True),
+        visit_count=Count('id'),
+        max_date=Max('tracking_session__created_at'),
+    ).order_by()
 
     for row in tracking_data:
         # check if there is closed deal exists
@@ -66,10 +68,7 @@ def get_tracking_data_group_by_recipient(message, file_index=None):
         if file_index:
             row['visit_count'] /= message.files.get(index=file_index).pages_num
         else:
-            row['visit_count'] /= (
-                message.files.all()
-                .aggregate(total_pages=Sum('pages_num'))['total_pages']
-            )
+            row['visit_count'] /= get_total_pages(message)
         # format time
         row['total_time'] = format_dbtime(row['total_time'])
 
@@ -124,9 +123,15 @@ def get_completion_percentage(recipient_id, message):
             viewed_pages=Count('page_number', distinct=True),
         )
     )
-    total_pages = message.files.all()[0].pages_num or 1
+    total_pages = get_total_pages(message)
 
     return (tracking_data['viewed_pages'] / float(total_pages)) * 100
+
+
+def get_total_pages(message):
+    return sum([
+        f.pages_num if f.pages_num else 1 for f in message.files.all()
+    ])
 
 
 def get_call_list(user, past_days=14):
