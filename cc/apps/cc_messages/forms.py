@@ -14,15 +14,15 @@ from datetime import timedelta
 class MessageForm(forms.ModelForm):
     to = forms.CharField()
     signature = forms.CharField(required=False)
-    attachment = forms.CharField(widget=forms.HiddenInput)
+    attachment = forms.CharField(widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = Message
         fields = [
             'subject',
             'cc_me',
-            'notify_email_opened',
-            'notify_link_clicked',
+            #'notify_email_opened',
+            #'notify_link_clicked',
             'allow_download',
             'message',
         ]
@@ -40,9 +40,7 @@ class MessageForm(forms.ModelForm):
             'to',
             'subject',
             'cc_me',
-            'notify_email_opened',
             'allow_download',
-            'notify_link_clicked',
             'message',
             'signature',
 

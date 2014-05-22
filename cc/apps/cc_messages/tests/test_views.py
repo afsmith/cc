@@ -45,8 +45,6 @@ class MessageViewTestCases(ClientTestCase):
         resp = c.post(reverse('send_message'), {
             'subject': 'Test',
             'cc_me': False,
-            'notify_email_opened': False,
-            'notify_link_clicked': False,
             'message': 'lala',
             'attachment': 1,
             'to': 'foo@cc.kneto.com',

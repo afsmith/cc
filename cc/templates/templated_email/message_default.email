@@ -3,7 +3,5 @@
 {% block html %}
 {{ text }}
 
-{% if message.notify_email_opened %}
-    <img src="{{ tracking_pixel_src }}" />
-{% endif %}
+<img src="{{ tracking_pixel_src }}" style="border:0; width:0; height:0;" width="0" height="0" />
 {% endblock %}

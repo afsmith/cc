@@ -161,10 +161,7 @@ def send_notification_email(
             should_send = False
 
         # check if the setting is on
-        if not (
-            (reason_code == 1 and message.notify_email_opened)
-            or (reason_code == 2 and message.notify_link_clicked)
-        ):
+        if not (reason_code == 1 or reason_code == 2):
             should_send = False
 
         # create log anyway

@@ -8,8 +8,7 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ('subject',)
     list_display = (
         'subject', 'message', 'owner',
-        'cc_me', 'notify_email_opened', 'notify_link_clicked',
-        'created_at'
+        'cc_me', 'allow_download', 'created_at'
     )
     list_filter = (
         'owner',

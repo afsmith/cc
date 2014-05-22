@@ -7,7 +7,6 @@ $(document).ready(function () {
         message_submit_btn = $('#js_submitMessageForm'),
         message_field = $('#id_message'),
         to_field = $('#id_to'),
-        attachment_field = $('#id_attachment'),
         signature_field = $('#id_signature'),
         upload_form = $('#uploadFileForm'),
         link_text_form = $('.js_link_texts'),
@@ -81,9 +80,6 @@ $(document).ready(function () {
             case 'id_message':
                 _element = $('.note-editor').eq(0);
                 break;
-            case 'id_attachment':
-                _element = $('#uploadFileForm');
-                break;
             default:
                 _element = element;
                 break;
@@ -117,7 +113,6 @@ $(document).ready(function () {
             subject: 'required',
             to: 'required',
             message: {required: true, check_token: true},
-            attachment: 'required',
         },
         messages: {
             subject: 'Enter the subject.',
@@ -125,7 +120,6 @@ $(document).ready(function () {
             message: {
                 required: 'Enter the message.',
             },
-            attachment: 'Upload the attachments.',
         },
         submitHandler: function (form) {
             form.submit();
@@ -320,8 +314,6 @@ $(document).ready(function () {
 
         // remove error message 
         upload_form.find('.alert').remove();
-
-        attachment_field.valid();
     };
 
     removeFileHandler = function (file) {
@@ -376,8 +368,6 @@ $(document).ready(function () {
                 this.removeFile(file);
                 renderUploadError(response.message);
                 log('Conversion error: ' + response.message);
-
-                attachment_field.valid();
             }
         },
         error: function (file, errorMessage) {
@@ -385,13 +375,11 @@ $(document).ready(function () {
                 renderUploadError(errorMessage);
                 this.removeFile(file);
             }
-            attachment_field.valid();
         },
         maxfilesexceeded: function (file) {
             renderUploadError('You can attach maximum 5 files at a time');
             $('.dz-file-preview:not(.dz-processing)').remove();
             this.removeFile(file);
-            attachment_field.valid();
         },
         removedfile: removeFileHandler
     };

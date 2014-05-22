@@ -12,8 +12,6 @@ class MessageModelTestCases(TestCase):
             subject='Foo',
             cc_me=True,
             message='Bar',
-            notify_email_opened=True,
-            notify_link_clicked=False,
             owner=CUser.objects.get(pk=1),
         )
         self.assertEqual(msg.subject, 'Foo')
