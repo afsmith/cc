@@ -14,8 +14,10 @@
         <form id="uploadFileForm" action="{% url 'upload_file' %}" method="POST" enctype="multipart/form-data" class="dropzone">{% csrf_token %}
             {% trans "Drop the attachments (or click) here to upload. Maximum 5 files. PDF only." %}
         </form>
-
-        <form class="js_link_texts"></form>
+        
+        <form class="js_file_form">
+            <div class="js_download_clone hidden"><label for="id_download_clone" class="label_checkbox"><input id="id_download_clone" type="checkbox" /> Allow download</label></div>
+        </form>
     </div>
 </div>
 

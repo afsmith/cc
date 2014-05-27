@@ -21,8 +21,6 @@ class MessageForm(forms.ModelForm):
         fields = [
             'subject',
             'cc_me',
-            #'notify_email_opened',
-            #'notify_link_clicked',
             'allow_download',
             'message',
         ]
@@ -31,6 +29,7 @@ class MessageForm(forms.ModelForm):
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'form-control'}),
             'message': forms.Textarea(attrs={'class': 'form-control'}),
+            'allow_download': forms.HiddenInput()
         }
 
     def __init__(self, *args, **kwargs):
@@ -40,12 +39,12 @@ class MessageForm(forms.ModelForm):
             'to',
             'subject',
             'cc_me',
-            'allow_download',
             'message',
             'signature',
 
             # hidden
             'attachment',
+            'allow_download',
         ]
 
     def clean_to(self):
@@ -60,6 +59,11 @@ class MessageForm(forms.ModelForm):
         return email_list
 
     def clean_attachment(self):
+        # if attachment is empty
+        if not self.cleaned_data['attachment']:
+            return ''
+
+        # otherwise get list of file ID
         file_ids = self.cleaned_data['attachment'][:-1].split(',')
         for id in file_ids:
             if not File.objects.filter(pk=id).exists():

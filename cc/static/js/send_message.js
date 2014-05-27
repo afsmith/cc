@@ -9,7 +9,7 @@ $(document).ready(function () {
         to_field = $('#id_to'),
         signature_field = $('#id_signature'),
         upload_form = $('#uploadFileForm'),
-        link_text_form = $('.js_link_texts'),
+        file_form = $('.js_file_form'),
 
         // function
         initSignatureField,
@@ -19,6 +19,7 @@ $(document).ready(function () {
         addFileHandler,
         removeFileHandler,
         uploadImage,
+        downloadCheckboxHandler,
 
         // config
         summernote_config_global = {
@@ -189,7 +190,7 @@ $(document).ready(function () {
             signature_field.val(signature_field.code());
         }
 
-        if (link_text_form.valid()) {
+        if (file_form.valid()) {
             // get the request data here
             var request_data = {};
             $('.js_link_text').each(function () {
@@ -220,7 +221,7 @@ $(document).ready(function () {
     });
 
 // ------------------------------- Upload ------------------------------- //
-    link_text_form.validate({
+    file_form.validate({
         ignore: '',
         rules: {
             link_text_1: 'required',
@@ -252,6 +253,25 @@ $(document).ready(function () {
         );
     };
 
+    // handle show and hide download checkbox
+    downloadCheckboxHandler = function () {
+        if ($('.js_link_text').length > 0) {
+            $('.js_download_clone').removeClass('hidden');
+        } else {
+            $('.js_download_clone').addClass('hidden');
+            $('#id_allow_download').val('False');
+        }
+    };
+    $('#id_download_clone').change(function () {
+        if ($(this).is(':checked')) {
+            $('#id_allow_download').val('True');
+        } else {
+            $('#id_allow_download').val('False');
+        }
+    });
+
+
+    // handle add and remove link token
     linkTokenHanlder = function (add) {
         var content = message_field.code(),
             previous_token,
@@ -259,16 +279,33 @@ $(document).ready(function () {
             i;
 
         if (add === true) {
-            for (i = 2; i < 6; i += 1) {
-                previous_token = '[link' + (i - 1) + ']';
-                current_token = '[link' + i + ']';
-                if (content.indexOf(current_token) === -1 && content.indexOf(previous_token) !== -1) {
-                    content = content.replace(previous_token, previous_token + '<br />' + current_token);
-                    break;
+            // add token 1
+            if (content.indexOf('[link1]') === -1) {
+                if (content.indexOf('<div id="link_token">') > -1) {
+                    // if there is link_token div then add inside it
+                    content = content.replace('<div id="link_token">', '<div id="link_token">[link1]');
+                } else if (content.indexOf('<div id="signature">') > -1) {
+                    // if there is signature div then add before it
+                    content = content.replace('<div id="signature">', '[link1]<br /><br /><div id="signature">');
+                } else {
+                    // else, add in the end of message
+                    content += '[link1]';
+                }
+            } else {
+                // and other token from lowest first
+                for (i = 2; i < 6; i += 1) {
+                    previous_token = '[link' + (i - 1) + ']';
+                    current_token = '[link' + i + ']';
+
+                    if (content.indexOf(current_token) === -1 && content.indexOf(previous_token) > -1) {
+                        content = content.replace(previous_token, previous_token + '<br />' + current_token);
+                        break;
+                    }
                 }
             }
         } else {
-            for (i = 5; i > 1; i -= 1) {
+            // remove the token from highest first
+            for (i = 5; i >= 1; i -= 1) {
                 current_token = '[link' + i + ']';
                 if (content.indexOf(current_token) > -1) {
                     content = content.replace(current_token, '');
@@ -280,6 +317,7 @@ $(document).ready(function () {
         message_field.code(content);
     };
 
+    // handle add file action
     addFileHandler = function (file, resp) {
         var file_id = file.server_id,
             file_index = upload_form.find('.dz-filename').length,
@@ -291,7 +329,7 @@ $(document).ready(function () {
         });
 
         // add link text input + label
-        $('.js_link_texts').append(
+        file_form.append(
             _.template('<label for="js_link_text_<%= data.file_id %>" class="js_link_label">Link text <%= data.file_index %></label><input id="js_link_text_<%= data.file_id %>" name="link_text_<%= data.file_index %>" type="text" class="form-control js_link_text" />', {
                 file_id: file_id,
                 file_index: file_index
@@ -302,10 +340,11 @@ $(document).ready(function () {
         file.previewElement.id = 'js_file_preview_' + file_id;
         file_preview = $('#js_file_preview_' + file_id);
 
+        // download checkbox
+        downloadCheckboxHandler();
+
         // add link token to message textarea
-        if (file_index > 1) {
-            linkTokenHanlder(true);
-        }
+        linkTokenHanlder(true);
 
         // handle some CSS and template
         upload_form.addClass('file_uploaded');
@@ -316,6 +355,7 @@ $(document).ready(function () {
         upload_form.find('.alert').remove();
     };
 
+    // handle remove file action
     removeFileHandler = function (file) {
         // if the file hasn't been uploaded
         if (!file.server_id) { return; }
@@ -347,6 +387,9 @@ $(document).ready(function () {
         $('.js_link_text').each(function (index) {
             $(this).prop('name', 'link_text_' + (index + 1));
         });
+
+        // download checkbox
+        downloadCheckboxHandler();
     };
 
     // dropzone config for file upload form

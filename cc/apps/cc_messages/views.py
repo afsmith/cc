@@ -43,7 +43,7 @@ def send_message(request):
     else:
         message_form = MessageForm(initial={
             'message': (
-                u'<br><br><br><br>'
+                u'<br><br><div id="link_token"></div><br><br>'
                 '<div id="signature">{}</div>'.format(request.user.signature)
             ),
             'signature': request.user.signature
