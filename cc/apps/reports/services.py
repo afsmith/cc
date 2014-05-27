@@ -1,4 +1,5 @@
 from django.db.models import Sum, Count, Max
+from django.db.models import Q
 
 from . import algorithm
 from .models import Bounce
@@ -75,10 +76,16 @@ def get_tracking_data_group_by_recipient(message, file_index=None):
     return tracking_data
 
 
-def get_recipient_without_tracking_data(message):
-    return CUser.objects.filter(
+def get_recipients_without_tracking_data(message, session_only=True):
+    qs = CUser.objects.filter(
         receivers=message
-    ).exclude(trackingsession__message=message)
+    ).exclude(
+        trackingsession__message=message
+    )
+    if session_only:
+        return qs
+    else:
+        return qs.exclude(trackinglog__message=message)
 
 
 def get_missing_data(message):
@@ -168,20 +175,40 @@ def get_call_list(user, past_days=14):
                 'message_id': message.id,
             })
 
-        # get list of people didn't look at the offer
-        uninterested_recipients = get_recipient_without_tracking_data(message)
-        for rec in uninterested_recipients:
-            # add a row to call list
-            call_list.append({
-                'total_point': 0,
-                'closed_deal': False,
-                'status': algorithm.get_status_color(0),
-                'email': rec.email,
-                'date': message.created_at,
-                'subject': message.subject,
-                'recipient_id': rec.id,
-                'message_id': message.id,
-            })
+        # get list of people that don't have tracking session
+        no_session = get_recipients_without_tracking_data(message)
+        for recipient in no_session:
+            # if this message doesn't have any attachment
+            if message.files.count() == 0:
+                total_point = 0
+                if TrackingLog.objects.filter(
+                    message=message,
+                    participant=recipient,
+                    action=TrackingLog.OPEN_EMAIL_ACTION
+                ):
+                    total_point = algorithm.calculate_point(4, True)
+                call_list.append({
+                    'total_point': total_point,
+                    'closed_deal': False,
+                    'status': algorithm.get_status_color(total_point),
+                    'email': recipient.email,
+                    'date': message.created_at,
+                    'subject': message.subject,
+                    'recipient_id': recipient.id,
+                    'message_id': message.id,
+                })
+            else:
+                # recipient doesn't look at offer
+                call_list.append({
+                    'total_point': 0,
+                    'closed_deal': False,
+                    'status': algorithm.get_status_color(0),
+                    'email': recipient.email,
+                    'date': message.created_at,
+                    'subject': message.subject,
+                    'recipient_id': recipient.id,
+                    'message_id': message.id,
+                })
 
     # sort the call_list based on total_point
     call_list = sorted(call_list, key=lambda k: k['total_point'], reverse=True)

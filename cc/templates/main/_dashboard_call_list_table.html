@@ -1,5 +1,5 @@
 {% for row in call_list %}
-<tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}">
+<tr id="row_{{ row.message_id }}_{{ row.recipient_id }}" class="call_row {% if row.closed_deal %}sold{% endif %}" data-point="{{ row.total_point }}">
     <td><input type="checkbox" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} disabled="disabled" /></td>
     <td>{% if row.status == 'Green' %}
         <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>

@@ -1,10 +1,11 @@
-def calculate_point(type, data):
+def calculate_point(point_type, data):
     '''
-    Type 1: percentage of completion
-    Type 2: number of visits
-    Type 3: hours since last visit
+    point_type 1: percentage of completion
+    point_type 2: number of visits
+    point_type 3: hours since last visit
+    point_type 4: email is opened (no attachment)
     '''
-    if type == 1:
+    if point_type == 1:
         if -1 < data < 11:
             return -15
         elif data < 21:
@@ -25,7 +26,7 @@ def calculate_point(type, data):
             return 10
         else:
             return 15
-    elif type == 2:
+    elif point_type == 2:
         if data == 0:
             return 0
         elif data == 1:
@@ -40,7 +41,7 @@ def calculate_point(type, data):
             return 10
         elif data > 5:
             return 10
-    elif type == 3:
+    elif point_type == 3:
         if -1 < data < 11:
             return 0
         elif data < 21:
@@ -75,6 +76,8 @@ def calculate_point(type, data):
             return -10
         else:
             return -25
+    elif point_type == 4:
+        return 15
 
 
 def get_status_color(points):
@@ -83,7 +86,7 @@ def get_status_color(points):
     '''
     if points < 5:
         return 'Red'
-    elif points < 11:
+    elif points < 16:
         return 'Yellow'
     else:
         return 'Green'

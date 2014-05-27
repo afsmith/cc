@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'django_forms_bootstrap',  # needed for django-stripe
     'payments',                # django-stripe
     # 'widget_tweaks',          #for form label class
+    'debug_toolbar',
 
     # ----- CC APP  ----- #
     'cc.apps.accounts',

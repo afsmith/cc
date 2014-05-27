@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .services import (
     get_tracking_data_group_by_recipient, get_missing_data,
     validate_request, get_tracking_data_group_by_page_number,
-    get_recipient_without_tracking_data, get_call_list
+    get_recipients_without_tracking_data, get_call_list
 )
 from .models import Bounce
 from cc.apps.cc_messages.models import Message
@@ -55,7 +55,9 @@ def report_detail(request, message_id):
     missing_data = get_missing_data(this_message)
 
     # get recipient without tracking data
-    uninterested_recipients = get_recipient_without_tracking_data(this_message)
+    uninterested_recipients = get_recipients_without_tracking_data(
+        this_message, False
+    )
 
     return {
         'this_message': this_message,
