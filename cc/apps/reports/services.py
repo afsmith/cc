@@ -61,7 +61,7 @@ def get_tracking_data_group_by_recipient(message, file_index=None):
         ip_count=Count('tracking_session__client_ip', distinct=True),
         device_count=Count('tracking_session__device', distinct=True),
         visit_count=Count('id'),
-        max_date=Max('tracking_session__created_at'),
+        last_visit=Max('tracking_session__created_at'),
     ).order_by()
 
     for row in tracking_data:
@@ -123,6 +123,21 @@ def get_tracking_data_group_by_page_number(**kwargs):
     return tracking_data
 
 
+def get_email_action_group_by_recipient(message, recipient):
+    return TrackingLog.objects.filter(
+        message=message,
+        participant=recipient,
+        action=TrackingLog.OPEN_EMAIL_ACTION
+    ).values(
+        'participant'
+    ).annotate(
+        #ip_count=Count('tracking_session__client_ip', distinct=True),
+        #device_count=Count('tracking_session__device', distinct=True),
+        visit_count=Count('id'),
+        last_visit=Max('created_at'),
+    ).order_by()
+
+
 def get_completion_percentage(recipient_id, message):
     tracking_data = (
         TrackingEvent.objects
@@ -162,8 +177,9 @@ def get_call_list(user, past_days=14):
             )
             point_completion = algorithm.calculate_point(1, percent)
             point_visit = algorithm.calculate_point(2, row['visit_count'])
-            hours_last_visit = get_hours_until_now(row['max_date'])
-            point_hours = algorithm.calculate_point(3, hours_last_visit)
+            point_hours = algorithm.calculate_point(
+                3, get_hours_until_now(row['last_visit'])
+            )
 
             total_point = point_completion + point_visit + point_hours
             status_color = algorithm.get_status_color(total_point)
@@ -186,12 +202,22 @@ def get_call_list(user, past_days=14):
             # if this message doesn't have any attachment
             if message.files.count() == 0:
                 total_point = 0
-                if TrackingLog.objects.filter(
-                    message=message,
-                    participant=recipient,
-                    action=TrackingLog.OPEN_EMAIL_ACTION
-                ):
-                    total_point = algorithm.calculate_point(4, True)
+                tracking_data = get_email_action_group_by_recipient(
+                    message, recipient
+                )
+                # calculate points for this recipient
+                if tracking_data:
+                    point_visit = algorithm.calculate_point(
+                        2, tracking_data[0]['visit_count']
+                    )
+                    point_hours = algorithm.calculate_point(
+                        3, get_hours_until_now(
+                            tracking_data[0]['last_visit']
+                        )
+                    )
+                    point_completion = algorithm.calculate_point(4, True)
+                    total_point = point_completion + point_visit + point_hours
+
                 call_list.append({
                     'total_point': total_point,
                     'closed_deal': False,

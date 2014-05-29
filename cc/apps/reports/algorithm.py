@@ -1,8 +1,8 @@
 def calculate_point(point_type, data):
     '''
     point_type 1: percentage of completion
-    point_type 2: number of visits
-    point_type 3: hours since last visit
+    point_type 2: number of visits OR number of email opens
+    point_type 3: hours since last visit (for both file and email)
     point_type 4: email is opened (no attachment)
     '''
     if point_type == 1:
