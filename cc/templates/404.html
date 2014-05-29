@@ -1,1 +1,6 @@
-<h1>404</h1>
+{% extends "base_template.html" %}
+{% load i18n %}
+
+{% block content %}
+    <p class="alert alert-info">{% trans "Oops! This page doesn't exist." %}</p>
+{% endblock content %}

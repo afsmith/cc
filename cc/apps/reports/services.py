@@ -1,4 +1,5 @@
 from django.db.models import Sum, Count, Max
+from django.core.exceptions import PermissionDenied
 
 from . import algorithm
 from .models import Bounce
@@ -30,6 +31,11 @@ def validate_request(request):
         return {'message': message, 'user': user, 'file_index': file_index}
     else:
         return False
+
+
+def check_permission(message, user):
+    if message.owner != user:
+        raise PermissionDenied
 
 
 def get_tracking_data_group_by_recipient(message, file_index=None):

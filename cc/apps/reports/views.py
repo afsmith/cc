@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .services import (
     get_tracking_data_group_by_recipient, get_missing_data,
     validate_request, get_tracking_data_group_by_page_number,
-    get_recipient_without_tracking_data, get_call_list
+    get_recipient_without_tracking_data, get_call_list, check_permission
 )
 from .models import Bounce
 from cc.apps.cc_messages.models import Message
@@ -44,6 +44,7 @@ def report_detail(request, message_id):
     Reporting detail view
     '''
     this_message = get_object_or_404(Message, pk=message_id)
+    check_permission(this_message, request.user)
 
     # get all messages for dropdown
     all_messages = (
@@ -70,6 +71,8 @@ def report_detail(request, message_id):
 @render_to('main/_report_graph_table.html')
 def report_detail_per_file(request, message_id, file_index):
     this_message = get_object_or_404(Message, pk=message_id)
+    check_permission(this_message, request.user)
+
     # get log data group by participant
     tracking_data = get_tracking_data_group_by_recipient(
         this_message, file_index
@@ -126,6 +129,7 @@ def report_drilldown(request):
     file_index = request.POST.get('file_index')
 
     this_message = get_object_or_404(Message, pk=message_id)
+    check_permission(this_message, request.user)
 
     if session_id:  # get session log from report detail
         data = get_tracking_data_group_by_page_number(
@@ -155,6 +159,7 @@ def report_dashboard(request):
     file_index = request.POST.get('file_index')
 
     this_message = get_object_or_404(Message, pk=message_id)
+    check_permission(this_message, request.user)
 
     if recipient_id and message_id and file_index:
         data = get_tracking_data_group_by_page_number(

@@ -1,1 +1,6 @@
-<h1>500</h1>
+{% extends "base_template.html" %}
+{% load i18n %}
+
+{% block content %}
+    <p class="alert alert-info">{% trans "Oops! Something bad happened. Please contact our support to solve this problem." %}</p>
+{% endblock content %}
