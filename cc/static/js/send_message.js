@@ -288,13 +288,24 @@ $(document).ready(function () {
 
     addFileHandler = function (file, resp) {
         var file_id = file.server_id,
-            file_index = upload_form.find('.dz-filename').length,
-            file_preview;
+            file_preview,
+            file_index = upload_form.find('.dz-filename').index();
 
         // add file ID to hidden input
         $('#id_attachment').val(function (index, value) {
             return value + file.server_id + ','; // example: 1,2,3,
         });
+
+        // add file preview ID
+        file.previewElement.id = 'js_file_preview_' + file_id;
+        file_preview = $('#js_file_preview_' + file_id);
+
+        upload_form.addClass('file_uploaded');
+        file_preview.find('.dz-success-mark').css('opacity', 1);
+        file_preview.find('.dz-filename').append(' (<span>' + resp.page_count + ' pages</span>)');
+
+        // find the correct file index
+        file_index = upload_form.find('.dz-file-preview').index(file_preview) + 1;
 
         // add link text input + label
         $('.js_link_texts').append(
@@ -304,19 +315,10 @@ $(document).ready(function () {
             })
         );
 
-        // add id to preview
-        file.previewElement.id = 'js_file_preview_' + file_id;
-        file_preview = $('#js_file_preview_' + file_id);
-
         // add link token to message textarea
         if (file_index > 1) {
             linkTokenHanlder(true);
         }
-
-        // handle some CSS and template
-        upload_form.addClass('file_uploaded');
-        file_preview.find('.dz-success-mark').css('opacity', 1);
-        file_preview.find('.dz-filename').append(' (<span>' + resp.page_count + ' pages</span>)');
 
         // remove error message 
         upload_form.find('.alert').remove();
