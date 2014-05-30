@@ -3,9 +3,7 @@
 {% block plain %}
 {{ recipient }} opened your email "{{ message_subject }}".
 
-If you selected to be notified when they look at your attachment we'll send you another email at that time.
-
-Good closings to you.
+Good to know, right?
 
 Best,
 Kneto
