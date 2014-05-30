@@ -1,8 +1,10 @@
 from .baseconv import BaseConv
 
 from mdetect import UAgentInfo
+from os.path import join, dirname, abspath
 import datetime
 import random
+import pygeoip
 
 
 def get_domain(request):
@@ -64,6 +66,21 @@ def get_device_name(request):
             return 'Desktop'
     else:
         raise ValueError('Invalid request')
+
+
+def get_location(request):
+    client_ip = get_client_ip(request)
+    gi = pygeoip.GeoIP(abspath(join(dirname(__file__), 'GeoLiteCity.dat')))
+    location = ''
+    try:
+        location_dict = gi.record_by_addr(client_ip)
+    except pygeoip.GeoIPError:
+        return location
+    if location_dict:
+        location = '{}, {}'.format(
+            location_dict['city'], location_dict['country_code']
+        )
+    return location
 
 
 def progress_formatter(progress):

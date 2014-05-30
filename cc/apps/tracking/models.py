@@ -16,6 +16,9 @@ class TrackingLog(models.Model):
     revision = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     file_index = models.IntegerField(default=1)
+    client_ip = models.CharField(_('Client IP'), max_length=50, null=True)
+    device = models.CharField(_('Device'), max_length=50, null=True)
+    location = models.CharField(_('Location'), max_length=50, null=True)
 
     def __unicode__(self):
         return self.action

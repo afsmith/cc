@@ -3,6 +3,38 @@
 <h3>{% trans "Postal report" %}</h3>
 
 <h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
+<div class="table-responsive">
+    <table class="table table-bordered messages_table">
+        <thead>
+            <tr>
+                <th>{% trans "Sent to" %}</th>
+                <th>{% trans "Time" %}</th>
+                <th>{% trans "Subject" %}</th>
+                <th>{% trans "Last opened" %}</th>
+                <th>{% trans "Visits" %}</th>
+                <th>{% trans "Attachments" %}</th>
+                <th>{% trans "Location" %}</th>
+                <th>{% trans "Device type" %}</th>
+                <th>{% trans "Resend" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in message_list %}
+            <tr id="row_msg_{{ row.id }}">
+                <td>{{ row.message.receivers.all|join:', ' }}</td>
+                <td>{{ row.message.created_at|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.message.subject }}</td>
+                <td>{{ row.last_visit }}</td>
+                <td>{{ row.visit_count }}</td>
+                <td>{{ row.message.files.count }}</td>
+                <td>{{ row.location|default:'' }}</td>
+                <td>{{ row.device|default:'' }}</td>
+                <td>{% if row.resend %}<input type="checkbox" />{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+</div>
 
 <h5>{% trans "Problemed messages" %}</h5>
 <div class="table-responsive">

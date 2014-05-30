@@ -6,10 +6,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 from cc.apps.accounts.models import CUser
-from cc.apps.reports.services import (
-    get_message_sent, get_call_list, get_bounce_list,
-    save_sendgrid_bounce_from_request
-)
+from cc.apps.reports import services
 from cc.libs.utils import get_domain
 
 
@@ -21,13 +18,16 @@ import json
 @auth_decorators.login_required
 @render_to('main/dashboard.html')
 def dashboard(request):
-    message_sent = get_message_sent(request.user, 'month')
-    call_list = get_call_list(request.user)
-    bounce_list = get_bounce_list(request.user)
+    message_sent = services.get_message_sent(request.user, 'month')
+    call_list = services.get_call_list(request.user)
+    bounce_list = services.get_bounce_list(request.user)
+
+    message_list = services.get_message_with_email_data(request.user)
 
     return {
         'message_sent': message_sent,
         'call_list': call_list,
+        'message_list': message_list,
         'bounce_list': bounce_list,
     }
 
@@ -55,7 +55,7 @@ def sendgrid_parse(request):
             and json_req[0].get('cc_message_id')
             and json_req[0].get('domain') == get_domain(request)
         ):
-            save_sendgrid_bounce_from_request(json_req)
+            services.save_sendgrid_bounce_from_request(json_req)
         elif settings.DEBUG:
             send_mail(
                 'Sendgrid debug report',

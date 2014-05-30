@@ -123,13 +123,17 @@ def get_tracking_data_group_by_page_number(**kwargs):
     return tracking_data
 
 
-def get_email_action_group_by_recipient(message, recipient):
-    return TrackingLog.objects.filter(
+def get_email_action_group_by_recipient(message, recipient=None):
+    qs = TrackingLog.objects.filter(
         message=message,
-        participant=recipient,
         action=TrackingLog.OPEN_EMAIL_ACTION
-    ).values(
-        'participant'
+    )
+    if recipient:
+        qs = qs.filter(participant=recipient)
+
+    return qs.values(
+        'participant',
+        'participant__email'
     ).annotate(
         #ip_count=Count('tracking_session__client_ip', distinct=True),
         #device_count=Count('tracking_session__device', distinct=True),
@@ -279,3 +283,47 @@ def save_sendgrid_bounce_from_request(json_request):
 
 def get_bounce_list(user):
     return Bounce.objects.filter(message__owner=user)
+
+
+def get_message_with_email_data(user, past_days=5):
+    rows = []
+    messages = Message.objects.filter(
+        owner=user,
+        created_at__gte=datetime.today()-timedelta(days=past_days)
+    ).order_by('-created_at')
+    for message in messages:
+        logs = (
+            TrackingLog.objects
+            .filter(message=message, action=TrackingLog.OPEN_EMAIL_ACTION)
+            .values('message')
+            .annotate(
+                visit_count=Count('id'),
+                last_visit=Max('created_at'),
+            )
+        )
+
+        #print log.query
+        if logs:
+            last_log = (
+                TrackingLog.objects
+                .filter(message=message, action=TrackingLog.OPEN_EMAIL_ACTION)
+                .order_by('-created_at')[0]
+            )
+            print last_log
+
+            rows.append({
+                'message': message,
+                'visit_count': logs[0]['visit_count'],
+                'last_visit': logs[0]['last_visit'],
+                'device': last_log.device,
+                'location': last_log.location,
+                'resend': False,
+            })
+        else:
+            rows.append({
+                'message': message,
+                'visit_count': 0,
+                'resend': True,
+            })
+
+    return rows

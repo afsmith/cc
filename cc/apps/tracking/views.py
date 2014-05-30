@@ -2,7 +2,7 @@ from django import http
 from django.conf import settings
 from django.views.decorators import http as http_decorators
 
-from .services import *
+from . import services
 from cc.apps.cc_messages.services import notify_email_opened
 from cc.libs.utils import get_client_ip, get_device_name
 
@@ -16,11 +16,11 @@ def create_event(request):
     '''
     Handles tracking event and session creation
     '''
-    data = validate_request(request, 'event')
+    data = services.validate_request(request, 'event')
     if data:
         if request.POST['type'] == 'SESSION':
             print '\n[DEBUG] Creating a new session\n'
-            session = create_tracking_session(
+            session = services.create_tracking_session(
                 message=data['message'],
                 user=data['user'],
                 tracking_log=data['tracking_log'],
@@ -60,14 +60,14 @@ def create_event(request):
                     '\n[DEBUG] Creating events after "beforeunload" JS event\n'
                 )
                 # save events in DB
-                create_tracking_events(
+                services.create_tracking_events(
                     data['session_id'], timer_params, counter_params
                 )
             elif request.POST['js_event_type'] == 'pagehide':
                 print('\n[DEBUG] Creating events after "pagehide" JS event\n')
                 # sum the data with existing events
                 #print request.POST
-                edit_or_create_tracking_events(
+                services.edit_or_create_tracking_events(
                     data['session_id'], timer_params, counter_params
                 )
             elif request.POST['js_event_type'] == 'safari_interval':
@@ -77,7 +77,7 @@ def create_event(request):
                 )
                 # sum the data with existing events
                 #print request.POST
-                edit_or_create_tracking_events(
+                services.edit_or_create_tracking_events(
                     data['session_id'], timer_params, counter_params, True
                 )
 
@@ -95,7 +95,7 @@ def track_email(request, message_id, user_id):
     The 1x1 transparent image to track opened email
     '''
     # send email notification to owner of the message
-    notify_email_opened(message_id, user_id)
+    notify_email_opened(message_id, user_id, request)
 
     # serve the 1x1 transparent image
     img_abs_path = path.abspath(path.join(
@@ -108,11 +108,11 @@ def track_email(request, message_id, user_id):
 @http_decorators.require_POST
 @ajax_request
 def close_deal(request):
-    data = validate_request(request, 'deal')
+    data = services.validate_request(request, 'deal')
     if data:
         if request.POST['action'] == 'create':
             # create closed deal
-            closed_deal = create_closed_deal(
+            closed_deal = services.create_closed_deal(
                 message=data['message'],
                 user=data['user']
             )
@@ -128,7 +128,7 @@ def close_deal(request):
                 }
         else:
             # remove closed deal
-            remove_closed_deal(
+            services.remove_closed_deal(
                 message=data['message'],
                 user=data['user']
             )

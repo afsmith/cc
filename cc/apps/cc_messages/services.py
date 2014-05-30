@@ -119,7 +119,7 @@ def create_ocl_and_send_message(message, domain):
 
 
 def send_notification_email(
-    reason_code, message, recipient=None, file_index=None
+    reason_code, message, recipient=None, file_index=None, request=None
 ):
     '''
     Send notification email to sender, log the action if not exist
@@ -170,6 +170,7 @@ def send_notification_email(
             participant=recipient,
             action=action,
             file_index=file_index,
+            request=request
         )
 
     # then send email if needed
@@ -188,13 +189,15 @@ def send_notification_email(
     return log
 
 
-def notify_email_opened(message_id, user_id):
+def notify_email_opened(message_id, user_id, request):
     if message_id > 0 and user_id > 0:
         qs = Message.objects.filter(id=message_id, receivers=user_id)
         if qs:
             message = qs[0]
             recipient = CUser.objects.get(id=user_id)
-            send_notification_email(1, message, recipient)
+            send_notification_email(
+                1, message, recipient, request=request
+            )
         else:
             return False
     else:

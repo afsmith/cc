@@ -1,6 +1,7 @@
 from .models import TrackingSession, TrackingEvent, TrackingLog, ClosedDeal
 from cc.apps.accounts.models import CUser
 from cc.apps.cc_messages.models import Message
+from cc.libs.utils import get_client_ip, get_device_name, get_location
 
 import re
 
@@ -50,6 +51,8 @@ def validate_request(request, type):
 def create_tracking_log(**kw):
     message = kw['message']
     participant = kw['participant']
+    request = kw.get('request')
+    # filter out bad data
     if not isinstance(message, Message):
         try:
             message = Message.objects.get(pk=message)
@@ -60,12 +63,23 @@ def create_tracking_log(**kw):
             participant = CUser.objects.get(pk=participant)
         except CUser.DoesNotExist:
             return False
+    # get more info from request
+    device = None
+    client_ip = None
+    location = None
+    if request:
+        device = get_device_name(request)
+        client_ip = get_client_ip(request)
+        location = get_location(request)
     return TrackingLog.objects.create(
         message=message,
         participant=participant,
         action=kw['action'],
         file_index=kw['file_index'],
         revision=2,
+        device=device,
+        client_ip=client_ip,
+        location=location,
     )
 
 
