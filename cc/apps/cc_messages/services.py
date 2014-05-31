@@ -211,9 +211,11 @@ def edit_email_and_resend_message(request, message):
     user_id = request.POST.get('user_id')
 
     if user_id:
+        # resend message to one user
         rec = CUser.objects.get(pk=int(user_id))
         _send_message(message, rec, domain)
-    else:
+    elif new_email:
+        # edit email address and resend message
         recipient = CUser.objects.filter(email=old_email)
         if recipient:
             exist_user = CUser.objects.filter(email=new_email)
@@ -232,3 +234,6 @@ def edit_email_and_resend_message(request, message):
             # clear record from bounce
             bounce = Bounce.objects.filter(message=message, email=old_email)
             bounce.delete()
+    else:
+        # resend the original message to all recipients
+        create_ocl_and_send_message(message, domain)

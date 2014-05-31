@@ -51,6 +51,41 @@ CC_GLOBAL.removeSpinner = function () {
 _.templateSettings.variable = 'data';
 
 
+// --------------------------- resend behavior ---------------------------
+$('.js_resend_checkbox').click(function () {
+    $(this).parent().html('<button class="btn btn-default btn-small js_resend_button">Send</button>');
+    return false;
+});
+
+$('.container').on('click', '.js_resend_button', function () {
+    var _this = $(this),
+        this_row = _this.closest('tr'),
+        /*this_id = this_row.prop('id'),
+        id_arr = this_id.replace('row_', '').split('_'),
+        message_id = id_arr[0],
+        user_id = id_arr[1]*/
+        message_id = this_row.data('message'),
+        user_id = this_row.data('user');
+
+    $.ajax({
+        url: '/message/resend/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            'message_id': message_id,
+            'user_id': user_id
+        },
+    }).done(function (resp) {
+        if (resp.status === 'ERROR') {
+            CC_GLOBAL.showErrorPopup(resp.message);
+        }
+        _this.remove();
+    });
+
+    return false;
+});
+
+
 // --------------------------- Global functions --------------------------- //
 // shortcut for console.log()
 if (!window.console) {

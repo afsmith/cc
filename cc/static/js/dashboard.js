@@ -158,18 +158,18 @@ $(document).ready(function () {
         // change email cell to input
         this_email_cell.html('<input class="js_emailInput" type="text" value="' + old_email_val + '">');
         this_email_cell.data('old_value', old_email_val);
-        this_row.find('.fix_cell').html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
+        this_row.find('.fix_cell').html('<button class="btn btn-default btn-small js_resend_button">Send</button>');
 
         return false;
     });
 
     // changing the text in email
     $('.bounces_table').on('keyup', '.js_emailInput', function () {
-        $(this).closest('tr').find('.js_resendButton').addClass('btn-success');
+        $(this).closest('tr').find('.js_resend_button').addClass('btn-success');
     });
 
     // click on resend button
-    $('.bounces_table').on('click', '.js_resendButton', function () {
+    $('.bounces_table').on('click', '.js_resend_button', function () {
         var _this = $(this),
             this_row = _this.closest('tr'),
             this_class = this_row.prop('class'),
@@ -222,7 +222,23 @@ $(document).ready(function () {
     CC_GLOBAL.filterTable('.call_list_table > tbody', '#js_search_email');
 
     // filter call list by date
-    $('#js_date_filter').change(function () {
+    $('#js_date_filter_call_list').change(function () {
+        var days = $(this).val();
+
+        $.ajax({
+            url: '/report/call_list/',
+            type: 'POST',
+            data: {
+                'days': days,
+            },
+        }).done(function (resp) {
+            $('.call_list_table > tbody').html(resp);
+            $.bootstrapSortable();
+        });
+    });
+
+    // filter call list by date
+    $('#js_date_filter_message_list').change(function () {
         var days = $(this).val();
 
         $.ajax({

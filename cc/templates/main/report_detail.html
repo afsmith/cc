@@ -21,11 +21,17 @@
 
         {% if missing_data|length == 0 %}
         <p class="alert alert-info">
-            {% trans "Looks like no one has viewed your offer yet. Come back again later. Did you know you can receive a notice when they click your link? Next time try the 'Notify when link clicked' checkbox when sending." %}
+            {% trans "Looks like no one has viewed your offer yet. Come back again later." %}
         </p>
         {% endif %}
 
     {% else %}
+        {% if this_message.files.count == 0 %}
+        <p class="alert alert-info">
+            {% trans "The detail report isn't available for this message because it doesn't contain any attachment." %}
+        </p>
+        {% else %}
+
         <ul class="nav nav-tabs">
             {% for f in this_message.files.all %}
                 <li {% if forloop.counter == 1 %}class="active"{% endif %}>
@@ -39,6 +45,8 @@
                 <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="tab_{{ f.index }}"></div>
             {% endfor %}
         </div>
+
+        {% endif %}
 
     {% endif %}
 </div>
@@ -57,9 +65,9 @@
         
         <tbody>
             {% for row in uninterested_recipients %}
-            <tr id="row_{{ this_message.id }}_{{ row.id }}">
+            <tr data-message="{{ this_message.id }}" data-user="{{ row.id }}">
                 <td>{{ row.email }}</td>
-                <td class="resend_cell"><input type="checkbox" class="js_resend" /></td>
+                <td class="resend_cell"><input type="checkbox" class="js_resend_checkbox" /></td>
             </tr>
             {% endfor %}
         </tbody>

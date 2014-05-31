@@ -135,8 +135,6 @@ def get_email_action_group_by_recipient(message, recipient=None):
         'participant',
         'participant__email'
     ).annotate(
-        #ip_count=Count('tracking_session__client_ip', distinct=True),
-        #device_count=Count('tracking_session__device', distinct=True),
         visit_count=Count('id'),
         last_visit=Max('created_at'),
     ).order_by()
@@ -285,13 +283,17 @@ def get_bounce_list(user):
     return Bounce.objects.filter(message__owner=user)
 
 
-def get_message_with_email_data(user, past_days=5):
+def get_messages_with_email_data(user, past_days=5):
     rows = []
+
+    # get all messages from recent days
     messages = Message.objects.filter(
         owner=user,
         created_at__gte=datetime.today()-timedelta(days=past_days)
     ).order_by('-created_at')
+
     for message in messages:
+        # check if there is any open action from message
         logs = (
             TrackingLog.objects
             .filter(message=message, action=TrackingLog.OPEN_EMAIL_ACTION)
@@ -302,15 +304,13 @@ def get_message_with_email_data(user, past_days=5):
             )
         )
 
-        #print log.query
         if logs:
+            # get the log of last open
             last_log = (
                 TrackingLog.objects
                 .filter(message=message, action=TrackingLog.OPEN_EMAIL_ACTION)
                 .order_by('-created_at')[0]
             )
-            print last_log
-
             rows.append({
                 'message': message,
                 'visit_count': logs[0]['visit_count'],

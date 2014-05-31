@@ -41,7 +41,9 @@ $(document).ready(function () {
     });
 
     // when init page, click on tab 1 to load the 1st file report
-    tabClickHandler(1);
+    if ($('.nav-tabs li').length) {
+        tabClickHandler(1);
+    }
 
     // draw chart function
     drawBarChart = function (json_data) {
@@ -256,38 +258,6 @@ $(document).ready(function () {
             },
         }).done(function (resp) {
             drawBarChart(resp);
-        });
-
-        return false;
-    });
-
-    // click on resend button
-    $('.js_resend').click(function () {
-        $(this).parent().html('<button class="btn btn-default btn-small js_resendButton">Send</button>');
-        return false;
-    });
-
-    $('.report_table').on('click', '.js_resendButton', function () {
-        var _this = $(this),
-            this_row = _this.closest('tr'),
-            this_id = this_row.prop('id'),
-            id_arr = this_id.replace('row_', '').split('_'),
-            message_id = id_arr[0],
-            user_id = id_arr[1];
-
-        $.ajax({
-            url: '/message/resend/',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'message_id': message_id,
-                'user_id': user_id
-            },
-        }).done(function (resp) {
-            if (resp.status === 'ERROR') {
-                CC_GLOBAL.showErrorPopup(resp.message);
-            }
-            _this.remove();
         });
 
         return false;

@@ -1,8 +1,20 @@
 {% load i18n %}
 
 <h3>{% trans "Postal report" %}</h3>
+<div class="row">
+    <div class="form-group col-md-6 col-lg-6">
+        <h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
+    </div>
+    <div class="form-group col-md-6 col-lg-6">
+        <label for="js_date_filter_message_list" class="form-label">{% trans "Past days" %}</label>
+        <select id="js_date_filter_message_list" class="form-control">
+            <option value="7" selected="selected">5</option>
+            <option value="14">14</option>
+            <option value="30">30</option>
+        </select>
+    </div>
+</div>
 
-<h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
 <div class="table-responsive">
     <table class="table table-bordered messages_table">
         <thead>
@@ -11,7 +23,7 @@
                 <th>{% trans "Time" %}</th>
                 <th>{% trans "Subject" %}</th>
                 <th>{% trans "Last opened" %}</th>
-                <th>{% trans "Visits" %}</th>
+                <th>{% trans "Opened" %}</th>
                 <th>{% trans "Attachments" %}</th>
                 <th>{% trans "Location" %}</th>
                 <th>{% trans "Device type" %}</th>
@@ -20,7 +32,7 @@
         </thead>
         <tbody>
             {% for row in message_list %}
-            <tr id="row_msg_{{ row.id }}">
+            <tr data-message="{{ row.message.id }}">
                 <td>{{ row.message.receivers.all|join:', ' }}</td>
                 <td>{{ row.message.created_at|date:'d.m.Y H:i:s' }}</td>
                 <td>{{ row.message.subject }}</td>
@@ -29,7 +41,7 @@
                 <td>{{ row.message.files.count }}</td>
                 <td>{{ row.location|default:'' }}</td>
                 <td>{{ row.device|default:'' }}</td>
-                <td>{% if row.resend %}<input type="checkbox" />{% endif %}</td>
+                <td>{% if row.resend %}<input type="checkbox" class="js_resend_checkbox" />{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>

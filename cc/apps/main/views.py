@@ -21,12 +21,11 @@ def dashboard(request):
     message_sent = services.get_message_sent(request.user, 'month')
     call_list = services.get_call_list(request.user)
     bounce_list = services.get_bounce_list(request.user)
-
-    message_list = services.get_message_with_email_data(request.user)
+    message_list = services.get_messages_with_email_data(request.user)
 
     return {
-        'message_sent': message_sent,
         'call_list': call_list,
+        'message_sent': message_sent,
         'message_list': message_list,
         'bounce_list': bounce_list,
     }
