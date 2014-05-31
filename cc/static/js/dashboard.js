@@ -61,10 +61,10 @@ $(document).ready(function () {
 
             // draw chart
             $('#call_list_graph').highcharts(options);
-            $('#call_list_detail').html('<p>Total pages: ' + len + '</p><p>Total visits: ' + json_data.total_visits + '</p>');
+            $('#call_list_detail').html('<p>Total pages: ' + len + '</p><p>Total visits: ' + json_data.total_visits + '</p>').removeClass('hidden');
         } else {
             $('#call_list_graph').html('<p class="alert alert-warning alert-block">This recipient didn\'t look at this file</p>');
-            $('#call_list_detail').html('');
+            $('#call_list_detail').addClass('hidden');
         }
     };
 
@@ -119,18 +119,19 @@ $(document).ready(function () {
     // click on each row
     $('.call_list_table').on('click', '.call_row', function () {
         var _this = $(this),
-            this_row = _this.closest('tr'),
-            this_id = this_row.prop('id'),
-            id_arr = this_id.replace('row_', '').split('_'),
-            message_id = id_arr[0],
-            user_id = id_arr[1];
+            this_row = _this.closest('tr');
 
         // reset state of right hand graph
         $('#call_list_graph_nav').addClass('hidden');
         $('#detail_button').addClass('hidden');
+        $('#call_list_detail').addClass('hidden');
 
         // get graph for 1st file
-        tabClickHandler(message_id, user_id, 1);
+        if (this_row.data('files') > 0) {
+            tabClickHandler(this_row.data('message'), this_row.data('user'), 1);
+        } else {
+            $('#call_list_graph').html('<p class="alert alert-info">No Attachment</p>');
+        }
 
         // handle css
         $('.call_row').removeClass('row_active');

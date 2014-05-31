@@ -192,10 +192,8 @@ def get_call_list(user, past_days=14):
                 'closed_deal': row['closed_deal'],
                 'status': status_color,
                 'email': row['tracking_session__participant__email'],
-                'date': message.created_at,
-                'subject': message.subject,
                 'recipient_id': row['tracking_session__participant'],
-                'message_id': message.id,
+                'message': message,
             })
 
         # get list of people that don't have tracking session
@@ -225,10 +223,8 @@ def get_call_list(user, past_days=14):
                     'closed_deal': False,
                     'status': algorithm.get_status_color(total_point),
                     'email': recipient.email,
-                    'date': message.created_at,
-                    'subject': message.subject,
                     'recipient_id': recipient.id,
-                    'message_id': message.id,
+                    'message': message,
                 })
             else:
                 # recipient doesn't look at offer
@@ -237,10 +233,8 @@ def get_call_list(user, past_days=14):
                     'closed_deal': False,
                     'status': algorithm.get_status_color(0),
                     'email': recipient.email,
-                    'date': message.created_at,
-                    'subject': message.subject,
                     'recipient_id': recipient.id,
-                    'message_id': message.id,
+                    'message': message,
                 })
 
     # sort the call_list based on total_point
