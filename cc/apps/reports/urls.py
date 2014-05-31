@@ -12,4 +12,5 @@ urlpatterns = patterns(
         'remove_bounce', name='remove_bounce'),
     url(r'^dashboard/$', 'report_dashboard', name='report_dashboard'),
     url(r'^call_list/$', 'report_call_list', name='report_call_list'),
+    url(r'^message_list/$', 'report_message_list', name='report_message_list'),
 )

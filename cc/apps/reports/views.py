@@ -6,11 +6,7 @@ from django.views.decorators import http as http_decorators
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-from .services import (
-    get_tracking_data_group_by_recipient, get_missing_data,
-    validate_request, get_tracking_data_group_by_page_number,
-    get_recipients_without_tracking_data, get_call_list, check_permission
-)
+from . import services
 from .models import Bounce
 from cc.apps.cc_messages.models import Message
 from cc.apps.tracking.models import TrackingSession
@@ -44,7 +40,7 @@ def report_detail(request, message_id):
     Reporting detail view
     '''
     this_message = get_object_or_404(Message, pk=message_id)
-    check_permission(this_message, request.user)
+    services.check_permission(this_message, request.user)
 
     # get all messages for dropdown
     all_messages = (
@@ -53,10 +49,10 @@ def report_detail(request, message_id):
     )
 
     # get missing data
-    missing_data = get_missing_data(this_message)
+    missing_data = services.get_missing_data(this_message)
 
     # get recipient without tracking data
-    uninterested_recipients = get_recipients_without_tracking_data(
+    uninterested_recipients = services.get_recipients_without_tracking_data(
         this_message, False
     )
 
@@ -73,10 +69,10 @@ def report_detail(request, message_id):
 @render_to('main/_report_graph_table.html')
 def report_detail_per_file(request, message_id, file_index):
     this_message = get_object_or_404(Message, pk=message_id)
-    check_permission(this_message, request.user)
+    services.check_permission(this_message, request.user)
 
     # get log data group by participant
-    tracking_data = get_tracking_data_group_by_recipient(
+    tracking_data = services.get_tracking_data_group_by_recipient(
         this_message, file_index
     )
     # get the file
@@ -93,7 +89,7 @@ def report_detail_per_file(request, message_id, file_index):
 @http_decorators.require_POST
 @ajax_request
 def user_log(request):
-    data = validate_request(request)
+    data = services.validate_request(request)
     if data:
         log_groupby_session = (
             TrackingSession.objects
@@ -131,20 +127,20 @@ def report_drilldown(request):
     file_index = request.POST.get('file_index')
 
     this_message = get_object_or_404(Message, pk=message_id)
-    check_permission(this_message, request.user)
+    services.check_permission(this_message, request.user)
 
     if session_id:  # get session log from report detail
-        data = get_tracking_data_group_by_page_number(
+        data = services.get_tracking_data_group_by_page_number(
             tracking_session=session_id
         )
     elif recipient_id:  # get recipient log from dashboard
-        data = get_tracking_data_group_by_page_number(
+        data = services.get_tracking_data_group_by_page_number(
             tracking_session__participant=recipient_id,
             tracking_session__message=message_id,
             tracking_session__file_index=file_index
         )
     else:  # get summary log from report detail
-        data = get_tracking_data_group_by_page_number(
+        data = services.get_tracking_data_group_by_page_number(
             tracking_session__message=message_id,
             tracking_session__file_index=file_index,
         )
@@ -161,10 +157,10 @@ def report_dashboard(request):
     file_index = request.POST.get('file_index')
 
     this_message = get_object_or_404(Message, pk=message_id)
-    check_permission(this_message, request.user)
+    services.check_permission(this_message, request.user)
 
     if recipient_id and message_id and file_index:
-        data = get_tracking_data_group_by_page_number(
+        data = services.get_tracking_data_group_by_page_number(
             tracking_session__participant=recipient_id,
             tracking_session__message=message_id,
             tracking_session__file_index=file_index
@@ -227,6 +223,18 @@ def remove_bounce(request, bounce_id):
 @render_to('main/_dashboard_call_list_table.html')
 def report_call_list(request):
     past_days = int(request.POST.get('days', '14'))
-    call_list = get_call_list(request.user, past_days)
+    call_list = services.get_call_list(request.user, past_days)
 
     return {'call_list': call_list}
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@render_to('main/_dashboard_message_list_table.html')
+def report_message_list(request):
+    past_days = int(request.POST.get('days', '7'))
+    message_list = services.get_messages_with_email_data(
+        request.user, past_days
+    )
+
+    return {'message_list': message_list}

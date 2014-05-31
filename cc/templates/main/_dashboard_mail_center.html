@@ -8,7 +8,7 @@
     <div class="form-group col-md-6 col-lg-6">
         <label for="js_date_filter_message_list" class="form-label">{% trans "Past days" %}</label>
         <select id="js_date_filter_message_list" class="form-control">
-            <option value="7" selected="selected">5</option>
+            <option value="7" selected="selected">7</option>
             <option value="14">14</option>
             <option value="30">30</option>
         </select>
@@ -31,19 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in message_list %}
-            <tr data-message="{{ row.message.id }}">
-                <td>{{ row.message.receivers.all|join:', ' }}</td>
-                <td>{{ row.message.created_at|date:'d.m.Y H:i:s' }}</td>
-                <td>{{ row.message.subject }}</td>
-                <td>{{ row.last_visit }}</td>
-                <td>{{ row.visit_count }}</td>
-                <td>{{ row.message.files.count }}</td>
-                <td>{{ row.location|default:'' }}</td>
-                <td>{{ row.device|default:'' }}</td>
-                <td>{% if row.resend %}<input type="checkbox" class="js_resend_checkbox" />{% endif %}</td>
-            </tr>
-            {% endfor %}
+            {% include "main/_dashboard_message_list_table.html" %}
         </tbody>
     </table>    
 </div>

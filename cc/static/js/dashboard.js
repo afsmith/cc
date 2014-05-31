@@ -242,13 +242,13 @@ $(document).ready(function () {
         var days = $(this).val();
 
         $.ajax({
-            url: '/report/call_list/',
+            url: '/report/message_list/',
             type: 'POST',
             data: {
                 'days': days,
             },
         }).done(function (resp) {
-            $('.call_list_table > tbody').html(resp);
+            $('.messages_table > tbody').html(resp);
             $.bootstrapSortable();
         });
     });

@@ -283,7 +283,7 @@ def get_bounce_list(user):
     return Bounce.objects.filter(message__owner=user)
 
 
-def get_messages_with_email_data(user, past_days=5):
+def get_messages_with_email_data(user, past_days=7):
     rows = []
 
     # get all messages from recent days
