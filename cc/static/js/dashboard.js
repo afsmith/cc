@@ -238,6 +238,9 @@ $(document).ready(function () {
         });
     });
 
+    // search call list table
+    CC_GLOBAL.filterTable('.messages_table > tbody', '#js_search_message');
+
     // filter call list by date
     $('#js_date_filter_message_list').change(function () {
         var days = $(this).val();

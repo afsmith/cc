@@ -64,7 +64,7 @@ def _send_message(message, recipient, domain):
 
     # create tracking pixel
     tracking_pixel_src = '{}/track/email/{}/{}/'.format(
-        domain, message.id, recipient.id
+        domain.replace('https', 'http'), message.id, recipient.id
     )
 
     send_templated_mail(
