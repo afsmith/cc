@@ -129,7 +129,7 @@ $(document).ready(function () {
         if (_this.data('files') > 0) {
             tabClickHandler(_this.data('message'), _this.data('user'), 1);
         } else {
-            $('#call_list_graph').html('<p class="alert alert-info">No Attachment</p>');
+            $('#call_list_graph').html('<p class="alert alert-info">No attachment. Please check report below.</p>');
         }
 
         // handle css
