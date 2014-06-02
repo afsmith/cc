@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, _, Highcharts, CC_GLOBAL*/
+/*global $, jQuery, _, Highcharts, CC_GLOBAL, log*/
 'use strict';
 
 $(document).ready(function () {
@@ -118,8 +118,7 @@ $(document).ready(function () {
 
     // click on each row
     $('.call_list_table').on('click', '.call_row', function () {
-        var _this = $(this),
-            this_row = _this.closest('tr');
+        var _this = $(this);
 
         // reset state of right hand graph
         $('#call_list_graph_nav').addClass('hidden');
@@ -127,15 +126,16 @@ $(document).ready(function () {
         $('#call_list_detail').addClass('hidden');
 
         // get graph for 1st file
-        if (this_row.data('files') > 0) {
-            tabClickHandler(this_row.data('message'), this_row.data('user'), 1);
+        if (_this.data('files') > 0) {
+            tabClickHandler(_this.data('message'), _this.data('user'), 1);
         } else {
             $('#call_list_graph').html('<p class="alert alert-info">No Attachment</p>');
         }
 
         // handle css
-        $('.call_row').removeClass('row_active');
+        $('.call_row, .message_row').removeClass('row_active');
         _this.addClass('row_active');
+        $('.js_row_message_' + _this.data('message')).addClass('row_active');
 
         return false;
     });

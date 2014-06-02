@@ -1,5 +1,5 @@
 {% for row in call_list %}
-<tr class="call_row {% if row.closed_deal %}sold{% endif %}" data-message="{{ row.message.id }}" data-user="{{ row.recipient_id }}" data-point="{{ row.total_point }}" data-files="{{ row.message.files.count }}">
+<tr class="call_row {% if row.closed_deal %}sold{% endif %} js_row_message_{{ row.message.id }}" data-message="{{ row.message.id }}" data-user="{{ row.recipient_id }}" data-point="{{ row.total_point }}" data-files="{{ row.message.files.count }}">
     <td>{{ row.attachment }}</td>
     <td>{% if row.status == 'Green' %}
         <span class="badge alert-success"><i class="glyphicon glyphicon-ok"></i></span>

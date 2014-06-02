@@ -1,5 +1,5 @@
 {% for row in message_list %}
-<tr data-message="{{ row.message.id }}">
+<tr data-message="{{ row.message.id }}" class="js_row_message_{{ row.message.id }} message_row">
     <td>{{ row.message.receivers.all|join:', ' }}</td>
     <td>{{ row.message.created_at|date:'d.m.Y H:i:s' }}</td>
     <td>{{ row.message.subject }}</td>
