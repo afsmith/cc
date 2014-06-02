@@ -189,7 +189,7 @@ def get_call_list(user, past_days=14):
             # add a row to call list
             call_list.append({
                 'total_point': total_point,
-                'closed_deal': row['closed_deal'],
+                'attachment': message.files.count(),
                 'status': status_color,
                 'email': row['tracking_session__participant__email'],
                 'recipient_id': row['tracking_session__participant'],
@@ -220,7 +220,7 @@ def get_call_list(user, past_days=14):
 
                 call_list.append({
                     'total_point': total_point,
-                    'closed_deal': False,
+                    'attachment': message.files.count(),
                     'status': algorithm.get_status_color(total_point),
                     'email': recipient.email,
                     'recipient_id': recipient.id,
@@ -230,7 +230,7 @@ def get_call_list(user, past_days=14):
                 # recipient doesn't look at offer
                 call_list.append({
                     'total_point': 0,
-                    'closed_deal': False,
+                    'attachment': message.files.count(),
                     'status': algorithm.get_status_color(0),
                     'email': recipient.email,
                     'recipient_id': recipient.id,
