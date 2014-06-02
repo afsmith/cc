@@ -1,8 +1,8 @@
 {% load i18n %}
 
 <h3>{% trans "Postal report" %}</h3>
+<h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
 <div class="row">
-    <h5>{% trans "Total messages sent this month" %}: {{ message_sent }}</h5>
     <div class="form-group col-md-6 col-lg-6">
         <label for="js_search_message" class="form-label">{% trans "Search" %}</label>
         <input id="js_search_message" type="text" class="form-control" />

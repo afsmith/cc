@@ -24,7 +24,10 @@ def report_index(request):
     '''
     try:
         latest_message = (
-            Message.objects.filter(owner=request.user).latest('created_at')
+            Message.objects
+            .filter(owner=request.user)
+            .exclude(files=None)
+            .latest('created_at')
         )
     except Message.DoesNotExist:
         return {}
@@ -44,7 +47,9 @@ def report_detail(request, message_id):
 
     # get all messages for dropdown
     all_messages = (
-        Message.objects.filter(owner=request.user)
+        Message.objects
+        .filter(owner=request.user)
+        .exclude(files=None)
         .order_by('created_at').reverse()
     )
 
