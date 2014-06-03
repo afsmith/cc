@@ -58,7 +58,7 @@
                 <td>{{ row.event_type|capfirst }}</td>
                 <td class="email_cell">{{ row.email }}</td>
                 <td>{{ row.message.subject }}</td>
-                <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.created_at|date:'H:i d.m.Y' }}</td>
                 <td>{{ row.reason }}</td>
                 <td class="fix_cell"><input type="checkbox" class="js_fix" /></td>
                 <td class="remove_cell"><input type="checkbox" class="js_remove" /></td>

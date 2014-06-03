@@ -92,7 +92,7 @@
         <tbody>
             {% for row in missing_data %}
             <tr>
-                <td>{{ row.created_at|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.created_at|date:'H:i d.m.Y' }}</td>
                 <td>{{ row.participant.email }}</td>
                 <td>{{ row.client_ip|default:'N/A' }}</td>
                 <td>{{ row.device|default:'N/A' }}</td>

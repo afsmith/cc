@@ -243,3 +243,21 @@ def report_message_list(request):
     )
 
     return {'message_list': message_list}
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@render_to('main/_dashboard_right.html')
+def report_email_opened(request):
+    message_id = request.POST.get('message_id')
+    user_id = request.POST.get('user_id')
+    log = services.get_email_action_group_by_recipient(
+        message_id, user_id
+    )
+    if log and log[0]['visit_count'] > 0:
+        last_open = services.get_last_email_open(message_id, user_id)
+        return {
+            'count': log[0]['visit_count'],
+            'last_open': last_open
+        }
+    return {}

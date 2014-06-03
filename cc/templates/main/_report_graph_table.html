@@ -22,7 +22,7 @@
             {% for row in tracking_data %}
             <tr id="row_{{ this_message.id }}_{{ row.tracking_session__participant }}_{{ row.tracking_session__file_index }}" {% if row.closed_deal %}class="sold"{% endif %}>
                 <td><input type="checkbox" name="sold" class="js_sold" {% if row.closed_deal %}checked="checked"{% endif %} /></td>
-                <td>{{ row.last_visit|date:'d.m.Y H:i:s' }}</td>
+                <td>{{ row.last_visit|date:'H:i d.m.Y' }}</td>
                 <td id="user_{{ row.tracking_session__participant }}_{{ row.tracking_session__file_index }}" class="cell_email">{{ row.tracking_session__participant__email }}</td>
                 <td>{{ row.total_time }}</td>
                 <td>{{ row.visit_count }}</td>

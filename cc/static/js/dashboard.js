@@ -118,7 +118,9 @@ $(document).ready(function () {
 
     // click on each row
     $('.call_list_table').on('click', '.call_row', function () {
-        var _this = $(this);
+        var _this = $(this),
+            message_id = _this.data('message'),
+            user_id = _this.data('user');
 
         // reset state of right hand graph
         $('#call_list_graph_nav').addClass('hidden');
@@ -127,9 +129,18 @@ $(document).ready(function () {
 
         // get graph for 1st file
         if (_this.data('files') > 0) {
-            tabClickHandler(_this.data('message'), _this.data('user'), 1);
+            tabClickHandler(message_id, user_id, 1);
         } else {
-            $('#call_list_graph').html('<p class="alert alert-info">No attachment. Please check report below.</p>');
+            $.ajax({
+                url: '/report/email_opened/',
+                type: 'POST',
+                data: {
+                    'message_id': message_id,
+                    'user_id': user_id,
+                }
+            }).done(function (resp) {
+                $('#call_list_graph').html(resp);
+            });
         }
 
         // handle css

@@ -1,0 +1,8 @@
+{% if count %}
+    <p><strong>Opened</strong>: <span class="label label-success">{{ count }}</span></p>
+    <p><strong>Last opened</strong>: {{ last_open.created_at|date:'H:i d.m.Y' }}</p>
+    <p><strong>Location</strong>: {{ last_open.location|default:'' }}</p>
+    <p><strong>Device</strong>: {{ last_open.device|default:'' }}</p>
+{% else %}
+    <p class="alert alert-warning">This recipient didn't open your email.</p>
+{% endif %}

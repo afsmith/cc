@@ -277,6 +277,16 @@ def get_bounce_list(user):
     return Bounce.objects.filter(message__owner=user)
 
 
+def get_last_email_open(message, recipient=None):
+    qs = TrackingLog.objects.filter(
+        message=message, action=TrackingLog.OPEN_EMAIL_ACTION
+    )
+    if recipient:
+        qs.filter(participant=recipient)
+
+    return qs.order_by('-created_at')[0]
+
+
 def get_messages_with_email_data(user, past_days=7):
     rows = []
 
@@ -300,11 +310,7 @@ def get_messages_with_email_data(user, past_days=7):
 
         if logs:
             # get the log of last open
-            last_log = (
-                TrackingLog.objects
-                .filter(message=message, action=TrackingLog.OPEN_EMAIL_ACTION)
-                .order_by('-created_at')[0]
-            )
+            last_log = get_last_email_open(message)
             rows.append({
                 'message': message,
                 'visit_count': logs[0]['visit_count'],
