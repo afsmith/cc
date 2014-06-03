@@ -52,8 +52,8 @@
                     <ul class="nav navbar-nav">
                         {% if user.is_authenticated %}
                         <li class="{% active request 'home' %}"><a href="{% url 'home' %}">{% trans 'Dashboard' %}</a></li>
-                        <li class="{% active request 'send_message' %}"><a href="{% url 'send_message' %}">{% trans 'Send messages' %}</a></li>
-                        <li class="{% active request 'report_index' %}"><a href="{% url 'report_index' %}">{% trans 'Attachment reports' %}</a></li>
+                        <li class="{% active request 'send_message' %}"><a href="{% url 'send_message' %}">{% trans 'Send' %}</a></li>
+                    <!---    <li class="{% active request 'report_index' %}"><a href="{% url 'report_index' %}">{% trans 'Attachment reports' %}</a></li> -->
                         {% endif %}
                     </ul>
                     
