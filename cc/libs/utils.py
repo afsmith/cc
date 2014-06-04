@@ -74,7 +74,7 @@ def get_location(request):
     except pygeoip.GeoIPError:
         return location
     if location_dict:
-        location = '{}, {}'.format(
+        location = u'{}, {}'.format(
             location_dict['city'], location_dict['country_code']
         )
     return location
