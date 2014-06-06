@@ -163,7 +163,7 @@ body, td { font-family: HelveticaNeue, sans-serif; }
             <td class="w580" width="580">
                 <div id="headline" align="center">
                     <p>
-                        <strong><singleline label="Title">Kneto</singleline></strong>
+                        <strong><singleline label="Title"><a href="https://cc.kneto.com">Kneto</a></singleline></strong>
                     </p>
                 </div>
             </td>
@@ -187,7 +187,7 @@ body, td { font-family: HelveticaNeue, sans-serif; }
                         <table class="w580" cellpadding="0" cellspacing="0" border="0" width="580">
                             <tbody><tr>
                                 <td class="w580" width="580">
-                                    <p class="article-title" align="left"><singleline label="Title">Message Received...</singleline></p>
+                                    <p class="article-title" align="left"><singleline label="Title"><a href="https://cc.kneto.com">Message Received... </a></singleline></p>
                                     <div class="article-content" align="left">
                                         <multiline label="Description">
                                             {{ recipient }} opened your email "{{ message_subject }}".
@@ -225,6 +225,7 @@ body, td { font-family: HelveticaNeue, sans-serif; }
             <td class="w580" valign="top" width="360">
             <span class="hide"><p id="permission-reminder" class="footer-content-left" align="left"></p></span>
             <p class="footer-content-left" align="left"><preferences lang="en"><a href="mailto:support@kneto.com">support@kneto.com</a></preferences> </p>
+            <a href="https://cc.kneto.com">Kneto</a>
             </td>
             <td class="hide w0" width="60"></td>
             <td class="hide w0" valign="top" width="160">
