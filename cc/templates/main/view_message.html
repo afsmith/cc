@@ -54,10 +54,9 @@
                 token: '{{ token }}',
                 tracking_log_id: {{ tracking_log.id }}
             };
-
-            {% if message.allow_download %}
-                CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}';
-            {% endif %}
+        {% endif %}
+        {% if message.allow_download %}
+            CC_GLOBAL.download_url = '{% url "download_file" file_id=file.id %}';
         {% endif %}
 
         $.get(

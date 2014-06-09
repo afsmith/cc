@@ -23,12 +23,13 @@ $(document).ready(function () {
         safariOrMobileHandler,
         createTrackingEventAjax;
 
-    // check if there is global var message_data to start tracking
-    if (CC_GLOBAL.message_data !== undefined) {
-        // document is ready inside flexpaper viewer
-        $(window).on('onDocumentLoaded', function () {
-            var flex_viewer = $FlexPaper('message_viewer');
 
+    // document is ready inside flexpaper viewer
+    $(window).on('onDocumentLoaded', function () {
+        var flex_viewer = $FlexPaper('message_viewer');
+
+        // check if there is global var message_data to start tracking
+        if (CC_GLOBAL.message_data !== undefined) {
 
             // ----------------------------- Timer ----------------------------- //
 
@@ -156,23 +157,27 @@ $(document).ready(function () {
                         log('ERROR: ' + resp.message);
                     }
                 });
-
-                // init download button
-                if (!_.isUndefined(CC_GLOBAL.download_url)) {
-                    $('.js_download_button').click(function () {
-                        window.location = _.template('<%= data.url %>?user=<%= data.user %>&message=<%= data.message %>', {
-                            url: CC_GLOBAL.download_url,
-                            user: CC_GLOBAL.message_data.user_id,
-                            message: CC_GLOBAL.message_data.message_id,
-                        });
-                    }).show();
-                }
             };
 
             // init page
             pageInitHandler();
 
         // ----------------------------- END ----------------------------- //
-        }); // end onDocumentLoaded 
-    } // end if CC_GLOBAL.message_data
+        }  // end if CC_GLOBAL.message_data
+
+        // init download button
+        if (!_.isUndefined(CC_GLOBAL.download_url)) {
+            $('.js_download_button').click(function () {
+                if (_.isUndefined(CC_GLOBAL.message_data)) {
+                    window.location = CC_GLOBAL.download_url;
+                } else {
+                    window.location = _.template('<%= data.url %>?user=<%= data.user %>&message=<%= data.message %>', {
+                        url: CC_GLOBAL.download_url,
+                        user: CC_GLOBAL.message_data.user_id,
+                        message: CC_GLOBAL.message_data.message_id,
+                    });
+                }
+            }).show();
+        }
+    }); // end onDocumentLoaded 
 }); // end document ready
