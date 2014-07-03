@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from cc.apps.accounts.models import CUser
 from cc.apps.content.models import File
+from cc.libs.utils import gen_file_key
 
 
 class Message(models.Model):
@@ -25,3 +26,13 @@ class Message(models.Model):
 
     def __unicode__(self):
         return self.subject
+
+
+class Link(models.Model):
+    original_url = models.URLField(unique=True)
+    converted_key = models.CharField(
+        max_length=100, unique=True, default=gen_file_key
+    )
+
+    def __unicode__(self):
+        return self.original_url

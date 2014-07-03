@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 
-from .models import Message
+from .models import Message, Link
 from cc.apps.reports.models import Bounce
 from cc.apps.accounts.models import OneClickLinkToken, CUser
 from cc.apps.tracking.models import TrackingLog
@@ -14,6 +14,9 @@ from cc.libs.exceptions import MessageExpired
 from templated_email import send_templated_mail
 from datetime import datetime, timedelta, date
 import json
+import re
+
+url_regex = re.compile(r'<a href="?\'?([^"\'>]*)')
 
 
 def get_message(id, user):
@@ -31,8 +34,20 @@ def get_message(id, user):
             raise PermissionDenied
 
 
+def _replace_links(message, text, domain):
+    def replace(match):
+        groups = match.groups()
+        link, created = Link.objects.get_or_create(original_url=groups[0])
+        return '<a href="{}/link/{}'.format(domain, link.converted_key)
+    return url_regex.sub(replace, text)
+
+
 def _create_ocl_link_replace_link_texts(message, user, domain):
     text = message.message
+
+    # replace all links
+    text = _replace_links(message, text, domain)
+
     # token should be expired after 30 days
     ocl = OneClickLinkToken.objects.create(
         user=user,
@@ -85,6 +100,7 @@ def _send_message(message, recipient, domain):
             })
         }
     )
+
 
 
 def create_ocl_and_send_message(message, domain):
