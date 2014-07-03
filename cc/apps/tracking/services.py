@@ -50,7 +50,7 @@ def validate_request(request, type):
 
 def create_tracking_log(**kw):
     message = kw['message']
-    participant = kw['participant']
+    participant = kw.get('participant')
     request = kw.get('request')
     # filter out bad data
     if not isinstance(message, Message):
@@ -58,7 +58,7 @@ def create_tracking_log(**kw):
             message = Message.objects.get(pk=message)
         except Message.DoesNotExist:
             return False
-    if not isinstance(participant, CUser):
+    if participant is not None and not isinstance(participant, CUser):
         try:
             participant = CUser.objects.get(pk=participant)
         except CUser.DoesNotExist:

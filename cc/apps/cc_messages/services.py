@@ -34,19 +34,19 @@ def get_message(id, user):
             raise PermissionDenied
 
 
-def _replace_links(message, text, domain):
+def _replace_links(message, domain):
     def replace(match):
         groups = match.groups()
         link, created = Link.objects.get_or_create(original_url=groups[0])
-        return '<a href="{}/link/{}'.format(domain, link.converted_key)
-    return url_regex.sub(replace, text)
+        return '<a href="{}/track/link/{}/{}/'.format(
+            domain, message.id, link.converted_key
+        )
+    return url_regex.sub(replace, message.message)
 
 
 def _create_ocl_link_replace_link_texts(message, user, domain):
-    text = message.message
-
     # replace all links
-    text = _replace_links(message, text, domain)
+    text = _replace_links(message, domain)
 
     # token should be expired after 30 days
     ocl = OneClickLinkToken.objects.create(
@@ -100,7 +100,6 @@ def _send_message(message, recipient, domain):
             })
         }
     )
-
 
 
 def create_ocl_and_send_message(message, domain):

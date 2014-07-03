@@ -9,9 +9,10 @@ class TrackingLog(models.Model):
     OPEN_EMAIL_ACTION = 'OPEN_EMAIL'
     CLICK_LINK_ACTION = 'CLICK_LINK'
     DOWNLOAD_ACTION = 'DOWNLOAD'
+    CLICK_EXT_LINK_ACTION = 'CLICK_EXT_LINK'
 
     message = models.ForeignKey(Message)
-    participant = models.ForeignKey(CUser)
+    participant = models.ForeignKey(CUser, null=True)
     action = models.CharField(_('Action'), max_length=100)
     revision = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
