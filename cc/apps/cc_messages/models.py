@@ -17,6 +17,7 @@ class Message(models.Model):
     allow_download = models.BooleanField(_('Allow download'))
     files = models.ManyToManyField(File, related_name='files')
     owner = models.ForeignKey(CUser, related_name='owner', null=True)
+    external_links = models.IntegerField(default=0)
     expired_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

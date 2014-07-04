@@ -41,12 +41,16 @@ def _replace_links(message, domain):
         return '<a href="{}/track/link/{}/{}/'.format(
             domain, message.id, link.converted_key
         )
-    return url_regex.sub(replace, message.message)
+    return url_regex.subn(replace, message.message)
 
 
 def _create_ocl_link_replace_link_texts(message, user, domain):
     # replace all links
-    text = _replace_links(message, domain)
+    text, count = _replace_links(message, domain)
+
+    # save the external link count
+    message.external_links = count
+    message.save()
 
     # token should be expired after 30 days
     ocl = OneClickLinkToken.objects.create(
