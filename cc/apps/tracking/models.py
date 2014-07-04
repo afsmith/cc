@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from cc.apps.cc_messages.models import Message
+from cc.apps.cc_messages.models import Message, Link
 from cc.apps.accounts.models import CUser
 
 
@@ -20,6 +20,7 @@ class TrackingLog(models.Model):
     client_ip = models.CharField(_('Client IP'), max_length=50, null=True)
     device = models.CharField(_('Device'), max_length=50, null=True)
     location = models.CharField(_('Location'), max_length=50, null=True)
+    link = models.ForeignKey(Link, null=True)
 
     def __unicode__(self):
         return self.action

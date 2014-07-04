@@ -151,7 +151,8 @@ def track_link(request, message_id, key):
         message=message_id,
         action='CLICK_EXT_LINK',
         file_index=0,
-        request=request
+        request=request,
+        link=link
     )
     # and redirect to original url
     return redirect(link.original_url)

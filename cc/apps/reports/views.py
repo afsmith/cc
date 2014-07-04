@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from . import services
 from .models import Bounce
 from cc.apps.cc_messages.models import Message
-from cc.apps.tracking.models import TrackingSession
+from cc.apps.tracking.models import TrackingSession, TrackingLog
 from cc.libs.utils import format_dbtime
 
 from annoying.decorators import render_to, ajax_request
@@ -261,3 +261,12 @@ def report_email_opened(request):
             'last_open': last_open
         }
     return {}
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+@render_to('main/_dashboard_external_link_table.html')
+def report_external_links(request):
+    message_id = request.POST.get('message_id')
+    log = services.get_tracking_data_group_by_link(message_id)
+    return {'log': log}

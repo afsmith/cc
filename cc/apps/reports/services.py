@@ -327,3 +327,16 @@ def get_messages_with_email_data(user, past_days=7):
             })
 
     return rows
+
+
+def get_tracking_data_group_by_link(message_id):
+    log = (
+        TrackingLog.objects
+        .filter(message=message_id, action=TrackingLog.CLICK_EXT_LINK_ACTION)
+        .values('link__original_url')
+        .annotate(
+            count=Count('id'),
+        )
+    )
+
+    return log

@@ -5,6 +5,7 @@
     <td>{{ row.message.subject }}</td>
     <td>{{ row.last_visit|date:'H:i d.m.Y' }}</td>
     <td>{{ row.visit_count }}</td>
+    <td><a class="ext_link_btn" href="javascript:void(0);" data-toggle="popover">{{ row.message.external_links }}</a></td>
     <td>{{ row.message.files.count }}</td>
     <td>{{ row.location|default:'' }}</td>
     <td>{{ row.device|default:'' }}</td>

@@ -49,7 +49,7 @@ def validate_request(request, type):
 
 
 def create_tracking_log(**kw):
-    message = kw['message']
+    message = kw.get('message')
     participant = kw.get('participant')
     request = kw.get('request')
     # filter out bad data
@@ -74,12 +74,13 @@ def create_tracking_log(**kw):
     return TrackingLog.objects.create(
         message=message,
         participant=participant,
-        action=kw['action'],
-        file_index=kw['file_index'],
+        action=kw.get('action'),
+        file_index=kw.get('file_index'),
         revision=2,
         device=device,
         client_ip=client_ip,
         location=location,
+        link=kw.get('link'),
     )
 
 

@@ -268,4 +268,24 @@ $(document).ready(function () {
         });
     });
 
+    // popover when click on link count
+    $('.ext_link_btn').popover({
+        trigger: 'hover',
+        html: true,
+        content: function (elem) {
+            var html = '';
+            $.ajax({
+                url: '/report/external_link/',
+                type: 'POST',
+                data: {
+                    'message_id': $(this).closest('tr').data('message'),
+                },
+                async: false
+            }).done(function (resp) {
+                html = resp;
+            });
+            return html;
+        },
+    });
+
 }); // end document ready

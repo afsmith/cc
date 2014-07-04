@@ -1,0 +1,16 @@
+{% if log %}
+    <table class="table table-bordered external_link_table">
+        <tr>
+            <th>Link</th>
+            <th>Clicks</th>
+        </tr>
+        {% for row in log %}
+        <tr>
+            <td>{{ row.link__original_url|truncatechars:50 }}</td>
+            <td>{{ row.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    No click yet
+{% endif %}

@@ -14,4 +14,6 @@ urlpatterns = patterns(
     url(r'^call_list/$', 'report_call_list', name='report_call_list'),
     url(r'^message_list/$', 'report_message_list', name='report_message_list'),
     url(r'^email_opened/$', 'report_email_opened', name='report_email_opened'),
+    url(r'^external_link/$',
+        'report_external_links', name='report_external_links'),
 )
