@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, date
 import json
 import re
 
-url_regex = re.compile(r'<a href="?\'?([^"\'>]*)')
+url_regex = re.compile(r'href="?\'?([^"\'>]*)')
 
 
 def get_message(id, user):

@@ -287,5 +287,4 @@ $(document).ready(function () {
             return html;
         },
     });
-
 }); // end document ready
