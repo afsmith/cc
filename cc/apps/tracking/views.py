@@ -4,7 +4,9 @@ from django.views.decorators import http as http_decorators
 from django.shortcuts import redirect, get_object_or_404
 
 from . import services
-from cc.apps.cc_messages.services import notify_email_opened
+from cc.apps.cc_messages.services import (
+    notify_email_opened, send_notification_email
+)
 from cc.libs.utils import get_client_ip, get_device_name
 from cc.apps.cc_messages.models import Link
 
@@ -146,13 +148,9 @@ def close_deal(request):
 
 def track_link(request, message_id, key):
     link = get_object_or_404(Link, converted_key=key)
-    # create tracking log
-    services.create_tracking_log(
-        message=message_id,
-        action='CLICK_EXT_LINK',
-        file_index=0,
-        request=request,
-        link=link
-    )
+    # send notif email and log the info
+    send_notification_email(4, {
+        'message': message_id, 'link': link, 'request': request
+    })
     # and redirect to original url
     return redirect(link.original_url)

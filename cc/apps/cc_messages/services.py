@@ -137,59 +137,69 @@ def create_ocl_and_send_message(message, domain):
         )
 
 
-def send_notification_email(
-    reason_code, message, recipient=None, file_index=None, request=None
-):
+def send_notification_email(reason_code, options):
     '''
     Send notification email to sender, log the action if not exist
     reason_code 1: email is opened
     reason_code 2: link is clicked
     reason_code 3: conversion error
+    reason_code 4: external link is click
     '''
     if reason_code == 1:
         action = TrackingLog.OPEN_EMAIL_ACTION
-        subject = _('[Notification] %s opened your email.') % recipient.email
+        subject = _('[Notification] {} opened your email.').format(
+            options.get('recipient').email
+        )
         email_template = 'notification_email_opened'
     elif reason_code == 2:
         action = TrackingLog.CLICK_LINK_ACTION
-        subject = _(
-            '[Notification] %s clicked on your link.'
-        ) % recipient.email
+        subject = _('[Notification] {} clicked on your link.').format(
+            options.get('recipient').email
+        )
         email_template = 'notification_link_clicked'
     elif reason_code == 3:
         subject = _('[Notification] Conversion error.')
         email_template = 'notification_conversion_error'
+    elif reason_code == 4:
+        action = TrackingLog.CLICK_EXT_LINK_ACTION
+        subject = _('[Notification] Your external link has been click.')
+        email_template = 'notification_ext_link_clicked'
     else:
         return None
+
+    # get the message
+    message = options['message']
+    if not isinstance(message, Message):
+        try:
+            message = Message.objects.get(pk=message)
+        except Message.DoesNotExist:
+            return False
 
     # check if email has been sent
     should_send = True
     log = None
-    if reason_code in [1, 2] and recipient:
+    if reason_code in [1, 2, 4]:
         # if this is open email action, set the file_index to 0
-        if reason_code == 1:
-            file_index = 0
+        file_index = options.get('file_index', 0)
 
         # if there is existing log then should not send email again
         if TrackingLog.objects.filter(
             message=message,
-            participant=recipient,
+            participant=options.get('recipient'),
             action=action,
             file_index=file_index,
+            link=options.get('link'),
         ):
-            should_send = False
-
-        # check if the setting is on
-        if not (reason_code == 1 or reason_code == 2):
             should_send = False
 
         # create log anyway
         log = create_tracking_log(
             message=message,
-            participant=recipient,
+            participant=options.get('recipient'),
             action=action,
             file_index=file_index,
-            request=request
+            request=options.get('request'),
+            link=options.get('link'),
         )
 
     # then send email if needed
@@ -201,7 +211,8 @@ def send_notification_email(
             context={
                 'subject': subject,
                 'message_subject': message.subject,
-                'recipient': getattr(recipient, 'email', None),
+                'recipient': getattr(options.get('recipient'), 'email', None),
+                'link': options.get('link'),
             },
         )
 
@@ -214,9 +225,9 @@ def notify_email_opened(message_id, user_id, request):
         if qs:
             message = qs[0]
             recipient = CUser.objects.get(id=user_id)
-            send_notification_email(
-                1, message, recipient, request=request
-            )
+            send_notification_email(1, {
+                'message': message, 'recipient': recipient, 'request': request
+            })
         else:
             return False
     else:

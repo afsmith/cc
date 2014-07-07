@@ -17,7 +17,7 @@ def process_files_and_send_message(message, request):
     except Exception, e:
         print '[CELERY TASK ERROR] %s' % e
         # if converion goes wrong, send notification to sender
-        send_notification_email(3, message)
+        send_notification_email(3, {'message': message})
 
 
 @task
@@ -26,4 +26,4 @@ def send_cc_message(convert_result, message, domain):
         create_ocl_and_send_message(message, domain)
     else:
         # if converion goes wrong, send notification to sender
-        send_notification_email(3, message)
+        send_notification_email(3, {'message': message})
