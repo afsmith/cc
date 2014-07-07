@@ -1,7 +1,7 @@
 {% block subject %}{{ subject }}{% endblock %}
 
 {% block plain %}
-Your external link {{ link.original_url }} from email "{{ message_subject }}" has been clicked.
+{{ recipient }} clicked on your external link {{ link.original_url }} in email "{{ message_subject }}".
 
 Good to know, right?
 
@@ -190,7 +190,7 @@ body, td { font-family: HelveticaNeue, sans-serif; }
                                     <p class="article-title" align="left"><singleline label="Title"><a href="https://cc.kneto.com">Link clicked...</a></singleline></p>
                                     <div class="article-content" align="left">
                                         <multiline label="Description">
-                                        Your external link {{ link.original_url }} from email "{{ message_subject }}" has been clicked.
+                                        {{ recipient }} clicked on your external link {{ link.original_url }} in email "{{ message_subject }}".
 										<p></p>
 										Good to know, right?
 										<p></p>

@@ -34,29 +34,29 @@ def get_message(id, user):
             raise PermissionDenied
 
 
-def _replace_links(message, domain):
+def _replace_links(message, domain, ocl):
     def replace(match):
         groups = match.groups()
         link, created = Link.objects.get_or_create(original_url=groups[0])
-        return '<a href="{}/track/link/{}/{}/'.format(
-            domain, message.id, link.converted_key
+        return 'href="{}/track/link/{}/{}/?token={}'.format(
+            domain, message.id, link.converted_key, ocl.token
         )
     return url_regex.subn(replace, message.message)
 
 
 def _create_ocl_link_replace_link_texts(message, user, domain):
-    # replace all links
-    text, count = _replace_links(message, domain)
-
-    # save the external link count
-    message.external_links = count
-    message.save()
-
     # token should be expired after 30 days
     ocl = OneClickLinkToken.objects.create(
         user=user,
         expires_on=date.today() + timedelta(days=30)
     )
+
+    # replace all links
+    text, count = _replace_links(message, domain, ocl)
+
+    # save the external link count
+    message.external_links = count
+    message.save()
 
     # loop through all files of message
     for f in message.files.all():
@@ -162,7 +162,9 @@ def send_notification_email(reason_code, options):
         email_template = 'notification_conversion_error'
     elif reason_code == 4:
         action = TrackingLog.CLICK_EXT_LINK_ACTION
-        subject = _('[Notification] Your external link has been click.')
+        subject = _('[Notification] {} clicked on your external link.').format(
+            options.get('recipient').email
+        )
         email_template = 'notification_ext_link_clicked'
     else:
         return None

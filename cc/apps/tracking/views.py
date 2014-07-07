@@ -8,7 +8,8 @@ from cc.apps.cc_messages.services import (
     notify_email_opened, send_notification_email
 )
 from cc.libs.utils import get_client_ip, get_device_name
-from cc.apps.cc_messages.models import Link
+from cc.apps.accounts.services import verify_ocl_token
+from cc.apps.cc_messages.models import Link, Message
 
 from annoying.decorators import ajax_request
 from os import path
@@ -148,9 +149,15 @@ def close_deal(request):
 
 def track_link(request, message_id, key):
     link = get_object_or_404(Link, converted_key=key)
-    # send notif email and log the info
-    send_notification_email(4, {
-        'message': message_id, 'link': link, 'request': request
-    })
-    # and redirect to original url
+    message = get_object_or_404(Message, pk=message_id)
+    ocl_token = verify_ocl_token(request.GET.get('token'))
+
+    # if not owner then send notif email and log the info
+    if ocl_token and not (ocl_token.user == message.owner):
+        send_notification_email(4, {
+            'message': message, 'recipient': ocl_token.user,
+            'link': link, 'request': request
+        })
+
+    # redirect to original url in any case
     return redirect(link.original_url)
