@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.conf import settings
 
 from cc.apps.accounts.forms import UserCreationForm
 
@@ -168,6 +169,20 @@ class UserCreationFormTests(TestCase):
             }, 'error': (
                 '__all__', [u'Invitation code is invalid.']
             )},
+
+            # invalid key
+            {'data': {
+                'email': 'foo@cc.kneto.com',
+                'email1': 'foo@cc.kneto.com',
+                'password1': 'abcd1234',
+                'password2': 'abcd1234',
+                'first_name': 'Foo',
+                'last_name': 'Bar',
+                'tos': True,
+                'f_key': 'BLAH'
+            }, 'error': (
+                'f_key', [u'This key is invalid.']
+            )},
         ]
 
         for invalid_dict in invalid_data_dicts:
@@ -177,3 +192,16 @@ class UserCreationFormTests(TestCase):
                 form.errors[invalid_dict['error'][0]],
                 invalid_dict['error'][1]
             )
+
+    def test_registration_form_success_with_key(self):
+        form = UserCreationForm(data={
+            'email1': 'foo@cc.kneto.com',
+            'email': 'foo@cc.kneto.com',
+            'password1': 'abcd1234',
+            'password2': 'abcd1234',
+            'first_name': 'Foo',
+            'last_name': 'Bar',
+            'f_key': settings.PAY_KEY,
+            'tos': True
+        })
+        self.assertTrue(form.is_valid())

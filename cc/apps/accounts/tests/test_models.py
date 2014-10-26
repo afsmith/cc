@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.db import IntegrityError
+from django.conf import settings
 
 from ..models import CUser, OneClickLinkToken, BillingAddress, Invitation
 
@@ -94,6 +95,40 @@ class CUserModelTestCases(TestCase):
                 invitation_code='lalala',
             )
         self.assertEqual('Invitation code is invalid', str(cm.exception))
+
+    def test_create_user_with_key_success(self):
+        user = CUser.objects.create_user(
+            email='foo@cc.kneto.com',
+            password='blah',
+            first_name='Foo',
+            last_name='Bar',
+            f_key=settings.PAY_KEY,
+        )
+        self.assertEqual(user.email, 'foo@cc.kneto.com')
+        # should be sender
+        self.assertEqual(user.user_type, 1)
+        # should be staff
+        self.assertTrue(user.is_staff)
+
+    def test_create_user_with_key_from_receiver(self):
+        user1 = CUser.objects.create_receiver_user('foo@cc.kneto.com')
+        self.assertEqual(user1.email, 'foo@cc.kneto.com')
+        self.assertEqual(user1.user_type, 2)
+        self.assertEqual(user1.first_name, 'N/A')
+
+        # then create user again
+        user2 = CUser.objects.create_user(
+            email='foo@cc.kneto.com',
+            password='blah',
+            first_name='Foo',
+            last_name='Bar',
+            f_key=settings.PAY_KEY,
+        )
+        self.assertEqual(user2.email, 'foo@cc.kneto.com')
+        # should be sender
+        self.assertEqual(user2.user_type, 1)
+        # should be staff
+        self.assertTrue(user2.is_staff)
 
     def test_create_receiver_user_default_values(self):
         user = CUser.objects.create_receiver_user('foo@cc.kneto.com')
