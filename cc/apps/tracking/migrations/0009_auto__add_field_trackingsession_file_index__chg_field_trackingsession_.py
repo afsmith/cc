@@ -4,7 +4,6 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
-from cc.apps.tracking.models import TrackingLog
 
 class Migration(SchemaMigration):
 
@@ -22,8 +21,8 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.IntegerField')(default=1),
                       keep_default=False)
 
-        for log in TrackingLog.objects.all():
-            if log.action == TrackingLog.OPEN_EMAIL_ACTION:
+        for log in orm.TrackingLog.objects.all():
+            if log.action == orm.TrackingLog.OPEN_EMAIL_ACTION:
                 log.file_index = 0
                 log.save()
 

@@ -47,10 +47,10 @@ class CustomUserManager(BaseUserManager):
             user = self.model(**kwargs)
         user.set_password(kwargs['password'])
 
-        #if has key, make staff to get past paywall
+        # if has key, make staff to get past paywall
         if f_key == settings.PAY_KEY:
             user.is_staff = True
-    
+
         user.save(using=self._db)
 
         if invitation:

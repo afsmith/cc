@@ -25,12 +25,6 @@ class UserCreationForm(forms.ModelForm):
     )
     email1 = forms.EmailField(label=_("E-mail"))
     email = forms.EmailField(label=_("Repeat email"))
-#    country = forms.ChoiceField(
-#        widget=forms.Select, choices=settings.COUNTRY_CHOICES
-#    )
-#    industry = forms.ChoiceField(
-#        widget=forms.Select, choices=settings.INDUSTRY_CHOICES
-#    )
     tos = forms.BooleanField(
         label=_(
             'I have read and agree to the <a href="{}">Terms of Service</a>'
@@ -42,8 +36,7 @@ class UserCreationForm(forms.ModelForm):
         }
     )
     invitation_code = forms.CharField(widget=forms.HiddenInput)
-    f_key = forms.CharField(   
-        label=("Key ( if you have one )"),)
+    f_key = forms.CharField(label=_('Key (if you have one)'))
 
     PASSWORD_MIN_LENGTH = 8
 
@@ -54,8 +47,6 @@ class UserCreationForm(forms.ModelForm):
             'last_name',
             'email1',
             'email',
-#            'country',
-#            'industry',
             'password1',
             'password2',
             'f_key',
@@ -105,6 +96,13 @@ class UserCreationForm(forms.ModelForm):
             raise forms.ValidationError(_('Email addresses don\'t match.'))
         return email
 
+    def clean_f_key(self):
+        # Check that the key is valid if given
+        f_key = self.cleaned_data.get('f_key')
+        if f_key and f_key != settings.PAY_KEY:
+            raise forms.ValidationError(_('This key is invalid.'))
+        return f_key
+
     def clean(self):
         email = self.cleaned_data.get('email')
         inv = self.cleaned_data.get('invitation_code')
@@ -125,15 +123,6 @@ class UserCreationForm(forms.ModelForm):
                 raise forms.ValidationError(_('Invitation code is invalid.'))
 
         return self.cleaned_data
-
-    def clean_f_key(self):
-        # Check that the key is valid if given
-        f_key = self.cleaned_data.get('f_key')
-        v_key = settings.PAY_KEY
-        if f_key:
-            if f_key != v_key:
-                raise forms.ValidationError(_('This key is invalid.'))
-        return f_key
 
 
 class UserChangeForm(forms.ModelForm):

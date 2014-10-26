@@ -47,8 +47,6 @@ class UserCreationFormTests(TestCase):
                 'password1': 'secret123',
                 'password2': 'secret123',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 'first_name', [u'This field is required.']
@@ -62,8 +60,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'secret123',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 'email', [u'Enter a valid email address.']
@@ -77,8 +73,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'secret123',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 '__all__', [u'User with this email address already exists.']
@@ -92,25 +86,8 @@ class UserCreationFormTests(TestCase):
                 'password2': 'secret123',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
             }, 'error': (
                 'email', [u'Email addresses don\'t match.']
-            )},
-
-            # invalid choice
-            {'data': {
-                'email': 'foo@cc.kneto.com',
-                'password1': 'secret123',
-                'password2': 'secret123',
-                'first_name': 'Foo',
-                'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'foobar',
-                'tos': True
-            }, 'error': (
-                'industry', [u'Select a valid choice. foobar is not one of the'
-                             ' available choices.']
             )},
 
             # short password
@@ -120,8 +97,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'foobar1',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 'password1', [u'The password must be at least 8 characters'
@@ -135,8 +110,6 @@ class UserCreationFormTests(TestCase):
                 'password2': '12345678',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 'password1', [u'The password must contain at least one letter'
@@ -151,8 +124,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'aaaaaaaa',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 'password1', [u'The password must contain at least one letter'
@@ -167,8 +138,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'abcd12345',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True
             }, 'error': (
                 'password2', [u'Passwords don\'t match.']
@@ -182,8 +151,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'abcd1234',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
             }, 'error': (
                 'tos', [u'You must agree to the terms to register']
             )},
@@ -196,8 +163,6 @@ class UserCreationFormTests(TestCase):
                 'password2': 'abcd1234',
                 'first_name': 'Foo',
                 'last_name': 'Bar',
-                'country': 'VN',
-                'industry': 'industry-legal',
                 'tos': True,
                 'invitation_code': 'haha'
             }, 'error': (
