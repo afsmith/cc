@@ -6,13 +6,11 @@
         "files": [
             1
         ],
-        "group": null,
         "receivers": [
             3
         ],
         "cc_me": false,
         "modified_at": "2013-10-15T01:13:52",
-        "key_page": 1,
         "owner": 1,
         "message": "Abcdefmessaasg",
         "created_at": "2013-10-15T01:13:52",

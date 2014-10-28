@@ -23,7 +23,8 @@ class MessageViewTestCases(ClientTestCase):
         )
         self.assertEqual(
             resp.context['message_form'].initial['message'],
-            u'<br><br><br><br>[link1]<br><br><div id="signature">Foobar</div>'
+            u'<br><br><div id="link_token">'
+            '</div><br><br><div id="signature">Foobar</div>'
         )
         self.assertEqual(
             resp.context['message_form'].initial['signature'],
@@ -35,20 +36,14 @@ class MessageViewTestCases(ClientTestCase):
         )
         self.assertEqual(resp.context['device'], 'Desktop')
 
-    def test_send_message_GET_invalid_request(self):
-        c = self._get_client_user_stripe()
-        with self.assertRaises(ValueError):
-            c.get(reverse('send_message'))
-
     def test_send_message_POST_success(self):
         c = self._get_client_user_stripe()
         resp = c.post(reverse('send_message'), {
-            'subject': 'Test',
-            'cc_me': False,
-            'message': 'lala',
-            'attachment': 1,
             'to': 'foo@cc.kneto.com',
-            'link_text': 'blah',
+            'subject': 'Test',
+            'message': 'lala',
+            'cc_me': False,
+            'attachment': '1,',
         })
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.context['thankyou_page'])
@@ -69,7 +64,7 @@ class ViewMessageTestCases(ClientTestCase):
     def test_receiver_view_message_success(self):
         resp = self.client.get(
             '{}?token=0ObtsIKxyzNzaeawg4x4Ivlwt5Ikl'.format(reverse(
-                'view_message', kwargs={'message_id': 100}
+                'view_message', kwargs={'message_id': 100, 'file_index': 1}
             ))
         )
         self.assertEqual(resp.status_code, 200)
@@ -91,7 +86,7 @@ class ViewMessageTestCases(ClientTestCase):
     def test_owner_view_message_success(self):
         resp = self.client.get(
             '{}?token=l1R6PfMMBPPNn1SC7G5pGZMI2vkVpF'.format(reverse(
-                'view_message', kwargs={'message_id': 100}
+                'view_message', kwargs={'message_id': 100, 'file_index': 1}
             ))
         )
         self.assertEqual(resp.status_code, 200)
@@ -101,13 +96,13 @@ class ViewMessageTestCases(ClientTestCase):
 
     def test_view_message_wrong_token(self):
         self.login_required_redirect(reverse(
-            'view_message', kwargs={'message_id': 100}
+            'view_message', kwargs={'message_id': 100, 'file_index': 1}
         ))
 
     def test_view_message_token_expired(self):
         resp = self.client.get(
             '{}?token=Yz6t9o71cpjnBTzvJ3Ls6eDe3zbtNp'.format(reverse(
-                'view_message', kwargs={'message_id': 100}
+                'view_message', kwargs={'message_id': 100, 'file_index': 1}
             ))
         )
         self.assertEqual(resp.status_code, 200)
@@ -116,7 +111,7 @@ class ViewMessageTestCases(ClientTestCase):
     def test_view_message_expired(self):
         resp = self.client.get(
             '{}?token=k2f6PfMMBPPNn1SC7G5pasg2vkVpF'.format(reverse(
-                'view_message', kwargs={'message_id': 2}
+                'view_message', kwargs={'message_id': 2, 'file_index': 1}
             ))
         )
         self.assertEqual(resp.status_code, 200)
@@ -125,8 +120,8 @@ class ViewMessageTestCases(ClientTestCase):
     def test_view_message_no_permission(self):
         resp = self.client.get(
             '{}?token=ag223623AGag362GAHPWnavawGNZS'.format(reverse(
-                'view_message', kwargs={'message_id': 2}
+                'view_message', kwargs={'message_id': 2, 'file_index': 1}
             ))
         )
         self.assertEqual(resp.status_code, 403)
-        self.assertIn('You do not have access to this content.', resp.content)
+        self.assertIn('Permission denied!', resp.content)
