@@ -590,7 +590,7 @@ def all():
 
 # ------------------------------ Local tasks ------------------------------ #
 @task(alias='t')
-def test(mode=''):
+def test(mode='', app='', file_name='', class_name='', test_name=''):
     '''
     Executes test suite
     fab t => run ALL tests
@@ -600,7 +600,12 @@ def test(mode=''):
     if mode == 's':
         local('python manage.py test --where=cc/selenium_tests/')
     elif mode == 'n':
-        local('python manage.py test --where=cc/apps/')
+        local('python manage.py test cc/apps/{}{}{}{}'.format(
+            '{}/tests/'.format(app) if app != '' else '',
+            '{}.py'.format(file_name) if file_name != '' else '',
+            ':{}'.format(class_name) if class_name != '' else '',
+            '.{}'.format(test_name) if test_name != '' else ''
+        ))
     else:
         local('python manage.py test')
 
@@ -645,3 +650,14 @@ def cleanup_db():
         'tracking_trackingevent, tracking_trackingsession, '
         'tracking_trackinglog CASCADE;" | python manage.py dbshell'
     )
+
+
+@task(alias='m')
+def migrate(app='', initial=''):
+    if app != '':
+        param = '--auto'
+        if initial == '1':
+            param = '--initial'
+        local('python manage.py schemamigration {} {}'.format(param, app))
+    else:
+        local('python manage.py migrate')

@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'cc.apps.reports',
     'cc.apps.main',        # register main apps to get the template tags
     'cc.apps.cc_stripe',
+    'cc.apps.address_book',
 )
 
 # disable email for SuspiciousOperation
