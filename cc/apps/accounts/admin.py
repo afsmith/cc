@@ -67,7 +67,7 @@ class UserAdmin(admin.ModelAdmin):
                 writer.writerow([
                     msg.owner.email,
                     recipient.email,
-                    msg.subject
+                    unicode(msg.subject).encode('utf-8')
                 ])
         return response
     export_report.short_description = 'Export user sending report'
