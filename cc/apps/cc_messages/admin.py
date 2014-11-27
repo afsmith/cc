@@ -5,14 +5,13 @@ from . import models
 
 
 class MessageAdmin(admin.ModelAdmin):
-    search_fields = ('subject',)
+    search_fields = ['subject', 'owner__email']
     list_display = (
-        'subject', 'message', 'owner',
+        'subject', 'owner',
         'cc_me', 'allow_download', 'created_at'
     )
     list_filter = (
-        'owner',
-        ('created_at', DateFieldListFilter)
+        ('created_at', DateFieldListFilter),
     )
     date_hierarchy = 'modified_at'
 
