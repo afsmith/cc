@@ -116,7 +116,7 @@ def view_message(request, message_id=None, file_index=None):
                 log = None
                 if not is_owner_viewing:
                     log = send_notification_email(2, {
-                        'message': message, 'recipient': ocl_token.user, 
+                        'message': message, 'recipient': ocl_token.user,
                         'file_index': file_index, 'request': request
                     })
 

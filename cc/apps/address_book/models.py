@@ -17,5 +17,8 @@ class Contact(models.Model):
     company = models.CharField(max_length=100, blank=True)
     user = models.ForeignKey(CUser)
 
+    class Meta:
+        unique_together = ('user', 'work_email')
+
     def __unicode__(self):
         return self.work_email

@@ -65,8 +65,8 @@ class UserAdmin(admin.ModelAdmin):
         for msg in messages:
             for recipient in msg.receivers.all():
                 writer.writerow([
-                    msg.owner.email,
-                    recipient.email,
+                    unicode(msg.owner.email).encode('utf-8'),
+                    unicode(recipient.email).encode('utf-8'),
                     unicode(msg.subject).encode('utf-8')
                 ])
         return response

@@ -41,7 +41,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     'cc.apps.cc_stripe.middleware.ActiveSubscriptionMiddleware',
+
+    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'cc.urls'
@@ -88,7 +91,7 @@ INSTALLED_APPS = (
     'django_nose',             # django nose for testing
     'django_forms_bootstrap',  # needed for django-stripe
     'payments',                # django-stripe
-    # 'widget_tweaks',          #for form label class
+    'pagination',
     'debug_toolbar',
 
     # ----- CC APP  ----- #

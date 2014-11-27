@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 from .baseconv import BaseConv
 
 from mdetect import UAgentInfo
@@ -119,7 +122,7 @@ def format_dbtime(time_from_db):
     if time_from_db is None:
         return '00:00:00'
     time_in_second = time_from_db / 10.0
-    #return str(datetime.timedelta(seconds=time_in_second))
+    # return str(datetime.timedelta(seconds=time_in_second))
     m, s = divmod(time_in_second, 60)
     h, m = divmod(m, 60)
     return '{0:02.0f}:{1:02.0f}:{2:04.1f}'.format(h, m, s)
@@ -170,6 +173,14 @@ class DotExpandedDict(dict):
                 current[bits[-1]] = v
             except TypeError:  # Special-case if current isn't a dict.
                 current = {bits[-1]: v}
+
+
+class LoginRequiredMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(
+            request, *args, **kwargs
+        )
 
 # ----------------- Random keys ----------------- #
 

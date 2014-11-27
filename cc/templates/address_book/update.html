@@ -1,0 +1,17 @@
+{% extends 'base_template.html' %}
+{% load extras i18n bootstrap_tags %}
+
+{% block meta_title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+<div class="address_book_wrapper row">
+    <div class="col-sm-6">
+        <form action="." class="form-horizontal" method="POST">
+            {% csrf_token %}
+            {{ form|as_bootstrap_horizontal:"col-sm-3" }}
+            <button type="submit" class="btn btn-success btn-lg pull-right">{% trans "Update contact" %}</button>
+            <a href="{% url 'address_book_list' %}" class="btn btn-default btn-lg pull-right" style="margin-right:20px">{% trans "Cancel" %}</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
