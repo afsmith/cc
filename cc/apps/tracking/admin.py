@@ -12,5 +12,6 @@ class TrackingLogAdmin(admin.ModelAdmin):
         'action',
         ('created_at', DateFieldListFilter),
     )
+    search_fields = ['message__subject', 'participant__email', 'action']
 
 admin.site.register(models.TrackingLog, TrackingLogAdmin)
