@@ -1,7 +1,7 @@
 {% extends 'base_template.html' %}
 {% load extras i18n bootstrap_tags pagination_tags %}
 
-{% block meta_title %}{% trans "Dashboard" %}{% endblock %}
+{% block meta_title %}{% trans "Address book" %}{% endblock %}
 
 {% block content %}
 <div class="address_book_wrapper row">
@@ -34,6 +34,10 @@
             {{ form|as_bootstrap_horizontal:"col-sm-3" }}
             <button type="submit" class="btn btn-success btn-lg pull-right">{% trans "Create new contact" %}</button>
         </form>
+
+        <div style="margin-top: 100px; clear: both;">
+            <a href="{% url 'import_contacts' %}" class="btn btn-info pull-right">Import contacts from CSV</a>
+        </div>
     </div>
 </div>
 {% endblock %}

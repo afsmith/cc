@@ -13,4 +13,7 @@ urlpatterns = patterns(
     url(r'^search/$',
         'search_contacts',
         name='search_contacts'),
+    url(r'^import/$',
+        'import_contacts',
+        name='import_contacts'),
 )

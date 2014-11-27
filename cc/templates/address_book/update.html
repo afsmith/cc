@@ -1,11 +1,11 @@
 {% extends 'base_template.html' %}
 {% load extras i18n bootstrap_tags %}
 
-{% block meta_title %}{% trans "Dashboard" %}{% endblock %}
+{% block meta_title %}{% trans "Contact" %}{% endblock %}
 
 {% block content %}
 <div class="address_book_wrapper row">
-    <div class="col-sm-6">
+    <div class="col-sm-6 center">
         <form action="." class="form-horizontal" method="POST">
             {% csrf_token %}
             {{ form|as_bootstrap_horizontal:"col-sm-3" }}
