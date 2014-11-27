@@ -29,9 +29,7 @@ def send_message(request):
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
             message = message_form.save()
-            # save message owner
-            message.owner = request.user
-            message.save()
+
             # save signature of the owner
             request.user.signature = message_form.cleaned_data['signature']
             request.user.save()
@@ -42,6 +40,7 @@ def send_message(request):
             return {'thankyou_page': True}
     else:
         message_form = MessageForm(initial={
+            'owner': request.user,
             'message': (
                 u'<br><br><div id="link_token"></div><br><br>'
                 '<div id="signature">{}</div>'.format(request.user.signature)

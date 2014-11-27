@@ -172,7 +172,7 @@ $(document).ready(function () {
                     results: $.map(data.contacts, function (item) {
                         return {
                             text: item.work_email,
-                            id: item.id
+                            id: item.work_email
                         };
                     })
                 };
