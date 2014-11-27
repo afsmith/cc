@@ -1,5 +1,5 @@
 from fabric.api import (
-    env, cd, prefix, sudo as _sudo, run as _run, hide, task, roles, local
+    env, cd, prefix, sudo as _sudo, run as _run, hide, task, roles, local, get
 )
 from fabric.contrib.files import exists, upload_template
 from fabric.colors import yellow, green, blue, red
@@ -365,6 +365,16 @@ def manage(command):
     Runs a Django management command.
     """
     return run("%s %s" % (env.manage, command))
+
+
+@roles()
+@task()
+def dump_local():
+    """
+    Backs up the database to local computer
+    """
+    postgres("pg_dump -Ox %s > %s" % (env.proj_name, 'dump.sql'))
+    get('dump.sql', '~/Downloads/cc.sql')
 
 
 #########################
