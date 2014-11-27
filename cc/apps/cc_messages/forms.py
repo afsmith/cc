@@ -27,6 +27,7 @@ class MessageForm(forms.ModelForm):
         exclude = ['receivers', 'owner', 'files']
 
         widgets = {
+            'to': forms.HiddenInput(),
             'subject': forms.TextInput(attrs={'class': 'form-control'}),
             'message': forms.Textarea(attrs={'class': 'form-control'}),
             'allow_download': forms.HiddenInput()

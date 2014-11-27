@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from . import services
 from .models import Bounce
 from cc.apps.cc_messages.models import Message
-from cc.apps.tracking.models import TrackingSession, TrackingLog
+from cc.apps.tracking.models import TrackingSession
 from cc.libs.utils import format_dbtime
 
 from annoying.decorators import render_to, ajax_request

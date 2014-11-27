@@ -1,9 +1,12 @@
 from django.views.generic import CreateView, UpdateView
 from django.core.urlresolvers import reverse
+from django.contrib.auth import decorators as auth_decorators
 
 from .models import Contact
 from .forms import ContactForm
 from cc.libs.utils import LoginRequiredMixin
+
+from annoying.decorators import ajax_request
 
 
 class AddressBookListView(LoginRequiredMixin, CreateView):
@@ -32,3 +35,20 @@ class AddressBookUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_initial(self):
         return {'user': self.request.user}
+
+
+@auth_decorators.login_required
+@ajax_request
+def search_contacts(request):
+    contacts = Contact.objects.search(
+        request.GET.get('q')
+    ).filter(user=request.user).values(
+        'work_email',
+        'first_name',
+        'last_name',
+        'id'
+    )[:20]
+
+    return {
+        'contacts': list(contacts)
+    }

@@ -76,7 +76,7 @@ $(document).ready(function () {
             var _element;
             switch (element.prop('id')) {
             case 'id_to':
-                _element = $('.tokenfield');
+                _element = $('.select2-container');
                 break;
             case 'id_message':
                 _element = $('.note-editor').eq(0);
@@ -153,24 +153,51 @@ $(document).ready(function () {
         });
     };
 
-    // use tokenfield for To field
-    $('#id_to').tokenfield({
-        minLength: 3,
-        createTokensOnBlur: true
-    }).on('afterCreateToken', function (e) {
-        // validate the email
-        var re = /^[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$/,
-            valid = re.test(e.token.value);
-        if (!valid) {
-            $(e.relatedTarget).addClass('invalid');
-            //toggleMessageSubmitButton(true);
-            to_field.valid();
-        }
-    }).on('removeToken', function () {
-        to_field.valid();
-    });
+    // use select2 for To field
+    to_field.select2({
+        width: '100%',
+        minimumInputLength: 3,
+        multiple: true,
+        ajax: {
+            url: '/addressbook/search/',
+            dataType: 'json',
+            quietMillis: 100,
+            data: function (term, page) {
+                return {
+                    q: term,
+                };
+            },
+            results: function (data, page) {
+                return {
+                    results: $.map(data.contacts, function (item) {
+                        return {
+                            text: item.work_email,
+                            id: item.id
+                        };
+                    })
+                };
+            },
+            cache: true
+        },
+        tags: true,
+        createSearchChoice: function (term, data) {
+            var re = /^[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,4}$/;
 
-    $('.token-input').on('blur', function () {
+            if ($(data).filter(function () {
+                    return this.text.localeCompare(term) === 0;
+                }).length === 0 && re.test(term)) {
+                return {
+                    id: term,
+                    text: term
+                };
+            }
+        },
+        formatNoMatches: function (term) {
+            return term + ' is not a valid email address';
+        },
+    }).on('change', function (e) {
+        to_field.valid();
+    }).on('select2-blur', function () {
         to_field.valid();
     });
 
@@ -353,7 +380,7 @@ $(document).ready(function () {
         // handle download checkbox
         downloadCheckboxHandler();
 
-        // remove error message 
+        // remove error message
         upload_form.find('.alert').remove();
     };
 

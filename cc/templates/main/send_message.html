@@ -6,7 +6,7 @@
 
 {% block content %}
     {% if thankyou_page %}
-    
+
         <div class="row">
             <div class="center col-sm-6 col-md-6">
                 <h2>{% trans "Sent" %}</h2>
@@ -23,7 +23,7 @@
         <div id="browser_not_supported" class="alert alert-danger hidden">
             <span class="hidden">{{ device }}</span>
             <p>Your current browser is: <span></span></p>
-            <p>Unfornunately, currently our application only supports sending message from these desktop browsers: 
+            <p>Unfornunately, currently our application only supports sending message from these desktop browsers:
                 <ul>
                     <li>Internet Explorer 10+</li>
                     <li>Chrome 7+</li>
@@ -38,15 +38,16 @@
             {% include "main/_send_message_form.html" %}
         </div>
     {% endif %}
-    
+
 {% endblock %}
 
 
 {% block additional_css %}
-    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-tokenfield.css' %}">
     <link rel="stylesheet" href="{% static 'css/vendor/dropzone.css' %}">
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.css">
+    <link rel="stylesheet" href="{% static 'css/vendor/select2-bootstrap3.css' %}">
     <link rel="stylesheet" href="{% static 'css/vendor/summernote-bs3.css' %}">
     <link rel="stylesheet" href="{% static 'css/vendor/summernote.css' %}">
 {% endblock %}
@@ -55,9 +56,9 @@
     <script src="{% static 'js/browser_check.js' %}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/dropzone/3.7.1/dropzone.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.js"></script>
     <script src="{% static 'js/vendor/summernote.min.js' %}"></script>
-    <script src="{% static 'js/vendor/bootstrap-tokenfield.min.js' %}"></script>
-    
+
     <script src="{% static 'js/custom_validators.js' %}"></script>
     <script src="{% static 'js/send_message.js' %}"></script>
 {% endblock %}
