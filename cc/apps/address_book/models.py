@@ -21,7 +21,6 @@ class ContactManager(models.Manager):
             q_objects.append(Q(work_email__icontains=term))
             q_objects.append(Q(first_name__icontains=term))
             q_objects.append(Q(last_name__icontains=term))
-            q_objects.append(Q(personal_email__icontains=term))
             q_objects.append(Q(company__icontains=term))
 
         # Start with a bare QuerySet

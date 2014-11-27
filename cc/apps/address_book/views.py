@@ -46,6 +46,7 @@ def search_contacts(request):
         'work_email',
         'first_name',
         'last_name',
+        'company',
     )[:20]
 
     return {

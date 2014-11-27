@@ -172,12 +172,32 @@ $(document).ready(function () {
                     results: $.map(data.contacts, function (item) {
                         return {
                             text: item.work_email,
-                            id: item.work_email
+                            id: item.work_email,
+                            first_name: item.first_name,
+                            last_name: item.last_name,
+                            company: item.company,
                         };
                     })
                 };
             },
             cache: true
+        },
+        formatSelection: function (item) {
+            return item.text;
+        },
+        formatResult: function (item) {
+            var text = item.text;
+
+            if (item.first_name || item.last_name) {
+                text += ' (' + $.trim(item.first_name + ' ' + item.last_name) + ')';
+
+            }
+
+            if (item.company) {
+                text += ' - ' + item.company;
+            }
+
+            return text;
         },
         tags: true,
         createSearchChoice: function (term, data) {
