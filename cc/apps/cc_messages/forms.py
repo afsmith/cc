@@ -92,9 +92,7 @@ class MessageForm(forms.ModelForm):
                 user = CUser.objects.create_receiver_user(email)
                 receiver_list.append(user.id)
             # do the same for contact
-            contact_qs = Contact.objects.filter(work_email__iexact=email)
-            if not contact_qs:
-                Contact.objects.create(work_email=email, user=owner)
+            Contact.objects.get_or_create(work_email=email, user=owner)
         return receiver_list
 
     def save(self):
