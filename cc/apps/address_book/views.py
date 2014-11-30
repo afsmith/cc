@@ -17,7 +17,9 @@ class AddressBookListView(LoginRequiredMixin, CreateView):
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
-        kwargs['object_list'] = Contact.objects.order_by('work_email')
+        kwargs['object_list'] = Contact.objects.filter(
+            user=self.request.user
+        ).order_by('work_email')
         return super(AddressBookListView, self).get_context_data(**kwargs)
 
     def get_success_url(self):
