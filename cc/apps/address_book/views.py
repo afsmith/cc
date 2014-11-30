@@ -3,12 +3,10 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
 
 from .models import Contact
-from .forms import ContactForm
+from .forms import ContactForm, ImportContactForm
 from cc.libs.utils import LoginRequiredMixin
 
 from annoying.decorators import ajax_request, render_to
-from os.path import splitext
-import csv
 
 
 class AddressBookListView(LoginRequiredMixin, CreateView):
@@ -61,35 +59,15 @@ def search_contacts(request):
 @auth_decorators.login_required
 @render_to('address_book/import.html')
 def import_contacts(request):
-    errors = []
+    result = []
     if request.method == 'POST':
-        f = request.FILES['file']
-        if splitext(f.name)[1].lower() == '.csv':
-            try:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    try:
-                        Contact.objects.get_or_create(
-                            work_email=row.get('work_email', ''),
-                            work_phone=row.get('work_phone', ''),
-                            work_fax=row.get('work_fax', ''),
-                            work_website=row.get('work_website', ''),
-                            personal_email=row.get('personal_email', ''),
-                            home_phone=row.get('home_phone', ''),
-                            mobile_phone=row.get('mobile_phone', ''),
-                            first_name=row.get('first_name', ''),
-                            last_name=row.get('last_name', ''),
-                            title=row.get('title', ''),
-                            company=row.get('company', ''),
-                            user=request.user,
-                        )
-                    except Exception as e:
-                        errors.append(e.__str__())
-            except:
-                errors = ['The uploaded file is not csv file']
-        else:
-            errors = ['The uploaded file is not csv file']
+        form = ImportContactForm(request.POST, request.FILES)
+        if form.is_valid():
+            result = form.save(request.user)
+    else:
+        form = ImportContactForm()
 
     return {
-        'errors': errors
+        'form': form,
+        'result': result
     }
