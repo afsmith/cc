@@ -18,14 +18,23 @@ class AddressBookListView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         query = self.request.GET.get('search')
+        sort = self.request.GET.get('sort', '').split(',')
         contacts = Contact.objects
         if query:
             contacts = contacts.search(query)
-        kwargs['object_list'] = contacts.filter(
-            user=self.request.user
-        ).order_by(
-            'last_name', 'first_name', 'work_email'
-        )
+        # get only from current user
+        contacts = contacts.filter(user=self.request.user)
+
+        ln, fn, em = 'last_name', 'first_name', 'work_email'
+        if 'ln' in sort:
+            ln = '-' + ln
+        if 'fn' in sort:
+            fn = '-' + fn
+        if 'em' in sort:
+            em = '-' + em
+        contacts = contacts.order_by(ln, fn, em)
+
+        kwargs['object_list'] = contacts
         return super(AddressBookListView, self).get_context_data(**kwargs)
 
     def get_success_url(self):

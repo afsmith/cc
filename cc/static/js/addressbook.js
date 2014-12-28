@@ -1,5 +1,5 @@
 /*jslint browser: true, nomen: true, unparam: true*/
-/*global $, jQuery, _, CC_GLOBAL, confirm*/
+/*global $, jQuery, _, CC_GLOBAL, confirm, indexOf*/
 'use strict';
 
 $(document).ready(function () {
@@ -10,20 +10,22 @@ $(document).ready(function () {
         }
     });
 
+    $('#contacts_table th').on('click', function (e) {
+        e.preventDefault();
+        var sort_by = $(e.target).prop('id').replace('sort_', ''),
+            current = CC_GLOBAL.GETParam.sort || '',
+            sort = '?sort=',
+            query_str = window.location.search;
 
-    // filter call list by date
-    // $('#js_date_filter_message_list').change(function () {
-    //     var days = $(this).val();
+        if (current.indexOf(sort_by) > -1) {
+            sort += current.replace(sort_by + ',', '');
+        } else {
+            sort += current + sort_by + ',';
+        }
 
-    //     $.ajax({
-    //         url: '/report/message_list/',
-    //         type: 'POST',
-    //         data: {
-    //             'days': days,
-    //         },
-    //     }).done(function (resp) {
-    //         $('.messages_table > tbody').html(resp);
-    //         $.bootstrapSortable();
-    //     });
-    // });
+        query_str = (CC_GLOBAL.GETParam.sort === undefined)
+            ? query_str + sort
+            : query_str.replace('?sort=' + current, sort);
+        window.location = window.location.pathname + query_str;
+    });
 }); // end document ready

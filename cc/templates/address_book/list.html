@@ -6,23 +6,22 @@
 {% block content %}
 <div class="address_book_wrapper row">
     <div class="col-sm-6">
-        <form action="{% url 'address_book_list' %}" class="form-inline" method="GET">
+        <form action="{% url 'address_book_list' %}" class="form-inline" method="GET" style="padding-bottom:10px">
             <div class="input-group">
                 <input name="search" type="search" class="form-control" placeholder="{% trans "Search contacts" %}" value="{{ request.GET.search }}" />
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-info">{% trans "Go" %}</button>
                 </span>
             </div>
-
         </form>
 
         {% autopaginate object_list %}
-        <table class="table table-hover table-striped">
+        <table id="contacts_table" class="table table-hover table-striped table-bordered">
             <thead>
                 <tr>
-                    <th>{% trans "Last name" %}</th>
-                    <th>{% trans "First name" %}</th>
-                    <th>{% trans "Work email" %}</th>
+                    <th id="sort_ln">{% trans "Last name" %}</th>
+                    <th id="sort_fn">{% trans "First name" %}</th>
+                    <th id="sort_em">{% trans "Work email" %}</th>
                 </tr>
             </thead>
             <tbody>
