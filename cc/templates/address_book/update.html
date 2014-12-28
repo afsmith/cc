@@ -1,17 +1,27 @@
 {% extends 'base_template.html' %}
-{% load extras i18n bootstrap_tags %}
+{% load extras i18n staticfiles bootstrap_tags %}
 
 {% block meta_title %}{% trans "Contact" %}{% endblock %}
 
 {% block content %}
 <div class="address_book_wrapper row">
     <div class="col-sm-6 center">
-        <form action="." class="form-horizontal" method="POST">
+        <form action="{% url 'address_book_update' pk=contact.id %}" class="form-horizontal" method="POST">
             {% csrf_token %}
             {{ form|as_bootstrap_horizontal:"col-sm-3" }}
+
             <button type="submit" class="btn btn-success btn-lg pull-right">{% trans "Update contact" %}</button>
             <a href="{% url 'address_book_list' %}" class="btn btn-default btn-lg pull-right" style="margin-right:20px">{% trans "Cancel" %}</a>
         </form>
+
+        <form id="delete_contact_form" action="{% url 'delete_contact' pk=contact.id %}" method="POST">
+            {% csrf_token %}
+            <button id="delete_contact_button" type="submit" class="btn btn-danger pull-left">{% trans "Delete" %}</button>
+        </form>
     </div>
 </div>
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{% static 'js/addressbook.js' %}"></script>
 {% endblock %}

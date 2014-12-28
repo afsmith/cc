@@ -1,6 +1,8 @@
 from django.views.generic import CreateView, UpdateView
 from django.core.urlresolvers import reverse
 from django.contrib.auth import decorators as auth_decorators
+from django.views.decorators import http as http_decorators
+from django.shortcuts import redirect
 
 from .models import Contact
 from .forms import ContactForm, ImportContactForm
@@ -43,6 +45,16 @@ class AddressBookUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_initial(self):
         return {'user': self.request.user}
+
+
+@auth_decorators.login_required
+@http_decorators.require_POST
+def delete_contact(request, pk):
+    try:
+        Contact.objects.get(pk=pk).delete()
+    except:
+        pass
+    return redirect('address_book_list')
 
 
 @auth_decorators.login_required
