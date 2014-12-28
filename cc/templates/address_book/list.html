@@ -1,11 +1,21 @@
 {% extends 'base_template.html' %}
-{% load extras i18n bootstrap_tags pagination_tags %}
+{% load extras i18n bootstrap_tags pagination_tags staticfiles %}
 
 {% block meta_title %}{% trans "Address book" %}{% endblock %}
 
 {% block content %}
 <div class="address_book_wrapper row">
     <div class="col-sm-6">
+        <form action="{% url 'address_book_list' %}" class="form-inline" method="GET">
+            <div class="input-group">
+                <input name="search" type="search" class="form-control" placeholder="{% trans "Search contacts" %}" value="{{ request.GET.search }}" />
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-info">{% trans "Go" %}</button>
+                </span>
+            </div>
+
+        </form>
+
         {% autopaginate object_list %}
         <table class="table table-hover table-striped">
             <thead>
@@ -40,4 +50,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{% static 'js/addressbook.js' %}"></script>
 {% endblock %}
