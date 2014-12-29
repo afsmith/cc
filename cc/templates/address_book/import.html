@@ -1,5 +1,5 @@
 {% extends 'base_template.html' %}
-{% load extras i18n bootstrap_tags %}
+{% load extras i18n staticfiles bootstrap_tags %}
 
 {% block meta_title %}{% trans "Import contacts" %}{% endblock %}
 
@@ -7,7 +7,7 @@
 <div class="address_book_wrapper row">
     <div class="col-sm-6 center">
         <div class="alert alert-info">
-            Please upload CSV file only (use comma as delimiter). The first line should contain the heading of the columns. Supported headings are: work_email, work_phone, work_fax, work_website, personal_email, home_phone, mobile_phone, first_name, last_name, title, company
+            Please upload CSV file only. The first line should contain the heading of the columns. Supported headings are: work_email, work_phone, work_fax, work_website, personal_email, home_phone, mobile_phone, first_name, last_name, title, company. Sample file can be <a href="{% static 'sample.csv' %}">found here</a>
         </div>
         {% if result %}
         <div class="alert alert-success">
