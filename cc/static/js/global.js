@@ -52,7 +52,7 @@ _.templateSettings.variable = 'data';
 
 
 // --------------------------- resend behavior ---------------------------
-$('.js_resend_checkbox').click(function () {
+$(document).on('click', '.js_resend_checkbox', function () {
     $(this).parent().html('<button class="btn btn-default btn-small js_resend_button">Send</button>');
     return false;
 });
@@ -60,10 +60,6 @@ $('.js_resend_checkbox').click(function () {
 $('.container').on('click', '.js_resend_button', function () {
     var _this = $(this),
         this_row = _this.closest('tr'),
-        /*this_id = this_row.prop('id'),
-        id_arr = this_id.replace('row_', '').split('_'),
-        message_id = id_arr[0],
-        user_id = id_arr[1]*/
         message_id = this_row.data('message'),
         user_id = this_row.data('user');
 
