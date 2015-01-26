@@ -162,9 +162,12 @@ $(document).ready(function () {
             url: '/addressbook/search/',
             dataType: 'json',
             quietMillis: 100,
-            data: function (term, page) {
+            data: function (input, page) {
+                if (input.indexOf(',') < 0) {
+                    return;
+                }
                 return {
-                    q: term,
+                    q: input,
                 };
             },
             results: function (data, page) {
@@ -215,6 +218,22 @@ $(document).ready(function () {
         formatNoMatches: function (term) {
             return term + ' is not a valid email address';
         },
+        tokenizer: function (input, selection, callback) {
+            var parts,
+                part,
+                i;
+            if (input.indexOf(',') < 0) {
+                return;
+            }
+
+            parts = input.split(/,| /);
+            for (i = 0; i < parts.length; i += 1) {
+                part = parts[i];
+                part = part.trim();
+
+                callback({id: part, text: part});
+            }
+        }
     }).on('change', function (e) {
         to_field.valid();
     }).on('select2-blur', function () {

@@ -14,6 +14,9 @@ class ContactManager(models.Manager):
     #     return VideoQueryset(self.model)
 
     def search(self, search_terms):
+        if search_terms is None:
+            return self.none()
+
         terms = [term.strip() for term in search_terms.split()]
         q_objects = []
 
