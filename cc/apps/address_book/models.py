@@ -10,11 +10,8 @@ class ContactManager(models.Manager):
     def __getattr__(self, name):
         return getattr(self.get_query_set(), name)
 
-    # def get_query_set(self):
-    #     return VideoQueryset(self.model)
-
     def search(self, search_terms):
-        if search_terms is None:
+        if not search_terms:
             return self.none()
 
         terms = [term.strip() for term in search_terms.split()]

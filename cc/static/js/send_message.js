@@ -163,9 +163,6 @@ $(document).ready(function () {
             dataType: 'json',
             quietMillis: 100,
             data: function (input, page) {
-                if (input.indexOf(',') < 0) {
-                    return;
-                }
                 return {
                     q: input,
                 };
