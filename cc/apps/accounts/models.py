@@ -89,6 +89,15 @@ class CustomUserManager(BaseUserManager):
         user.is_active = False
         user.save(using=self._db)
         return user
+    
+    def create_azure_user(self, **kwargs):
+        kwargs['password'] = CUser.objects.make_random_password()
+        user = self.create_user(**kwargs)
+        user.is_active = True
+        user.is_staff = True        
+        user.save(using=self._db)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        return user;
 
 
 class CUser(AbstractUser):

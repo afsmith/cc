@@ -1,5 +1,6 @@
 from os.path import join, dirname, abspath
 import sys
+import os
 from celery.schedules import crontab
 
 ROOT_PATH = join(dirname(__file__))
@@ -136,6 +137,13 @@ LOGGING = {
             'filters': ['require_debug_false', 'skip_suspicious_operations'],
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
+        },
+        'applogfile': {
+                'level':'DEBUG',
+                'class':'logging.handlers.RotatingFileHandler',
+                'filename': os.path.join(ROOT_PATH, 'APPNAME.log'),
+                'maxBytes': 1024*1024*15, # 15MB
+                'backupCount': 10,
         }
     },
     'loggers': {
@@ -143,6 +151,10 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'APPNAME': {
+            'handlers': ['applogfile',],
+            'level': 'DEBUG',
         },
     }
 }
@@ -326,6 +338,22 @@ FABRIC_GLOBAL = {
 FLEXPAPER_KEY = '$ccd1b1d26f39cf5ec44'
 PAY_KEY = 'A923C5'
 
+# my constants
+SSO = {
+    'RESOURCE_NAME': 'przemyslawfgmail.onmicrosoft.com',
+    'CLIENT_ID': '631e3e5c-e70a-431a-97aa-7e4d19bfbf1e',
+    'CLIENT_KEY': '0Ccp3vTuOG7H6CLMbUIf1kc8b+5YnwNXghBDi4U86uI=',
+    'REDIRECT_URI': 'http://192.168.56.100:8001/accounts/token_sso',
+    'REDIRECT_URI_LIVE': 'http://192.168.56.100:8001/accounts/token_sso',
+    'AUTHORIZATION_BASE_URL': 'https://login.windows.net/%s/oauth2/authorize',
+    'BASE_TOKEN_URL': 'https://login.windows.net/%s/oauth2/token',
+    'RESOURCE_URI': 'https://management.core.windows.net/',
+    'GET_SUBSCRIPTIONS_URL': 'https://management.core.windows.net/subscriptions',
+    'MS_API_VERSION_HEADER': 'x-ms-version',
+    'MS_API_VERSION_HEADER_VALUE': '2013-08-01'
+}
+
+
 ##############################################################################
 # Move local settings to bottom so any setting can be overriden
 ##############################################################################
@@ -336,6 +364,6 @@ except ImportError:
     print 'local_settings.py doesnt exist yet. Make sure you have created it.'
 
 # merge FABRIC settings
-FABRIC.update(FABRIC_GLOBAL)
+#FABRIC.update(FABRIC_GLOBAL)
 
 ################################### THE END ###################################

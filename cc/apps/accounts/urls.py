@@ -25,5 +25,11 @@ urlpatterns = patterns(
     url(r'^remove_invitation/(?P<invitation_id>\d+)/$',
         'cc.apps.accounts.views.remove_invitation',
         name='remove_invitation'),
+    url(r'^login_sso/$',
+        'cc.apps.accounts.views.login_sso',
+        name='login_sso'),    
+    url(r'^token_sso/$',
+        'cc.apps.accounts.views.token_sso',
+        name='token_sso'),                                            
     url(r'', include('registration.backends.default.urls')),
 )

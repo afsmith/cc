@@ -17,7 +17,9 @@
         {{ form|as_bootstrap }}
 
         <input type="hidden" name="next" value="{% url 'home' %}" />
-        
+        <div>
+            <a href="{% url 'login_sso' %}">{% trans "Login using SSO" %}</a>
+        </div>
         <div>
             <button id="js_loginButton" class="btn btn-success" href="#" style="margin-top: 10px;">{% trans "Login" %}</button>  
         </div>
