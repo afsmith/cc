@@ -61,9 +61,7 @@ def login_sso(request):
     AUTHORIZATION_BASE_URL = constants['AUTHORIZATION_BASE_URL']
     RESOURCE_NAME = constants['RESOURCE_NAME']
 
-    # create a 'requests' Oauth2Session
     azure_session = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI)    
-
     authorization_url, state = azure_session.authorization_url(AUTHORIZATION_BASE_URL % RESOURCE_NAME)
     resp = requests.get(authorization_url)    
     
@@ -82,9 +80,8 @@ def token_sso(request):
     
     azure_session = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI)
     token_dict = azure_session.fetch_token(BASE_TOKEN_URL % RESOURCE_NAME, code=aad_code, client_secret=CLIENT_KEY, resource=RESOURCE_URI)
-    redirect('accounts/login')
-    if token_dict:
-        
+    
+    if token_dict:        
         data = jwt.decode(token_dict['id_token'], verify=False)
         email = data['email']
         family_name = data['family_name']
