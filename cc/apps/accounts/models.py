@@ -94,6 +94,7 @@ class CustomUserManager(BaseUserManager):
         kwargs['password'] = CUser.objects.make_random_password()
         user = self.create_user(**kwargs)
         user.is_active = True
+        user.user_type = 4
         user.is_staff = True        
         user.save(using=self._db)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
