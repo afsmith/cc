@@ -44,6 +44,9 @@ def send_invitation_email(invitation, domain):
         )
 
 def get_authorization_url_sso(settings):
+    '''
+    Get authorization url from Azure Active Directory service
+    '''
     CLIENT_ID = settings['CLIENT_ID']
     REDIRECT_URI = settings['REDIRECT_URI_LIVE']
     AUTHORIZATION_BASE_URL = settings['AUTHORIZATION_BASE_URL']
@@ -54,6 +57,9 @@ def get_authorization_url_sso(settings):
     return (authorization_url, state)    
 
 def get_user_sso(settings, aad_code):
+    '''
+    Fetch a token from Azure Active Directory and create user account if does not exist
+    '''
     BASE_TOKEN_URL = settings['BASE_TOKEN_URL']
     REDIRECT_URI = settings['REDIRECT_URI']
     CLIENT_ID = settings['CLIENT_ID']
@@ -64,7 +70,8 @@ def get_user_sso(settings, aad_code):
     azure_session = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI)
     token_dict = azure_session.fetch_token(BASE_TOKEN_URL % RESOURCE_NAME, code=aad_code, client_secret=CLIENT_KEY, resource=RESOURCE_URI)
     
-    if token_dict:        
+    if token_dict:
+        # id_token key contains encoded JSON Web Token value                 
         data = jwt.decode(token_dict['id_token'], verify=False)
         email = data['email']
         family_name = data['family_name']

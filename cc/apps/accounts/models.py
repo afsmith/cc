@@ -91,6 +91,10 @@ class CustomUserManager(BaseUserManager):
         return user
     
     def create_azure_user(self, **kwargs):
+        '''
+        Create the AzureAD account
+        Generate random password and set basic values
+        '''
         kwargs['password'] = CUser.objects.make_random_password()
         user = self.create_user(**kwargs)
         user.is_active = True
