@@ -340,17 +340,17 @@ PAY_KEY = 'A923C5'
 
 # my constants
 SSO = {
-    'RESOURCE_NAME': 'przemyslawfgmail.onmicrosoft.com',
-    'CLIENT_ID': '631e3e5c-e70a-431a-97aa-7e4d19bfbf1e',
-    'CLIENT_KEY': '0Ccp3vTuOG7H6CLMbUIf1kc8b+5YnwNXghBDi4U86uI=',
-    'REDIRECT_URI': 'http://192.168.56.100:8001/accounts/token_sso',
-    'REDIRECT_URI_LIVE': 'http://192.168.56.100:8001/accounts/token_sso',
+    'RESOURCE_NAME': 'ccknetooutlook.onmicrosoft.com',
+    'CLIENT_ID': '40cbce99-a762-4f4d-a89a-80f34984d1b8',
+    'CLIENT_KEY': 'RXoUItJJ+3WA946s3ZV+73ssPtIoPIHv10L3LGkvUMc=',       
+    'REDIRECT_URI': 'https://cc-stage.kneto.com/accounts/token_sso',
+    'REDIRECT_URI_LIVE': 'https://cc-stage.kneto.com/accounts/token_sso',
     'AUTHORIZATION_BASE_URL': 'https://login.windows.net/%s/oauth2/authorize',
     'BASE_TOKEN_URL': 'https://login.windows.net/%s/oauth2/token',
     'RESOURCE_URI': 'https://management.core.windows.net/',
     'GET_SUBSCRIPTIONS_URL': 'https://management.core.windows.net/subscriptions',
     'MS_API_VERSION_HEADER': 'x-ms-version',
-    'MS_API_VERSION_HEADER_VALUE': '2013-08-01'
+    'MS_API_VERSION_HEADER_VALUE': '2014-02-14'
 }
 
 

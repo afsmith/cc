@@ -18,11 +18,9 @@
 
         <input type="hidden" name="next" value="{% url 'home' %}" />
         <div>
-            <a href="{% url 'login_sso' %}">{% trans "Login using SSO" %}</a>
-        </div>
-        <div>
-            <button id="js_loginButton" class="btn btn-success" href="#" style="margin-top: 10px;">{% trans "Login" %}</button>  
-        </div>
+            <button id="js_loginButton" class="btn btn-success" href="#" style="margin-top: 10px;">{% trans "Login" %}</button>
+            <button id="js_ssoButton" class="btn btn-warning" href="{% url 'login_sso' %}" style="margin-top: 10px;">{% trans "Microsoft Organizational Account" %}</button>
+        </div>        
         <div style="margin-top: 10px;">
             <a class="btn btn-primary"  href="{% url 'accounts_register' %}">{% trans "Register" %}</a>
         </div>

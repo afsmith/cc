@@ -70,13 +70,19 @@ def get_user_sso(settings, aad_code):
     azure_session = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI)
     token_dict = azure_session.fetch_token(BASE_TOKEN_URL % RESOURCE_NAME, code=aad_code, client_secret=CLIENT_KEY, resource=RESOURCE_URI)
     
-    if token_dict:
+    if token_dict:                
         # id_token key contains encoded JSON Web Token value                 
-        data = jwt.decode(token_dict['id_token'], verify=False)
-        email = data['email']
-        family_name = data['family_name']
-        given_name = data['given_name']
-        kwargs = dict(email=email, first_name=given_name, last_name=family_name)
+        data = jwt.decode(token_dict['access_token'], verify=False)
+
+        kwargs = {}
+        kwargs['email'] = kwargs['first_name'] = data['email']
+
+        if 'family_name' in data:
+            kwargs['first_name'] = data['family_name']
+
+        if 'given_name' in data:
+            kwargs['last_name'] = data['given_name']
+                            
         return CUser.objects.create_azure_user(**kwargs)
     
     return None

@@ -7,7 +7,12 @@ $(document).ready(function () {
         $('#loginForm').submit();
         return false;
     });
-
+    
+    $('#js_ssoButton').click(function () {
+        location.href = $(this).attr('href');
+        return false;
+    });
+    
     // enter to submit
     $('#loginForm input').keyup(function (event) {
         if (event.keyCode === 13) {
