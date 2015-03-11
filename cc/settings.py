@@ -344,7 +344,7 @@ SSO = {
     'CLIENT_ID': '40cbce99-a762-4f4d-a89a-80f34984d1b8',
     'CLIENT_KEY': 'RXoUItJJ+3WA946s3ZV+73ssPtIoPIHv10L3LGkvUMc=',       
     'REDIRECT_URI': 'https://cc-stage.kneto.com/accounts/token_sso',
-    'REDIRECT_URI_LIVE': 'https://cc-stage.kneto.com/accounts/token_sso',
+    'REDIRECT_URI_LIVE': 'https://cc.kneto.com/accounts/token_sso',
     'AUTHORIZATION_BASE_URL': 'https://login.windows.net/%s/oauth2/authorize',
     'BASE_TOKEN_URL': 'https://login.windows.net/%s/oauth2/token',
     'RESOURCE_URI': 'https://management.core.windows.net/',
