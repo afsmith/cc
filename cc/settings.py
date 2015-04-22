@@ -158,7 +158,6 @@ from settings_choices import *
 
 # admin settings
 ADMINS = (
-    ('Hieu Nguyen', 'hieu@sudointeractive.com'),
     ('Andrew Smith', 'andrew.smith@kneto.fi'),
 )
 
