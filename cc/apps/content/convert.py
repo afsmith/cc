@@ -86,9 +86,9 @@ class BaseConverter(object):
         return self._storage.path(path)
 
     def _run_command(self, cmd, cwd=None):
+
         p = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            close_fds=True, cwd=cwd)
+            cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd, shell = True)
         stdout, _ = p.communicate()
         if p.returncode != 0:
             raise utils.CommandError(cmd, p.returncode, stdout)
@@ -100,25 +100,29 @@ class BaseConverterWithTempDir(BaseConverter):
     def _initialize(self):
         super(BaseConverterWithTempDir, self)._initialize()
         root = self._storage.path(settings.CONTENT_UPLOADED_DIR)
+
         self._tmp = tempfile.mkdtemp(dir=root)
+
 
     def _finalize(self):
         super(BaseConverterWithTempDir, self)._finalize()
 
         try:
+
+
             shutil.move(self._tmp, self._get_dst_path())
             os.chmod(
                 self._get_dst_path(), settings.FILE_UPLOAD_PERMISSIONS_DIRS
             )
         except OSError as e:
-            try:
-                shutil.rmtree(self._tmp)
-            except OSError as e:
-                self._logger.error(
-                    'Cannot remove temp dir "%s" after conversion of "%s": %s'
-                    % (self._tmp, self._file, str(e))
-                )
-
+        #     try:
+        #         shutil.rmtree(self._tmp)
+        #     except OSError as e:
+        #         self._logger.error(
+        #             'Cannot remove temp dir "%s" after conversion of "%s": %s'
+        #             % (self._tmp, self._file, str(e))
+        #         )
+        #
             raise ConversionError('Cannot rename "%s" to "%s": %s' % (
                 self._tmp, self._get_dst_path(), str(e)))
 
@@ -133,6 +137,7 @@ class PDFConverter(BaseConverterWithTempDir):
         ]
 
     def _run_command(self, cmd, cwd=None):
+
         output = super(PDFConverter, self)._run_command(cmd, cwd)
         if output and output.startswith('Error'):
             raise ConversionError(
@@ -143,7 +148,9 @@ class PDFConverter(BaseConverterWithTempDir):
             )
 
     def _convert_to_json(self):
+
         dst = os.path.join(self._tmp, 'pdf.json')
+
         super(PDFConverter, self)._run_command([
             'pdf2json', self._get_src_path(), '-enc', 'UTF-8',
             '-compress', '-split', '10', dst

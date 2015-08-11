@@ -1,0 +1,116 @@
+{% extends 'base_template_api.html' %}
+{% load extras i18n staticfiles %}
+
+{% block meta_title %}{% trans "Report" %} #{{ this_message.id }}{% endblock %}
+
+{% block content %}
+            {% if user.is_authenticated %}
+            User: {{ user.first_name }} {{ user.last_name }} <br>
+            {% endif %}
+
+
+
+    <select id="js_selectMessage" class="form-control">
+
+        <option value="{{this_message.id}}" }selected="selected">
+            {{ this_message.subject }} | {{ this_message.created_at|date:'H:i d.m.Y' }} | {{ this_message.receivers.all|join:', '|truncatechars:30 }}
+        </option>
+
+    </select>
+
+
+<div class="row report_wrapper">
+    {% if log_groupby_user|length == 0 %}
+
+        {% if missing_data|length == 0 %}
+        <p class="alert alert-info">
+            {% trans "Looks like no one has viewed your offer yet. Come back again later." %}
+        </p>
+        {% endif %}
+
+    {% else %}
+        {% if this_message.files.count == 0 %}
+        <p class="alert alert-info">
+            {% trans "The detail report isn't available for this message because it doesn't contain any attachment." %}
+        </p>
+        {% else %}
+
+        <ul class="nav nav-tabs">
+            {% for f in this_message.files.all %}
+                <li {% if forloop.counter == 1 %}class="active"{% endif %}>
+                    <a href="#tab_{{ f.index }}" data-toggle="tab" data-index="{{ f.index }}"><strong>{{ f.orig_filename }}</strong></a>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <div class="tab-content">
+            {% for f in this_message.files.all %}
+                <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="tab_{{ f.index }}"></div>
+            {% endfor %}
+        </div>
+
+        {% endif %}
+
+    {% endif %}
+</div>
+
+{% if uninterested_recipients|length > 0 %}
+<hr><div class="row">
+    <h4>{% trans "These recipients haven't viewed your offer" %}</h4>
+    
+    <table class="table report_table">
+        <thead>
+            <tr class="error">
+                <th>{% trans "Email" %}</th>
+
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for row in uninterested_recipients %}
+            <tr data-message="{{ this_message.id }}" data-user="{{ row.id }}">
+                <td>{{ row.email }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if missing_data|length > 0 %}
+<hr><div class="row">
+    <h4>{% trans 'Missing tracking data' %}</h4>
+    
+    <table class="table report_table">
+        <thead>
+            <tr class="error">
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Viewed by" %}</th>
+                <th>{% trans "Unique IP" %}</th>
+                <th>{% trans "Device type" %}</th>
+            </tr>    
+        </thead>
+        
+        <tbody>
+            {% for row in missing_data %}
+            <tr>
+                <td>{{ row.created_at|date:'H:i d.m.Y' }}</td>
+                <td>{{ row.participant.email }}</td>
+                <td>{{ row.client_ip|default:'N/A' }}</td>
+                <td>{{ row.device|default:'N/A' }}</td>
+            </tr>
+            {% endfor %}    
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{% static 'js/vendor/highcharts.js' %}"></script>
+    
+    <script src="{% static 'js/report.js' %}"></script>
+{% endblock %}

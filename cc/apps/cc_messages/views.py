@@ -27,6 +27,7 @@ def send_message(request):
     '''
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
+
         if message_form.is_valid():
             message = message_form.save()
 

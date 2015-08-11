@@ -32,6 +32,7 @@ class CustomUserManager(BaseUserManager):
             except Invitation.DoesNotExist:
                 raise ValueError('Invitation code is invalid')
 
+
         f_key = kwargs.get('f_key')
         keys = kwargs.keys()
         for key in keys:

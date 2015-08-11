@@ -4,6 +4,7 @@ from .models import OneClickLinkToken, Invitation
 
 from templated_email import send_templated_mail
 from datetime import date
+from cc.apps.accounts.models import CUser
 
 from django.contrib.auth import login
 
@@ -69,10 +70,12 @@ def get_user_sso(settings, aad_code):
     
     azure_session = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI)
     token_dict = azure_session.fetch_token(BASE_TOKEN_URL % RESOURCE_NAME, code=aad_code, client_secret=CLIENT_KEY, resource=RESOURCE_URI)
-    
-    if token_dict:                
+    if token_dict:
         # id_token key contains encoded JSON Web Token value                 
-        data = jwt.decode(token_dict['access_token'], verify=False)
+        data = jwt.decode(token_dict['access_token'],  verify=False)
+        file_ = open('d:\\token.txt', 'w')
+        file_.write(token_dict['access_token'])
+        file_.close()
 
         kwargs = {}
         kwargs['email'] = kwargs['first_name'] = data['email']

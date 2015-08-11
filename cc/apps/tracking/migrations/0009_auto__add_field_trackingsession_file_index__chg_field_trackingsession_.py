@@ -7,6 +7,7 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    no_dry_run = True
     def forwards(self, orm):
         # Adding field 'TrackingSession.file_index'
         db.add_column(u'tracking_trackingsession', 'file_index',

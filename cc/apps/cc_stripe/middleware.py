@@ -10,6 +10,7 @@ URLS = [reverse(url) for url in settings.SUBSCRIPTION_REQUIRED_EXCEPTION_URLS]
 
 class ActiveSubscriptionMiddleware(object):
     def process_request(self, request):
+
         if (
             request.user.is_authenticated()
             and not request.user.is_staff

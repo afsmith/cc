@@ -17,6 +17,7 @@ class AddressBookListView(LoginRequiredMixin, CreateView):
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
+
         query = self.request.GET.get('search')
         sort = self.request.GET.get('sort', '').split(',')
         contacts = Contact.objects
@@ -35,6 +36,7 @@ class AddressBookListView(LoginRequiredMixin, CreateView):
         contacts = contacts.order_by(ln, fn, em)
 
         kwargs['object_list'] = contacts
+
         return super(AddressBookListView, self).get_context_data(**kwargs)
 
     def get_success_url(self):
@@ -56,8 +58,6 @@ class AddressBookUpdateView(LoginRequiredMixin, UpdateView):
         return {'user': self.request.user}
 
 
-@auth_decorators.login_required
-@http_decorators.require_POST
 def delete_contact(request, pk):
     try:
         Contact.objects.get(pk=pk).delete()

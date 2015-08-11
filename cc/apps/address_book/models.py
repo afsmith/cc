@@ -43,11 +43,12 @@ class Contact(models.Model):
     title = models.CharField(max_length=100, blank=True)
     company = models.CharField(max_length=100, blank=True)
     user = models.ForeignKey(CUser)
+    crmContactId = models.IntegerField(default=0)
 
     objects = ContactManager()
 
     class Meta:
-        unique_together = ('user', 'work_email')
+        unique_together = ('user', 'work_email','crmContactId')
 
     def __unicode__(self):
         return self.work_email

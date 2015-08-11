@@ -16,7 +16,7 @@ urlpatterns = patterns(
     url(r'^file/',  include('cc.apps.content.urls')),
     url(r'^payments/',  include('cc.apps.cc_stripe.urls')),
     url(r'^addressbook/',  include('cc.apps.address_book.urls')),
-
+    url(r'^api/',  include('cc.apps.api.urls')),
     # ----- Individual patterns  ----- #
     url(r'^$', 'cc.apps.main.views.dashboard', name='home'),
     url(r'^view/(?P<message_id>\d+)/(?P<file_index>\d+)/$',

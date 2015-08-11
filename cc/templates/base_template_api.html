@@ -1,0 +1,103 @@
+{% load i18n staticfiles extras analytical payments_tags %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+   {% analytical_head_top %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Kneto CC - {% block meta_title %}{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+
+    <style>
+        body {
+            padding-top: 50px;
+            padding-bottom: 40px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block additional_css %}{% endblock %}
+    <script src="{% static 'js/vendor/modernizr-2.6.2-respond-1.1.0.min.js' %}"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="{% static 'js/vendor/checkout.js' %}"></script>
+    <script src="{% static 'js/vendor/eldarion-ajax.min.js' %}"></script>
+
+    {% analytical_head_bottom %}
+</head>
+
+<body{% block bodyclass %}{% endblock %}>
+    {% analytical_body_top %}
+
+
+    <div class="container">
+        <h1 class="page_title">{% block title %}{% endblock %}</h1>
+
+        {% block content %}{% endblock %}
+
+        <hr>
+        <footer>
+            <p>
+                &copy; {% now "Y" %} Kneto CC
+                  <!-- Digicert site seal -->
+                <span class="pull-right" id="DigiCertClickID_hUIIH7jy" data-language="en_US">
+                    <a href="https://www.digicert.com/ev-ssl-certification.htm"></a>
+                </span>
+                <!-- // Digicert site seal -->
+            </p>
+        </footer>
+
+    </div> <!-- /container -->
+
+ <div class="modal fade" id="js_error_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm"><div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Error</h4>
+        </div>
+        <div class="modal-body"></div>
+    </div></div>
+    </div>
+
+    <script>window.jQuery || document.write('<script src="{% static "js/vendor/jquery-1.9.1.min.js" %}"><\/script>')</script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+
+    <script src="{% static 'js/global.js' %}"></script>
+
+    {% if user.is_authenticated %}
+        <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
+        <style type="text/css" media="screen, projection">
+            @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
+        </style>
+        <script type="text/javascript">
+            if (typeof(Zenbox) !== 'undefined') {
+                Zenbox.init({
+                dropboxID:   '20272963',
+                url:         'https://kneto.zendesk.com',
+                tabTooltip:  'Support',
+                tabImageURL: 'https://assets.zendesk.com/external/zenbox/images/tab_support_right.png',
+                tabColor:    'black',
+                tabPosition: 'Right'
+                });
+            }
+        </script>
+    {% endif %}
+
+    <!-- Digicert site seal -->
+    <script type="text/javascript">
+    var __dcid = __dcid || [];__dcid.push(["DigiCertClickID_hUIIH7jy", "13", "s", "black", "hUIIH7jy"]);(function(){var cid=document.createElement("script");cid.async=true;cid.src="//seal.digicert.com/seals/cascade/seal.min.js";var s = document.getElementsByTagName("script");var ls = s[(s.length - 1)];ls.parentNode.insertBefore(cid, ls.nextSibling);}());
+    </script>
+    <!-- // Digicert site seal -->
+
+    {% block js_scripts %}{% endblock %}
+
+    {% analytical_body_bottom %}
+
+
+</body>
+</html>

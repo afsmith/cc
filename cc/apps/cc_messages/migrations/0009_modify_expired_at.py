@@ -7,7 +7,7 @@ from django.db import models
 from datetime import timedelta
 
 class Migration(SchemaMigration):
-
+    no_dry_run = True
     def forwards(self, orm):
         for msg in orm.Message.objects.all():
             msg.expired_at = msg.created_at + timedelta(days=120)

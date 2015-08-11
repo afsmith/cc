@@ -66,11 +66,14 @@ def _create_ocl_link_replace_link_texts(message, user, domain):
         )
 
         # get link text for each file
+
         link_text = f.link_text
+
         if link_text == '':
             link_text = ocl_link
 
         # and replace the token
+
         text = text.replace(
             '[link{}]'.format(f.index),
             u'<a href="{}">{}</a>'.format(ocl_link, link_text)
@@ -107,6 +110,7 @@ def _send_message(message, recipient, domain):
 
 
 def create_ocl_and_send_message(message, domain):
+
     '''
     Create OCL link (to the message) for each recipients and send email to them
     '''

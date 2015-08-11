@@ -42,9 +42,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'cc.apps.cc_stripe.middleware.ActiveSubscriptionMiddleware',
-
     'pagination.middleware.PaginationMiddleware',
 )
 
@@ -104,6 +102,7 @@ INSTALLED_APPS = (
     'cc.apps.main',        # register main apps to get the template tags
     'cc.apps.cc_stripe',
     'cc.apps.address_book',
+    'cc.apps.api',
 )
 
 # disable email for SuspiciousOperation
@@ -219,6 +218,7 @@ SUBSCRIPTION_REQUIRED_EXCEPTION_URLS = (
     'payments_webhook',
 )
 
+
 SUBSCRIPTION_REQUIRED_REDIRECT = ('new_payments_subscribe')
 
 STRIPE_PUBLIC_KEY = "pk_test_AAXz4ICYdcu4deHMJGmKJsVB"
@@ -249,7 +249,7 @@ CONTENT_PREVIEWS_DIR = 'previews'
 SUMMERNOTE_FILE_DIR = 'summernote'
 
 FILE_UPLOAD_PERMISSIONS = 0644
-FILE_UPLOAD_PERMISSIONS_DIRS = 0775
+FILE_UPLOAD_PERMISSIONS_DIRS = 0777
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 41943040  # 40 MB
 FILE_UPLOAD_HANDLERS = (
@@ -340,11 +340,11 @@ PAY_KEY = 'A923C5'
 
 # my constants
 SSO = {
-    'RESOURCE_NAME': 'ccknetooutlook.onmicrosoft.com',
-    'CLIENT_ID': '40cbce99-a762-4f4d-a89a-80f34984d1b8',
-    'CLIENT_KEY': 'RXoUItJJ+3WA946s3ZV+73ssPtIoPIHv10L3LGkvUMc=',       
-    'REDIRECT_URI': 'https://cc.kneto.com/accounts/token_sso',
-    'REDIRECT_URI_LIVE': 'https://cc.kneto.com/accounts/token_sso',
+    'RESOURCE_NAME': 'biernykgmail.onmicrosoft.com',
+    'CLIENT_ID': '829bbe3a-2eaf-4d5b-a012-0b4eeb6a7fac',
+    'CLIENT_KEY': 'ORhLV4UGNL9PNYmt/RXV55+gOOqNfu1K2jJ5+9j6gzc=',       
+    'REDIRECT_URI': 'http://localhost:8000/accounts/token_sso',
+    'REDIRECT_URI_LIVE': 'http://localhost:8000/accounts/token_sso',
     'AUTHORIZATION_BASE_URL': 'https://login.windows.net/%s/oauth2/authorize',
     'BASE_TOKEN_URL': 'https://login.windows.net/%s/oauth2/token',
     'RESOURCE_URI': 'https://management.core.windows.net/',
@@ -363,7 +363,23 @@ try:
 except ImportError:
     print 'local_settings.py doesnt exist yet. Make sure you have created it.'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'test@gmail.com'
+EMAIL_HOST_PASSWORD = 'test'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'biernyk@gmail.com'
 # merge FABRIC settings
 #FABRIC.update(FABRIC_GLOBAL)
+
+#Api
+
+OAUTH_TOKEN_REQUIRED_URLS = (
+      '/api/addcontact/',
+      '/api/sendemail/',
+      '/api/getreport/'
+)
+
 
 ################################### THE END ###################################

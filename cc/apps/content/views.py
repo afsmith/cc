@@ -20,7 +20,10 @@ from contextlib import closing
 @ajax_request
 def upload_file(request):
     form = FileImportForm(request.POST, request.FILES)
+
+
     if form.is_valid():
+
         def coping_file_callback(full_orig_file_path):
             with closing(
                 storage.default_storage.open(full_orig_file_path, 'wb')
@@ -32,6 +35,7 @@ def upload_file(request):
             form.cleaned_data['file'].name,
             coping_file_callback
         )
+
     return {
         'status': 'ERROR',
         'message': unicode(_('Exceeded maximum file upload size.'))

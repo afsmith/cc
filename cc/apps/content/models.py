@@ -228,7 +228,7 @@ class File(models.Model):
         :return: URL
         :rtype: ``str``
         """
-        path = join(settings.CONTENT_AVAILABLE_DIR, self.conv_file_path)
+        path = join(settings.CONTENT_AVAILABLE_DIR+'/', self.conv_file_path)
         return urlparse.urljoin(settings.MEDIA_URL, path)
 
     @property

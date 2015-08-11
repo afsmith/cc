@@ -11,7 +11,8 @@ class ContactForm(forms.ModelForm):
         model = Contact
 
         widgets = {
-            'user': forms.HiddenInput()
+           'user': forms.HiddenInput(),
+           #'crmContactId': forms.HiddenInput()
         }
 
 

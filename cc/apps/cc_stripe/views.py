@@ -205,7 +205,6 @@ def webhook(request):
                 try:
                     user = CUser.objects.get(customer=event.customer)
                 except CUser.DoesNotExist:
-                    print 'huhu'
                     return HttpResponse(status=200)
 
                 card = json_req['data']['object']

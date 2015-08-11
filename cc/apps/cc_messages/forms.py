@@ -92,7 +92,7 @@ class MessageForm(forms.ModelForm):
                 user = CUser.objects.create_receiver_user(email)
                 receiver_list.append(user.id)
             # do the same for contact
-            Contact.objects.get_or_create(work_email=email, user=owner)
+            Contact.objects.get_or_create(work_email=email, user=owner,crmContactId = 0)
         return receiver_list
 
     def save(self):
@@ -120,3 +120,7 @@ class MessageForm(forms.ModelForm):
 
         message.save()
         return message
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
