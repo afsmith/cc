@@ -64,6 +64,8 @@ def sendemail(request):
              try:
 
                 json_data = get_json(request)
+
+            
                 del request.FILES[WHERE_IS_JSON]
 
                 uploaded_files = upload_files(request)
@@ -305,11 +307,24 @@ def getreport(request,knetoSendId):
         this_message, False
     )
 
+
+    user_id = this_message.owner
+    log = services.get_email_action_group_by_recipient(
+        message_id, user_id
+    )
+    count = None
+    last_open = None
+    if log and log[0]['visit_count'] > 0:
+        last_open = services.get_last_email_open(message_id, user_id)
+        count =  log[0]['visit_count']
+
     json_data_out= {
         'this_message': this_message,
         'messages': all_messages,
         'missing_data': missing_data,
-        'uninterested_recipients': uninterested_recipients
+        'uninterested_recipients': uninterested_recipients,
+        'count':count,
+        'last_open': last_open
     }
 
     #data = serializers.serialize('json',json_data_out)

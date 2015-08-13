@@ -54,6 +54,22 @@
     {% endif %}
 </div>
 
+{% if count %}
+    <table style="width:100%">
+    <tr>
+    <td> <p><strong>Opened</strong>: <span class="label label-success">{{ count }}</span> </p></td><td><strong>Last opened</strong>: {{ last_open.created_at|date:'H:i d.m.Y' }}</p></td>
+    <tr>
+    <td><p><strong>Location</strong>: {{ last_open.location|default:'' }}</td> <td> <strong>Device</strong>: {{ last_open.device|default:'' }}</p></td>
+    </tr>
+    </table>
+
+{% else %}
+    <p class="alert alert-warning">This recipient didn't open your email.</p>
+{% endif %}
+
+
+
+
 {% if uninterested_recipients|length > 0 %}
 <hr><div class="row">
     <h4>{% trans "These recipients haven't viewed your offer" %}</h4>
