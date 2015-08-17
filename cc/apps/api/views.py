@@ -65,7 +65,7 @@ def sendemail(request):
 
                 json_data = get_json(request)
 
-            
+
                 del request.FILES[WHERE_IS_JSON]
 
                 uploaded_files = upload_files(request)
@@ -109,7 +109,7 @@ def sendemail(request):
 
              return HttpResponse(status=200,content=('{"knetoSendId":',message.pk,'}'))
 
-     return HttpResponse(status=403,content='forbidden2')
+     return HttpResponse(status=403,content='forbidden')
 
 def generateMessage(content,uploaded_files):
     index =0;
@@ -228,7 +228,8 @@ def add_or_update_user_and_login(data, request,create_user=True):
        userAzureAd = CUser.objects.create_azure_user(**kwargs)
     else:
        userAzureAd = CUser.objects.get(email=data['email'])
-
+       userAzureAd.backend = 'django.contrib.auth.backends.ModelBackend'
+ 
     if userAzureAd is not None:
         login(request, userAzureAd)
         return userAzureAd
