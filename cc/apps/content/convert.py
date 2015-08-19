@@ -88,7 +88,10 @@ class BaseConverter(object):
     def _run_command(self, cmd, cwd=None):
 
         p = subprocess.Popen(
-            cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd, shell = True)
+            cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT,close_fds=True, cwd=cwd, shell = True)
+        # for win
+        # p = subprocess.Popen(
+        #     cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd, shell = True)
         stdout, _ = p.communicate()
         if p.returncode != 0:
             raise utils.CommandError(cmd, p.returncode, stdout)
@@ -115,14 +118,14 @@ class BaseConverterWithTempDir(BaseConverter):
                 self._get_dst_path(), settings.FILE_UPLOAD_PERMISSIONS_DIRS
             )
         except OSError as e:
-        #     try:
-        #         shutil.rmtree(self._tmp)
-        #     except OSError as e:
-        #         self._logger.error(
-        #             'Cannot remove temp dir "%s" after conversion of "%s": %s'
-        #             % (self._tmp, self._file, str(e))
-        #         )
-        #
+            try:
+                shutil.rmtree(self._tmp)
+            except OSError as e:
+                self._logger.error(
+                    'Cannot remove temp dir "%s" after conversion of "%s": %s'
+                    % (self._tmp, self._file, str(e))
+                )
+
             raise ConversionError('Cannot rename "%s" to "%s": %s' % (
                 self._tmp, self._get_dst_path(), str(e)))
 
