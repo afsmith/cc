@@ -340,11 +340,11 @@ PAY_KEY = 'A923C5'
 
 # my constants
 SSO = {
-    'RESOURCE_NAME': 'biernykgmail.onmicrosoft.com',
-    'CLIENT_ID': '829bbe3a-2eaf-4d5b-a012-0b4eeb6a7fac',
-    'CLIENT_KEY': 'ORhLV4UGNL9PNYmt/RXV55+gOOqNfu1K2jJ5+9j6gzc=',       
-    'REDIRECT_URI': 'http://localhost:8000/accounts/token_sso',
-    'REDIRECT_URI_LIVE': 'http://localhost:8000/accounts/token_sso',
+    'RESOURCE_NAME': 'ccknetooutlook.onmicrosoft.com',
+    'CLIENT_ID': '40cbce99-a762-4f4d-a89a-80f34984d1b8',
+    'CLIENT_KEY': 'RXoUItJJ+3WA946s3ZV+73ssPtIoPIHv10L3LGkvUMc=',       
+    'REDIRECT_URI': 'https://cc.kneto.com/accounts/token_sso',
+    'REDIRECT_URI_LIVE': 'https://cc.kneto.com/accounts/token_sso',
     'AUTHORIZATION_BASE_URL': 'https://login.windows.net/%s/oauth2/authorize',
     'BASE_TOKEN_URL': 'https://login.windows.net/%s/oauth2/token',
     'RESOURCE_URI': 'https://management.core.windows.net/',
