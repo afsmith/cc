@@ -1,15 +1,7 @@
-from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, UpdateView
-from django.core.urlresolvers import reverse
-from django.contrib.auth import decorators as auth_decorators
-from django.views.decorators import http as http_decorators
-from django.shortcuts import redirect
-from cc.libs.utils import LoginRequiredMixin
-from django.http import HttpResponse
+
 from annoying.decorators import ajax_request, render_to
 from cc import settings
-from cryptography.x509 import load_pem_x509_certificate
-from cryptography.hazmat.backends import default_backend
+
 from cc.apps.accounts.models import CUser
 from cc.apps.address_book.models import Contact
 from django.contrib.auth import login
@@ -18,15 +10,7 @@ import json
 import jwt
 from cc.apps.cc_messages.models import Message
 from cc.apps.cc_messages import tasks
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
-from cc.apps.cc_messages.forms import UploadFileForm
-from cc.apps.content.views import upload_file
 from django.core.files import storage
-from django.contrib.auth import decorators as auth_decorators
-from django.views.decorators import http as http_decorators
-from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import smart_str
 from django.http import HttpResponse
 from contextlib import closing
 from django.template.response import TemplateResponse
@@ -35,7 +19,6 @@ from  cc.apps.cc_messages.models import File
 from datetime import timedelta
 from cc.apps.reports import services
 from cc.apps.reports.views import get_object_or_404, _format_data_for_chart
-from django.core import serializers
 
 BEARER = 'Bearer'
 WHERE_IS_JSON = 'info'
@@ -229,7 +212,7 @@ def add_or_update_user_and_login(data, request,create_user=True):
     else:
        userAzureAd = CUser.objects.get(email=data['email'])
        userAzureAd.backend = 'django.contrib.auth.backends.ModelBackend'
- 
+
     if userAzureAd is not None:
         login(request, userAzureAd)
         return userAzureAd
