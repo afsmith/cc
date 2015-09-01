@@ -371,7 +371,7 @@ EMAIL_HOST_PASSWORD = 'test'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'biernyk@gmail.com'
 # merge FABRIC settings
-#FABRIC.update(FABRIC_GLOBAL)
+FABRIC.update(FABRIC_GLOBAL)
 
 #Api
 
