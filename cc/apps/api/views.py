@@ -26,12 +26,12 @@ LINK_TOKEN = '<br><div id="link_token">[link{}]</div>'
 OPTIONS = {
         'verify_signature': False,
         'verify_exp': False,
-        'verify_nbf': True,
-        'verify_iat': True,
+        'verify_nbf': False,
+        'verify_iat': False,
         'verify_aud': False,
         'require_exp': False,
-        'require_iat': True,
-        'require_nbf': True,
+        'require_iat': False,
+        'require_nbf': False,
         }
 
 @csrf_exempt
