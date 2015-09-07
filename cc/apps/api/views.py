@@ -34,6 +34,7 @@ OPTIONS = {
         'require_nbf': False,
         }
 
+
 @csrf_exempt
 def sendemail(request):
      if request.path in  settings.OAUTH_TOKEN_REQUIRED_URLS:
