@@ -26,12 +26,12 @@ LINK_TOKEN = '<br><div id="link_token">[link{}]</div>'
 OPTIONS = {
         'verify_signature': False,
         'verify_exp': False,
-        'verify_nbf': True,
-        'verify_iat': True,
+        'verify_nbf': False,
+        'verify_iat': False,
         'verify_aud': False,
         'require_exp': False,
-        'require_iat': True,
-        'require_nbf': True,
+        'require_iat': False,
+        'require_nbf': False,
         }
 
 @csrf_exempt
@@ -183,7 +183,7 @@ def addContact(request ):
              return prepare_respone_contact(contact)
 
 
-    return HttpResponse(status=403,content='forbidden')
+    return HttpResponse(status=403,content='forbidden1')
 
 def validate_and_login(request,create_user=True):
     httpAuth = request.META.get('HTTP_AUTHORIZATION', '')
