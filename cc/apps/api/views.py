@@ -19,6 +19,7 @@ from  cc.apps.cc_messages.models import File
 from datetime import timedelta
 from cc.apps.reports import services
 from cc.apps.reports.views import get_object_or_404, _format_data_for_chart
+from django.views.decorators import http
 
 BEARER = 'Bearer'
 WHERE_IS_JSON = 'info'
@@ -171,8 +172,11 @@ def _fetch_receiver_ids(contacts, owner):
 
 @csrf_exempt
 def addContact(request ):
+    content='forbidden14'
     if request.path in  settings.OAUTH_TOKEN_REQUIRED_URLS:
+          content='forbidden14'
           if validate_and_login(request):
+             content='forbidden14'
              json_data = json.loads(request.body)
              email = json_data['email']
              firstname = json_data['firstname']
@@ -184,10 +188,10 @@ def addContact(request ):
              return prepare_respone_contact(contact)
 
 
-    return HttpResponse(status=403,content='forbidden321')
+    return HttpResponse(status=403,content= content)
 
 def validate_and_login(request,create_user=True):
-    httpAuth = request.META.get('HTTP_AUTHORIZATION', '')
+    httpAuth = request.META.get('HTTP_IESM_AUTHORIZATION', '')
     if  httpAuth!=None and httpAuth.startswith(BEARER):
 
         token = (httpAuth[len(BEARER)+1:])
