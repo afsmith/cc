@@ -12,7 +12,7 @@ class ContactForm(forms.ModelForm):
 
         widgets = {
            'user': forms.HiddenInput(),
-           #'crmContactId': forms.HiddenInput()
+           'crmContactId': forms.HiddenInput()
         }
 
 
