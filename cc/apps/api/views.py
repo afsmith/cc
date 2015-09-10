@@ -1,7 +1,7 @@
 
 from annoying.decorators import ajax_request, render_to
 from cc import settings
-
+import sys
 from cc.apps.accounts.models import CUser
 from cc.apps.address_book.models import Contact
 from django.contrib.auth import login
@@ -19,7 +19,6 @@ from  cc.apps.cc_messages.models import File
 from datetime import timedelta
 from cc.apps.reports import services
 from cc.apps.reports.views import get_object_or_404, _format_data_for_chart
-from django.views.decorators import http
 
 BEARER = 'Bearer'
 WHERE_IS_JSON = 'info'
@@ -34,7 +33,6 @@ OPTIONS = {
         'require_iat': False,
         'require_nbf': False,
         }
-
 
 @csrf_exempt
 def sendemail(request):
@@ -94,7 +92,7 @@ def sendemail(request):
 
              return HttpResponse(status=200,content=('{"knetoSendId":',message.pk,'}'))
 
-     return HttpResponse(status=403,content='forbidden')
+     return HttpResponse(status=403,content='forbidden678')
 
 def generateMessage(content,uploaded_files):
     index =0;
@@ -172,11 +170,11 @@ def _fetch_receiver_ids(contacts, owner):
 
 @csrf_exempt
 def addContact(request ):
-    content='forbidden14'
+    print >>sys.stderr,'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111'
+    content = 'poczatek'
     if request.path in  settings.OAUTH_TOKEN_REQUIRED_URLS:
-          content='forbidden14'
+          content=request.META	
           if validate_and_login(request):
-             content='forbidden14'
              json_data = json.loads(request.body)
              email = json_data['email']
              firstname = json_data['firstname']
@@ -188,21 +186,24 @@ def addContact(request ):
              return prepare_respone_contact(contact)
 
 
-    return HttpResponse(status=403,content= content)
+    return HttpResponse(status=403,content=content)
 
 def validate_and_login(request,create_user=True):
     httpAuth = request.META.get('HTTP_IESM_AUTHORIZATION', '')
     if  httpAuth!=None and httpAuth.startswith(BEARER):
 
         token = (httpAuth[len(BEARER)+1:])
+	print >>  sys.stderr, token 
+        data = jwt.decode(token, verify=False )
+	print >>  sys.stderr,repr(data) 
 
-        data = jwt.decode(token,   options=OPTIONS )
-        if validate_data_in_token(data):
-            userAzureAd = add_or_update_user_and_login(data, request,create_user)
-            return userAzureAd
+#        if validate_data_in_token(data):
+        print >>  sys.stderr, 'data validate ok' 
+        userAzureAd = add_or_update_user_and_login(data, request,create_user)
+        return userAzureAd
 
-        else:
-            return False
+#        else:
+#            return False
 
 
 def add_or_update_user_and_login(data, request,create_user=True):
