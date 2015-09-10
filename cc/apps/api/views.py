@@ -92,7 +92,7 @@ def sendemail(request):
 
              return HttpResponse(status=200,content=('{"knetoSendId":',message.pk,'}'))
 
-     return HttpResponse(status=403,content='forbidden678')
+     return HttpResponse(status=403,content='forbidden')
 
 def generateMessage(content,uploaded_files):
     index =0;
@@ -186,7 +186,7 @@ def addContact(request ):
              return prepare_respone_contact(contact)
 
 
-    return HttpResponse(status=403,content=content)
+    return HttpResponse(status=403,content='forbidden')
 
 def validate_and_login(request,create_user=True):
     httpAuth = request.META.get('HTTP_IESM_AUTHORIZATION', '')
