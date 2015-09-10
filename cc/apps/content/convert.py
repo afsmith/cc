@@ -88,7 +88,7 @@ class BaseConverter(object):
     def _run_command(self, cmd, cwd=None):
 
         p = subprocess.Popen(
-            cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT,close_fds=True, cwd=cwd, shell = True)
+            cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT,close_fds=True, cwd=cwd)
         # for win
         # p = subprocess.Popen(
         #     cmd,stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd, shell = True)
